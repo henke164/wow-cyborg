@@ -4,6 +4,6 @@
 
 /.vs/WoWPal/v15
 /packages/Tesseract.3.2.0-alpha4
-/WoWPal.Events/bin/Debug
-/WoWPal.Events/obj/Debug
 /.vs/WoWPal/DesignTimeBuild
+/src/WoWPal.Events/obj/Debug
+/src/WoWPal.Events/bin/Debug

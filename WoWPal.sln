@@ -5,7 +5,7 @@ VisualStudioVersion = 15.0.27703.2042
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WoWPal", "src\WoWPal\WoWPal.csproj", "{C1985AD8-5618-4713-BEC8-AC0F300DDE07}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WoWPal.Events", "WoWPal.Events\WoWPal.Events.csproj", "{FF2D6508-8248-4754-BE43-F82230662469}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WoWPal.Events", "src\WoWPal.Events\WoWPal.Events.csproj", "{FF2D6508-8248-4754-BE43-F82230662469}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
