@@ -1,0 +1,7 @@
+## Interface: 80000
+## Title: WoWPalAddon
+## Notes: Experimental addon.
+## Author: Mazon
+## Version: 1.0.0
+
+WoWPalAddon.lua
