@@ -2,7 +2,7 @@
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.Windows.Forms;
-using WoWPal.EventDispatchers.Abstractions;
+using WoWPal.Events.Abstractions;
 
 namespace WoWPal.EventDispatchers
 {
@@ -19,9 +19,14 @@ namespace WoWPal.EventDispatchers
             var screenshot = CaptureScreenShot();
             TriggerEvent(screenshot);
         }
+        
+        public override void ReceiveEvent(Event ev)
+        {
+        }
 
         public Bitmap CaptureScreenShot()
         {
+            Bitmap clone;
             var bounds = Screen.GetBounds(Point.Empty);
 
             using (var bitmap = new Bitmap(bounds.Width, bounds.Height))
@@ -31,8 +36,9 @@ namespace WoWPal.EventDispatchers
                     g.CopyFromScreen(Point.Empty, Point.Empty, bounds.Size);
                 }
 
-                return bitmap.Clone(bounds, PixelFormat.Format24bppRgb);
+                clone = bitmap.Clone(bounds, PixelFormat.Format24bppRgb);
             }
+            return clone;
         }
     }
 }
