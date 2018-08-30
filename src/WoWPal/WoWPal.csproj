@@ -48,6 +48,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Commanders\RotationCommander.cs" />
     <Compile Include="EventDispatchers\CombatChangedDispatcher.cs" />
     <Compile Include="EventDispatchers\PlayerTransformChangedDispatcher.cs" />
     <Compile Include="EventDispatchers\ScreenChangedDispatcher.cs" />
@@ -60,6 +61,7 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Utilities\Transform.cs" />
+    <Compile Include="Utilities\Vector2.cs" />
     <EmbeddedResource Include="Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>
     </EmbeddedResource>
@@ -90,12 +92,6 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\WoWPal.Events\WoWPal.Events.csproj">
-      <Project>{ff2d6508-8248-4754-be43-f82230662469}</Project>
-      <Name>WoWPal.Events</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="x64\liblept1742.dll">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
@@ -108,6 +104,12 @@
     <Content Include="x86\libtesseract3051.dll">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\WoWPal.Events\WoWPal.Events.csproj">
+      <Project>{ff2d6508-8248-4754-be43-f82230662469}</Project>
+      <Name>WoWPal.Events</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

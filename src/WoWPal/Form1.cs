@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Windows.Forms;
+using WoWPal.Commanders;
 using WoWPal.EventDispatchers;
 using WoWPal.Events;
 using WoWPal.Events.Abstractions;
@@ -9,6 +10,8 @@ namespace WoWPal
 {
     public partial class Form1 : Form
     {
+        private RotationCommander _rotationCommander = new RotationCommander();
+
         public Form1()
         {
             InitializeComponent();
@@ -44,6 +47,11 @@ namespace WoWPal
                     label2.Text = data ? "In combat" : "Not in combat";
                 }));
             });
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            _rotationCommander.FacePoint(new Vector2(0.3816f, 0.3643f));
         }
     }
 }
