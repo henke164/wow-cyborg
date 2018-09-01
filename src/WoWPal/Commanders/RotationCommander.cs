@@ -16,15 +16,15 @@ namespace WoWPal.Commanders
 
         [DllImport("user32.dll")]
         public static extern void mouse_event(int dwFlags, int dx, int dy, int cButtons, int dwExtraInfo);
-
+        
         public const int MOUSEEVENTF_RIGHTDOWN = 0x08;
 
         public const int MOUSEEVENTF_RIGHTUP = 0x10;
 
-        public int OneLapPixels = 57;
+        public int OneLapPixels = 280;
 
         private Transform _currentTransform;
-
+        
         public RotationCommander()
         {
             EventManager.On("PlayerTransformChanged", (Event ev) => {
@@ -32,7 +32,7 @@ namespace WoWPal.Commanders
             });
         }
 
-        private double GetRadian(Vector2 point)
+        private double GetRadian(Vector3 point)
         {
             var xDiff = _currentTransform.X - point.X;
             var yDiff = _currentTransform.Z - point.Z;
@@ -44,62 +44,60 @@ namespace WoWPal.Commanders
                 return angleRadians;
             }
 
-            return 6.278 + angleRadians;
+            return (Math.PI * 2) + angleRadians;
         }
 
-        public void FacePoint(Vector2 point)
+        public void FacePoint(Vector3 point)
         {
             if (_currentTransform == null)
             {
                 return;
             }
 
-            var angleRadians = GetRadian(point);
-            
-            return;
-            Console.WriteLine(angleRadians);
-
             var screenBounds = Screen.PrimaryScreen.Bounds;
-
-            var startXPosition = screenBounds.Width / 2;
-            var yPosition = screenBounds.Height / 2;
-
-            var deg1 = ToDegree(Math.Abs(_currentTransform.R));
-            var deg2 = ToDegree(Math.Abs(angleRadians));
-            var perc = (deg1 - deg2) / 360;
-
-            var dist = 57 * perc;
+            var mousePos = new Vector3(screenBounds.Width / 2, screenBounds.Height / 2, 0);
 
             Task.Run(() => {
-
-                SetCursorPos(startXPosition, yPosition);
-
-                Thread.Sleep(500);
-
-                mouse_event(MOUSEEVENTF_RIGHTDOWN, startXPosition, yPosition, 0, 0);
+                SetCursorPos((int)mousePos.X, (int)mousePos.Y);
 
                 Thread.Sleep(500);
-                if (dist > 0)
-                {
-                    for (var x = 0; x < dist; x++)
-                    {
-                        SetCursorPos(startXPosition + x, yPosition);
-                        Thread.Sleep(5);
-                    }
-                }
-                else
-                {
-                    for (var x = 0; x > dist; x--)
-                    {
-                        SetCursorPos(startXPosition + x, yPosition);
-                        Thread.Sleep(5);
-                    }
-                }
 
-                Thread.Sleep(10);
-                mouse_event(MOUSEEVENTF_RIGHTUP, startXPosition, yPosition, 0, 0);
+                mouse_event(MOUSEEVENTF_RIGHTDOWN, (int)mousePos.X, (int)mousePos.Y, 0, 0);
 
+                Thread.Sleep(100);
+
+                HandleRotation(mousePos, point);
+
+                Thread.Sleep(100);
+
+                mouse_event(MOUSEEVENTF_RIGHTUP, (int)mousePos.X, (int)mousePos.Y, 0, 0);
             });
+        }
+
+        private int GetMouseMovementDistance(double rotationDistance)
+            => (int)(OneLapPixels * (rotationDistance / (Math.PI * 2)));
+
+        private RotationInstruction GetRotationInstructions(Vector3 point)
+        {
+            var angleRadians = GetRadian(point);
+            if (angleRadians > _currentTransform.R)
+            {
+                return new RotationInstruction(Direction.Left, angleRadians - _currentTransform.R);
+            }
+
+            return new RotationInstruction(Direction.Right, _currentTransform.R - angleRadians);
+        }
+
+        private void HandleRotation(Vector3 mousePos, Vector3 point)
+        {
+            var rotationInstructions = GetRotationInstructions(point);
+            var mousePosX = rotationInstructions.Direction == Direction.Right ? (int)mousePos.X + 5 : (int)mousePos.X - 5;
+            var mouseMovementInPixels = GetMouseMovementDistance(rotationInstructions.Distance);
+            for (var x = 0; x < mouseMovementInPixels; x++)
+            {
+                SetCursorPos(mousePosX, (int)mousePos.Y);
+                Thread.Sleep(10);
+            }
         }
 
         private double ToDegree(double radian)
@@ -107,5 +105,23 @@ namespace WoWPal.Commanders
 
         private double ToRadian(double degree)
             => degree * (Math.PI / 180);
+    }
+
+    internal class RotationInstruction
+    {
+        public Direction Direction { get; set; }
+        public double Distance { get; set; }
+
+        public RotationInstruction(Direction dir, double dist)
+        {
+            Direction = dir;
+            Distance = dist;
+        }
+    }
+
+    internal enum Direction
+    {
+        Right,
+        Left
     }
 }

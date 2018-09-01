@@ -51,7 +51,7 @@ namespace WoWPal
 
         private void button1_Click(object sender, EventArgs e)
         {
-            _rotationCommander.FacePoint(new Vector2(0.3816f, 0.3643f));
+            _rotationCommander.FacePoint(new Vector3(0.3816f, 0, 0.3643f));
         }
     }
 }

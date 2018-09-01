@@ -61,7 +61,7 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Utilities\Transform.cs" />
-    <Compile Include="Utilities\Vector2.cs" />
+    <Compile Include="Utilities\Vector3.cs" />
     <EmbeddedResource Include="Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>
     </EmbeddedResource>
