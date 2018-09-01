@@ -48,6 +48,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Commanders\MovementCommander.cs" />
     <Compile Include="Commanders\RotationCommander.cs" />
     <Compile Include="EventDispatchers\CombatChangedDispatcher.cs" />
     <Compile Include="EventDispatchers\PlayerTransformChangedDispatcher.cs" />
@@ -58,6 +59,7 @@
     <Compile Include="Form1.Designer.cs">
       <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
+    <Compile Include="Handlers\InputHandler.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Utilities\Transform.cs" />

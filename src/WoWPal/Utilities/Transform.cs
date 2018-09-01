@@ -2,15 +2,13 @@
 {
     public class Transform
     {
-        public float X { get; set; }
-        public float Z { get; set; }
-        public float R { get; set; }
+        public Vector3 Position { get; set; }
+        public float Rotation { get; set; }
 
-        public Transform(float x, float z, float r)
+        public Transform(float x, float y, float z, float rotation)
         {
-            X = x;
-            Z = z;
-            R = r;
+            Position = new Vector3(x, y, z);
+            Rotation = rotation;
         }
     }
 }

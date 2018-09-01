@@ -10,8 +10,6 @@ namespace WoWPal
 {
     public partial class Form1 : Form
     {
-        private RotationCommander _rotationCommander = new RotationCommander();
-
         public Form1()
         {
             InitializeComponent();
@@ -33,7 +31,7 @@ namespace WoWPal
 
                 label1.Invoke((MethodInvoker)(() =>
                 {
-                    label1.Text = $"x: {data.X}\nz: {data.Z}\nr: {data.R}";
+                    label1.Text = $"x: {data.Position.X}\nz: {data.Position.Z}\nr: {data.Rotation}";
                 }));
             });
 
@@ -51,7 +49,11 @@ namespace WoWPal
 
         private void button1_Click(object sender, EventArgs e)
         {
-            _rotationCommander.FacePoint(new Vector3(0.3816f, 0, 0.3643f));
+            var moveCommander = new MovementCommander();
+
+            var f1 = (float)numericUpDown1.Value;
+            var f2 = (float)numericUpDown2.Value;
+            moveCommander.MoveToLocation(new Vector3(f1, 0, f2));
         }
     }
 }
