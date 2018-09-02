@@ -11,10 +11,8 @@ namespace WoWPal.Commanders
         private ActionbarSettings _settings;
 
         public ActionbarCommander(ActionbarSettings settings)
-        {
-            _settings = settings;
-        }
-
+            => _settings = settings;
+        
         public static ActionbarCommander FromSettingFile(string filePath)
             => new ActionbarCommander(SettingsLoader.LoadSettings<ActionbarSettings>(filePath));
         
@@ -30,7 +28,7 @@ namespace WoWPal.Commanders
             InputHandler.LeftMouseDown(button.X, button.Y);
             Thread.Sleep(50);
             InputHandler.LeftMouseUp(button.X, button.Y);
-            Thread.Sleep(10);
+            Thread.Sleep(50);
             InputHandler.CenterMouse();
         }
     }

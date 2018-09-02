@@ -1,0 +1,12 @@
+﻿{
+  "combatSpells": [
+    {
+      "ActionbarName": "Fire",
+      "CooldownInSeconds": 6
+    },
+    {
+      "ActionbarName": "LightningBold",
+      "CooldownInSeconds": 2
+    }
+  ]
+}

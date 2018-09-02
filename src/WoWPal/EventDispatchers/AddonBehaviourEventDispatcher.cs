@@ -28,5 +28,11 @@ namespace WoWPal.EventDispatchers
             var pixel = AddonScreenshot.GetPixel(x, y);
             return pixel.R == 0 && pixel.G > 250 && pixel.B == 0;
         }
+
+        protected bool AddonIsRedAt(int x, int y)
+        {
+            var pixel = AddonScreenshot.GetPixel(x, y);
+            return pixel.R > 250 && pixel.G == 0 && pixel.B == 0;
+        }
     }
 }

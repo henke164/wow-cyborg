@@ -1,9 +1,6 @@
 ﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Windows.Forms;
-using WoWPal.Events;
-using WoWPal.Events.Abstractions;
 using WoWPal.Handlers;
 using WoWPal.Utilities;
 
@@ -17,19 +14,23 @@ namespace WoWPal.Commanders
 
         private Task _facingTask;
 
-        public RotationCommander()
+        private bool _pauseRotation;
+
+        public void UpdateCurrentTransform(Transform transform)
         {
-            EventManager.On("PlayerTransformChanged", (Event ev) => {
-                var currentTransform = (Transform)ev.Data;
+            if (TargetPoint == null || _pauseRotation || (_facingTask != null && !_facingTask.IsCompleted))
+            {
+                return;
+            }
 
-                if (TargetPoint == null || (_facingTask != null && !_facingTask.IsCompleted))
-                {
-                    return;
-                }
-
-                StartRotationTask(currentTransform);
-            });
+            StartRotationTask(transform);
         }
+
+        public void Stop()
+            => _pauseRotation = true;
+
+        public void Start()
+            => _pauseRotation = false;
 
         private void StartRotationTask(Transform transform)
         {
@@ -65,7 +66,7 @@ namespace WoWPal.Commanders
 
         private void HandleRotation(Transform transform, Vector3 mousePos)
         {
-            if (TargetPoint == null)
+            if (TargetPoint == null || _pauseRotation)
             {
                 return;
             }
@@ -93,23 +94,23 @@ namespace WoWPal.Commanders
 
         private int GetMouseMovementDistance(double rotationDistance)
             => (int)(OneLapPixels * (rotationDistance / (Math.PI * 2)));
-    }
 
-    internal class RotationInstruction
-    {
-        public Direction Direction { get; set; }
-        public double Distance { get; set; }
-
-        public RotationInstruction(Direction dir, double dist)
+        internal class RotationInstruction
         {
-            Direction = dir;
-            Distance = dist;
-        }
-    }
+            public Direction Direction { get; set; }
+            public double Distance { get; set; }
 
-    internal enum Direction
-    {
-        Right,
-        Left
+            public RotationInstruction(Direction dir, double dist)
+            {
+                Direction = dir;
+                Distance = dist;
+            }
+        }
+
+        internal enum Direction
+        {
+            Right,
+            Left
+        }
     }
 }

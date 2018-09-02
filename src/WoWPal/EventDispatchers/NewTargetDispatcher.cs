@@ -9,24 +9,12 @@ namespace WoWPal.EventDispatchers
 {
     public class NewTargetDispatcher : AddonBehaviourEventDispatcher
     {
-        private bool _hasTarget = false;
-        private ActionbarCommander _actionbarCommander;
-
+        private bool? _hasTarget = null;
+        
         public NewTargetDispatcher(Action<Event> onEvent)
             : base(onEvent)
         {
             EventName = "TargetInRange";
-
-            _actionbarCommander = ActionbarCommander.FromSettingFile("actionbarsettings.json");
-
-            EventManager.On("PlayerTransformChanged", (Event ev) => {
-                var currentTransform = (Transform)ev.Data;
-
-                if (!InputHandler.IsRightButtonDown && !_hasTarget)
-                {
-                    _actionbarCommander.ClickOnActionBar("AutoTarget");
-                }
-            });
         }
 
         protected override void Update()
@@ -38,12 +26,27 @@ namespace WoWPal.EventDispatchers
 
             if (AddonIsGreenAt(0, AddonScreenshot.Height - 1))
             {
-                _hasTarget = true;
-                TriggerEvent(_hasTarget);
+                if (!_hasTarget.HasValue)
+                {
+                    _hasTarget = false;
+                }
+                else if (_hasTarget == true)
+                {
+                    _hasTarget = false;
+                    TriggerEvent(false);
+                }
             }
-            else
+            else if (AddonIsRedAt(0, AddonScreenshot.Height - 1))
             {
-                _hasTarget = false;
+                if (!_hasTarget.HasValue)
+                {
+                    _hasTarget = true;
+                }
+                else if (_hasTarget == false)
+                {
+                    _hasTarget = true;
+                    TriggerEvent(true);
+                }
             }
         }
     }

@@ -4,6 +4,16 @@
       "name": "AutoTarget",
       "x": 515,
       "y": 1060
+    },
+    {
+      "name": "LightningBold",
+      "x": 470,
+      "y": 1060
+    },
+    {
+      "name": "Fire",
+      "x": 560,
+      "y": 1060
     }
   ]
 }
