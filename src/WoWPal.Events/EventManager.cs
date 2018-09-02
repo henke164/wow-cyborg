@@ -12,11 +12,6 @@ namespace WoWPal.Events
         
         public static EventDispatcherBase StartEventDispatcher(Type dispatcherType)
         {
-            if (dispatcherType.BaseType != typeof(EventDispatcherBase))
-            {
-                throw new InvalidOperationException("Tried to start an invalid dispatcher");
-            }
-
             var dispatcher = (EventDispatcherBase)Activator.CreateInstance(dispatcherType, 
                 new Action<Event>((Event ev) => { BroadcastEvent(ev); }));
 

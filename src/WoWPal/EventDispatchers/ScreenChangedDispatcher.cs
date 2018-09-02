@@ -20,10 +20,6 @@ namespace WoWPal.EventDispatchers
             TriggerEvent(screenshot);
         }
         
-        public override void ReceiveEvent(Event ev)
-        {
-        }
-
         public Bitmap CaptureScreenShot()
         {
             Bitmap clone;

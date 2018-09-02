@@ -21,11 +21,6 @@ namespace WoWPal
             var locationDispatcher = EventManager.StartEventDispatcher(typeof(PlayerTransformChangedDispatcher));
             var combatDispatcher = EventManager.StartEventDispatcher(typeof(CombatChangedDispatcher));
 
-            EventManager.On("ScreenChanged", (Event ev) => {
-                locationDispatcher.ReceiveEvent(ev);
-                combatDispatcher.ReceiveEvent(ev);
-            });
-
             EventManager.On("PlayerTransformChanged", (Event ev) => {
                 var data = (Transform)ev.Data;
 

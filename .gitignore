@@ -7,3 +7,4 @@
 /.vs/WoWPal/DesignTimeBuild
 /src/WoWPal.Events/obj/Debug
 /src/WoWPal.Events/bin/Debug
+/packages

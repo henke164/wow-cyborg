@@ -8,9 +8,8 @@ using WoWPal.Utilities;
 
 namespace WoWPal.EventDispatchers
 {
-    public class PlayerTransformChangedDispatcher : EventDispatcherBase
+    public class PlayerTransformChangedDispatcher : AddonBehaviourEventDispatcher
     {
-        private Rectangle _inGameAddonLocation = new Rectangle(0, 450, 300, 200);
         private Transform _transform = new Transform(0, 0, 0, 0);
 
         public PlayerTransformChangedDispatcher(Action<Event> onEvent)
@@ -21,26 +20,13 @@ namespace WoWPal.EventDispatchers
 
         protected override void Update()
         {
-        }
-
-        public override void ReceiveEvent(Event ev)
-        {
             try
             {
-                if (ev.Name != "ScreenChanged")
-                {
-                    return;
-                }
-
-                var screenshot = (Bitmap)ev.Data;
-
-                var addonBitmap = screenshot.Clone(_inGameAddonLocation, screenshot.PixelFormat);
-
                 using (var engine = new TesseractEngine(@"tessdata", "eng"))
                 {
                     engine.SetVariable("tessedit_char_whitelist", "0123456789.");
 
-                    using (var img = PixConverter.ToPix(addonBitmap))
+                    using (var img = PixConverter.ToPix(AddonScreenshot))
                     {
                         using (var page = engine.Process(img))
                         {
@@ -67,7 +53,7 @@ namespace WoWPal.EventDispatchers
 
             }
         }
-        
+
         private Bitmap CaptureScreenShot()
         {
             var bounds = Screen.GetBounds(Point.Empty);

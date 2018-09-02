@@ -29,8 +29,6 @@ namespace WoWPal.Events.Abstractions
         public void Stop()
             => _isRunning = false;
 
-        public abstract void ReceiveEvent(Event ev);
-
         protected abstract void Update();
 
         protected void TriggerEvent(object eventData)
