@@ -22,5 +22,11 @@ namespace WoWPal.EventDispatchers
                 AddonScreenshot = screenshot.Clone(inGameAddonLocation, screenshot.PixelFormat);
             });
         }
+
+        protected bool AddonIsGreenAt(int x, int y)
+        {
+            var pixel = AddonScreenshot.GetPixel(x, y);
+            return pixel.R == 0 && pixel.G > 250 && pixel.B == 0;
+        }
     }
 }

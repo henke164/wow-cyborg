@@ -33,13 +33,8 @@ namespace WoWPal.Commanders
 
         private void StartRotationTask(Transform transform)
         {
-            var screenBounds = Screen.PrimaryScreen.Bounds;
-            var mousePos = new Vector3(screenBounds.Width / 2, screenBounds.Height / 2, 0);
-
             _facingTask = Task.Run(() => {
-                InputHandler.SetCursorPos((int)mousePos.X, (int)mousePos.Y);
-
-                Thread.Sleep(100);
+                var mousePos = InputHandler.CenterMouse();
 
                 InputHandler.RightMouseDown((int)mousePos.X, (int)mousePos.Y);
 

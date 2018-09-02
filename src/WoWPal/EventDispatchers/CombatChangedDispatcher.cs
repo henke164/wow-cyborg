@@ -17,9 +17,7 @@ namespace WoWPal.EventDispatchers
         {
             try
             {
-                var pixel = AddonScreenshot.GetPixel(0, 0);
-
-                if (pixel.R == 0 && pixel.G > 250 && pixel.B == 0)
+                if (AddonIsGreenAt(0, 0))
                 {
                     if (_inCombat)
                     {

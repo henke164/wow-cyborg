@@ -46,9 +46,7 @@ namespace WoWPal.Commanders
         public void MoveToLocation(Vector3 location)
         {
             var screenBounds = Screen.PrimaryScreen.Bounds;
-            var mousePos = new Vector3(screenBounds.Width / 2, screenBounds.Height / 2, 0);
-            InputHandler.SetCursorPos((int)mousePos.X, (int)mousePos.Y);
-            Thread.Sleep(100);
+            var mousePos = InputHandler.CenterMouse();
             InputHandler.RightMouseDown((int)mousePos.X, (int)mousePos.Y);
             Thread.Sleep(100);
             InputHandler.RightMouseUp((int)mousePos.X, (int)mousePos.Y);
@@ -58,12 +56,23 @@ namespace WoWPal.Commanders
             _targetLocation = location;
         }
 
+        public void Stop()
+        {
+            _targetLocation = null;
+            if (_isMoving)
+            {
+                ToggleMovement();
+            }
+        }
+
         private void ToggleMovement()
         {
             _isMoving = !_isMoving;
-            InputHandler.MiddleMouseDown(0, 0);
+
+            var mousePos = InputHandler.CenterMouse();
+            InputHandler.MiddleMouseDown((int)mousePos.X, (int)mousePos.Y);
             Thread.Sleep(10);
-            InputHandler.MiddleMouseUp(0, 0);
+            InputHandler.MiddleMouseUp((int)mousePos.X, (int)mousePos.Y);
         }
     }
 }

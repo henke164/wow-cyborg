@@ -25,10 +25,13 @@ namespace WoWPal.Commanders
             {
                 return;
             }
-
+            Thread.Sleep(10);
+            InputHandler.SetCursorPos(button.X, button.Y);
             InputHandler.LeftMouseDown(button.X, button.Y);
-            Thread.Sleep(500);
+            Thread.Sleep(50);
             InputHandler.LeftMouseUp(button.X, button.Y);
+            Thread.Sleep(10);
+            InputHandler.CenterMouse();
         }
     }
 }

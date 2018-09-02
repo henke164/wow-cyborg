@@ -53,6 +53,7 @@
   <ItemGroup>
     <Compile Include="Commanders\ActionbarCommander.cs" />
     <Compile Include="Commanders\MovementCommander.cs" />
+    <Compile Include="Commanders\CombatCommander.cs" />
     <Compile Include="Commanders\RotationCommander.cs" />
     <Compile Include="EventDispatchers\AddonBehaviourEventDispatcher.cs" />
     <Compile Include="EventDispatchers\CombatChangedDispatcher.cs" />
