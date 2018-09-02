@@ -1,15 +1,11 @@
 ﻿using System;
-using WoWPal.Commanders;
-using WoWPal.Events;
 using WoWPal.Events.Abstractions;
-using WoWPal.Handlers;
-using WoWPal.Utilities;
 
 namespace WoWPal.EventDispatchers
 {
     public class NewTargetDispatcher : AddonBehaviourEventDispatcher
     {
-        private bool? _hasTarget = null;
+        public bool _hasTarget = false;
         
         public NewTargetDispatcher(Action<Event> onEvent)
             : base(onEvent)
@@ -24,29 +20,25 @@ namespace WoWPal.EventDispatchers
                 return;
             }
 
-            if (AddonIsGreenAt(0, AddonScreenshot.Height - 1))
+            if (AddonIsRedAt(0, AddonScreenshot.Height - 1))
             {
-                if (!_hasTarget.HasValue)
+                if (!_hasTarget)
                 {
-                    _hasTarget = false;
+                    return;
                 }
-                else if (_hasTarget == true)
-                {
-                    _hasTarget = false;
-                    TriggerEvent(false);
-                }
+
+                _hasTarget = false;
+                TriggerEvent(false);
             }
-            else if (AddonIsRedAt(0, AddonScreenshot.Height - 1))
+            else if (AddonIsGreenAt(0, AddonScreenshot.Height - 1))
             {
-                if (!_hasTarget.HasValue)
+                if (_hasTarget)
                 {
-                    _hasTarget = true;
+                    return;
                 }
-                else if (_hasTarget == false)
-                {
-                    _hasTarget = true;
-                    TriggerEvent(true);
-                }
+
+                _hasTarget = true;
+                TriggerEvent(true);
             }
         }
     }

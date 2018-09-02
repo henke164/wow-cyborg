@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
 using WoWPal.Models;
 using WoWPal.Utilities;
@@ -38,14 +37,12 @@ namespace WoWPal.Commanders
         }
 
         public void StopCombat()
-        {
-            _inCombat = false;
-        }
-
+            => _inCombat = false;
+        
         private void RunCombatTask()
         {
             _inCombat = true;
-            _combatTask = Task.Run(() => {
+            _combatTask = Task.Run(async () => {
                 while (_inCombat)
                 {
                     var now = DateTime.Now;
@@ -53,16 +50,17 @@ namespace WoWPal.Commanders
 
                     if (spell == null)
                     {
-                        Thread.Sleep(500);
+                        await Task.Delay(500);
                         continue;
                     }
 
-                    Thread.Sleep(200);
+                    await Task.Delay(200);
 
-                    _actionbarCommander.ClickOnActionBar(spell.ActionbarName);
+                    await _actionbarCommander.ClickOnActionBarAsync(spell.ActionbarName);
 
                     spell.LastUsed = now;
-                    Thread.Sleep(100);
+
+                    await Task.Delay(100);
                 }
             });
         }

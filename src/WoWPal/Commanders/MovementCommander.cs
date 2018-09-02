@@ -1,4 +1,4 @@
-﻿using System.Threading;
+﻿using System.Threading.Tasks;
 using WoWPal.Handlers;
 using WoWPal.Utilities;
 
@@ -8,30 +8,32 @@ namespace WoWPal.Commanders
     {
         private bool _isMoving = false;
 
-        public void MoveToLocation(Vector3 location)
+        public async Task MoveToLocation(Vector3 location)
         {
-            if (!_isMoving)
-            {
-                ToggleMovement();
-            }
-        }
+            await Task.Delay(500);
+            var mousePos = await InputHandler.CenterMouseAsync();
 
-        public void Stop()
-        {
-            if (_isMoving)
-            {
-                ToggleMovement();
-            }
-        }
-
-        public void ToggleMovement()
-        {
-            _isMoving = !_isMoving;
-
-            var mousePos = InputHandler.CenterMouse();
+            await Task.Delay(100);
             InputHandler.MiddleMouseDown((int)mousePos.X, (int)mousePos.Y);
-            Thread.Sleep(10);
+
+            await Task.Delay(100);
             InputHandler.MiddleMouseUp((int)mousePos.X, (int)mousePos.Y);
+        }
+
+        public async Task StopAsync()
+        {
+            await Task.Delay(100);
+            var mousePos = await InputHandler.CenterMouseAsync();
+
+            await Task.Delay(100);
+            InputHandler.LeftMouseDown((int)mousePos.X, (int)mousePos.Y);
+            await Task.Delay(10);
+            InputHandler.RightMouseDown((int)mousePos.X, (int)mousePos.Y);
+
+            await Task.Delay(100);
+            InputHandler.LeftMouseUp((int)mousePos.X, (int)mousePos.Y);
+            await Task.Delay(10);
+            InputHandler.RightMouseUp((int)mousePos.X, (int)mousePos.Y);
         }
     }
 }

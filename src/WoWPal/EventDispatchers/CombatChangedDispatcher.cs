@@ -5,7 +5,7 @@ namespace WoWPal.EventDispatchers
 {
     public class CombatChangedDispatcher : AddonBehaviourEventDispatcher
     {
-        private bool? _inCombat = null;
+        private bool _inCombat = false;
 
         public CombatChangedDispatcher(Action<Event> onEvent)
             : base(onEvent)
@@ -15,36 +15,25 @@ namespace WoWPal.EventDispatchers
 
         protected override void Update()
         {
-            try
+            if (AddonIsGreenAt(0, 0))
             {
-                if (AddonIsGreenAt(0, 0))
+                if (!_inCombat)
                 {
-                    if (!_inCombat.HasValue)
-                    {
-                        _inCombat = false;
-                    }
-                    else if (_inCombat == true)
-                    {
-                        _inCombat = false;
-                        TriggerEvent(false);
-                    }
+                    return;
                 }
-                else if (AddonIsRedAt(0, 0))
-                {
-                    if (!_inCombat.HasValue)
-                    {
-                        _inCombat = true;
-                    }
-                    else if (_inCombat == false)
-                    {
-                        _inCombat = true;
-                        TriggerEvent(true);
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
 
+                _inCombat = false;
+                TriggerEvent(false);
+            }
+            else if (AddonIsRedAt(0, 0))
+            {
+                if (_inCombat)
+                {
+                    return;
+                }
+
+                _inCombat = true;
+                TriggerEvent(true);
             }
         }
     }

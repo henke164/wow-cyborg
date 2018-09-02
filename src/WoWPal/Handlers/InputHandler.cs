@@ -1,5 +1,6 @@
 ﻿using System.Runtime.InteropServices;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using WoWPal.Utilities;
 
@@ -59,13 +60,13 @@ namespace WoWPal.Handlers
             mouse_event(MOUSEEVENTF_MIDDLEUP, xPos, yPos, 0, 0);
         }
 
-        public static Vector3 CenterMouse()
+        public static async Task<Vector3> CenterMouseAsync()
         {
-            Thread.Sleep(100);
+            await Task.Delay(100);
             var screenBounds = Screen.PrimaryScreen.Bounds;
             var mousePos = new Vector3(screenBounds.Width / 2, screenBounds.Height / 2, 0);
             SetCursorPos((int)mousePos.X, (int)mousePos.Y);
-            Thread.Sleep(100);
+            await Task.Delay(100);
             return mousePos;
         }
     }

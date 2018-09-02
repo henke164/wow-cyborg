@@ -20,15 +20,15 @@ namespace WoWPal.EventDispatchers
 
         protected override void Update()
         {
-            try
+            using (var engine = new TesseractEngine(@"tessdata", "eng"))
             {
-                using (var engine = new TesseractEngine(@"tessdata", "eng"))
-                {
-                    engine.SetVariable("tessedit_char_whitelist", "0123456789.");
+                engine.SetVariable("tessedit_char_whitelist", "0123456789.");
 
-                    using (var img = PixConverter.ToPix(AddonScreenshot))
+                using (var img = PixConverter.ToPix(AddonScreenshot))
+                {
+                    using (var page = engine.Process(img))
                     {
-                        using (var page = engine.Process(img))
+                        try
                         {
                             var transformData = page.GetText().Replace('.', ',').Split('\n');
                             var newTransform = new Transform(
@@ -45,12 +45,12 @@ namespace WoWPal.EventDispatchers
                                 TriggerEvent(_transform);
                             }
                         }
+                        catch
+                        {
+
+                        }
                     }
                 }
-            }
-            catch (Exception ex)
-            {
-
             }
         }
 

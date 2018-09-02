@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using WoWPal.Events.Abstractions;
 
 namespace WoWPal.Events
@@ -39,10 +40,10 @@ namespace WoWPal.Events
                 return;
             }
 
-            foreach (var subscriber in EventSubscribers[ev.Name])
+            foreach(var subscriber in EventSubscribers[ev.Name])
             {
                 subscriber(ev);
-            }
+            };
         }
     }
 }

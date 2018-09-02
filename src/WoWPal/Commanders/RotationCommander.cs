@@ -34,16 +34,16 @@ namespace WoWPal.Commanders
 
         private void StartRotationTask(Transform transform)
         {
-            _facingTask = Task.Run(() => {
-                var mousePos = InputHandler.CenterMouse();
+            _facingTask = Task.Run(async () => {
+                var mousePos = await InputHandler.CenterMouseAsync();
 
                 InputHandler.RightMouseDown((int)mousePos.X, (int)mousePos.Y);
 
-                Thread.Sleep(100);
+                await Task.Delay(100);
 
-                HandleRotation(transform, mousePos);
+                await HandleRotationAsync(transform, mousePos);
 
-                Thread.Sleep(100);
+                await Task.Delay(100);
 
                 InputHandler.RightMouseUp((int)mousePos.X, (int)mousePos.Y);
             });
@@ -64,7 +64,7 @@ namespace WoWPal.Commanders
             return (Math.PI * 2) + angleRadians;
         }
 
-        private void HandleRotation(Transform transform, Vector3 mousePos)
+        private async Task HandleRotationAsync(Transform transform, Vector3 mousePos)
         {
             if (TargetPoint == null || _pauseRotation)
             {
@@ -72,12 +72,12 @@ namespace WoWPal.Commanders
             }
 
             var rotationInstructions = GetRotationInstructions(transform, TargetPoint);
-            var mousePosX = rotationInstructions.Direction == Direction.Right ? (int)mousePos.X + 5 : (int)mousePos.X - 5;
+            var mousePosX = rotationInstructions.Direction == Direction.Right ? (int)mousePos.X + 3 : (int)mousePos.X - 3;
             var mouseMovementInPixels = GetMouseMovementDistance(rotationInstructions.Distance);
             for (var x = 0; x < mouseMovementInPixels; x++)
             {
                 InputHandler.SetCursorPos(mousePosX, (int)mousePos.Y);
-                Thread.Sleep(10);
+                await Task.Delay(10);
             }
         }
 

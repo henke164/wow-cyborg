@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading;
+using System.Threading.Tasks;
 using WoWPal.Commanders;
 using WoWPal.EventDispatchers;
 using WoWPal.Events;
@@ -11,7 +12,7 @@ namespace WoWPal
 {
     public class BotRunner
     {
-        public Action<string> OnLog { get; set; }
+        public Action<string> OnLog { get; set; } = (string s) => { };
         private bool _hasTarget = false;
         private Vector3 _targetLocation;
         private CombatCommander _combatCommander = new CombatCommander();
@@ -54,18 +55,13 @@ namespace WoWPal
                 HandleOnPlayerTransformChanged((Transform)ev.Data);
             });
 
-            EventManager.On("CombatChanged", (Event ev) =>
-            {
-                HandleCombatChanged((bool)ev.Data);
-            });
-
             EventManager.On("TargetInRange", (Event ev) =>
             {
                 HandleTargetInRange((bool)ev.Data);
             });
         }
 
-        private void HandleOnPlayerTransformChanged(Transform currentTransform)
+        private async Task HandleOnPlayerTransformChanged(Transform currentTransform)
         {
             if (_targetLocation == null)
             {
@@ -76,59 +72,48 @@ namespace WoWPal
 
             if (!InputHandler.IsRightButtonDown && !_hasTarget)
             {
-                _actionbarCommander.ClickOnActionBar("AutoTarget");
+                await _actionbarCommander.ClickOnActionBarAsync("AutoTarget");
             }
 
             if (Vector3.Distance(_targetLocation, currentTransform.Position) < 0.005)
             {
-                _movementCommander.Stop();
+                await _movementCommander.StopAsync();
                 _targetLocation = null;
                 _rotationCommander.TargetPoint = null;
                 OnLog("Destination reached");
             }
         }
-
-        private void HandleCombatChanged(bool inCombat)
-        {
-            if (inCombat)
-            {
-                OnLog("In combat");
-                StartCombat();
-            }
-            else
-            {
-                OnLog("Not in combat, continue moving");
-                EndCombat();
-            }
-        }
-
-        private void HandleTargetInRange(bool inRange)
+        
+        private async Task HandleTargetInRange(bool inRange)
         {
             _hasTarget = inRange;
             if (inRange)
             {
                 OnLog("Target in range: Stopping movement and starting combat.");
-                StartCombat();
+                await StartCombatAsync();
             }
             else
             {
                 OnLog("No targets in range: Continue moving.");
-                EndCombat();
+                await EndCombatAsync();
             }
         }
 
-        private void StartCombat()
+        private async Task StartCombatAsync()
         {
             _rotationCommander.Stop();
-            _movementCommander.Stop();
-            Thread.Sleep(200);
+            await _movementCommander.StopAsync();
+            await Task.Delay(200);
             _combatCommander.StartOrContinueCombatTask();
         }
 
-        private void EndCombat()
+        private async Task EndCombatAsync()
         {
-            ContinueMoving();
             _combatCommander.StopCombat();
+            await Task.Delay(200);
+            await _actionbarCommander.ClickOnActionBarAsync("ClearTarget");
+            await Task.Delay(1000);
+            ContinueMoving();
         }
     }
 }
