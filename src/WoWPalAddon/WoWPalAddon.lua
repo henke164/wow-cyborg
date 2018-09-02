@@ -1,43 +1,54 @@
 function CreateDefaultFrame(x, y, width, height)
-    local frame = CreateFrame("Frame");
-    frame:ClearAllPoints();
-    frame:SetPoint("LEFT", UIParent, "LEFT", x, y);
-    frame:SetWidth(width);
-    frame:SetHeight(height);
-    local texture = frame:CreateTexture("WhiteTexture", "ARTWORK");
-    texture:SetWidth(width);
-    texture:SetHeight(height);
-    texture:ClearAllPoints();
-    texture:SetColorTexture(0, 0, 0);
-    texture:SetAllPoints(frame);
-    return frame, texture;
+  frame = CreateFrame("Frame");
+  frame:ClearAllPoints();
+  frame:SetPoint("LEFT", UIParent, "LEFT", x, y);
+  frame:SetWidth(width);
+  frame:SetHeight(height);
+  texture = frame:CreateTexture("WhiteTexture", "ARTWORK");
+  texture:SetWidth(width);
+  texture:SetHeight(height);
+  texture:ClearAllPoints();
+  texture:SetColorTexture(0, 0, 0);
+  texture:SetAllPoints(frame);
+  return frame, texture;
 end
 
 function CreateCombatFrame()
-    local combatFrame, combatTexture = CreateDefaultFrame(0, 70, 200, 20);
-    combatFrame:RegisterEvent("PLAYER_REGEN_DISABLED");
-    combatFrame:RegisterEvent("PLAYER_REGEN_ENABLED");
-    combatFrame:SetScript("OnEvent", function(self, event, ...)
-        if event == "PLAYER_REGEN_DISABLED" then
-            combatTexture:SetColorTexture(1, 0, 0);
-        end
-        if event == "PLAYER_REGEN_ENABLED" then
-            combatTexture:SetColorTexture(0, 1, 0);
-        end
-    end)
+  frame, texture = CreateDefaultFrame(0, 70, 200, 20);
+  frame:RegisterEvent("PLAYER_REGEN_DISABLED");
+  frame:RegisterEvent("PLAYER_REGEN_ENABLED");
+  frame:SetScript("OnEvent", function(self, event, ...)
+      if event == "PLAYER_REGEN_DISABLED" then
+        texture:SetColorTexture(1, 0, 0);
+      end
+      if event == "PLAYER_REGEN_ENABLED" then
+        texture:SetColorTexture(0, 1, 0);
+      end
+  end)
 end
 
 function CreateDataFrame()
-    local dataFrame = CreateDefaultFrame(0, 0, 200, 120);
-    local dataString = dataFrame:CreateFontString(nil, "OVERLAY", "GameFontNormalLarge");
-    dataString:SetPoint("CENTER");
-    dataString:SetTextColor(1, 1, 1);
-    dataFrame:SetScript("OnUpdate", function(self, event, ...)
-        local facing = GetPlayerFacing();
-        local px, py = C_Map.GetPlayerMapPosition(C_Map.GetBestMapForUnit("player"), "player"):GetXY()
-        dataString:SetText(px .. "\n\n" .. py .. "\n\n" .. facing);
-    end)
+  frame = CreateDefaultFrame(0, 0, 200, 120);
+  str = frame:CreateFontString(nil, "OVERLAY", "GameFontNormalLarge");
+  str:SetPoint("CENTER");
+  str:SetTextColor(1, 1, 1);
+  frame:SetScript("OnUpdate", function(self, event, ...)
+      facing = GetPlayerFacing();
+      px, py = C_Map.GetPlayerMapPosition(C_Map.GetBestMapForUnit("player"), "player"):GetXY()
+      str:SetText(px .. "\n\n" .. py .. "\n\n" .. facing);
+  end)
+end
+
+function CreateRangeCheckFrame()
+  frame, texture = CreateDefaultFrame(0, -70, 200, 20);
+  frame:SetScript("OnUpdate", function(self, event, ...)
+    texture:SetColorTexture(1, 0, 0);
+    if CheckInteractDistance("target", 4) then
+      texture:SetColorTexture(0, 1, 0);
+    end
+  end)
 end
 
 CreateCombatFrame();
 CreateDataFrame();
+CreateRangeCheckFrame();
