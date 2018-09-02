@@ -1,6 +1,4 @@
-﻿using System;
-using System.Threading;
-using System.Threading.Tasks;
+﻿using System.Threading;
 using System.Windows.Forms;
 using WoWPal.Events;
 using WoWPal.Events.Abstractions;
@@ -63,7 +61,9 @@ namespace WoWPal.Commanders
         private void ToggleMovement()
         {
             _isMoving = !_isMoving;
-            SendKeys.SendWait("W");
+            InputHandler.MiddleMouseDown(0, 0);
+            Thread.Sleep(10);
+            InputHandler.MiddleMouseUp(0, 0);
         }
     }
 }
