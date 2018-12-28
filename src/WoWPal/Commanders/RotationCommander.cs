@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 using WoWPal.Handlers;
 using WoWPal.Utilities;
 
@@ -8,47 +9,33 @@ namespace WoWPal.Commanders
 {
     public class RotationCommander
     {
-        public Vector3 TargetPoint { get; set; }
-
-        public int OneLapPixels = 280;
+        private Transform _currentTransform;
 
         private Task _facingTask;
 
-        private bool _pauseRotation;
+        private Vector3 _targetPoint;
+
+        public void FaceLocation(Vector3 targetPoint, Action onDone)
+        {
+            _targetPoint = targetPoint;
+            if (_facingTask != null)
+            {
+                _facingTask.Dispose();
+                _facingTask = null;
+            }
+
+            _facingTask = Task.Run(async () =>
+            {
+                await HandleRotationAsync();
+                onDone();
+            });
+        }
 
         public void UpdateCurrentTransform(Transform transform)
         {
-            if (TargetPoint == null || _pauseRotation || (_facingTask != null && !_facingTask.IsCompleted))
-            {
-                return;
-            }
-
-            StartRotationTask(transform);
+            _currentTransform = transform;
         }
 
-        public void Stop()
-            => _pauseRotation = true;
-
-        public void Start()
-            => _pauseRotation = false;
-
-        private void StartRotationTask(Transform transform)
-        {
-            _facingTask = Task.Run(async () => {
-                var mousePos = await InputHandler.CenterMouseAsync();
-
-                InputHandler.RightMouseDown((int)mousePos.X, (int)mousePos.Y);
-
-                await Task.Delay(100);
-
-                await HandleRotationAsync(transform, mousePos);
-
-                await Task.Delay(100);
-
-                InputHandler.RightMouseUp((int)mousePos.X, (int)mousePos.Y);
-            });
-        }
-        
         private double GetRadian(Transform transform, Vector3 point)
         {
             var xDiff = transform.Position.X - point.X;
@@ -64,21 +51,36 @@ namespace WoWPal.Commanders
             return (Math.PI * 2) + angleRadians;
         }
 
-        private async Task HandleRotationAsync(Transform transform, Vector3 mousePos)
+        private async Task HandleRotationAsync()
         {
-            if (TargetPoint == null || _pauseRotation)
+            while (true)
             {
-                return;
-            }
+                if (_targetPoint == null)
+                {
+                    break;
+                }
 
-            var rotationInstructions = GetRotationInstructions(transform, TargetPoint);
-            var mousePosX = rotationInstructions.Direction == Direction.Right ? (int)mousePos.X + 3 : (int)mousePos.X - 3;
-            var mouseMovementInPixels = GetMouseMovementDistance(rotationInstructions.Distance);
-            for (var x = 0; x < mouseMovementInPixels; x++)
-            {
-                InputHandler.SetCursorPos(mousePosX, (int)mousePos.Y);
-                await Task.Delay(10);
+                var rotationInstructions = GetRotationInstructions(_currentTransform, _targetPoint);
+                Console.WriteLine(rotationInstructions.Distance);
+                if (rotationInstructions.Distance > 0.05)
+                {
+                    var keyDownTime = (int)(rotationInstructions.Distance * 100);
+                    if (rotationInstructions.Direction == Direction.Right)
+                    {
+                        KeyHandler.PressKey(Keys.D, keyDownTime);
+                    }
+                    else
+                    {
+                        KeyHandler.PressKey(Keys.A, keyDownTime);
+                    }
+                }
+                else
+                {
+                    break;
+                }
+                Thread.Sleep(50);
             }
+            _facingTask = null;
         }
 
         private RotationInstruction GetRotationInstructions(Transform transform, Vector3 point)
@@ -91,9 +93,6 @@ namespace WoWPal.Commanders
 
             return new RotationInstruction(Direction.Right, transform.Rotation - angleRadians);
         }
-
-        private int GetMouseMovementDistance(double rotationDistance)
-            => (int)(OneLapPixels * (rotationDistance / (Math.PI * 2)));
 
         internal class RotationInstruction
         {

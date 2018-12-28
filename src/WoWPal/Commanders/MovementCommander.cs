@@ -1,39 +1,18 @@
-﻿using System.Threading.Tasks;
-using WoWPal.Handlers;
+﻿using System.Windows.Forms;
 using WoWPal.Utilities;
 
 namespace WoWPal.Commanders
 {
     public class MovementCommander
     {
-        private bool _isMoving = false;
-
-        public async Task MoveToLocation(Vector3 location)
+        public void MoveToLocation(Vector3 location)
         {
-            await Task.Delay(500);
-            var mousePos = await InputHandler.CenterMouseAsync();
-
-            await Task.Delay(100);
-            InputHandler.MiddleMouseDown((int)mousePos.X, (int)mousePos.Y);
-
-            await Task.Delay(100);
-            InputHandler.MiddleMouseUp((int)mousePos.X, (int)mousePos.Y);
+            KeyHandler.HoldKey(Keys.W);
         }
 
-        public async Task StopAsync()
+        public void Stop()
         {
-            await Task.Delay(100);
-            var mousePos = await InputHandler.CenterMouseAsync();
-
-            await Task.Delay(100);
-            InputHandler.LeftMouseDown((int)mousePos.X, (int)mousePos.Y);
-            await Task.Delay(10);
-            InputHandler.RightMouseDown((int)mousePos.X, (int)mousePos.Y);
-
-            await Task.Delay(100);
-            InputHandler.LeftMouseUp((int)mousePos.X, (int)mousePos.Y);
-            await Task.Delay(10);
-            InputHandler.RightMouseUp((int)mousePos.X, (int)mousePos.Y);
+            KeyHandler.ReleaseKey(Keys.W);
         }
     }
 }

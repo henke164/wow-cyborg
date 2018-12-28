@@ -1,11 +1,9 @@
 ﻿using System;
-using System.Threading;
 using System.Threading.Tasks;
 using WoWPal.Commanders;
 using WoWPal.EventDispatchers;
 using WoWPal.Events;
 using WoWPal.Events.Abstractions;
-using WoWPal.Handlers;
 using WoWPal.Utilities;
 
 namespace WoWPal
@@ -15,10 +13,8 @@ namespace WoWPal
         public Action<string> OnLog { get; set; } = (string s) => { };
         private bool _hasTarget = false;
         private Vector3 _targetLocation;
-        private CombatCommander _combatCommander = new CombatCommander();
-        private MovementCommander _movementCommander = new MovementCommander();
         private RotationCommander _rotationCommander = new RotationCommander();
-        private ActionbarCommander _actionbarCommander = ActionbarCommander.FromSettingFile("actionbarsettings.json");
+        private MovementCommander _movementCommander = new MovementCommander();
 
         public BotRunner()
         {
@@ -30,14 +26,9 @@ namespace WoWPal
         {
             OnLog("Move to:" + target.X + "," + target.Z);
             _targetLocation = target;
-            _rotationCommander.TargetPoint = _targetLocation;
-            ContinueMoving();
-        }
-
-        public void ContinueMoving()
-        {
-            _rotationCommander.Start();
-            _movementCommander.MoveToLocation(_targetLocation);
+            _rotationCommander.FaceLocation(_targetLocation, () => {
+                _movementCommander.MoveToLocation(_targetLocation);
+            });
         }
 
         private void StartEventDispatchers()
@@ -70,16 +61,10 @@ namespace WoWPal
             
             _rotationCommander.UpdateCurrentTransform(currentTransform);
 
-            if (!InputHandler.IsRightButtonDown && !_hasTarget)
-            {
-                await _actionbarCommander.ClickOnActionBarAsync("AutoTarget");
-            }
-
             if (Vector3.Distance(_targetLocation, currentTransform.Position) < 0.005)
             {
-                await _movementCommander.StopAsync();
                 _targetLocation = null;
-                _rotationCommander.TargetPoint = null;
+                _movementCommander.Stop();
                 OnLog("Destination reached");
             }
         }
@@ -90,30 +75,11 @@ namespace WoWPal
             if (inRange)
             {
                 OnLog("Target in range: Stopping movement and starting combat.");
-                await StartCombatAsync();
             }
             else
             {
                 OnLog("No targets in range: Continue moving.");
-                await EndCombatAsync();
             }
-        }
-
-        private async Task StartCombatAsync()
-        {
-            _rotationCommander.Stop();
-            await _movementCommander.StopAsync();
-            await Task.Delay(200);
-            _combatCommander.StartOrContinueCombatTask();
-        }
-
-        private async Task EndCombatAsync()
-        {
-            _combatCommander.StopCombat();
-            await Task.Delay(200);
-            await _actionbarCommander.ClickOnActionBarAsync("ClearTarget");
-            await Task.Delay(1000);
-            ContinueMoving();
         }
     }
 }
