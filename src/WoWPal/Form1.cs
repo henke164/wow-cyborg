@@ -1,5 +1,7 @@
-﻿using System;
+﻿using System.IO;
 using System.Windows.Forms;
+using CefSharp;
+using CefSharp.WinForms;
 
 namespace WoWPal
 {
@@ -10,12 +12,24 @@ namespace WoWPal
         public Form1()
         {
             InitializeComponent();
-            _controller = new CharacterController(pictureBox1, listBox1);
-        }
+            
+            CefSharpSettings.LegacyJavascriptBindingEnabled = true;
+            Cef.Initialize(new CefSettings());
 
-        private void Form1_Load(object sender, EventArgs e)
-        {
+            var browser = new ChromiumWebBrowser("")
+            {
+                Dock = DockStyle.Fill
+            };
+            
+            using (var sr = new StreamReader("map.html"))
+            {
+                var doc = sr.ReadToEnd();
+                browser.LoadHtml(doc);
+            }
 
+            panel1.Controls.Add(browser);
+
+            _controller = new CharacterController(browser, listBox1);
         }
     }
 }

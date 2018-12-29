@@ -1,0 +1,89 @@
+﻿<html>
+<head>
+    <style>
+        html, body {
+            padding: 0;
+            margin: 0;
+            overflow: hidden;
+        }
+
+        #map {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+        }
+
+        #debug {
+            position: absolute;
+            top:0;
+            left:0;
+            color:green;
+        }
+    </style>
+</head>
+<body>
+    <div id="map" />
+    <span id="debug" />
+
+    <script>
+        var startDrag = null;
+        var zoom = 6000;
+        var mapPosition = {
+            x: 0,
+            y: 0
+        };
+
+        var image = document.getElementById("map");
+        var debug = document.getElementById("debug");
+
+        image.style.background = "url('https://wow.zamimg.com/images/wow/maps/enus/zoom/6452.jpg')";
+        image.style.backgroundRepeat = "no-repeat";
+        image.style.backgroundSize = "cover";
+
+        function setCharacterLocation(x, y) {
+            debug.innerHTML = "x: " + x + ", y: " + y;
+        }
+
+        function updateMapPosition() {
+            image.style.backgroundPositionX = mapPosition.x + "px";
+            image.style.backgroundPositionY = mapPosition.y + "px";
+        }
+        
+        document.body.addEventListener("mousedown", function (e) {
+            if (e.button === 0) {
+                startDrag = {
+                    x: e.clientX - mapPosition.x,
+                    y: e.clientY - mapPosition.y
+                };
+            } else {
+                var x = (e.clientX - mapPosition.x) / document.body.clientWidth;
+                var y = (e.clientY - mapPosition.y) / document.body.clientHeight;
+                try {
+                    characterController.onMovementCommand(x.toString(), y.toString());
+                } catch (e) {
+
+                }
+
+                console.log(x, y);
+            }
+        });
+
+        document.body.addEventListener("mousemove", function (e) {
+            if (!startDrag) {
+                return;
+            }
+
+            mapPosition.x = e.clientX - startDrag.x;
+            mapPosition.y = e.clientY - startDrag.y;
+
+            updateMapPosition();
+        });
+
+        document.body.addEventListener("mouseup", function (e) {
+            startDrag = null;
+        });
+        
+        document.addEventListener('contextmenu', event => event.preventDefault());
+    </script>
+</body>
+</html>

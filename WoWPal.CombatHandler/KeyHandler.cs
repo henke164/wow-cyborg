@@ -16,12 +16,24 @@ namespace WoWPal.CombatHandler
         {
             if (GameProcess == null)
             {
-                GameProcess = Process.GetProcessesByName("WoW")[0];
+                try
+                {
+                    GameProcess = Process.GetProcessesByName("WoW")[0];
+                }
+                catch
+                {
+
+                }
             }
         }
 
         public void PressKey(string key)
         {
+            if (GameProcess == null)
+            {
+                return;
+            }
+
             SetForegroundWindow(GameProcess.MainWindowHandle);
             SendKeys.SendWait(key);
         }

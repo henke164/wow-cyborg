@@ -33,14 +33,17 @@ namespace WoWPal.EventDispatchers
                             .Replace('.', ',')
                             .Split('\n')
                             .Where(s => !string.IsNullOrWhiteSpace(s))
+                            .Select(s => s.Replace(" ", ""))
                             .ToList();
                         try
                         {
                             var newTransform = new Transform(
-                                (float)Math.Round(float.Parse(transformData[0]), 6),
-                                0,
                                 (float)Math.Round(float.Parse(transformData[1]), 6),
-                                (float)Math.Round(float.Parse(transformData[2]), 6));
+                                0,
+                                (float)Math.Round(float.Parse(transformData[2]), 6),
+                                (float)Math.Round(float.Parse(transformData[3]), 6));
+
+                            newTransform.ZoneId = int.Parse(transformData[0]);
 
                             if (_transform.Position.X != newTransform.Position.X ||
                                 _transform.Position.Z != newTransform.Position.Z ||

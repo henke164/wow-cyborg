@@ -38,6 +38,7 @@ namespace WoWPal.Utilities
         public static void ReleaseKey(Keys key)
         {
             SetForeground();
+            keybd_event((byte)key, 0, KEYEVENTF_EXTENDEDKEY, 0);
             keybd_event((byte)key, 0, KEYEVENTF_KEYUP, 0);
         }
 

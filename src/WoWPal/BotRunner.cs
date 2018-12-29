@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Threading;
+using System.Threading.Tasks;
 using WoWPal.CombatHandler;
 using WoWPal.CombatHandler.Rotators;
 using WoWPal.Commanders;
@@ -31,6 +33,17 @@ namespace WoWPal
             _targetLocation = target;
             _rotationCommander.FaceLocation(_targetLocation, () => {
                 _movementCommander.MoveToLocation(_targetLocation);
+            });
+
+            Task.Run(() => 
+            {
+                Thread.Sleep(4000);
+
+                if (_targetLocation != null)
+                {
+                    _movementCommander.Stop();
+                    MoveTo(_targetLocation);
+                }
             });
         }
 
