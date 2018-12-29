@@ -8,3 +8,5 @@
 /src/WoWPal.Events/obj/Debug
 /src/WoWPal.Events/bin/Debug
 /packages
+/WoWPal.CombatHandler/bin/Debug
+/WoWPal.CombatHandler/obj/Debug

@@ -1,5 +1,6 @@
 ﻿using System;
-using System.Threading.Tasks;
+using WoWPal.CombatHandler;
+using WoWPal.CombatHandler.Rotators;
 using WoWPal.Commanders;
 using WoWPal.EventDispatchers;
 using WoWPal.Events;
@@ -11,15 +12,17 @@ namespace WoWPal
     public class BotRunner
     {
         public Action<string> OnLog { get; set; } = (string s) => { };
-        private bool _hasTarget = false;
         private Vector3 _targetLocation;
         private RotationCommander _rotationCommander = new RotationCommander();
         private MovementCommander _movementCommander = new MovementCommander();
+        private CombatRotator _rotator;
 
         public BotRunner()
         {
             StartEventDispatchers();
             SetupBehaviour();
+            _rotator = new ShamanRotator();
+            _rotator.RunRotation(RotationType.None);
         }
 
         public void MoveTo(Vector3 target)
@@ -52,14 +55,14 @@ namespace WoWPal
             });
         }
 
-        private async Task HandleOnPlayerTransformChanged(Transform currentTransform)
+        private void HandleOnPlayerTransformChanged(Transform currentTransform)
         {
+            _rotationCommander.UpdateCurrentTransform(currentTransform);
+
             if (_targetLocation == null)
             {
                 return;
-            }
-            
-            _rotationCommander.UpdateCurrentTransform(currentTransform);
+            }            
 
             if (Vector3.Distance(_targetLocation, currentTransform.Position) < 0.005)
             {
@@ -69,15 +72,17 @@ namespace WoWPal
             }
         }
         
-        private async Task HandleTargetInRange(bool inRange)
+        private void HandleTargetInRange(bool inRange)
         {
-            _hasTarget = inRange;
             if (inRange)
             {
+                _rotator.RunRotation(RotationType.SingleTarget);
+                _movementCommander.Stop();
                 OnLog("Target in range: Stopping movement and starting combat.");
             }
             else
             {
+                _rotator.RunRotation(RotationType.None);
                 OnLog("No targets in range: Continue moving.");
             }
         }

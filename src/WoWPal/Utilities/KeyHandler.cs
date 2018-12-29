@@ -24,6 +24,7 @@ namespace WoWPal.Utilities
             SetForeground();
             keybd_event((byte)key, 0, KEYEVENTF_EXTENDEDKEY, 0);
             Thread.Sleep(holdMs);
+            Console.WriteLine(holdMs);
             keybd_event((byte)key, 0, KEYEVENTF_KEYUP, 0);
         }
 

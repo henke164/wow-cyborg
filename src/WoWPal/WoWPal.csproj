@@ -136,6 +136,10 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\WoWPal.CombatHandler\WoWPal.CombatHandler.csproj">
+      <Project>{71c7e9ad-e69e-4472-a3bf-e43dfb62f53e}</Project>
+      <Name>WoWPal.CombatHandler</Name>
+    </ProjectReference>
     <ProjectReference Include="..\WoWPal.Events\WoWPal.Events.csproj">
       <Project>{ff2d6508-8248-4754-be43-f82230662469}</Project>
       <Name>WoWPal.Events</Name>

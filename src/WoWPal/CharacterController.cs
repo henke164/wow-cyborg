@@ -56,8 +56,8 @@ namespace WoWPal
             var minX = _cameraRectangle.Width - _cameraRectangle.X;
             var minY = _cameraRectangle.Height - _cameraRectangle.Y;
 
-            var xTarget = ((decimal)(minX / 100) * xPerc) + (decimal)_cameraRectangle.X;
-            var yTarget = ((decimal)(minY / 100) * yPerc) + (decimal)_cameraRectangle.Y;
+            var xTarget = Math.Round(((decimal)(minX / 100) * xPerc) + (decimal)_cameraRectangle.X, 8);
+            var yTarget = Math.Round(((decimal)(minY / 100) * yPerc) + (decimal)_cameraRectangle.Y, 8);
             _botRunner.MoveTo(new Vector3((float)xTarget, 0, (float)yTarget));
         }
     }

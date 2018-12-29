@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Drawing;
 using System.Drawing.Imaging;
+using System.Linq;
 using System.Windows.Forms;
 using Tesseract;
 using WoWPal.Events.Abstractions;
@@ -28,26 +29,33 @@ namespace WoWPal.EventDispatchers
                 {
                     using (var page = engine.Process(img))
                     {
+                        var transformData = page.GetText()
+                            .Replace('.', ',')
+                            .Split('\n')
+                            .Where(s => !string.IsNullOrWhiteSpace(s))
+                            .ToList();
                         try
                         {
-                            var transformData = page.GetText().Replace('.', ',').Split('\n');
                             var newTransform = new Transform(
-                                float.Parse(transformData[0]),
+                                (float)Math.Round(float.Parse(transformData[0]), 6),
                                 0,
-                                float.Parse(transformData[1]),
-                                float.Parse(transformData[2]));
+                                (float)Math.Round(float.Parse(transformData[1]), 6),
+                                (float)Math.Round(float.Parse(transformData[2]), 6));
 
                             if (_transform.Position.X != newTransform.Position.X ||
                                 _transform.Position.Z != newTransform.Position.Z ||
                                 _transform.Rotation != newTransform.Rotation)
                             {
-                                _transform = newTransform;
-                                TriggerEvent(_transform);
+                                if (newTransform.Rotation < 7)
+                                {
+                                    _transform = newTransform;
+                                    TriggerEvent(_transform);
+                                }
                             }
                         }
-                        catch
+                        catch(Exception ex)
                         {
-
+                            TriggerEvent(_transform);
                         }
                     }
                 }

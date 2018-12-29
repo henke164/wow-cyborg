@@ -2,7 +2,6 @@
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using WoWPal.Handlers;
 using WoWPal.Utilities;
 
 namespace WoWPal.Commanders
@@ -20,7 +19,6 @@ namespace WoWPal.Commanders
             _targetPoint = targetPoint;
             if (_facingTask != null)
             {
-                _facingTask.Dispose();
                 _facingTask = null;
             }
 
@@ -61,10 +59,9 @@ namespace WoWPal.Commanders
                 }
 
                 var rotationInstructions = GetRotationInstructions(_currentTransform, _targetPoint);
-                Console.WriteLine(rotationInstructions.Distance);
-                if (rotationInstructions.Distance > 0.05)
+                if (rotationInstructions.Distance > 0.02)
                 {
-                    var keyDownTime = (int)(rotationInstructions.Distance * 100);
+                    var keyDownTime = (int)(rotationInstructions.Distance * 200);
                     if (rotationInstructions.Direction == Direction.Right)
                     {
                         KeyHandler.PressKey(Keys.D, keyDownTime);
@@ -78,7 +75,18 @@ namespace WoWPal.Commanders
                 {
                     break;
                 }
-                Thread.Sleep(50);
+
+                var rotation = _currentTransform.Rotation;
+                var sleeps = 0;
+                while (rotation == _currentTransform.Rotation)
+                {
+                    Thread.Sleep(10);
+                    sleeps++;
+                    if (sleeps > 50)
+                    {
+                        break;
+                    }
+                }
             }
             _facingTask = null;
         }
@@ -103,6 +111,11 @@ namespace WoWPal.Commanders
             {
                 Direction = dir;
                 Distance = dist;
+
+                if (Distance > 7)
+                {
+
+                }
             }
         }
 
