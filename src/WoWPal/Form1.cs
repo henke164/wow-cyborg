@@ -31,5 +31,10 @@ namespace WoWPal
 
             _controller = new CharacterController(browser, listBox1);
         }
+
+        private void Form1_Load(object sender, System.EventArgs e)
+        {
+            this.Location = new System.Drawing.Point(500, 1);
+        }
     }
 }

@@ -10,54 +10,68 @@
         #map {
             position: absolute;
             width: 100%;
-            height: 100%;
         }
 
         #debug {
             position: absolute;
             top:0;
             left:0;
-            color:green;
+            color:red;
+        }
+
+        #arrow-wrapper .arrow {
+            position:absolute;
+            width: 20px;
+            height: 20px;
         }
     </style>
 </head>
 <body>
-    <div id="map" />
+    <img id="map" />
+    <div id="arrow-wrapper">
+        <img id="player1_arrow" class="arrow" src="/Images/arrow.png" />
+    </div>
     <span id="debug" />
 
     <script>
-        var startDrag = null;
-        var zoom = 6000;
-        var mapPosition = {
-            x: 0,
-            y: 0
-        };
-
-        var image = document.getElementById("map");
+        var map = document.getElementById("map");
         var debug = document.getElementById("debug");
-
-        image.style.background = "url('https://wow.zamimg.com/images/wow/maps/enus/zoom/6452.jpg')";
-        image.style.backgroundRepeat = "no-repeat";
-        image.style.backgroundSize = "cover";
+        var arrows = [{
+            x: 0,
+            y: 0,
+            element: document.getElementById('player1_arrow')
+        }];
+        map.setAttribute('src', 'https://wow.zamimg.com/images/wow/maps/enus/zoom/215.jpg');
 
         function setCharacterLocation(x, y) {
+            arrows[0].x = parseFloat(x.replace(',', '.'));
+            arrows[0].y = parseFloat(y.replace(',', '.'));
             debug.innerHTML = "x: " + x + ", y: " + y;
-        }
 
-        function updateMapPosition() {
-            image.style.backgroundPositionX = mapPosition.x + "px";
-            image.style.backgroundPositionY = mapPosition.y + "px";
+
+            for (var x = 0; x < arrows.length; x++) {
+                var xPos = arrows[x].x * map.width;
+                var yPos = arrows[x].y * map.height;
+                arrows[x].element.style.left = (xPos - (arrows[x].element.width / 2)) + "px";
+                arrows[x].element.style.top = (yPos - (arrows[x].element.width / 2)) + "px";
+            }
         }
         
+        map.addEventListener("mousedown", function (e) {
+            e.preventDefault();
+        });
+
         document.body.addEventListener("mousedown", function (e) {
+            var x = e.clientX / map.width;
+            var y = e.clientY / map.height;
+
             if (e.button === 0) {
-                startDrag = {
-                    x: e.clientX - mapPosition.x,
-                    y: e.clientY - mapPosition.y
-                };
+                try {
+                    characterController.onFaceCommand(x.toString(), y.toString());
+                } catch (e) {
+
+                }
             } else {
-                var x = (e.clientX - mapPosition.x) / document.body.clientWidth;
-                var y = (e.clientY - mapPosition.y) / document.body.clientHeight;
                 try {
                     characterController.onMovementCommand(x.toString(), y.toString());
                 } catch (e) {
@@ -66,21 +80,6 @@
 
                 console.log(x, y);
             }
-        });
-
-        document.body.addEventListener("mousemove", function (e) {
-            if (!startDrag) {
-                return;
-            }
-
-            mapPosition.x = e.clientX - startDrag.x;
-            mapPosition.y = e.clientY - startDrag.y;
-
-            updateMapPosition();
-        });
-
-        document.body.addEventListener("mouseup", function (e) {
-            startDrag = null;
         });
         
         document.addEventListener('contextmenu', event => event.preventDefault());

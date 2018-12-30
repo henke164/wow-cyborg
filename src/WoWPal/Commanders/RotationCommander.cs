@@ -59,9 +59,10 @@ namespace WoWPal.Commanders
                 }
 
                 var rotationInstructions = GetRotationInstructions(_currentTransform, _targetPoint);
-                if (rotationInstructions.Distance > 0.02)
+                if (rotationInstructions.Distance > 0.1)
                 {
-                    var keyDownTime = (int)(rotationInstructions.Distance * 200);
+                    var keyDownTime = (int)(rotationInstructions.Distance * 100);
+
                     if (rotationInstructions.Direction == Direction.Right)
                     {
                         KeyHandler.PressKey(Keys.D, keyDownTime);
@@ -80,9 +81,9 @@ namespace WoWPal.Commanders
                 var sleeps = 0;
                 while (rotation == _currentTransform.Rotation)
                 {
-                    Thread.Sleep(10);
+                    Thread.Sleep(50);
                     sleeps++;
-                    if (sleeps > 50)
+                    if (sleeps > 20)
                     {
                         break;
                     }
@@ -93,13 +94,32 @@ namespace WoWPal.Commanders
 
         private RotationInstruction GetRotationInstructions(Transform transform, Vector3 point)
         {
-            var angleRadians = GetRadian(transform, point);
-            if (angleRadians > transform.Rotation)
-            {
-                return new RotationInstruction(Direction.Left, angleRadians - transform.Rotation);
-            }
+            var targetRadian = GetRadian(transform, point);
 
-            return new RotationInstruction(Direction.Right, transform.Rotation - angleRadians);
+            if (targetRadian > transform.Rotation)
+            {
+                var rot1 = Math.Abs(targetRadian - transform.Rotation);
+                var rot2 = Math.Abs(targetRadian - transform.Rotation - (Math.PI * 2));
+
+                if (rot1 > rot2)
+                {
+                    return new RotationInstruction(Direction.Right, rot2);
+                }
+
+                return new RotationInstruction(Direction.Left, rot1);
+            }
+            else
+            {
+                var rot1 = Math.Abs(transform.Rotation - targetRadian);
+                var rot2 = Math.Abs(transform.Rotation - targetRadian - (Math.PI * 2));
+
+                if (rot1 < rot2)
+                {
+                    return new RotationInstruction(Direction.Right, rot2);
+                }
+
+                return new RotationInstruction(Direction.Left, rot1);
+            }
         }
 
         internal class RotationInstruction

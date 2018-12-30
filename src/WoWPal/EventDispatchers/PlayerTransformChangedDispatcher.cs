@@ -24,7 +24,7 @@ namespace WoWPal.EventDispatchers
             using (var engine = new TesseractEngine(@"tessdata", "eng"))
             {
                 engine.SetVariable("tessedit_char_whitelist", "0123456789.");
-
+                AddonScreenshot.Save("d:\\test.png");
                 using (var img = PixConverter.ToPix(AddonScreenshot))
                 {
                     using (var page = engine.Process(img))

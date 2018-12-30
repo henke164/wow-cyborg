@@ -1,7 +1,6 @@
 ﻿using CefSharp;
 using CefSharp.WinForms;
 using System;
-using System.Drawing;
 using System.Windows.Forms;
 using WoWPal.Events;
 using WoWPal.Events.Abstractions;
@@ -33,7 +32,7 @@ namespace WoWPal
                 htmlController.ExecuteScriptAsync("setCharacterLocation", new string[]
                 {
                     _currentTransform.Position.X.ToString(),
-                    _currentTransform.Position.Y.ToString()
+                    _currentTransform.Position.Z.ToString()
                 });
             });
 
@@ -45,6 +44,13 @@ namespace WoWPal
             var floatX = float.Parse(x.Replace('.', ','));
             var floatY = float.Parse(y.Replace('.', ','));
             _botRunner.MoveTo(new Vector3(floatX, 0, floatY));
+        }
+
+        public void OnFaceCommand(string x, string y)
+        {
+            var floatX = float.Parse(x.Replace('.', ','));
+            var floatY = float.Parse(y.Replace('.', ','));
+            _botRunner.FaceTowards(new Vector3(floatX, 0, floatY));
         }
     }
 }

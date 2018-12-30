@@ -112,10 +112,10 @@
     </Compile>
     <None Include="Addon\MazonAddon.lua" />
     <None Include="Addon\MazonAddon.toc" />
-    <None Include="combatsettings.json">
+    <None Include="addonsettings.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="addonsettings.json">
+    <None Include="combatsettings.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="Properties\Settings.settings">
@@ -148,6 +148,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Images\arrow.png" />
     <Content Include="map.html">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

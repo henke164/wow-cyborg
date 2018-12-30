@@ -14,10 +14,12 @@ namespace WoWPal
     public class BotRunner
     {
         public Action<string> OnLog { get; set; } = (string s) => { };
+        private Vector3 _currentLocation;
         private Vector3 _targetLocation;
         private RotationCommander _rotationCommander = new RotationCommander();
         private MovementCommander _movementCommander = new MovementCommander();
         private CombatRotator _rotator;
+        private bool _isInCombat = false;
 
         public BotRunner()
         {
@@ -27,11 +29,21 @@ namespace WoWPal
             _rotator.RunRotation(RotationType.None);
         }
 
+        public void FaceTowards(Vector3 target)
+        {
+            _targetLocation = null;
+            _rotationCommander.FaceLocation(target, () => { });
+        }
+
         public void MoveTo(Vector3 target)
         {
             OnLog("Move to:" + target.X + "," + target.Z);
             _targetLocation = target;
             _rotationCommander.FaceLocation(_targetLocation, () => {
+                if (_targetLocation == null)
+                {
+                    return;
+                }
                 _movementCommander.MoveToLocation(_targetLocation);
             });
 
@@ -39,11 +51,18 @@ namespace WoWPal
             {
                 Thread.Sleep(4000);
 
-                if (_targetLocation != null)
+                if (_targetLocation == null || _isInCombat)
+                {
+                    return;
+                }
+
+                var distanceToTarget = Vector3.Distance(_targetLocation, _currentLocation);
+                if (distanceToTarget < 0.02)
                 {
                     _movementCommander.Stop();
-                    MoveTo(_targetLocation);
                 }
+
+                MoveTo(_targetLocation);
             });
         }
 
@@ -70,6 +89,7 @@ namespace WoWPal
 
         private void HandleOnPlayerTransformChanged(Transform currentTransform)
         {
+            _currentLocation = currentTransform.Position;
             _rotationCommander.UpdateCurrentTransform(currentTransform);
 
             if (_targetLocation == null)
@@ -91,11 +111,17 @@ namespace WoWPal
             {
                 _rotator.RunRotation(RotationType.SingleTarget);
                 _movementCommander.Stop();
+                _isInCombat = true;
                 OnLog("Target in range: Stopping movement and starting combat.");
             }
             else
             {
                 _rotator.RunRotation(RotationType.None);
+                if (_targetLocation != null && _isInCombat)
+                {
+                    MoveTo(_targetLocation);
+                    _isInCombat = false;
+                }
                 OnLog("No targets in range: Continue moving.");
             }
         }
