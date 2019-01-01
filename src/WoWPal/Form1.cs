@@ -21,15 +21,9 @@ namespace WoWPal
                 Dock = DockStyle.Fill
             };
             
-            using (var sr = new StreamReader("map.html"))
-            {
-                var doc = sr.ReadToEnd();
-                browser.LoadHtml(doc);
-            }
-
             panel1.Controls.Add(browser);
 
-            _controller = new CharacterController(browser, listBox1);
+            _controller = new CharacterController(browser);
         }
 
         private void Form1_Load(object sender, System.EventArgs e)

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 using WoWPal.CombatHandler.Models;
 
 namespace WoWPal.CombatHandler.Rotators
@@ -11,16 +12,39 @@ namespace WoWPal.CombatHandler.Rotators
     {
         protected IList<Spell> SingleTargetSpellRotation { get; set; }
         protected IList<Spell> AOESpellRotation { get; set; }
-        private KeyHandler _keyHandler = new KeyHandler();
         private IList<Spell> _currentRotation;
+        private int _failedCastAttempts = 0;
 
-        public CombatRotator()
+        public CombatRotator(Func<bool> checkSuccessfulCast)
         {
             Task.Run(() => {
                 while (true)
                 {
-                    Update();
-                    Thread.Sleep(200);
+                    if (_currentRotation != null)
+                    {
+                        Update();
+                        Thread.Sleep(200);
+
+                        var isCasting = checkSuccessfulCast();
+                        if (!isCasting)
+                        {
+                            _failedCastAttempts++;
+
+                            if (_failedCastAttempts > 10)
+                            {
+                                KeyHandler.PressKey(Keys.D, 500);
+                                _failedCastAttempts = 0;
+                            }
+                        }
+                        else
+                        {
+                            _failedCastAttempts = 0;
+                        }
+                    }
+                    else
+                    {
+                        Thread.Sleep(200);
+                    }
                 }
             });
         }
@@ -67,11 +91,6 @@ namespace WoWPal.CombatHandler.Rotators
 
         public void Update()
         {
-            if (_currentRotation == null)
-            {
-                return;
-            }
-
             var now = DateTime.Now;
 
             if (!HasGlobalCooldown(1500, now))
@@ -82,7 +101,7 @@ namespace WoWPal.CombatHandler.Rotators
                 if (dot != null)
                 {
                     Console.WriteLine("DOT");
-                    _keyHandler.PressKey(dot.Button);
+                    KeyHandler.PressKey(dot.Button);
                     dot.CastedAt = now;
                     return;
                 }
@@ -94,7 +113,7 @@ namespace WoWPal.CombatHandler.Rotators
             if (spell != null)
             {
                 Console.WriteLine("Attack");
-                _keyHandler.PressKey(spell.Button);
+                KeyHandler.PressKey(spell.Button);
                 spell.CastedAt = now;
                 return;
             }

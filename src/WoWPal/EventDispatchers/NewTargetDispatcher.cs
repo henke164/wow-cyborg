@@ -20,7 +20,7 @@ namespace WoWPal.EventDispatchers
                 return;
             }
 
-            if (AddonIsRedAt(0, AddonScreenshot.Height - 1))
+            if (AddonIsRedAt(AddonScreenshot.Width / 2, 0))
             {
                 if (!_hasTarget)
                 {
@@ -30,7 +30,7 @@ namespace WoWPal.EventDispatchers
                 _hasTarget = false;
                 TriggerEvent(false);
             }
-            else if (AddonIsGreenAt(0, AddonScreenshot.Height - 1))
+            else if (AddonIsGreenAt(AddonScreenshot.Width / 2, 0))
             {
                 if (_hasTarget)
                 {

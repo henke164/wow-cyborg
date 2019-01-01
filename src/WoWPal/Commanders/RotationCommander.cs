@@ -61,7 +61,7 @@ namespace WoWPal.Commanders
                 var rotationInstructions = GetRotationInstructions(_currentTransform, _targetPoint);
                 if (rotationInstructions.Distance > 0.1)
                 {
-                    var keyDownTime = (int)(rotationInstructions.Distance * 100);
+                    var keyDownTime = (int)(rotationInstructions.Distance * 200);
 
                     if (rotationInstructions.Direction == Direction.Right)
                     {
@@ -96,30 +96,17 @@ namespace WoWPal.Commanders
         {
             var targetRadian = GetRadian(transform, point);
 
-            if (targetRadian > transform.Rotation)
+            var rot1 = Math.Abs(targetRadian - transform.Rotation);
+            var rot2 = Math.Abs(rot1 - (Math.PI * 2));
+
+            if (rot1 > rot2)
             {
-                var rot1 = Math.Abs(targetRadian - transform.Rotation);
-                var rot2 = Math.Abs(targetRadian - transform.Rotation - (Math.PI * 2));
-
-                if (rot1 > rot2)
-                {
-                    return new RotationInstruction(Direction.Right, rot2);
-                }
-
-                return new RotationInstruction(Direction.Left, rot1);
+                return new RotationInstruction(
+                    targetRadian > transform.Rotation ? Direction.Right : Direction.Left, rot2);
             }
-            else
-            {
-                var rot1 = Math.Abs(transform.Rotation - targetRadian);
-                var rot2 = Math.Abs(transform.Rotation - targetRadian - (Math.PI * 2));
 
-                if (rot1 < rot2)
-                {
-                    return new RotationInstruction(Direction.Right, rot2);
-                }
-
-                return new RotationInstruction(Direction.Left, rot1);
-            }
+            return new RotationInstruction(
+                targetRadian > transform.Rotation ? Direction.Left : Direction.Right, rot1);
         }
 
         internal class RotationInstruction

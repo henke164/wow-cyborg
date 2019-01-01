@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Windows.Forms;
 
 namespace WoWPal.CombatHandler.Models
 {
@@ -6,7 +7,7 @@ namespace WoWPal.CombatHandler.Models
     {
         public string Name { get; set; }
         public int Cooldown { get; set; }
-        public string Button { get; set; }
+        public Keys Button { get; set; }
         public DateTime CastedAt { get; set; }
     }
 }

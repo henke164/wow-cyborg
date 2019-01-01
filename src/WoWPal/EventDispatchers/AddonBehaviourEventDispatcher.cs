@@ -12,6 +12,9 @@ namespace WoWPal.EventDispatchers
         public AddonBehaviourEventDispatcher(Action<Event> onEvent) 
             : base(onEvent)
         {
+            AddonScreenshot = new Bitmap(1, 1);
+            AddonScreenshot.SetPixel(0, 0, Color.White);
+
             EventManager.On("ScreenChanged", (Event ev) => {
                 var screenshot = (Bitmap)ev.Data;
 

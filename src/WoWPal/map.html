@@ -5,6 +5,7 @@
             padding: 0;
             margin: 0;
             overflow: hidden;
+            background: #444;
         }
 
         #map {
@@ -21,12 +22,15 @@
 
         #arrow-wrapper .arrow {
             position:absolute;
-            width: 20px;
-            height: 20px;
+            width: 10px;
+            height: 10px;
         }
     </style>
 </head>
 <body>
+    <div class="menu">
+
+    </div>
     <img id="map" />
     <div id="arrow-wrapper">
         <img id="player1_arrow" class="arrow" src="/Images/arrow.png" />
@@ -41,7 +45,14 @@
             y: 0,
             element: document.getElementById('player1_arrow')
         }];
-        map.setAttribute('src', 'https://wow.zamimg.com/images/wow/maps/enus/zoom/215.jpg');
+
+        function log(text) {
+
+        }
+
+        function setMapUrl(url) {
+            map.setAttribute('src', url);
+        }
 
         function setCharacterLocation(x, y) {
             arrows[0].x = parseFloat(x.replace(',', '.'));

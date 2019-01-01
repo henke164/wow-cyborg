@@ -11,29 +11,40 @@ namespace WoWPal
 {
     public class CharacterController
     {
-        private Rect _cameraRectangle;
+        private ChromiumWebBrowser _htmlController;
         private BotRunner _botRunner = new BotRunner();
-        private MapHandler _mapHandler;
+        private MapHandler _mapHandler = new MapHandler();
         private Transform _currentTransform = new Transform(0, 0, 0, 0);
-        private float _fieldWidth = 0.05f;
-        private float _fieldHeight = 0.05f;
 
-        public CharacterController(ChromiumWebBrowser htmlController, ListBox logListbox)
+        public CharacterController(ChromiumWebBrowser htmlController)
         {
+            _htmlController = htmlController;
+
+            var page = string.Format(@"{0}\UserInterface\index.html", Application.StartupPath);
+            _htmlController.Load(page);
+
             _botRunner.OnLog = new Action<string>((string s) => {
-                logListbox.Invoke((MethodInvoker)delegate {
-                    logListbox.Items.Insert(0, s);
-                });
+                if (!htmlController.IsAccessible)
+                {
+                    return;
+                }
+                CallJSFunction("log", s);
             });
 
             EventManager.On("PlayerTransformChanged", (Event ev) =>
             {
-                _currentTransform = (Transform)ev.Data;
-                htmlController.ExecuteScriptAsync("setCharacterLocation", new string[]
+                var transform = (Transform)ev.Data;
+                if (_currentTransform.ZoneId != transform.ZoneId)
                 {
+                    CallJSFunction("setMapUrl", _mapHandler.GetMapUrl(transform.ZoneId));
+                }
+
+                _currentTransform = transform;
+
+                CallJSFunction("setCharacterLocation", 
                     _currentTransform.Position.X.ToString(),
-                    _currentTransform.Position.Z.ToString()
-                });
+                    _currentTransform.Position.Z.ToString(),
+                    _currentTransform.Rotation.ToString());
             });
 
             htmlController.RegisterAsyncJsObject("characterController", this);
@@ -52,5 +63,8 @@ namespace WoWPal
             var floatY = float.Parse(y.Replace('.', ','));
             _botRunner.FaceTowards(new Vector3(floatX, 0, floatY));
         }
+
+        private void CallJSFunction(string functionName, params object[] param)
+            => _htmlController.ExecuteScriptAsync(functionName, param);
     }
 }

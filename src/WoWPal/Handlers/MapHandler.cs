@@ -1,10 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Drawing.Drawing2D;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Net;
-using System.Windows.Forms;
 using WoWPal.Models;
 using WoWPal.Utilities;
 
@@ -12,19 +7,16 @@ namespace WoWPal.Handlers
 {
     public class MapHandler
     {
-        private int _currentId;
         private List<UiMapId> _uiMapIds;
-        private PictureBox _mapController;
 
-        public MapHandler(PictureBox mapController)
+        public MapHandler()
         {
-            _mapController = mapController;
             _uiMapIds = SettingsLoader.LoadSettings<List<UiMapId>>("uiMapIds.json");
         }
 
-        public string GetMapUrl(Transform transform)
+        public string GetMapUrl(int zoneId)
         {
-            var map = FindMapById(transform.ZoneId);
+            var map = FindMapById(zoneId);
             if (map == null)
             {
                 return "";

@@ -73,6 +73,7 @@
     <Compile Include="Commanders\MovementCommander.cs" />
     <Compile Include="Commanders\RotationCommander.cs" />
     <Compile Include="EventDispatchers\AddonBehaviourEventDispatcher.cs" />
+    <Compile Include="EventDispatchers\IsCastingDispatcher.cs" />
     <Compile Include="EventDispatchers\CombatChangedDispatcher.cs" />
     <Compile Include="EventDispatchers\NewTargetDispatcher.cs" />
     <Compile Include="EventDispatchers\PlayerTransformChangedDispatcher.cs" />
@@ -83,7 +84,6 @@
     <Compile Include="Form1.Designer.cs">
       <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
-    <Compile Include="Handlers\InputHandler.cs" />
     <Compile Include="Handlers\MapHandler.cs" />
     <Compile Include="Models\ActionbarSettings.cs" />
     <Compile Include="Models\AddonSettings.cs" />
@@ -113,9 +113,6 @@
     <None Include="Addon\MazonAddon.lua" />
     <None Include="Addon\MazonAddon.toc" />
     <None Include="addonsettings.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="combatsettings.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="Properties\Settings.settings">
@@ -148,7 +145,18 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Images\arrow.png" />
+    <Content Include="UserInterface\assets\js\index.js">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="UserInterface\assets\style\index.css">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="UserInterface\Images\arrow.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="UserInterface\index.html">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="map.html">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

@@ -20,12 +20,15 @@ namespace WoWPal
         private MovementCommander _movementCommander = new MovementCommander();
         private CombatRotator _rotator;
         private bool _isInCombat = false;
+        private bool _isCasting = false;
 
         public BotRunner()
         {
             StartEventDispatchers();
             SetupBehaviour();
-            _rotator = new ShamanRotator();
+            _rotator = new ShamanRotator(() => {
+                return _isCasting;
+            });
             _rotator.RunRotation(RotationType.None);
         }
 
@@ -72,10 +75,16 @@ namespace WoWPal
             EventManager.StartEventDispatcher(typeof(PlayerTransformChangedDispatcher));
             EventManager.StartEventDispatcher(typeof(CombatChangedDispatcher));
             EventManager.StartEventDispatcher(typeof(NewTargetDispatcher));
+            EventManager.StartEventDispatcher(typeof(IsCastingDispatcher));
         }
 
         private void SetupBehaviour()
         {
+            EventManager.On("IsCasting", (Event ev) =>
+            {
+                _isCasting = (bool)ev.Data;
+            });
+
             EventManager.On("PlayerTransformChanged", (Event ev) => 
             {
                 HandleOnPlayerTransformChanged((Transform)ev.Data);

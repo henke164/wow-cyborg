@@ -28,23 +28,15 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.listBox1 = new System.Windows.Forms.ListBox();
             this.panel1 = new System.Windows.Forms.Panel();
             this.SuspendLayout();
             // 
-            // listBox1
-            // 
-            this.listBox1.FormattingEnabled = true;
-            this.listBox1.Location = new System.Drawing.Point(647, 12);
-            this.listBox1.Name = "listBox1";
-            this.listBox1.Size = new System.Drawing.Size(250, 498);
-            this.listBox1.TabIndex = 9;
-            // 
             // panel1
             // 
-            this.panel1.Location = new System.Drawing.Point(13, 13);
+            this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.panel1.Location = new System.Drawing.Point(0, 0);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(628, 497);
+            this.panel1.Size = new System.Drawing.Size(887, 522);
             this.panel1.TabIndex = 10;
             // 
             // Form1
@@ -53,7 +45,6 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(887, 522);
             this.Controls.Add(this.panel1);
-            this.Controls.Add(this.listBox1);
             this.Name = "Form1";
             this.Text = "WoWPal";
             this.TopMost = true;
@@ -63,7 +54,6 @@
         }
 
         #endregion
-        private System.Windows.Forms.ListBox listBox1;
         private System.Windows.Forms.Panel panel1;
     }
 }

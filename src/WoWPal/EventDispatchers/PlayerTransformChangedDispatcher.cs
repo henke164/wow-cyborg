@@ -24,12 +24,12 @@ namespace WoWPal.EventDispatchers
             using (var engine = new TesseractEngine(@"tessdata", "eng"))
             {
                 engine.SetVariable("tessedit_char_whitelist", "0123456789.");
-                AddonScreenshot.Save("d:\\test.png");
                 using (var img = PixConverter.ToPix(AddonScreenshot))
                 {
                     using (var page = engine.Process(img))
                     {
-                        var transformData = page.GetText()
+                        var pageText = page.GetText();
+                        var transformData = pageText
                             .Replace('.', ',')
                             .Split('\n')
                             .Where(s => !string.IsNullOrWhiteSpace(s))
@@ -45,6 +45,11 @@ namespace WoWPal.EventDispatchers
 
                             newTransform.ZoneId = int.Parse(transformData[0]);
 
+                            if (newTransform.Position.X > 1 || newTransform.Position.Z > 1)
+                            {
+                                throw new Exception("Invalid coordinates");
+                            }
+                            
                             if (_transform.Position.X != newTransform.Position.X ||
                                 _transform.Position.Z != newTransform.Position.Z ||
                                 _transform.Rotation != newTransform.Rotation)
