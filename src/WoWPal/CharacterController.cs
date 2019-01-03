@@ -15,21 +15,17 @@ namespace WoWPal
         private BotRunner _botRunner = new BotRunner();
         private MapHandler _mapHandler = new MapHandler();
         private Transform _currentTransform = new Transform(0, 0, 0, 0);
+        private WaypointManager _waypointManager;
 
         public CharacterController(ChromiumWebBrowser htmlController)
         {
             _htmlController = htmlController;
+            _waypointManager = new WaypointManager(htmlController);
 
             var page = string.Format(@"{0}\UserInterface\index.html", Application.StartupPath);
             _htmlController.Load(page);
 
-            _botRunner.OnLog = new Action<string>((string s) => {
-                if (!htmlController.IsAccessible)
-                {
-                    return;
-                }
-                CallJSFunction("log", s);
-            });
+            _botRunner.OnLog = new Action<string>(Log);
 
             EventManager.On("PlayerTransformChanged", (Event ev) =>
             {
@@ -50,6 +46,24 @@ namespace WoWPal
             htmlController.RegisterAsyncJsObject("characterController", this);
         }
 
+        private void Log(string s)
+        {
+            try
+            {
+                CallJSFunction("log", s);
+            }
+            catch
+            {
+                Console.WriteLine(s);
+            }
+        }
+
+        public void GoToNextWaypoint()
+            => _botRunner.MoveTo(_waypointManager.GetNextWaypoint(), () => {
+                Log("Go to next waypoint");
+                GoToNextWaypoint();
+            });
+        
         public void OnMovementCommand(string x, string y)
         {
             var floatX = float.Parse(x.Replace('.', ','));

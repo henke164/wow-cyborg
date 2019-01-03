@@ -16,11 +16,14 @@ namespace WoWPal
         public Action<string> OnLog { get; set; } = (string s) => { };
         private Vector3 _currentLocation;
         private Vector3 _targetLocation;
+        private Action _onDestinationReached;
         private RotationCommander _rotationCommander = new RotationCommander();
         private MovementCommander _movementCommander = new MovementCommander();
+        private EnemyTargettingCommander _enemyTargettingCommander = new EnemyTargettingCommander();
         private CombatRotator _rotator;
         private bool _isInCombat = false;
         private bool _isCasting = false;
+        private bool _isInRange = false;
 
         public BotRunner()
         {
@@ -38,8 +41,10 @@ namespace WoWPal
             _rotationCommander.FaceLocation(target, () => { });
         }
 
-        public void MoveTo(Vector3 target)
+        public void MoveTo(Vector3 target, Action onDestinationReached = null)
         {
+            _onDestinationReached = onDestinationReached;
+
             OnLog("Move to:" + target.X + "," + target.Z);
             _targetLocation = target;
             _rotationCommander.FaceLocation(_targetLocation, () => {
@@ -54,8 +59,14 @@ namespace WoWPal
             {
                 Thread.Sleep(4000);
 
-                if (_targetLocation == null || _isInCombat)
+                if (_targetLocation == null)
                 {
+                    return;
+                }
+
+                if (_isInCombat)
+                {
+                    _movementCommander.Stop();
                     return;
                 }
 
@@ -65,7 +76,7 @@ namespace WoWPal
                     _movementCommander.Stop();
                 }
 
-                MoveTo(_targetLocation);
+                MoveTo(_targetLocation, _onDestinationReached);
             });
         }
 
@@ -88,11 +99,26 @@ namespace WoWPal
             EventManager.On("PlayerTransformChanged", (Event ev) => 
             {
                 HandleOnPlayerTransformChanged((Transform)ev.Data);
+
+                if (_targetLocation != null && !_isInRange)
+                {
+                    _enemyTargettingCommander.Update();
+                }
             });
 
             EventManager.On("TargetInRange", (Event ev) =>
             {
                 HandleTargetInRange((bool)ev.Data);
+            });
+
+            EventManager.On("CombatChanged", (Event ev) =>
+            {
+                _isInCombat = (bool)ev.Data;
+
+                if (_isInCombat)
+                {
+                    _movementCommander.Stop();
+                }
             });
         }
 
@@ -106,11 +132,13 @@ namespace WoWPal
                 return;
             }            
 
-            if (Vector3.Distance(_targetLocation, currentTransform.Position) < 0.005)
+            if (Vector3.Distance(_targetLocation, currentTransform.Position) < 0.0005)
             {
                 _targetLocation = null;
                 _movementCommander.Stop();
                 OnLog("Destination reached");
+
+                _onDestinationReached?.Invoke();
             }
         }
         
@@ -121,6 +149,7 @@ namespace WoWPal
                 _rotator.RunRotation(RotationType.SingleTarget);
                 _movementCommander.Stop();
                 _isInCombat = true;
+                _isInRange = true;
                 OnLog("Target in range: Stopping movement and starting combat.");
             }
             else
@@ -130,6 +159,7 @@ namespace WoWPal
                 {
                     MoveTo(_targetLocation);
                     _isInCombat = false;
+                    _isInRange = false;
                 }
                 OnLog("No targets in range: Continue moving.");
             }

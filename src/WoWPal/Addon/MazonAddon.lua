@@ -55,7 +55,7 @@ function CreateRangeCheckFrame()
   frame:SetScript("OnUpdate", function(self, event, ...)
     texture:SetColorTexture(1, 0, 0);
     if CheckInteractDistance("target", 4) then
-      if (UnitIsEnemy("target","player")) then
+      if (UnitCanAttack("player","target")) then
         texture:SetColorTexture(0, 1, 0);
       end
     end

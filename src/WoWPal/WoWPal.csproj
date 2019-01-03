@@ -70,6 +70,7 @@
   <ItemGroup>
     <Compile Include="BotRunner.cs" />
     <Compile Include="CharacterController.cs" />
+    <Compile Include="Commanders\EnemyTargettingCommander.cs" />
     <Compile Include="Commanders\MovementCommander.cs" />
     <Compile Include="Commanders\RotationCommander.cs" />
     <Compile Include="EventDispatchers\AddonBehaviourEventDispatcher.cs" />
@@ -97,6 +98,7 @@
     <Compile Include="Utilities\SettingsLoader.cs" />
     <Compile Include="Utilities\Transform.cs" />
     <Compile Include="Utilities\Vector3.cs" />
+    <Compile Include="WaypointManager.cs" />
     <EmbeddedResource Include="Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>
     </EmbeddedResource>
@@ -146,6 +148,15 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="UserInterface\assets\js\index.js">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="UserInterface\assets\js\log.js">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="UserInterface\assets\js\menu.js">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="UserInterface\assets\js\waypoint-manager.js">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="UserInterface\assets\style\index.css">

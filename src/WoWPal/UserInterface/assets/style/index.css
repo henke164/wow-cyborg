@@ -23,7 +23,24 @@ html, body {
 
 .top-menu {
   height: 50px;
-  width: 100px;
+  width: 100%;
+  background: rgba(0, 0, 0, 0.4);
+}
+
+.top-menu a {
+  text-align: center;
+  display: inline-block;
+  height: 50px;
+  line-height: 50px;
+  color: white;
+  text-decoration: none;
+  width: 150px;
+  margin: 0;
+  padding: 0;
+}
+
+.top-menu a:hover {
+  background: rgba(0, 0, 0, 0.5);
 }
 
 #map {
@@ -42,4 +59,24 @@ html, body {
   position:absolute;
   width: 20px;
   height: 20px;
+}
+
+.left-menu {
+  color: white;
+  padding: 10px;
+  width: 180px;
+  display: block;
+  position: absolute;
+  bottom: 45px;
+  top: 50px;
+  overflow-y: scroll;
+}
+
+#log-wrapper {
+  display: none;
+}
+
+#log {
+  padding: 0;
+  list-style: none;
 }

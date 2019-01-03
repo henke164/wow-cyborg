@@ -15,7 +15,7 @@ namespace WoWPal.EventDispatchers
 
         protected override void Update()
         {
-            if (AddonIsGreenAt(0, 0))
+            if (AddonIsRedAt(0, 0))
             {
                 if (!_inCombat)
                 {
@@ -25,7 +25,7 @@ namespace WoWPal.EventDispatchers
                 _inCombat = false;
                 TriggerEvent(false);
             }
-            else if (AddonIsRedAt(0, 0))
+            else if (AddonIsGreenAt(0, 0))
             {
                 if (_inCombat)
                 {

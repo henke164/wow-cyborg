@@ -6,12 +6,32 @@
   <meta charset="utf-8" />
   <title></title>
   <link rel="stylesheet" href="assets/style/index.css" />
-  <script src="assets/js/index.js"></script>
+  <script>
+    document.addEventListener('contextmenu', event => event.preventDefault());
+  </script>
 </head>
 
 <body>
   <div class="top-menu">
-      <span id="debug" />
+    <a id="waypoint-button" href="#">Waypoints</a>
+    <a id="log-button" href="#">Log</a>
+    <span id="debug"></span>
+  </div>
+  <div class="left-menu">
+    <div id="waypoints-wrapper">
+      <h2>Waypoints</h2>
+      <input id="add-wp-button" type="button" value="Add waypoint">
+      <input id="run-wp-button" type="button" value="Play">
+      <ul id="waypoints">
+
+      </ul>
+    </div>
+    <div id="log-wrapper">
+      <h2>LOG</h2>
+      <ul id="log">
+
+      </ul>
+    </div>
   </div>
   <div id="map-wrapper">
     <div id="arrow-wrapper">
@@ -19,6 +39,10 @@
     </div>
     <img id="map" src="https://wow.zamimg.com/images/wow/maps/enus/zoom/6452.jpg">
   </div>
+  <script src="assets/js/index.js"></script>
+  <script src="assets/js/menu.js"></script>
+  <script src="assets/js/waypoint-manager.js"></script>
+  <script src="assets/js/log.js"></script>
 </body>
 
 </html>
