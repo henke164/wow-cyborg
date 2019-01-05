@@ -22,11 +22,16 @@ namespace WoWPal.Commanders
                 _facingTask = null;
             }
 
-            _facingTask = Task.Run(async () =>
+            _facingTask = Task.Run(() =>
             {
-                await HandleRotationAsync();
+                HandleRotation();
                 onDone();
             });
+        }
+
+        public void Abort()
+        {
+            _targetPoint = null;
         }
 
         public void UpdateCurrentTransform(Transform transform)
@@ -49,15 +54,10 @@ namespace WoWPal.Commanders
             return (Math.PI * 2) + angleRadians;
         }
 
-        private async Task HandleRotationAsync()
+        private void HandleRotation()
         {
-            while (true)
+            while (_targetPoint != null)
             {
-                if (_targetPoint == null)
-                {
-                    break;
-                }
-
                 var rotationInstructions = GetRotationInstructions(_currentTransform, _targetPoint);
                 if (rotationInstructions.Distance > 0.1)
                 {

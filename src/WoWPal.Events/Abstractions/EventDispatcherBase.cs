@@ -20,8 +20,17 @@ namespace WoWPal.Events.Abstractions
                 _isRunning = true;
                 while (_isRunning)
                 {
-                    Update();
-                    Thread.Sleep(1000 / 30);
+                    try
+                    {
+                        Update();
+                        Thread.Sleep(1000 / 30);
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine("Error in event dispatcher");
+                        Console.WriteLine(ex.Message);
+                        Console.WriteLine(ex.StackTrace);
+                    }
                 }
             });
         }

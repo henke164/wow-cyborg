@@ -21,6 +21,7 @@ namespace WoWPal
         private MovementCommander _movementCommander = new MovementCommander();
         private EnemyTargettingCommander _enemyTargettingCommander = new EnemyTargettingCommander();
         private CombatRotator _rotator;
+        private Task _runningTask;
         private bool _isInCombat = false;
         private bool _isCasting = false;
         private bool _isInRange = false;
@@ -29,7 +30,7 @@ namespace WoWPal
         {
             StartEventDispatchers();
             SetupBehaviour();
-            _rotator = new ShamanRotator(() => {
+            _rotator = new MonkRotator(() => {
                 return _isCasting;
             });
             _rotator.RunRotation(RotationType.None);
@@ -47,36 +48,44 @@ namespace WoWPal
 
             OnLog("Move to:" + target.X + "," + target.Z);
             _targetLocation = target;
+
             _rotationCommander.FaceLocation(_targetLocation, () => {
-                if (_targetLocation == null)
+                if (_targetLocation == null || _isInCombat || _isInRange)
                 {
                     return;
                 }
                 _movementCommander.MoveToLocation(_targetLocation);
             });
 
-            Task.Run(() => 
+            StartMovementTask();
+        }
+
+        private void StartMovementTask()
+        {
+            _runningTask = Task.Run(() => 
             {
-                Thread.Sleep(4000);
-
-                if (_targetLocation == null)
+                for (var x = 0; x < 4; x++)
                 {
-                    return;
-                }
+                    Thread.Sleep(1000);
 
-                if (_isInCombat)
-                {
-                    _movementCommander.Stop();
-                    return;
+                    if (_targetLocation == null || _isInCombat || _isInRange)
+                    {
+                        _rotationCommander.Abort();
+                        _movementCommander.Stop();
+                        return;
+                    }
                 }
 
                 var distanceToTarget = Vector3.Distance(_targetLocation, _currentLocation);
-                if (distanceToTarget < 0.02)
+                if (distanceToTarget < 0.03)
                 {
                     _movementCommander.Stop();
                 }
 
-                MoveTo(_targetLocation, _onDestinationReached);
+                Task.Run(() =>
+                {
+                    MoveTo(_targetLocation, _onDestinationReached);
+                });
             });
         }
 
@@ -117,6 +126,7 @@ namespace WoWPal
 
                 if (_isInCombat)
                 {
+                    _rotationCommander.Abort();
                     _movementCommander.Stop();
                 }
             });
@@ -132,12 +142,16 @@ namespace WoWPal
                 return;
             }            
 
-            if (Vector3.Distance(_targetLocation, currentTransform.Position) < 0.0005)
+            if (Vector3.Distance(_targetLocation, currentTransform.Position) <= 0.0025)
             {
                 _targetLocation = null;
                 _movementCommander.Stop();
                 OnLog("Destination reached");
-
+                while (!_runningTask.IsCompleted)
+                {
+                    OnLog("Waiting for runningtask to complete");
+                    Thread.Sleep(1000);
+                }
                 _onDestinationReached?.Invoke();
             }
         }
@@ -147,6 +161,7 @@ namespace WoWPal
             if (inRange)
             {
                 _rotator.RunRotation(RotationType.SingleTarget);
+                _rotationCommander.Abort();
                 _movementCommander.Stop();
                 _isInCombat = true;
                 _isInRange = true;
@@ -155,11 +170,14 @@ namespace WoWPal
             else
             {
                 _rotator.RunRotation(RotationType.None);
-                if (_targetLocation != null && _isInCombat)
+                _isInCombat = false;
+                _isInRange = false;
+
+                if (_targetLocation != null)
                 {
-                    MoveTo(_targetLocation);
-                    _isInCombat = false;
-                    _isInRange = false;
+                    _enemyTargettingCommander.TargetNearestEnemy();
+                    Thread.Sleep(1000);
+                    MoveTo(_targetLocation, _onDestinationReached);
                 }
                 OnLog("No targets in range: Continue moving.");
             }

@@ -76,6 +76,10 @@ function CreateCooldownCheckFrame()
     print("shaman");
     defaultSpellId = 188196; -- Lightning bolt
   end
+  if classId == 9 then
+    print("warlock");
+    defaultSpellId = 686; -- Shadow bolt
+  end
 
   frame:SetScript("OnUpdate", function(self, event, ...)
     cooldown = GetSpellCooldown(defaultSpellId);

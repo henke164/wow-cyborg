@@ -17,7 +17,8 @@ namespace WoWPal.CombatHandler.Rotators
 
         public CombatRotator(Func<bool> checkSuccessfulCast)
         {
-            Task.Run(() => {
+            Task.Run(() =>
+            {
                 while (true)
                 {
                     if (_currentRotation != null)
@@ -30,7 +31,7 @@ namespace WoWPal.CombatHandler.Rotators
                         {
                             _failedCastAttempts++;
 
-                            if (_failedCastAttempts > 10)
+                            if (_failedCastAttempts > 20)
                             {
                                 KeyHandler.PressKey(Keys.D, 500);
                                 _failedCastAttempts = 0;
@@ -93,29 +94,31 @@ namespace WoWPal.CombatHandler.Rotators
         {
             var now = DateTime.Now;
 
-            if (!HasGlobalCooldown(1500, now))
+            if (HasGlobalCooldown(1500, now))
             {
-                var dot = _currentRotation.FirstOrDefault(s => IsDot(s) &&
-                DurationExceeded((Dot)s, now));
-
-                if (dot != null)
-                {
-                    Console.WriteLine("DOT");
-                    KeyHandler.PressKey(dot.Button);
-                    dot.CastedAt = now;
-                    return;
-                }
+                return;
             }
 
-            var spell = _currentRotation.FirstOrDefault(s => !IsDot(s) &&
-                CooldownExceeded(s, now));
+            var dot = _currentRotation.FirstOrDefault(s => IsDot(s) &&
+                DurationExceeded((Dot)s, now));
 
-            if (spell != null)
+            if (dot != null)
             {
-                Console.WriteLine("Attack");
-                KeyHandler.PressKey(spell.Button);
-                spell.CastedAt = now;
-                return;
+                Console.WriteLine("DOT");
+                KeyHandler.PressKey(dot.Button);
+                dot.CastedAt = now;
+            }
+            else
+            {
+                var spell = _currentRotation.FirstOrDefault(s => !IsDot(s) &&
+                    CooldownExceeded(s, now));
+
+                if (spell != null)
+                {
+                    Console.WriteLine("Attack");
+                    KeyHandler.PressKey(spell.Button);
+                    spell.CastedAt = now;
+                }
             }
         }
     }

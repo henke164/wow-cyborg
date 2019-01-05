@@ -12,12 +12,17 @@ namespace WoWPal.Commanders
         {
             _framesSinceLastTargetCheck++;
 
-            if (_framesSinceLastTargetCheck > 10)
+            if (_framesSinceLastTargetCheck >= 5)
             {
                 _framesSinceLastTargetCheck = 0;
-                KeyHandler.PressKey(Keys.Tab);
-                Console.WriteLine("check target");
+                TargetNearestEnemy();
             }
+        }
+
+        public void TargetNearestEnemy()
+        {
+            KeyHandler.PressKey(Keys.Tab);
+            Console.WriteLine("check target");
         }
     }
 }

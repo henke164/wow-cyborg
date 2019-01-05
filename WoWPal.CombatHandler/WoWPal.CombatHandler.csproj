@@ -54,6 +54,8 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RotationType.cs" />
     <Compile Include="Rotators\Rotator.cs" />
+    <Compile Include="Rotators\MonkRotator.cs" />
+    <Compile Include="Rotators\WarlockRotator.cs" />
     <Compile Include="Rotators\ShamanRotator.cs" />
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

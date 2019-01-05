@@ -2,6 +2,9 @@ var logRows = [];
 
 function log(text) {
   logRows.splice(0, 0, text);
+  if (logRows.length > 10) {
+    logRows.splice(logRows.length - 1, 1);
+  }
   renderLog();
 }
 

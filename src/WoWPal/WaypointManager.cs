@@ -2,6 +2,7 @@
 using CefSharp.WinForms;
 using Newtonsoft.Json;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using WoWPal.Utilities;
 
@@ -19,6 +20,23 @@ namespace WoWPal
             _htmlController = htmlController;
 
             htmlController.RegisterAsyncJsObject("waypointManager", this);
+
+            try
+            {
+                using (var sr = new StreamReader("d:\\waypoints.txt"))
+                {
+                    var wpJson = sr.ReadToEnd();
+                    _waypoints = JsonConvert.DeserializeObject<List<Vector3>>(wpJson);
+                }
+            }
+            catch
+            {
+            }
+
+            if (_waypoints == null)
+            {
+                _waypoints = new List<Vector3>();
+            }
         }
 
         public void AddWaypoint(string x, string z)
@@ -31,10 +49,30 @@ namespace WoWPal
             {
                 return new { x = w.X, z = w.Z };
             })));
+
+            using (var sw = new StreamWriter("d:\\waypoints.txt"))
+            {
+                sw.WriteLine(JsonConvert.SerializeObject(_waypoints));
+            }
         }
-        
+
+        public void SetCurrentWaypointToClosest(Vector3 position)
+        {
+            var closestDistance = 0f;
+
+            for (var x = 0; x < _waypoints.Count; x++)
+            {
+                var distance = Vector3.Distance(position, _waypoints[x]);
+                if (distance < closestDistance)
+                {
+                    closestDistance = distance;
+                    _currentWaypoint = x;
+                }
+            }
+        }
+
         public Vector3 GetNextWaypoint()
-         {
+        {
             if (_currentWaypoint >= _waypoints.Count)
             {
                 _currentWaypoint = 0;
