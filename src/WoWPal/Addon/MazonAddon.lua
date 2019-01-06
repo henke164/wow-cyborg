@@ -71,7 +71,11 @@ function CreateCooldownCheckFrame()
 
   local defaultSpellId = 0;
   local _, _, classId = UnitClass("player");
-
+  
+  if classId == 3 then
+    print("hunter");
+    defaultSpellId = 193455; -- Cobra shot
+  end
   if classId == 7 then
     print("shaman");
     defaultSpellId = 188196; -- Lightning bolt
@@ -79,6 +83,10 @@ function CreateCooldownCheckFrame()
   if classId == 9 then
     print("warlock");
     defaultSpellId = 686; -- Shadow bolt
+  end
+  if classId == 10 then
+    print("monk");
+    defaultSpellId = 100780; -- Tiger Palm
   end
 
   frame:SetScript("OnUpdate", function(self, event, ...)
