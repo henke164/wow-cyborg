@@ -48,7 +48,13 @@ namespace WoWPal.Utilities
             {
                 SetForeground();
                 keybd_event((byte)key, 0, KEYEVENTF_KEYUP, 0);
-                _keydowns.Remove(key);
+                try
+                {
+                    _keydowns.Remove(key);
+                }
+                catch
+                {
+                }
             }
         }
 
