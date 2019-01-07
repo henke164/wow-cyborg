@@ -1,9 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
-using System.Drawing.Imaging;
 using System.Linq;
-using System.Windows.Forms;
-using Tesseract;
 using WoWPal.Events.Abstractions;
 using WoWPal.Utilities;
 
@@ -19,79 +17,139 @@ namespace WoWPal.EventDispatchers
             EventName = "PlayerTransformChanged";
         }
 
-        private string FixDecimal(string number)
-        {
-            if (!number.Contains(",") && number[1] != ',')
-            {
-                number = number.Insert(1, ",");
-            }
-            return number;
-        }
-
         protected override void Update()
         {
-            using (var engine = new TesseractEngine(@"tessdata", "eng"))
+            var zoneId = GetZoneId();
+            var xPos = GetXPosition();
+            var zPos = GetZPosition();
+            var rotation = GetRotation();
+
+            var newTransform = new Transform(xPos, 0, zPos, rotation)
             {
-                engine.SetVariable("tessedit_char_whitelist", "0123456789.,");
-                using (var img = PixConverter.ToPix(AddonScreenshot))
-                {
-                    using (var page = engine.Process(img))
-                    {
-                        var pageText = page.GetText();
-                        var transformData = pageText
-                            .Replace('.', ',')
-                            .Split('\n')
-                            .Where(s => !string.IsNullOrWhiteSpace(s))
-                            .Select(s => s.Replace(" ", ""))
-                            .ToList();
-                        try
-                        {
-                            var newTransform = new Transform(
-                                (float)Math.Round(float.Parse(FixDecimal(transformData[1])), 6),
-                                0,
-                                (float)Math.Round(float.Parse(FixDecimal(transformData[2])), 6),
-                                (float)Math.Round(float.Parse(FixDecimal(transformData[3])), 6));
+                ZoneId = zoneId
+            };
 
-                            newTransform.ZoneId = int.Parse(transformData[0]);
-
-                            if (newTransform.Position.X > 1 || newTransform.Position.Z > 1)
-                            {
-                                throw new Exception("Invalid coordinates");
-                            }
-                            
-                            if (_transform.Position.X != newTransform.Position.X ||
-                                _transform.Position.Z != newTransform.Position.Z ||
-                                _transform.Rotation != newTransform.Rotation)
-                            {
-                                if (newTransform.Rotation < 7)
-                                {
-                                    _transform = newTransform;
-                                    TriggerEvent(_transform);
-                                }
-                            }
-                        }
-                        catch(Exception ex)
-                        {
-                            TriggerEvent(_transform);
-                        }
-                    }
-                }
+            if (_transform.Position.X != newTransform.Position.X ||
+                _transform.Position.Z != newTransform.Position.Z ||
+                _transform.Rotation != newTransform.Rotation)
+            {
+                _transform = newTransform;
+                TriggerEvent(_transform);
             }
         }
 
-        private Bitmap CaptureScreenShot()
+        private int GetZoneId()
         {
-            var bounds = Screen.GetBounds(Point.Empty);
+            var numbers = new List<string> {
+                GetCharacterAt(0, 1),
+                GetCharacterAt(1, 1),
+                GetCharacterAt(2, 1),
+                GetCharacterAt(3, 1)
+            };
 
-            using (var bitmap = new Bitmap(bounds.Width, bounds.Height))
+            return int.Parse(string.Join("", numbers));
+        }
+
+        private float GetXPosition()
+        {
+            var numbers = new List<string> {
+                "0,",
+                GetCharacterAt(0, 2),
+                GetCharacterAt(1, 2),
+                GetCharacterAt(2, 2),
+                GetCharacterAt(3, 2)
+            };
+
+            return float.Parse(string.Join("", numbers));
+        }
+
+        private float GetZPosition()
+        {
+            var numbers = new List<string> {
+                "0,",
+                GetCharacterAt(0, 3),
+                GetCharacterAt(1, 3),
+                GetCharacterAt(2, 3),
+                GetCharacterAt(3, 3)
+            };
+
+            return float.Parse(string.Join("", numbers));
+        }
+
+        private float GetRotation()
+        {
+            var numbers = new List<string> {
+                GetCharacterAt(0, 4),
+                GetCharacterAt(1, 4),
+                GetCharacterAt(2, 4),
+                GetCharacterAt(3, 4)
+            };
+
+            var rotation = float.Parse(string.Join("", numbers));
+            return rotation / 1000;
+        }
+
+        private string GetCharacterAt(int x, int y)
+        {
+            var frameWidth = AddonScreenshot.Width / 4;
+            var frameHeight = AddonScreenshot.Height / 4;
+            var color = AddonScreenshot.GetPixel(frameWidth * x, frameHeight * y);
+            return GetCharacterFromColor(color);
+        }
+
+        private string GetCharacterFromColor(Color c)
+        {
+            if (c.R == 0 && c.G == 0 && c.B == 0)
             {
-                using (var g = Graphics.FromImage(bitmap))
-                {
-                    g.CopyFromScreen(Point.Empty, Point.Empty, bounds.Size);
-                }
-
-                return bitmap.Clone(bounds, PixelFormat.Format24bppRgb);
+                return "0";
             }
+
+            if (c.R == 0 && c.G == 0 && c.B > 100 && c.B < 200)
+            {
+                return "1";
+            }
+
+            if (c.R == 0 && c.G == 0 && c.B > 200)
+            {
+                return "2";
+            }
+
+            if (c.R == 0 && c.G > 100 && c.G < 200 && c.B == 0)
+            {
+                return "3";
+            }
+
+            if (c.R == 0 && c.G > 200 && c.B == 0)
+            {
+                return "4";
+            }
+
+            if (c.R > 100 && c.R < 200 && c.G == 0 && c.B == 0)
+            {
+                return "5";
+            }
+
+            if (c.R > 200 && c.G == 0 && c.B == 0)
+            {
+                return "6";
+            }
+
+            if (c.R == 0 && c.G > 100 && c.G < 200 && c.B > 200)
+            {
+                return "7";
+            }
+
+            if (c.R == 0 && c.G > 200 && c.B > 200)
+            {
+                return "8";
+            }
+
+            if (c.R > 100 && c.R < 200 && c.G == 0 && c.B > 200)
+            {
+                return "9";
+            }
+
+            return "";
         }
     }
 }

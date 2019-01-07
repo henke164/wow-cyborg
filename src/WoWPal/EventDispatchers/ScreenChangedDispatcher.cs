@@ -41,7 +41,6 @@ namespace WoWPal.EventDispatchers
                 clone = bitmap.Clone(_inGameAddonLocation, PixelFormat.Format24bppRgb);
             }
 
-            //clone.Save("d:\\test.png");
             return clone;
         }
     }

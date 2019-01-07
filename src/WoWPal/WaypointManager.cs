@@ -23,7 +23,7 @@ namespace WoWPal
 
             try
             {
-                using (var sr = new StreamReader("c:\\waypoints.txt"))
+                using (var sr = new StreamReader("d:\\waypoints.txt"))
                 {
                     var wpJson = sr.ReadToEnd();
                     _waypoints = JsonConvert.DeserializeObject<List<Vector3>>(wpJson);
@@ -50,7 +50,7 @@ namespace WoWPal
                 return new { x = w.X, z = w.Z };
             })));
 
-            using (var sw = new StreamWriter("c:\\waypoints.txt"))
+            using (var sw = new StreamWriter("d:\\waypoints.txt"))
             {
                 sw.WriteLine(JsonConvert.SerializeObject(_waypoints));
             }

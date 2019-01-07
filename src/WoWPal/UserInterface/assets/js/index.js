@@ -8,7 +8,7 @@ function setCharacterLocation(x, z, a) {
   players[idx].x = parseFloat(x.replace(',', '.'));
   players[idx].z = parseFloat(z.replace(',', '.'));
   players[idx].a = parseFloat(a.replace(',', '.'));
-  locationDebug.innerHTML = "x: " + x + ", z: " + z;
+  locationDebug.innerHTML = "x: " + x + ", z: " + z + ", a:" + a;
 
   var xPos = players[idx].x * map.width;
   var zPos = players[idx].z * map.height;
