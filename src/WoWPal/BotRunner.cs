@@ -30,7 +30,7 @@ namespace WoWPal
         {
             StartEventDispatchers();
             SetupBehaviour();
-            _rotator = new MonkRotator(() => {
+            _rotator = new HunterRotator(() => {
                 return _isCasting;
             });
             _rotator.RunRotation(RotationType.None);
@@ -128,6 +128,14 @@ namespace WoWPal
                 {
                     _rotationCommander.Abort();
                     _movementCommander.Stop();
+                    
+                    Task.Run(() => {
+                        while (!_isInRange)
+                        {
+                            _enemyTargettingCommander.TargetNearestEnemy();
+                            Thread.Sleep(500);
+                        }
+                    });
                 }
             });
         }

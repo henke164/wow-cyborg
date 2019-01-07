@@ -19,11 +19,20 @@ namespace WoWPal.EventDispatchers
             EventName = "PlayerTransformChanged";
         }
 
+        private string FixDecimal(string number)
+        {
+            if (!number.Contains(",") && number[1] != ',')
+            {
+                number = number.Insert(1, ",");
+            }
+            return number;
+        }
+
         protected override void Update()
         {
             using (var engine = new TesseractEngine(@"tessdata", "eng"))
             {
-                engine.SetVariable("tessedit_char_whitelist", "0123456789.");
+                engine.SetVariable("tessedit_char_whitelist", "0123456789.,");
                 using (var img = PixConverter.ToPix(AddonScreenshot))
                 {
                     using (var page = engine.Process(img))
@@ -38,10 +47,10 @@ namespace WoWPal.EventDispatchers
                         try
                         {
                             var newTransform = new Transform(
-                                (float)Math.Round(float.Parse(transformData[1]), 6),
+                                (float)Math.Round(float.Parse(FixDecimal(transformData[1])), 6),
                                 0,
-                                (float)Math.Round(float.Parse(transformData[2]), 6),
-                                (float)Math.Round(float.Parse(transformData[3]), 6));
+                                (float)Math.Round(float.Parse(FixDecimal(transformData[2])), 6),
+                                (float)Math.Round(float.Parse(FixDecimal(transformData[3])), 6));
 
                             newTransform.ZoneId = int.Parse(transformData[0]);
 

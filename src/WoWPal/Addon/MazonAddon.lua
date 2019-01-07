@@ -155,7 +155,11 @@ function CreateCooldownCheckFrame()
 
   local defaultSpellId = 0;
   local _, _, classId = UnitClass("player");
-
+  
+  if classId == 3 then
+    print("hunter");
+    defaultSpellId = 193455; -- Cobra shot
+  end
   if classId == 7 then
     print("shaman");
     defaultSpellId = 188196; -- Lightning bolt
