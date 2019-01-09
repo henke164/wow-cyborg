@@ -1,8 +1,9 @@
 ## Interface: 80000
 ## Title: MazonAddon
-## Notes: Experimental addon.
+## Notes: OCR Addon for WowPal.
 ## Author: Mazon
 ## Version: 1.0.0
 
+Combat\MonkBrewmaster.lua
 MazonAddon.lua
 OCR.lua
