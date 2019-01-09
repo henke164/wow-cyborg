@@ -70,6 +70,19 @@ function CreateCooldownCheckFrame()
   end)
 end
 
+function CreateAttackFrame()
+  local frame, texture = CreateDefaultFrame(50, 50, 150, 10);
+  frame:SetScript("OnUpdate", function(self, event, ...)
+    texture:SetColorTexture(1, 0, 0);
+    if CheckInteractDistance("target", 4) then
+      if (UnitCanAttack("player","target")) then
+        texture:SetColorTexture(0, 1, 0);
+      end
+    end
+  end)
+end
+
 CreateCombatFrame();
 CreateRangeCheckFrame();
 CreateCooldownCheckFrame();
+CreateAttackFrame();

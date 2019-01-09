@@ -31,9 +31,9 @@ namespace WoWPal.CombatHandler.Rotators
                         {
                             _failedCastAttempts++;
 
-                            if (_failedCastAttempts > 20)
+                            if (_failedCastAttempts > 10)
                             {
-                                KeyHandler.PressKey(Keys.D, 500);
+                                KeyHandler.PressKey(Keys.D, 600);
                                 _failedCastAttempts = 0;
                             }
                         }
@@ -44,6 +44,7 @@ namespace WoWPal.CombatHandler.Rotators
                     }
                     else
                     {
+                        _failedCastAttempts = 0;
                         Thread.Sleep(200);
                     }
                 }
@@ -52,6 +53,7 @@ namespace WoWPal.CombatHandler.Rotators
 
         public void RunRotation(RotationType type)
         {
+            return;
             switch (type)
             {
                 case RotationType.SingleTarget:

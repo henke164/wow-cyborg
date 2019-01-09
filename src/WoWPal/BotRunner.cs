@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
-using WoWPal.CombatHandler;
-using WoWPal.CombatHandler.Rotators;
+using System.Windows.Forms;
 using WoWPal.Commanders;
 using WoWPal.EventDispatchers;
 using WoWPal.Events;
@@ -20,7 +19,6 @@ namespace WoWPal
         private RotationCommander _rotationCommander = new RotationCommander();
         private MovementCommander _movementCommander = new MovementCommander();
         private EnemyTargettingCommander _enemyTargettingCommander = new EnemyTargettingCommander();
-        private CombatRotator _rotator;
         private Task _runningTask;
         private bool _isInCombat = false;
         private bool _isCasting = false;
@@ -30,10 +28,6 @@ namespace WoWPal
         {
             StartEventDispatchers();
             SetupBehaviour();
-            _rotator = new HunterRotator(() => {
-                return _isCasting;
-            });
-            _rotator.RunRotation(RotationType.None);
         }
 
         public void FaceTowards(Vector3 target)
@@ -94,8 +88,9 @@ namespace WoWPal
             EventManager.StartEventDispatcher(typeof(ScreenChangedDispatcher));
             EventManager.StartEventDispatcher(typeof(PlayerTransformChangedDispatcher));
             EventManager.StartEventDispatcher(typeof(CombatChangedDispatcher));
+            EventManager.StartEventDispatcher(typeof(CombatCastingDispatcher));
             EventManager.StartEventDispatcher(typeof(NewTargetDispatcher));
-            EventManager.StartEventDispatcher(typeof(IsCastingDispatcher));
+            EventManager.StartEventDispatcher(typeof(WrongFacingDispatcher));
         }
 
         private void SetupBehaviour()
@@ -105,7 +100,7 @@ namespace WoWPal
                 _isCasting = (bool)ev.Data;
             });
 
-            EventManager.On("PlayerTransformChanged", (Event ev) => 
+            EventManager.On("PlayerTransformChanged", (Event ev) =>
             {
                 HandleOnPlayerTransformChanged((Transform)ev.Data);
 
@@ -128,7 +123,7 @@ namespace WoWPal
                 {
                     _rotationCommander.Abort();
                     _movementCommander.Stop();
-                    
+
                     Task.Run(() => {
                         while (!_isInRange)
                         {
@@ -137,6 +132,17 @@ namespace WoWPal
                         }
                     });
                 }
+            });
+
+            EventManager.On("CastRequested", (Event ev) =>
+            {
+                var button = (Keys)ev.Data;
+                KeyHandler.PressKey(button);
+            });
+
+            EventManager.On("WrongFacing", (Event ev) =>
+            {
+                KeyHandler.PressKey(Keys.D, 200);
             });
         }
 
@@ -168,7 +174,6 @@ namespace WoWPal
         {
             if (inRange)
             {
-                _rotator.RunRotation(RotationType.SingleTarget);
                 _rotationCommander.Abort();
                 _movementCommander.Stop();
                 _isInCombat = true;
@@ -177,7 +182,6 @@ namespace WoWPal
             }
             else
             {
-                _rotator.RunRotation(RotationType.None);
                 _isInCombat = false;
                 _isInRange = false;
 

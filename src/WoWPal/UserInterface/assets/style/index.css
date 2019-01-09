@@ -84,3 +84,28 @@ html, body {
 #debug {
   color:white;
 }
+
+#wp-collection-popup {
+    position: fixed;
+    width: 50%;
+    top: 10px;
+    bottom: 10px;
+    left: 10px;
+    background-color: white;
+    z-index: 2;
+    display: none;
+}
+
+#wp-collection-popup ul {
+    list-style: none;
+}
+
+#wp-collection-popup ul .wp-delete {
+    float: right;
+    color: red;
+}
+
+#wp-collection-label {
+    display: block;
+    color: white;
+}

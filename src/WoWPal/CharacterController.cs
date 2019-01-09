@@ -58,6 +58,11 @@ namespace WoWPal
             }
         }
 
+        public void ShowDevTools()
+        {
+            _htmlController.ShowDevTools();
+        }
+
         public void GoToNextWaypoint()
             => _botRunner.MoveTo(_waypointManager.GetNextWaypoint(), () => {
                 Log("Go to next waypoint");

@@ -17,8 +17,9 @@ namespace WoWPal.EventDispatchers
         {
             EventName = "ScreenChanged";
 
-            var settings = SettingsLoader.LoadSettings<AddonSettings>("addonsettings.json");
-            _inGameAddonLocation = new Rectangle(settings.X, settings.Y, settings.Width, settings.Height);
+            var settings = SettingsLoader.LoadSettings<AppSettings>("settings.json");
+            var position = settings.AddonPosition;
+            _inGameAddonLocation = new Rectangle(position.X, position.Y, position.Width, position.Height);
         }
 
         protected override void Update()

@@ -12,3 +12,7 @@ document.getElementById('log-button').addEventListener('click', function() {
   logWrapper.style.display = 'block';
   renderLog();
 });
+
+document.getElementById('devtools-button').addEventListener('click', function () {
+  characterController.showDevTools();
+});

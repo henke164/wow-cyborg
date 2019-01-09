@@ -27,22 +27,22 @@ namespace WoWPal.CombatHandler.Rotators
                 },
                 new Spell
                 {
-                    Name = "TigerPalm",
-                    Button = Keys.D2,
-                    Cooldown = 1,
-                },
-                new Spell
-                {
-                    Name = "HealinElixir",
+                    Name = "BlackStrike",
                     Button = Keys.D4,
                     Cooldown = 7,
                 },
                 new Spell
                 {
-                    Name = "LegSweep",
+                    Name = "HealinElixir",
                     Button = Keys.D5,
                     Cooldown = 15,
-                }
+                },
+                new Spell
+                {
+                    Name = "TigerPalm",
+                    Button = Keys.D2,
+                    Cooldown = 1,
+                },
             };
         }
     }

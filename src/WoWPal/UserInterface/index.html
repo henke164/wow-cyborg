@@ -15,13 +15,14 @@
   <div class="top-menu">
     <a id="waypoint-button" href="#">Waypoints</a>
     <a id="log-button" href="#">Log</a>
+    <a id="devtools-button" href="#">DevTools</a>
     <span id="debug"></span>
   </div>
   <div class="left-menu">
     <div id="waypoints-wrapper">
       <h2>Waypoints</h2>
-        
-      <input type="text" placeholder="name" /><input id="load-wp-button" type="button" value="Load" />
+      <a id="wp-collection-label" href="#"></a>
+      <input id="wp-collection-name-input" type="text" placeholder="name" style="width:100px" /><input id="new-wp-collection-button" type="button" value="New" />
       <hr />
       <input id="add-wp-button" type="button" value="Add waypoint">
       <input id="run-wp-button" type="button" value="Play">
@@ -35,6 +36,12 @@
 
       </ul>
     </div>
+  </div>
+  <div id="wp-collection-popup">
+    <ul id="wp-collection-selector">
+        <li>Test1</li>
+        <li>Test2</li>
+    </ul>
   </div>
   <div id="map-wrapper">
     <div id="arrow-wrapper">

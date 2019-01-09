@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Drawing;
-using System.Linq;
 using WoWPal.Events.Abstractions;
 using WoWPal.Utilities;
 
@@ -87,69 +85,6 @@ namespace WoWPal.EventDispatchers
 
             var rotation = float.Parse(string.Join("", numbers));
             return rotation / 1000;
-        }
-
-        private string GetCharacterAt(int x, int y)
-        {
-            var frameWidth = AddonScreenshot.Width / 4;
-            var frameHeight = AddonScreenshot.Height / 4;
-            var color = AddonScreenshot.GetPixel(frameWidth * x, frameHeight * y);
-            return GetCharacterFromColor(color);
-        }
-
-        private string GetCharacterFromColor(Color c)
-        {
-            if (c.R == 0 && c.G == 0 && c.B == 0)
-            {
-                return "0";
-            }
-
-            if (c.R == 0 && c.G == 0 && c.B > 100 && c.B < 200)
-            {
-                return "1";
-            }
-
-            if (c.R == 0 && c.G == 0 && c.B > 200)
-            {
-                return "2";
-            }
-
-            if (c.R == 0 && c.G > 100 && c.G < 200 && c.B == 0)
-            {
-                return "3";
-            }
-
-            if (c.R == 0 && c.G > 200 && c.B == 0)
-            {
-                return "4";
-            }
-
-            if (c.R > 100 && c.R < 200 && c.G == 0 && c.B == 0)
-            {
-                return "5";
-            }
-
-            if (c.R > 200 && c.G == 0 && c.B == 0)
-            {
-                return "6";
-            }
-
-            if (c.R == 0 && c.G > 100 && c.G < 200 && c.B > 200)
-            {
-                return "7";
-            }
-
-            if (c.R == 0 && c.G > 200 && c.B > 200)
-            {
-                return "8";
-            }
-
-            if (c.R > 100 && c.R < 200 && c.G == 0 && c.B > 200)
-            {
-                return "9";
-            }
-
-            return "";
         }
     }
 }

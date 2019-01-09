@@ -50,5 +50,73 @@ namespace WoWPal.EventDispatchers
             var pixel = AddonScreenshot.GetPixel(x, y);
             return pixel.R > 250 && pixel.G == 0 && pixel.B == 0;
         }
+        
+        protected string GetCharacterAt(int x, int y)
+        {
+            var frameWidth = AddonScreenshot.Width / 4;
+            var frameHeight = AddonScreenshot.Height / 6;
+            var xPos = (frameWidth * x);
+            var yPos = (frameHeight * y);
+
+            var color = AddonScreenshot.GetPixel(
+                xPos > 0 ? xPos : 1,
+                yPos > 0 ? yPos : 1);
+            return GetCharacterFromColor(color);
+        }
+
+        private string GetCharacterFromColor(Color c)
+        {
+            if (c.R == 0 && c.G == 0 && c.B == 0)
+            {
+                return "0";
+            }
+
+            if (c.R == 0 && c.G == 0 && c.B > 100 && c.B < 200)
+            {
+                return "1";
+            }
+
+            if (c.R == 0 && c.G == 0 && c.B > 200)
+            {
+                return "2";
+            }
+
+            if (c.R == 0 && c.G > 100 && c.G < 200 && c.B == 0)
+            {
+                return "3";
+            }
+
+            if (c.R == 0 && c.G > 200 && c.B == 0)
+            {
+                return "4";
+            }
+
+            if (c.R > 100 && c.R < 200 && c.G == 0 && c.B == 0)
+            {
+                return "5";
+            }
+
+            if (c.R > 200 && c.G == 0 && c.B == 0)
+            {
+                return "6";
+            }
+
+            if (c.R == 0 && c.G > 100 && c.G < 200 && c.B > 200)
+            {
+                return "7";
+            }
+
+            if (c.R == 0 && c.G > 200 && c.B > 200)
+            {
+                return "8";
+            }
+
+            if (c.R > 100 && c.R < 200 && c.G == 0 && c.B > 200)
+            {
+                return "9";
+            }
+
+            return "";
+        }
     }
 }

@@ -1,6 +1,13 @@
 ﻿namespace WoWPal.Models
 {
-    public class AddonSettings
+    public class AppSettings
+    {
+        public AddonPosition AddonPosition { get; set; }
+
+        public string WaypointsPath { get; set; }
+    }
+
+    public class AddonPosition
     {
         public int X { get; set; }
         public int Y { get; set; }
