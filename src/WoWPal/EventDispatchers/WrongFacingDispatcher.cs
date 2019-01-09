@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Windows.Forms;
 using WoWPal.Events;
 using WoWPal.Events.Abstractions;
 
@@ -6,23 +7,30 @@ namespace WoWPal.EventDispatchers
 {
     public class WrongFacingDispatcher : AddonBehaviourEventDispatcher
     {
-        private DateTime _lastCast;
+        private Keys _lastKey = Keys.None;
+        private int _keyRepeatCount = 0;
 
         public WrongFacingDispatcher(Action<Event> onEvent)
             : base(onEvent)
         {
             EventName = "WrongFacing";
 
-            _lastCast = DateTime.Now;
-
             EventManager.On("CastRequested", (Event ev) =>
             {
-                var lastCastAttempt = (DateTime.Now - _lastCast).TotalMilliseconds;
-                if (lastCastAttempt <= 550)
+                if (_lastKey == (Keys)ev.Data)
                 {
-                    TriggerEvent(true);
+                    _keyRepeatCount++;
+                    if (_keyRepeatCount >= 5)
+                    {
+                        TriggerEvent(true);
+                        _keyRepeatCount = 0;
+                    }
                 }
-                _lastCast = DateTime.Now;
+                else
+                {
+                    _lastKey = (Keys)ev.Data;
+                    _keyRepeatCount = 0;
+                }
             });
         }
 

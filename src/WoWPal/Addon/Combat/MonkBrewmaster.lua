@@ -20,6 +20,14 @@ function IsCastable(spellName, requiredEnergy)
   return false;
 end
 
+function IsLowHealth()
+  maxHp = UnitHealthMax("player");
+  hp = UnitHealth("player");
+  perc = (hp / maxHp) * 100;
+  return perc < 80;
+end
+
+
 function CreateMonkBrewmasterFrame()
   local inCombat = false;
   local frame, texture = CreateDefaultFrame(0, -40, 40, 10);
@@ -39,13 +47,19 @@ function CreateMonkBrewmasterFrame()
   end)
 
   frame:SetScript("OnUpdate", function(self, event, ...)
-    if inCombat == false then
-    if IsCastable("Crackling Jade Lightning", 50) then
-      r, g, b = GetColorFromNumber(1);
+    if IsLowHealth() then
+      r, g, b = GetColorFromNumber(5);
       texture:SetColorTexture(r, g, b);
-      --str:SetText("Crackling Jade Lightning");
-      return;
+      return; 
     end
+
+    if inCombat == false then
+      if IsCastable("Crackling Jade Lightning", 50) then
+        r, g, b = GetColorFromNumber(1);
+        texture:SetColorTexture(r, g, b);
+        --str:SetText("Crackling Jade Lightning");
+        return;
+      end
     end
 
     if IsCastable("Keg Smash", 40) then

@@ -142,7 +142,7 @@ namespace WoWPal
 
             EventManager.On("WrongFacing", (Event ev) =>
             {
-                KeyHandler.PressKey(Keys.D, 600);
+                KeyHandler.PressKey(Keys.D, 400);
             });
         }
 

@@ -111,6 +111,7 @@
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
     </Compile>
+    <None Include="Addon\Combat\MonkBrewmaster.lua" />
     <None Include="Addon\MazonAddon.lua" />
     <None Include="Addon\MazonAddon.toc" />
     <None Include="settings.json">
