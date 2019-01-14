@@ -71,6 +71,7 @@
     <Compile Include="BotRunner.cs" />
     <Compile Include="CharacterController.cs" />
     <Compile Include="Commanders\EnemyTargettingCommander.cs" />
+    <Compile Include="Commanders\LootingCommander.cs" />
     <Compile Include="Commanders\MovementCommander.cs" />
     <Compile Include="Commanders\RotationCommander.cs" />
     <Compile Include="EventDispatchers\AddonBehaviourEventDispatcher.cs" />
@@ -93,6 +94,7 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Utilities\KeyHandler.cs" />
+    <Compile Include="Utilities\MouseHandler.cs" />
     <Compile Include="Utilities\Rect.cs" />
     <Compile Include="Utilities\SettingsLoader.cs" />
     <Compile Include="Utilities\Transform.cs" />
