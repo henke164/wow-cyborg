@@ -32,14 +32,21 @@ namespace WoWPal.Utilities
 
         public static void HoldKey(Keys key)
         {
-            if (!_keydowns.Contains(key))
+            try
             {
-                _keydowns.Add(key);
-            }
+                if (!_keydowns.Contains(key))
+                {
+                    _keydowns.Add(key);
+                }
 
-            SetForeground();
-            keybd_event((byte)key, 0, KEYEVENTF_KEYUP, 0);
-            keybd_event((byte)key, 0, KEYEVENTF_EXTENDEDKEY, 0);
+                SetForeground();
+                keybd_event((byte)key, 0, KEYEVENTF_KEYUP, 0);
+                keybd_event((byte)key, 0, KEYEVENTF_EXTENDEDKEY, 0);
+            }
+            catch
+            {
+                Console.WriteLine("Could not hold key");
+            }
         }
 
         public static void ReleaseKey(Keys key)
