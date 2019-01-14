@@ -18,6 +18,7 @@ namespace WoWPal
         private Action _onDestinationReached;
         private RotationCommander _rotationCommander = new RotationCommander();
         private MovementCommander _movementCommander = new MovementCommander();
+        private LootingCommander _lootingCommander = new LootingCommander();
         private EnemyTargettingCommander _enemyTargettingCommander = new EnemyTargettingCommander();
         private Task _runningTask;
         private bool _isInCombat = false;
@@ -182,16 +183,18 @@ namespace WoWPal
             }
             else
             {
-                _isInCombat = false;
-                _isInRange = false;
+                _lootingCommander.Loot(() => { 
+                    _isInCombat = false;
+                    _isInRange = false;
 
-                if (_targetLocation != null)
-                {
-                    _enemyTargettingCommander.TargetNearestEnemy();
-                    Thread.Sleep(1000);
-                    MoveTo(_targetLocation, _onDestinationReached);
-                }
-                OnLog("No targets in range: Continue moving.");
+                    if (_targetLocation != null)
+                    {
+                        _enemyTargettingCommander.TargetNearestEnemy();
+                        Thread.Sleep(1000);
+                        MoveTo(_targetLocation, _onDestinationReached);
+                    }
+                    OnLog("No targets in range: Continue moving.");
+                });
             }
         }
     }
