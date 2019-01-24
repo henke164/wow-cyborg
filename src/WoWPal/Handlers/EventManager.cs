@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
-using WoWPal.Events.Abstractions;
+using WoWPal.Models.Abstractions;
 
-namespace WoWPal.Events
+namespace WoWPal.Handlers
 {
     public static class EventManager
     {

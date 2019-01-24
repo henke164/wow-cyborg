@@ -2,7 +2,7 @@
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.Windows.Forms;
-using WoWPal.Events.Abstractions;
+using WoWPal.Models.Abstractions;
 using WoWPal.Models;
 using WoWPal.Utilities;
 

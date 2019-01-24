@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Windows.Forms;
-using WoWPal.Events;
-using WoWPal.Events.Abstractions;
+using WoWPal.Handlers;
+using WoWPal.Models.Abstractions;
 
 namespace WoWPal.EventDispatchers
 {

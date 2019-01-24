@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using WoWPal.Events.Abstractions;
+using WoWPal.Models.Abstractions;
 using WoWPal.Utilities;
 
 namespace WoWPal.EventDispatchers

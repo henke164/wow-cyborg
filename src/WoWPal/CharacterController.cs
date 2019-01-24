@@ -2,8 +2,8 @@
 using CefSharp.WinForms;
 using System;
 using System.Windows.Forms;
-using WoWPal.Events;
-using WoWPal.Events.Abstractions;
+using WoWPal.Handlers;
+using WoWPal.Models.Abstractions;
 using WoWPal.Handlers;
 using WoWPal.Utilities;
 

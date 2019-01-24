@@ -4,8 +4,8 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using WoWPal.Commanders;
 using WoWPal.EventDispatchers;
-using WoWPal.Events;
-using WoWPal.Events.Abstractions;
+using WoWPal.Handlers;
+using WoWPal.Models.Abstractions;
 using WoWPal.Utilities;
 
 namespace WoWPal
@@ -184,10 +184,10 @@ namespace WoWPal
             }
             else
             {
-                _lootingCommander.Loot(() => { 
-                    _isInCombat = false;
-                    _isInRange = false;
+                _isInCombat = false;
+                _isInRange = false;
 
+                _lootingCommander.Loot(() => { 
                     if (_targetLocation != null)
                     {
                         _enemyTargettingCommander.TargetNearestEnemy();

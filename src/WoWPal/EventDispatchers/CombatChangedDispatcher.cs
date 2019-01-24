@@ -1,5 +1,5 @@
 ﻿using System;
-using WoWPal.Events.Abstractions;
+using WoWPal.Models.Abstractions;
 
 namespace WoWPal.EventDispatchers
 {

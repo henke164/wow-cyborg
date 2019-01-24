@@ -2,7 +2,7 @@
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace WoWPal.Events.Abstractions
+namespace WoWPal.Models.Abstractions
 {
     public abstract class EventDispatcherBase
     {

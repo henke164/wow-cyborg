@@ -87,7 +87,10 @@
     <Compile Include="Form1.Designer.cs">
       <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
+    <Compile Include="Handlers\EventManager.cs" />
     <Compile Include="Handlers\MapHandler.cs" />
+    <Compile Include="Models\Abstractions\Event.cs" />
+    <Compile Include="Models\Abstractions\EventDispatcherBase.cs" />
     <Compile Include="Models\AddonSettings.cs" />
     <Compile Include="Models\MapIdSettings.cs" />
     <Compile Include="Models\WaypointCollection.cs" />
@@ -135,12 +138,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\WoWPal.Events\WoWPal.Events.csproj">
-      <Project>{ff2d6508-8248-4754-be43-f82230662469}</Project>
-      <Name>WoWPal.Events</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Content Include="UserInterface\assets\js\index.js">

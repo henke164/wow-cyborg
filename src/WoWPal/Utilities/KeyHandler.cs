@@ -51,18 +51,20 @@ namespace WoWPal.Utilities
 
         public static void ReleaseKey(Keys key)
         {
-            if (_keydowns.Contains(key))
+            try
             {
-                SetForeground();
-                keybd_event((byte)key, 0, KEYEVENTF_KEYUP, 0);
-                try
+                if (_keydowns.Contains(key))
                 {
+                    SetForeground();
+                    keybd_event((byte)key, 0, KEYEVENTF_KEYUP, 0);
                     _keydowns.Remove(key);
                 }
-                catch
-                {
-                }
             }
+            catch
+            {
+                Console.WriteLine("Could not hold key");
+            }
+
         }
 
         private static void SetForeground()

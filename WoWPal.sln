@@ -5,8 +5,6 @@ VisualStudioVersion = 15.0.27703.2042
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WoWPal", "src\WoWPal\WoWPal.csproj", "{C1985AD8-5618-4713-BEC8-AC0F300DDE07}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WoWPal.Events", "src\WoWPal.Events\WoWPal.Events.csproj", "{FF2D6508-8248-4754-BE43-F82230662469}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -23,14 +21,6 @@ Global
 		{C1985AD8-5618-4713-BEC8-AC0F300DDE07}.Release|Any CPU.Build.0 = Release|Any CPU
 		{C1985AD8-5618-4713-BEC8-AC0F300DDE07}.Release|x64.ActiveCfg = Release|x64
 		{C1985AD8-5618-4713-BEC8-AC0F300DDE07}.Release|x64.Build.0 = Release|x64
-		{FF2D6508-8248-4754-BE43-F82230662469}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{FF2D6508-8248-4754-BE43-F82230662469}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{FF2D6508-8248-4754-BE43-F82230662469}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{FF2D6508-8248-4754-BE43-F82230662469}.Debug|x64.Build.0 = Debug|Any CPU
-		{FF2D6508-8248-4754-BE43-F82230662469}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{FF2D6508-8248-4754-BE43-F82230662469}.Release|Any CPU.Build.0 = Release|Any CPU
-		{FF2D6508-8248-4754-BE43-F82230662469}.Release|x64.ActiveCfg = Release|Any CPU
-		{FF2D6508-8248-4754-BE43-F82230662469}.Release|x64.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

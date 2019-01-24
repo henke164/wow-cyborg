@@ -1,4 +1,4 @@
-﻿namespace WoWPal.Events.Abstractions
+﻿namespace WoWPal.Models.Abstractions
 {
     public class Event
     {
