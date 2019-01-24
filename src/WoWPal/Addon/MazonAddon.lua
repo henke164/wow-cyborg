@@ -28,47 +28,38 @@ function CreateCombatFrame()
   end)
 end
 
+function TargetIsAlive()
+  hp = UnitHealth("target");
+  return hp > 0;
+end
+
 function CreateRangeCheckFrame()
-  local frame, texture = CreateDefaultFrame(10, 10, 20, 10);
+  local frame, texture = CreateDefaultFrame(10, 10, 10, 10);
   frame:SetScript("OnUpdate", function(self, event, ...)
     texture:SetColorTexture(1, 0, 0);
     if CheckInteractDistance("target", 4) then
       if (UnitCanAttack("player","target")) then
-        texture:SetColorTexture(0, 1, 0);
+	    if TargetIsAlive() then
+		  texture:SetColorTexture(0, 1, 0);
+		end;
       end
     end
   end)
 end
 
 function CreateCooldownCheckFrame()
-  local frame, texture = CreateDefaultFrame(30, 10, 10, 10);
-  local defaultSpellId = 0;
   local _, _, classId = UnitClass("player");
 
   if classId == 7 then
     print("shaman");
-    defaultSpellId = 188196; -- Lightning bolt
   end
   if classId == 9 then
     print("warlock");
-    defaultSpellId = 686; -- Shadow bolt
   end
   if classId == 10 then
     print("monk");
-    defaultSpellId = 100780; -- Tiger Palm
     CreateMonkBrewmasterFrame();
   end
-
-  frame:SetScript("OnUpdate", function(self, event, ...)
-    cooldown = GetSpellCooldown(defaultSpellId);
-
-    if cooldown > 0 then
-      texture:SetColorTexture(0, 1, 0);
-    end
-    if cooldown == 0 then
-      texture:SetColorTexture(1, 0, 0);
-    end
-  end)
 end
 
 CreateCombatFrame();

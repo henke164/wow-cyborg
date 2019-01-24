@@ -31,23 +31,39 @@ namespace WoWPal.EventDispatchers
 
         protected bool AddonIsGreenAt(int x, int y)
         {
-            if (AddonScreenshot == null)
+            if (AddonScreenshot.Width == 1 || AddonScreenshot.Height == 1)
             {
                 return false;
             }
 
-            var pixel = AddonScreenshot.GetPixel(x, y);
+            var frameWidth = AddonScreenshot.Width / 4;
+            var frameHeight = AddonScreenshot.Height / 6;
+            var xPos = (frameWidth * x);
+            var yPos = (frameHeight * y);
+
+            var pixel = AddonScreenshot.GetPixel(
+                xPos > 0 ? xPos : 1,
+                yPos > 0 ? yPos : 1);
+
             return pixel.R == 0 && pixel.G > 250 && pixel.B == 0;
         }
 
         protected bool AddonIsRedAt(int x, int y)
         {
-            if (AddonScreenshot == null)
+            if (AddonScreenshot.Width == 1 || AddonScreenshot.Height == 1)
             {
                 return false;
             }
 
-            var pixel = AddonScreenshot.GetPixel(x, y);
+            var frameWidth = AddonScreenshot.Width / 4;
+            var frameHeight = AddonScreenshot.Height / 6;
+            var xPos = (frameWidth * x);
+            var yPos = (frameHeight * y);
+
+            var pixel = AddonScreenshot.GetPixel(
+                xPos > 0 ? xPos : 1,
+                yPos > 0 ? yPos : 1);
+
             return pixel.R > 250 && pixel.G == 0 && pixel.B == 0;
         }
         
@@ -61,6 +77,7 @@ namespace WoWPal.EventDispatchers
             var color = AddonScreenshot.GetPixel(
                 xPos > 0 ? xPos : 1,
                 yPos > 0 ? yPos : 1);
+
             return GetCharacterFromColor(color);
         }
 

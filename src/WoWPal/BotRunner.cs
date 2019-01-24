@@ -143,8 +143,7 @@ namespace WoWPal
 
             EventManager.On("WrongFacing", (Event ev) =>
             {
-                KeyHandler.PressKey(Keys.D, 400);
-                _enemyTargettingCommander.TargetNearestEnemy();
+                KeyHandler.PressKey(Keys.D, 500);
             });
         }
 
@@ -184,7 +183,6 @@ namespace WoWPal
             }
             else
             {
-                _isInCombat = false;
                 _isInRange = false;
 
                 _lootingCommander.Loot(() => { 

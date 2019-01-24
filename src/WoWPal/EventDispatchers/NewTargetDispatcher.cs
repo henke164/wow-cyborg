@@ -15,12 +15,7 @@ namespace WoWPal.EventDispatchers
 
         protected override void Update()
         {
-            if (AddonScreenshot == null)
-            {
-                return;
-            }
-
-            if (AddonIsRedAt(AddonScreenshot.Width / 2, 0))
+            if (AddonIsRedAt(1, 0))
             {
                 if (!_hasTarget)
                 {
@@ -30,7 +25,7 @@ namespace WoWPal.EventDispatchers
                 _hasTarget = false;
                 TriggerEvent(false);
             }
-            else if (AddonIsGreenAt(AddonScreenshot.Width / 2, 0))
+            else if (AddonIsGreenAt(1, 0))
             {
                 if (_hasTarget)
                 {
