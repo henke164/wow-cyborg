@@ -68,13 +68,14 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BotRunner.cs" />
+    <Compile Include="Runners\BotRunnerBase.cs" />
     <Compile Include="CharacterController.cs" />
     <Compile Include="Commanders\EnemyTargettingCommander.cs" />
     <Compile Include="Commanders\LootingCommander.cs" />
     <Compile Include="Commanders\MovementCommander.cs" />
     <Compile Include="Commanders\RotationCommander.cs" />
     <Compile Include="EventDispatchers\AddonBehaviourEventDispatcher.cs" />
+    <Compile Include="EventDispatchers\LeaderTransformChangedDispatcher.cs" />
     <Compile Include="EventDispatchers\WrongFacingDispatcher.cs" />
     <Compile Include="EventDispatchers\CombatChangedDispatcher.cs" />
     <Compile Include="EventDispatchers\CombatCastingDispatcher.cs" />
@@ -96,6 +97,7 @@
     <Compile Include="Models\WaypointCollection.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Runners\SoloRunner.cs" />
     <Compile Include="Utilities\KeyHandler.cs" />
     <Compile Include="Utilities\MouseHandler.cs" />
     <Compile Include="Utilities\Rect.cs" />

@@ -4,15 +4,15 @@ using System;
 using System.Windows.Forms;
 using WoWPal.Handlers;
 using WoWPal.Models.Abstractions;
-using WoWPal.Handlers;
 using WoWPal.Utilities;
+using WoWPal.Runners;
 
 namespace WoWPal
 {
     public class CharacterController
     {
         private ChromiumWebBrowser _htmlController;
-        private BotRunner _botRunner = new BotRunner();
+        private SoloRunner _botRunner = new SoloRunner();
         private MapHandler _mapHandler = new MapHandler();
         private Transform _currentTransform = new Transform(0, 0, 0, 0);
         private WaypointManager _waypointManager;

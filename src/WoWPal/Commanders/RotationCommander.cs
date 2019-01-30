@@ -58,6 +58,11 @@ namespace WoWPal.Commanders
         {
             while (_targetPoint != null)
             {
+                if (_currentTransform == null)
+                {
+                    continue;
+                }
+
                 var rotationInstructions = GetRotationInstructions(_currentTransform, _targetPoint);
                 if (rotationInstructions.Distance > 0.1)
                 {
