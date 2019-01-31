@@ -12,7 +12,7 @@ namespace WoWPal
     public class CharacterController
     {
         private ChromiumWebBrowser _htmlController;
-        private SoloRunner _botRunner = new SoloRunner();
+        private BotRunnerBase _botRunner = new SoloRunner();
         private MapHandler _mapHandler = new MapHandler();
         private Transform _currentTransform = new Transform(0, 0, 0, 0);
         private WaypointManager _waypointManager;
@@ -37,10 +37,26 @@ namespace WoWPal
 
                 _currentTransform = transform;
 
-                CallJSFunction("setCharacterLocation", 
+                CallJSFunction("setCharacterLocation",
+                    0,
                     _currentTransform.Position.X.ToString(),
                     _currentTransform.Position.Z.ToString(),
                     _currentTransform.Rotation.ToString());
+            });
+
+            EventManager.On("LeaderTransformChanged", (Event ev) =>
+            {
+                var transform = (Transform)ev.Data;
+                if (_currentTransform.ZoneId != transform.ZoneId)
+                {
+                    return;
+                }
+
+                CallJSFunction("setCharacterLocation",
+                    1,
+                    transform.Position.X.ToString(),
+                    transform.Position.Z.ToString(),
+                    transform.Rotation.ToString());
             });
 
             htmlController.RegisterAsyncJsObject("characterController", this);
@@ -78,9 +94,16 @@ namespace WoWPal
 
         public void OnFaceCommand(string x, string y)
         {
-            var floatX = float.Parse(x.Replace('.', ','));
-            var floatY = float.Parse(y.Replace('.', ','));
-            _botRunner.FaceTowards(new Vector3(floatX, 0, floatY));
+            if (float.TryParse(x.Replace('.', ','), out float floatX) &&
+                float.TryParse(y.Replace('.', ','), out float floatY))
+            {
+                _botRunner.FaceTowards(new Vector3(floatX, 0, floatY));
+            }
+        }
+
+        public void FollowLeader()
+        {
+            _botRunner = new PartyRunner();
         }
 
         private void CallJSFunction(string functionName, params object[] param)

@@ -4,6 +4,11 @@
 ## Author: Mazon
 ## Version: 1.0.0
 
+Combat\HunterBM.lua
 Combat\MonkBrewmaster.lua
+Combat\Shared.lua
+
 MazonAddon.lua
+Positioning\PlayerPositioning.lua
+Positioning\TankPositioning.lua
 OCR.lua

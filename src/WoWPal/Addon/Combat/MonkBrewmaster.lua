@@ -1,45 +1,3 @@
-function IsCastable(spellName, requiredEnergy)
-  local spell, _, _, _, endTime = UnitCastingInfo("player");
-
-  energy = UnitPower("player");
-  cd = GetSpellCooldown(spellName, "spell");
-
-  if cd == 0 then
-    if energy > requiredEnergy then
-      return true;
-    end
-  end
-  return false;
-end
-
-function IsCastableAtEnemyTarget(spellName, requiredEnergy)
-  if CheckInteractDistance("target", 4) == false then
-    return false;
-  end
-
-  if UnitCanAttack("player","target") == false then
-    return false;
-  end
-
-  if TargetIsAlive() == false then
-	return false;
-  end;
-  
-  return IsCastable(spellName, requiredEnergy);
-end
-
-function IsLowHealth()
-  maxHp = UnitHealthMax("player");
-  hp = UnitHealth("player");
-  perc = (hp / maxHp) * 100;
-  return perc < 80;
-end
-
-function TargetIsAlive()
-  hp = UnitHealth("target");
-  return hp > 0;
-end
-
 function CreateMonkBrewmasterFrame()
   local inCombat = false;
   local frame, texture = CreateDefaultFrame(0, -40, 40, 10);
@@ -61,44 +19,28 @@ function CreateMonkBrewmasterFrame()
   frame:SetScript("OnUpdate", function(self, event, ...)
     if IsLowHealth() then
       if IsCastable("Healing Elixir", 0) then
-        r, g, b = GetColorFromNumber(5);
-        texture:SetColorTexture(r, g, b);
-        return;
+        return SetSpellRequest(texture, 5);
       end
     end
 
     if inCombat == false then
       if IsCastableAtEnemyTarget("Crackling Jade Lightning", 50) then
-        r, g, b = GetColorFromNumber(1);
-        texture:SetColorTexture(r, g, b);
-        --str:SetText("Crackling Jade Lightning");
-        return;
+        return SetSpellRequest(texture, 1);
       end
     end
 
     if IsCastableAtEnemyTarget("Keg Smash", 40) then
-      r, g, b = GetColorFromNumber(2);
-      texture:SetColorTexture(r, g, b);
-      --str:SetText("Keg Smash");
-      return;
+      return SetSpellRequest(texture, 2);
     end
 
     if IsCastableAtEnemyTarget("Blackout Strike", 0) then
-      r, g, b = GetColorFromNumber(3);
-      texture:SetColorTexture(r, g, b);
-      --str:SetText("Blackout Strike");
-      return;
+      return SetSpellRequest(texture, 3);
     end
     
     if IsCastableAtEnemyTarget("Tiger Palm", 25) then
-      r, g, b = GetColorFromNumber(4);
-      texture:SetColorTexture(r, g, b);
-      --str:SetText("Tiger Palm");
-      return;
+      return SetSpellRequest(texture, 4);
     end
     
-    --str:SetText("Wait");
-    r, g, b = GetColorFromNumber(nil);
-    texture:SetColorTexture(r, g, b);
+    return SetSpellRequest(texture, nil);
   end)
 end

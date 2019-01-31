@@ -130,6 +130,7 @@ namespace WoWPal.Runners
         {
             EventManager.StartEventDispatcher(typeof(ScreenChangedDispatcher));
             EventManager.StartEventDispatcher(typeof(PlayerTransformChangedDispatcher));
+            EventManager.StartEventDispatcher(typeof(LeaderTransformChangedDispatcher));
             EventManager.StartEventDispatcher(typeof(CombatChangedDispatcher));
             EventManager.StartEventDispatcher(typeof(CombatCastingDispatcher));
             EventManager.StartEventDispatcher(typeof(NewTargetDispatcher));

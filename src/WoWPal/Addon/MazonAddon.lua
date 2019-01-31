@@ -60,6 +60,10 @@ function CreateCooldownCheckFrame()
     print("monk");
     CreateMonkBrewmasterFrame();
   end
+  if classId == 3 then
+    print("hunter");
+    CreateHunterBMFrame();
+  end
 end
 
 CreateCombatFrame();

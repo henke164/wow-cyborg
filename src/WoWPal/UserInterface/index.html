@@ -3,56 +3,57 @@
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
 
 <head>
-  <meta charset="utf-8" />
-  <title></title>
-  <link rel="stylesheet" href="assets/style/index.css" />
-  <script>
-    document.addEventListener('contextmenu', event => event.preventDefault());
-  </script>
+    <meta charset="utf-8" />
+    <title></title>
+    <link rel="stylesheet" href="assets/style/index.css" />
+    <script>
+        document.addEventListener('contextmenu', event => event.preventDefault());
+    </script>
 </head>
 
 <body>
-  <div class="top-menu">
-    <a id="waypoint-button" href="#">Waypoints</a>
-    <a id="log-button" href="#">Log</a>
-    <a id="devtools-button" href="#">DevTools</a>
-    <span id="debug"></span>
-  </div>
-  <div class="left-menu">
-    <div id="waypoints-wrapper">
-      <h2>Waypoints</h2>
-      <a id="wp-collection-label" href="#"></a>
-      <input id="wp-collection-name-input" type="text" placeholder="name" style="width:100px" /><input id="new-wp-collection-button" type="button" value="New" />
-      <hr />
-      <input id="add-wp-button" type="button" value="Add waypoint">
-      <input id="run-wp-button" type="button" value="Play">
-      <ul id="waypoints">
-
-      </ul>
+    <div class="top-menu">
+        <a id="party-button" href="#">Party</a>
+        <a id="waypoint-button" href="#">Waypoints</a>
+        <a id="log-button" href="#">Log</a>
+        <a id="devtools-button" href="#">DevTools</a>
+        <span id="debug"></span>
     </div>
-    <div id="log-wrapper">
-      <h2>LOG</h2>
-      <ul id="log">
-
-      </ul>
+    <div class="left-menu">
+        <div id="waypoints-wrapper">
+            <h2>Waypoints</h2>
+            <a id="wp-collection-label" href="#"></a>
+            <input id="wp-collection-name-input" type="text" placeholder="name" style="width:100px" /><input id="new-wp-collection-button" type="button" value="New" />
+            <hr />
+            <input id="add-wp-button" type="button" value="Add waypoint">
+            <input id="run-wp-button" type="button" value="Play">
+            <ul id="waypoints"></ul>
+        </div>
+        <div id="log-wrapper">
+            <h2>LOG</h2>
+            <ul id="log"></ul>
+        </div>
+        <div id="party-wrapper">
+            <h2>Party</h2>
+            <input id="run-party-button" type="button" value="Play">
+        </div>
     </div>
-  </div>
-  <div id="wp-collection-popup">
-    <ul id="wp-collection-selector">
-        <li>Test1</li>
-        <li>Test2</li>
-    </ul>
-  </div>
-  <div id="map-wrapper">
-    <div id="arrow-wrapper">
-      <img id="player1_arrow" class="arrow" src="Images/arrow.png" />
+    <div id="wp-collection-popup">
+        <ul id="wp-collection-selector">
+            <li>Test1</li>
+            <li>Test2</li>
+        </ul>
     </div>
-    <img id="map" src="https://wow.zamimg.com/images/wow/maps/enus/zoom/6452.jpg">
-  </div>
-  <script src="assets/js/index.js"></script>
-  <script src="assets/js/menu.js"></script>
-  <script src="assets/js/waypoint-manager.js"></script>
-  <script src="assets/js/log.js"></script>
+    <div id="map-wrapper">
+        <div id="arrow-wrapper">
+        </div>
+        <img id="map" src="https://wow.zamimg.com/images/wow/maps/enus/zoom/6452.jpg">
+    </div>
+    <script src="assets/js/index.js"></script>
+    <script src="assets/js/menu.js"></script>
+    <script src="assets/js/waypoint-manager.js"></script>
+    <script src="assets/js/log.js"></script>
+    <script src="assets/js/party.js"></script>
 </body>
 
 </html>

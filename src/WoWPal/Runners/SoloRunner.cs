@@ -10,7 +10,6 @@ namespace WoWPal.Runners
 {
     public class SoloRunner : BotRunnerBase
     {
-        private bool _isCasting = false;
         private EnemyTargettingCommander _enemyTargettingCommander = new EnemyTargettingCommander();
         private LootingCommander _lootingCommander = new LootingCommander();
         private bool _isInCombat = false;
@@ -26,12 +25,7 @@ namespace WoWPal.Runners
 
         protected override void SetupBehaviour()
         {
-            EventManager.On("IsCasting", (Event ev) =>
-            {
-                _isCasting = (bool)ev.Data;
-            });
-
-            EventManager.On("PlayerTransformChanged", (Event ev) =>
+            EventManager.On("PlayerTransformChanged", (Event _) =>
             {
                 if (TargetLocation != null && !_isInRange)
                 {
@@ -67,7 +61,7 @@ namespace WoWPal.Runners
                 KeyHandler.PressKey(button);
             });
 
-            EventManager.On("WrongFacing", (Event ev) =>
+            EventManager.On("WrongFacing", (Event _) =>
             {
                 KeyHandler.PressKey(Keys.D, 500);
             });

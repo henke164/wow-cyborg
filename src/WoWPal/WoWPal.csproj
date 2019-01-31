@@ -97,6 +97,7 @@
     <Compile Include="Models\WaypointCollection.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Runners\PartyRunner.cs" />
     <Compile Include="Runners\SoloRunner.cs" />
     <Compile Include="Utilities\KeyHandler.cs" />
     <Compile Include="Utilities\MouseHandler.cs" />
@@ -145,6 +146,9 @@
     <Content Include="UserInterface\assets\js\index.js">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="UserInterface\assets\js\party.js">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="UserInterface\assets\js\log.js">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
@@ -155,6 +159,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="UserInterface\assets\style\index.css">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="UserInterface\Images\circle.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="UserInterface\Images\arrow.png">

@@ -7,6 +7,9 @@ namespace WoWPal.EventDispatchers
 {
     public abstract class AddonBehaviourEventDispatcher : EventDispatcherBase
     {
+        private static int AddonColorRows = 9;
+        private static int AddonColorColumns = 4;
+
         protected Bitmap AddonScreenshot;
 
         public AddonBehaviourEventDispatcher(Action<Event> onEvent) 
@@ -20,7 +23,7 @@ namespace WoWPal.EventDispatchers
 
                 try
                 {
-                    AddonScreenshot = screenshot.Clone(new Rectangle(0, 0, screenshot.Width, screenshot.Height), screenshot.PixelFormat);
+                    AddonScreenshot = screenshot;//.Clone(new Rectangle(0, 0, screenshot.Width, screenshot.Height), screenshot.PixelFormat);
                 }
                 catch
                 {
@@ -36,8 +39,8 @@ namespace WoWPal.EventDispatchers
                 return false;
             }
 
-            var frameWidth = AddonScreenshot.Width / 4;
-            var frameHeight = AddonScreenshot.Height / 6;
+            var frameWidth = AddonScreenshot.Width / AddonColorColumns;
+            var frameHeight = AddonScreenshot.Height / AddonColorRows;
             var xPos = (frameWidth * x);
             var yPos = (frameHeight * y);
 
@@ -55,8 +58,8 @@ namespace WoWPal.EventDispatchers
                 return false;
             }
 
-            var frameWidth = AddonScreenshot.Width / 4;
-            var frameHeight = AddonScreenshot.Height / 6;
+            var frameWidth = AddonScreenshot.Width / AddonColorColumns;
+            var frameHeight = AddonScreenshot.Height / AddonColorRows;
             var xPos = (frameWidth * x);
             var yPos = (frameHeight * y);
 
@@ -69,8 +72,8 @@ namespace WoWPal.EventDispatchers
         
         protected string GetCharacterAt(int x, int y)
         {
-            var frameWidth = AddonScreenshot.Width / 4;
-            var frameHeight = AddonScreenshot.Height / 6;
+            var frameWidth = AddonScreenshot.Width / AddonColorColumns;
+            var frameHeight = AddonScreenshot.Height / AddonColorRows;
             var xPos = (frameWidth * x);
             var yPos = (frameHeight * y);
 
