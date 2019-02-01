@@ -17,6 +17,7 @@ namespace WoWPal.EventDispatchers
 
         protected override void Update()
         {
+            return;
             var zoneId = GetZoneId();
             var xPos = GetXPosition();
             var zPos = GetZPosition();

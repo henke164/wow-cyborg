@@ -1,20 +1,21 @@
 ﻿using System;
 using System.Drawing;
 using WoWPal.Handlers;
+using WoWPal.Models;
 using WoWPal.Models.Abstractions;
+using WoWPal.Utilities;
 
 namespace WoWPal.EventDispatchers
 {
     public abstract class AddonBehaviourEventDispatcher : EventDispatcherBase
     {
-        private static int AddonColorRows = 9;
-        private static int AddonColorColumns = 4;
-
         protected Bitmap AddonScreenshot;
+        private AppSettings _appSettings;
 
         public AddonBehaviourEventDispatcher(Action<Event> onEvent) 
             : base(onEvent)
         {
+            _appSettings = SettingsLoader.LoadSettings<AppSettings>("settings.json");
             AddonScreenshot = new Bitmap(1, 1);
             AddonScreenshot.SetPixel(0, 0, Color.White);
 
@@ -23,7 +24,7 @@ namespace WoWPal.EventDispatchers
 
                 try
                 {
-                    AddonScreenshot = screenshot;//.Clone(new Rectangle(0, 0, screenshot.Width, screenshot.Height), screenshot.PixelFormat);
+                    AddonScreenshot = screenshot;
                 }
                 catch
                 {
@@ -39,14 +40,14 @@ namespace WoWPal.EventDispatchers
                 return false;
             }
 
-            var frameWidth = AddonScreenshot.Width / AddonColorColumns;
-            var frameHeight = AddonScreenshot.Height / AddonColorRows;
+            var frameWidth = AddonScreenshot.Width / _appSettings.AddonColumnCount;
+            var frameHeight = AddonScreenshot.Height / _appSettings.AddonRowCount;
             var xPos = (frameWidth * x);
             var yPos = (frameHeight * y);
 
             var pixel = AddonScreenshot.GetPixel(
-                xPos > 0 ? xPos : 1,
-                yPos > 0 ? yPos : 1);
+                xPos - (frameWidth / 2),
+                AddonScreenshot.Height - yPos + (frameHeight / 2));
 
             return pixel.R == 0 && pixel.G > 250 && pixel.B == 0;
         }
@@ -58,28 +59,28 @@ namespace WoWPal.EventDispatchers
                 return false;
             }
 
-            var frameWidth = AddonScreenshot.Width / AddonColorColumns;
-            var frameHeight = AddonScreenshot.Height / AddonColorRows;
+            var frameWidth = AddonScreenshot.Width / _appSettings.AddonColumnCount;
+            var frameHeight = AddonScreenshot.Height / _appSettings.AddonRowCount;
             var xPos = (frameWidth * x);
             var yPos = (frameHeight * y);
 
             var pixel = AddonScreenshot.GetPixel(
-                xPos > 0 ? xPos : 1,
-                yPos > 0 ? yPos : 1);
+                xPos - (frameWidth / 2),
+                AddonScreenshot.Height - yPos + (frameHeight / 2));
 
             return pixel.R > 250 && pixel.G == 0 && pixel.B == 0;
         }
         
         protected string GetCharacterAt(int x, int y)
         {
-            var frameWidth = AddonScreenshot.Width / AddonColorColumns;
-            var frameHeight = AddonScreenshot.Height / AddonColorRows;
+            var frameWidth = AddonScreenshot.Width / _appSettings.AddonColumnCount;
+            var frameHeight = AddonScreenshot.Height / _appSettings.AddonRowCount;
             var xPos = (frameWidth * x);
             var yPos = (frameHeight * y);
 
             var color = AddonScreenshot.GetPixel(
-                xPos > 0 ? xPos : 1,
-                yPos > 0 ? yPos : 1);
+                xPos - (frameWidth / 2),
+                AddonScreenshot.Height - yPos + (frameHeight / 2));
 
             return GetCharacterFromColor(color);
         }

@@ -39,10 +39,10 @@ namespace WoWPal.EventDispatchers
         private int GetZoneId()
         {
             var numbers = new List<string> {
-                GetCharacterAt(0, 1),
-                GetCharacterAt(1, 1),
-                GetCharacterAt(2, 1),
-                GetCharacterAt(3, 1)
+                GetCharacterAt(1, 6),
+                GetCharacterAt(2, 6),
+                GetCharacterAt(3, 6),
+                GetCharacterAt(4, 6)
             };
 
             return int.Parse(string.Join("", numbers));
@@ -52,10 +52,10 @@ namespace WoWPal.EventDispatchers
         {
             var numbers = new List<string> {
                 "0,",
-                GetCharacterAt(0, 2),
-                GetCharacterAt(1, 2),
-                GetCharacterAt(2, 2),
-                GetCharacterAt(3, 2)
+                GetCharacterAt(1, 5),
+                GetCharacterAt(2, 5),
+                GetCharacterAt(3, 5),
+                GetCharacterAt(4, 5)
             };
 
             return float.Parse(string.Join("", numbers));
@@ -65,10 +65,10 @@ namespace WoWPal.EventDispatchers
         {
             var numbers = new List<string> {
                 "0,",
-                GetCharacterAt(0, 3),
-                GetCharacterAt(1, 3),
-                GetCharacterAt(2, 3),
-                GetCharacterAt(3, 3)
+                GetCharacterAt(1, 4),
+                GetCharacterAt(2, 4),
+                GetCharacterAt(3, 4),
+                GetCharacterAt(4, 4)
             };
 
             return float.Parse(string.Join("", numbers));
@@ -77,10 +77,10 @@ namespace WoWPal.EventDispatchers
         private float GetRotation()
         {
             var numbers = new List<string> {
-                GetCharacterAt(0, 4),
-                GetCharacterAt(1, 4),
-                GetCharacterAt(2, 4),
-                GetCharacterAt(3, 4)
+                GetCharacterAt(1, 3),
+                GetCharacterAt(2, 3),
+                GetCharacterAt(3, 3),
+                GetCharacterAt(4, 3)
             };
 
             var rotation = float.Parse(string.Join("", numbers));

@@ -26,7 +26,7 @@ namespace WoWPal.EventDispatchers
                 return;
             }
 
-            var button = GetCharacterAt(1, 5);
+            var button = GetCharacterAt(3, 2);
 
             if (button == "")
             {

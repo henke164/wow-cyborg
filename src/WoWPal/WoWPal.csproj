@@ -98,6 +98,7 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Runners\PartyRunner.cs" />
+    <Compile Include="Runners\AutoCaster.cs" />
     <Compile Include="Runners\SoloRunner.cs" />
     <Compile Include="Utilities\KeyHandler.cs" />
     <Compile Include="Utilities\MouseHandler.cs" />
@@ -119,9 +120,13 @@
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
     </Compile>
+    <None Include="Addon\Combat\HunterBM.lua" />
     <None Include="Addon\Combat\MonkBrewmaster.lua" />
+    <None Include="Addon\Combat\Shared.lua" />
     <None Include="Addon\MazonAddon.lua" />
     <None Include="Addon\MazonAddon.toc" />
+    <None Include="Addon\Positioning\PlayerPositioning.lua" />
+    <None Include="Addon\Positioning\TankPositioning.lua" />
     <None Include="settings.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

@@ -12,7 +12,7 @@ namespace WoWPal
     public class CharacterController
     {
         private ChromiumWebBrowser _htmlController;
-        private BotRunnerBase _botRunner = new SoloRunner();
+        private BotRunnerBase _botRunner = new AutoCaster();
         private MapHandler _mapHandler = new MapHandler();
         private Transform _currentTransform = new Transform(0, 0, 0, 0);
         private WaypointManager _waypointManager;
