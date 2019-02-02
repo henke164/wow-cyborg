@@ -21,7 +21,9 @@ namespace WoWPal.EventDispatchers
                 return;
             }
 
-            if ((DateTime.Now - _lastCast).TotalMilliseconds < 500)
+            var now = DateTime.Now;
+
+            if ((now - _lastCast).TotalMilliseconds < 500)
             {
                 return;
             }
@@ -37,7 +39,7 @@ namespace WoWPal.EventDispatchers
 
             if (key != Keys.None)
             {
-                _lastCast = DateTime.Now;
+                _lastCast = now;
                 TriggerEvent(key);
             }
         }

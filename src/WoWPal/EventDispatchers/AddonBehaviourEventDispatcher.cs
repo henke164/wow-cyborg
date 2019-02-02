@@ -10,6 +10,7 @@ namespace WoWPal.EventDispatchers
     public abstract class AddonBehaviourEventDispatcher : EventDispatcherBase
     {
         protected Bitmap AddonScreenshot;
+        protected Size AddonScreenshotSize;
         private AppSettings _appSettings;
 
         public AddonBehaviourEventDispatcher(Action<Event> onEvent) 
@@ -25,64 +26,75 @@ namespace WoWPal.EventDispatchers
                 try
                 {
                     AddonScreenshot = screenshot;
+                    AddonScreenshotSize = screenshot.Size;
                 }
-                catch
+                catch(Exception ex)
                 {
                     Console.WriteLine("ERROR");
+                    Console.WriteLine(ex.Message);
                 }
             });
         }
 
         protected bool AddonIsGreenAt(int x, int y)
         {
-            if (AddonScreenshot.Width == 1 || AddonScreenshot.Height == 1)
+            if (AddonScreenshotSize.Width == 1 || AddonScreenshotSize.Height == 1)
             {
                 return false;
             }
 
-            var frameWidth = AddonScreenshot.Width / _appSettings.AddonColumnCount;
-            var frameHeight = AddonScreenshot.Height / _appSettings.AddonRowCount;
+            var frameWidth = AddonScreenshotSize.Width / _appSettings.AddonColumnCount;
+            var frameHeight = AddonScreenshotSize.Height / _appSettings.AddonRowCount;
             var xPos = (frameWidth * x);
             var yPos = (frameHeight * y);
 
-            var pixel = AddonScreenshot.GetPixel(
-                xPos - (frameWidth / 2),
-                AddonScreenshot.Height - yPos + (frameHeight / 2));
+            var color = TryGetPixelAt(xPos - (frameWidth / 2), 
+                AddonScreenshotSize.Height - yPos + (frameHeight / 2));
 
-            return pixel.R == 0 && pixel.G > 250 && pixel.B == 0;
+            return color.R == 0 && color.G > 250 && color.B == 0;
         }
 
         protected bool AddonIsRedAt(int x, int y)
         {
-            if (AddonScreenshot.Width == 1 || AddonScreenshot.Height == 1)
+            if (AddonScreenshotSize.Width == 1 || AddonScreenshotSize.Height == 1)
             {
                 return false;
             }
 
-            var frameWidth = AddonScreenshot.Width / _appSettings.AddonColumnCount;
-            var frameHeight = AddonScreenshot.Height / _appSettings.AddonRowCount;
+            var frameWidth = AddonScreenshotSize.Width / _appSettings.AddonColumnCount;
+            var frameHeight = AddonScreenshotSize.Height / _appSettings.AddonRowCount;
             var xPos = (frameWidth * x);
             var yPos = (frameHeight * y);
 
-            var pixel = AddonScreenshot.GetPixel(
-                xPos - (frameWidth / 2),
-                AddonScreenshot.Height - yPos + (frameHeight / 2));
+            var color = TryGetPixelAt(xPos - (frameWidth / 2), 
+                AddonScreenshotSize.Height - yPos + (frameHeight / 2));
 
-            return pixel.R > 250 && pixel.G == 0 && pixel.B == 0;
+            return color.R > 250 && color.G == 0 && color.B == 0;
         }
         
         protected string GetCharacterAt(int x, int y)
         {
-            var frameWidth = AddonScreenshot.Width / _appSettings.AddonColumnCount;
-            var frameHeight = AddonScreenshot.Height / _appSettings.AddonRowCount;
+            var frameWidth = AddonScreenshotSize.Width / _appSettings.AddonColumnCount;
+            var frameHeight = AddonScreenshotSize.Height / _appSettings.AddonRowCount;
             var xPos = (frameWidth * x);
             var yPos = (frameHeight * y);
 
-            var color = AddonScreenshot.GetPixel(
-                xPos - (frameWidth / 2),
-                AddonScreenshot.Height - yPos + (frameHeight / 2));
+            var color = TryGetPixelAt(xPos - (frameWidth / 2), 
+                AddonScreenshotSize.Height - yPos + (frameHeight / 2));
 
             return GetCharacterFromColor(color);
+        }
+
+        private Color TryGetPixelAt(int x, int y)
+        {
+            try
+            {
+                return AddonScreenshot.GetPixel(x, y);
+            }
+            catch
+            {
+                return Color.Magenta;
+            }
         }
 
         private string GetCharacterFromColor(Color c)

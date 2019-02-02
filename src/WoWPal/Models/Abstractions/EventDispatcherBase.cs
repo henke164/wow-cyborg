@@ -9,6 +9,7 @@ namespace WoWPal.Models.Abstractions
         public string EventName { get; set; }
 
         private bool _isRunning = false;
+
         private Action<Event> _onEventTriggered;
 
         public EventDispatcherBase(Action<Event> onEventTriggered)
