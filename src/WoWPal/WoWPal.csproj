@@ -71,6 +71,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CommandHandler\AddonInput.cs" />
+    <Compile Include="Handlers\AddonFolderHandler.cs" />
     <Compile Include="Handlers\AddonLocator.cs" />
     <Compile Include="InputHandler.cs" />
     <Compile Include="Runners\BotRunnerBase.cs" />

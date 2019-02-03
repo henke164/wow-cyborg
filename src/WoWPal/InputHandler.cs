@@ -5,14 +5,13 @@ namespace WoWPal
 {
     public static class InputHandler
     {
-        public static void ReloadAddon()
+        public static void AddonReload()
         {
             AddonLocator.ReCalculateAddonPosition();
             var addonLocation = AddonLocator.GetAddonLocation();
             if (addonLocation.Width == 1 || addonLocation.Height == 1)
             {
-                Program.Log("Addon could not be located.", ConsoleColor.Red);
-                Program.Log("Make sure it's loaded and visible.", ConsoleColor.Red);
+                Program.Log("Addon could not be located, make sure it's loaded and visible.", ConsoleColor.Red);
             }
             else
             {
@@ -21,14 +20,5 @@ namespace WoWPal
             }
         }
 
-        public static void ShowHelp()
-        {
-            Program.Log($@"
-Help:
-
-reload addon    -   If this program cant see the addon on startup you will need to run this command.
-                    It commands the program to find out where the addon is located on the screen.
-            ", ConsoleColor.White);
-        }
     }
 }

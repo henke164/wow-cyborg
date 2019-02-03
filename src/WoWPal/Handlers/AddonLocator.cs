@@ -10,6 +10,9 @@ namespace WoWPal.Handlers
     {
         private static Rectangle _inGameAddonLocation;
 
+        public static void SetInGameAddonLocation(Rectangle rect)
+            => _inGameAddonLocation = rect;
+        
         public static Rectangle GetAddonLocation()
         {
             if (_inGameAddonLocation == Rectangle.Empty)

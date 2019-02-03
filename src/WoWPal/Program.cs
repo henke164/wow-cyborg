@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Drawing;
+using WoWPal.CommandHandler;
 using WoWPal.Handlers;
 using WoWPal.Runners;
 
@@ -26,22 +27,22 @@ namespace WoWPal
 -----------------------------------------------------------------------
             ", ConsoleColor.Yellow);
 
-            InputHandler.ShowHelp();
+            ShowHelp();
         }
 
         static void HandleInput()
         {
             Log(">> ", ConsoleColor.White, true);
-            var command = Console.ReadLine();
+            var command = Console.ReadLine().Split(' ');
 
-            switch (command.ToLower())
+            switch (command[0])
             {
-                case "reload addon":
-                    InputHandler.ReloadAddon();
+                case "addon":
+                    AddonInput.HandleInputParameters(command);
                     break;
 
                 case "help":
-                    InputHandler.ShowHelp();
+                    ShowHelp();
                     break;
 
                 default:
@@ -61,6 +62,18 @@ namespace WoWPal
                 return;
             }
             Console.WriteLine(str);
+        }
+
+
+        public static void ShowHelp()
+        {
+            Log($@"
+Help:
+
+addon reload                    If this program cant see the addon on startup you will need to run this command.
+                                It commands the program to find out where the addon is located on the screen.
+
+            ", ConsoleColor.White);
         }
     }
 }

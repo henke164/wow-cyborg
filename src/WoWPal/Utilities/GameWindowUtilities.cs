@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Linq;
 using System.Runtime.InteropServices;
 
 namespace WoWPal.Utilities
@@ -15,7 +16,11 @@ namespace WoWPal.Utilities
         {
             if (GameProcess == null)
             {
-                GameProcess = Process.GetProcessesByName("WoW")[0];
+                GameProcess = Process.GetProcessesByName("WoW").FirstOrDefault();
+                if (GameProcess == null)
+                {
+                    return false;
+                }
             }
 
             return GetForegroundWindow() == GameProcess.MainWindowHandle;
