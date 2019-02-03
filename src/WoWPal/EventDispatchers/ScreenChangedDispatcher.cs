@@ -4,6 +4,7 @@ using System.Drawing.Imaging;
 using System.Windows.Forms;
 using WoWPal.Handlers;
 using WoWPal.Models.Abstractions;
+using WoWPal.Utilities;
 
 namespace WoWPal.EventDispatchers
 {
@@ -17,6 +18,11 @@ namespace WoWPal.EventDispatchers
 
         protected override void Update()
         {
+            if (!GameWindowUtilities.IsForeground())
+            {
+                return;
+            }
+
             var screenshot = CaptureScreenShot();
             TriggerEvent(screenshot);
         }

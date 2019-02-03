@@ -96,6 +96,7 @@
     <Compile Include="Runners\PartyRunner.cs" />
     <Compile Include="Runners\AutoCaster.cs" />
     <Compile Include="Runners\SoloRunner.cs" />
+    <Compile Include="Utilities\GameWindowUtilities.cs" />
     <Compile Include="Utilities\KeyHandler.cs" />
     <Compile Include="Utilities\MouseHandler.cs" />
     <Compile Include="Utilities\Rect.cs" />

@@ -5,7 +5,9 @@
 ## Version: 1.0.0
 
 Combat\HunterBM.lua
+Combat\HunterMM.lua
 Combat\MonkBrewmaster.lua
+Combat\MonkMistweaver.lua
 Combat\Shared.lua
 
 MazonAddon.lua

@@ -1,72 +1,95 @@
-frameYPos = 0;
-frameWidth = 10;
-frameHeight = 10;
+frameYPos = frameSize * 5
 
 function CreateMapDataFrame(numberIndex)
     local frame, texture = CreateDefaultFrame(
-      numberIndex * frameWidth,
+      numberIndex * frameSize,
       frameYPos,
-      frameWidth,
-      frameHeight
+      frameSize,
+      frameSize
     );
   
     frame:SetScript("OnUpdate", function(self, event, ...)
-      map = C_Map.GetBestMapForUnit("player");
-      number = tonumber(strsub(map, numberIndex + 1, numberIndex + 1));
-      r, g, b = GetColorFromNumber(number);
+      local map = C_Map.GetBestMapForUnit("player");
+      if map == nil then
+        return;
+      end
+
+      local number = tonumber(strsub(map, numberIndex + 1, numberIndex + 1));
+      local r, g, b = GetColorFromNumber(number);
       texture:SetColorTexture(r, g, b);
     end)
   end
   
   function CreateXDataFrame(decimalIndex)
     local frame, texture = CreateDefaultFrame(
-      decimalIndex * frameWidth,
-      frameYPos - frameHeight,
-      frameWidth,
-      frameHeight
+      decimalIndex * frameSize,
+      frameYPos - frameSize,
+      frameSize,
+      frameSize
     );
   
     frame:SetScript("OnUpdate", function(self, event, ...)
-      map = C_Map.GetBestMapForUnit("player");
-      px = C_Map.GetPlayerMapPosition(map, "player"):GetXY();
-      fullXString = tostring(px);
-      number = tonumber(strsub(fullXString, decimalIndex + 3, decimalIndex + 3));
-      r, g, b = GetColorFromNumber(number);
+      local map = C_Map.GetBestMapForUnit("player");
+      if map == nil then
+        return;
+      end
+      
+      local mapPos = C_Map.GetPlayerMapPosition(map, "player");
+      if mapPos == nil then
+        return;
+      end
+      px = mapPos:GetXY();
+
+      local fullXString = tostring(px);
+      local number = tonumber(strsub(fullXString, decimalIndex + 3, decimalIndex + 3));
+      local r, g, b = GetColorFromNumber(number);
       texture:SetColorTexture(r, g, b);
     end)
   end
   
   function CreateYDataFrame(decimalIndex)
     local frame, texture = CreateDefaultFrame(
-      decimalIndex * frameWidth,
-      frameYPos - (frameHeight * 2), 
-      frameWidth, 
-      frameHeight
+      decimalIndex * frameSize,
+      frameYPos - (frameSize * 2), 
+      frameSize, 
+      frameSize
     );
   
     frame:SetScript("OnUpdate", function(self, event, ...)
-      map = C_Map.GetBestMapForUnit("player");
-      _, py = C_Map.GetPlayerMapPosition(map, "player"):GetXY();
-      fullYString = tostring(py);
-      number = tonumber(strsub(fullYString, decimalIndex + 3, decimalIndex + 3));
-      r, g, b = GetColorFromNumber(number);
+      local map = C_Map.GetBestMapForUnit("player");
+      if map == nil then
+        return;
+      end
+      local mapPos = C_Map.GetPlayerMapPosition(map, "player");
+      if mapPos == nil then
+        return;
+      end
+      _, py = mapPos:GetXY();
+
+      local fullYString = tostring(py);
+      local number = tonumber(strsub(fullYString, decimalIndex + 3, decimalIndex + 3));
+      local r, g, b = GetColorFromNumber(number);
       texture:SetColorTexture(r, g, b);
     end)
   end
   
   function CreateRotationDataFrame(numberIndex)
     local frame, texture = CreateDefaultFrame(
-      numberIndex * frameWidth,
-      frameYPos - (frameHeight * 3),
-      frameWidth,
-      frameHeight
+      numberIndex * frameSize,
+      frameYPos - (frameSize * 3),
+      frameSize,
+      frameSize
     );
   
     frame:SetScript("OnUpdate", function(self, event, ...)
-      facing = GetPlayerFacing();
-      fullFacingString = tostring(facing * 1000);
-      number = tonumber(strsub(fullFacingString, numberIndex + 1, numberIndex + 1));
-      r, g, b = GetColorFromNumber(number);
+      local facing = GetPlayerFacing();
+      if facing == nil then
+        return;
+      end
+
+      local fullFacingString = tostring(facing * 1000);
+      local number = tonumber(strsub(fullFacingString, numberIndex + 1, numberIndex + 1));
+      local r, g, b = GetColorFromNumber(number);
       texture:SetColorTexture(r, g, b);
     end)
   end

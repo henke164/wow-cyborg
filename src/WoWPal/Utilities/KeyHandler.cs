@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.Threading;
 using System.Windows.Forms;
@@ -12,11 +11,6 @@ namespace WoWPal.Utilities
         [DllImport("user32.dll")]
         public static extern void keybd_event(byte bVk, byte bScan, uint dwFlags, uint dwExtraInfo);
 
-        [DllImport("user32.dll", CharSet = CharSet.Auto, ExactSpelling = true)]
-        public static extern IntPtr GetForegroundWindow();
-
-        private static Process GameProcess;
-
         public const int KEYEVENTF_EXTENDEDKEY = 0x0001; //Key down flag
         public const int KEYEVENTF_KEYUP = 0x0002; //Key up flag
 
@@ -24,7 +18,7 @@ namespace WoWPal.Utilities
 
         public static void PressKey(Keys key, int holdMs = 0)
         {
-            if (!IsForeground())
+            if (!GameWindowUtilities.IsForeground())
             {
                 return;
             }
@@ -42,7 +36,7 @@ namespace WoWPal.Utilities
                     _keydowns.Add(key);
                 }
 
-                if (!IsForeground())
+                if (!GameWindowUtilities.IsForeground())
                 {
                     return;
                 }
@@ -61,7 +55,7 @@ namespace WoWPal.Utilities
             {
                 if (_keydowns.Contains(key))
                 {
-                    if (!IsForeground())
+                    if (!GameWindowUtilities.IsForeground())
                     {
                         return;
                     }
@@ -75,16 +69,6 @@ namespace WoWPal.Utilities
                 Console.WriteLine("Could not hold key");
             }
 
-        }
-
-        private static bool IsForeground()
-        {
-            if (GameProcess == null)
-            {
-                GameProcess = Process.GetProcessesByName("WoW")[0];
-            }
-
-            return GetForegroundWindow() == GameProcess.MainWindowHandle;
         }
     }
 }

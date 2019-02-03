@@ -1,6 +1,6 @@
 function CreateMonkBrewmasterFrame()
   local inCombat = false;
-  local frame, texture = CreateDefaultFrame(0, -40, 40, 10);
+  local frame, texture = CreateDefaultFrame(frameSize * 2, frameSize, frameSize, frameSize);
   local str = frame:CreateFontString(nil, "OVERLAY", "GameFontNormalLarge");
   str:SetPoint("CENTER");
   str:SetTextColor(1, 1, 1);
@@ -17,7 +17,7 @@ function CreateMonkBrewmasterFrame()
   end)
 
   frame:SetScript("OnUpdate", function(self, event, ...)
-    if IsLowHealth() then
+    if GetHealthPercentage("player") < 80 then
       if IsCastable("Healing Elixir", 0) then
         return SetSpellRequest(texture, 5);
       end

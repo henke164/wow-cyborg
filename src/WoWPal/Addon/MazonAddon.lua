@@ -1,7 +1,9 @@
+frameSize = 5;
+
 function CreateDefaultFrame(x, y, width, height)
   local frame = CreateFrame("Frame");
   frame:ClearAllPoints();
-  frame:SetPoint("LEFT", UIParent, "LEFT", x, y);
+  frame:SetPoint("BOTTOMLEFT", UIParent, "BOTTOMLEFT", x, y);
   frame:SetWidth(width);
   frame:SetHeight(height);
   local texture = frame:CreateTexture("WhiteTexture", "ARTWORK");
@@ -13,8 +15,13 @@ function CreateDefaultFrame(x, y, width, height)
   return frame, texture;
 end
 
+function CreateWrapperFrame()
+  local frame, texture = CreateDefaultFrame(0, 0, frameSize * 4, frameSize);
+  texture:SetColorTexture(1, 0, 0.5);
+end
+
 function CreateCombatFrame()
-  local frame, texture = CreateDefaultFrame(0, 10, 10, 10);
+  local frame, texture = CreateDefaultFrame(0, frameSize, frameSize, frameSize);
   frame:RegisterEvent("PLAYER_REGEN_DISABLED");
   frame:RegisterEvent("PLAYER_REGEN_ENABLED");
 
@@ -34,7 +41,7 @@ function TargetIsAlive()
 end
 
 function CreateRangeCheckFrame()
-  local frame, texture = CreateDefaultFrame(10, 10, 10, 10);
+  local frame, texture = CreateDefaultFrame(frameSize, frameSize, frameSize, frameSize);
   frame:SetScript("OnUpdate", function(self, event, ...)
     texture:SetColorTexture(1, 0, 0);
     if CheckInteractDistance("target", 4) then
@@ -69,3 +76,4 @@ end
 CreateCombatFrame();
 CreateRangeCheckFrame();
 CreateCooldownCheckFrame();
+CreateWrapperFrame();

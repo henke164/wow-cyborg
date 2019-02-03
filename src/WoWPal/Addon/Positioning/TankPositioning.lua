@@ -1,14 +1,12 @@
-frameYPos = -50;
-frameWidth = 10;
-frameHeight = 10;
+frameYPos = (frameSize * 4) * 3;
 tankIndex = -1;
 
 function CreateMapDataFrame(numberIndex)
   local frame, texture = CreateDefaultFrame(
-    numberIndex * frameWidth,
+    numberIndex * frameSize,
     frameYPos,
-    frameWidth,
-    frameHeight
+    frameSize,
+    frameSize
   );
 
   frame:SetScript("OnUpdate", function(self, event, ...)
@@ -37,10 +35,10 @@ end
 
 function CreateXDataFrame(decimalIndex)
   local frame, texture = CreateDefaultFrame(
-    decimalIndex * frameWidth,
-    frameYPos - frameHeight,
-    frameWidth,
-    frameHeight
+    decimalIndex * frameSize,
+    frameYPos - frameSize,
+    frameSize,
+    frameSize
   );
 
   frame:SetScript("OnUpdate", function(self, event, ...)
@@ -58,10 +56,10 @@ end
 
 function CreateYDataFrame(decimalIndex)
   local frame, texture = CreateDefaultFrame(
-    decimalIndex * frameWidth,
-    frameYPos - (frameHeight * 2), 
-    frameWidth, 
-    frameHeight
+    decimalIndex * frameSize,
+    frameYPos - (frameSize * 2), 
+    frameSize, 
+    frameSize
   );
 
   frame:SetScript("OnUpdate", function(self, event, ...)
@@ -76,18 +74,18 @@ function CreateYDataFrame(decimalIndex)
     texture:SetColorTexture(r, g, b);
   end)
 end
-  
-CreateMapDataFrame(0);
-CreateMapDataFrame(1);
-CreateMapDataFrame(2);
-CreateMapDataFrame(3);
 
-CreateXDataFrame(0);
-CreateXDataFrame(1);
-CreateXDataFrame(2);
-CreateXDataFrame(3);
+--CreateMapDataFrame(0);
+--CreateMapDataFrame(1);
+--CreateMapDataFrame(2);
+--CreateMapDataFrame(3);
 
-CreateYDataFrame(0);
-CreateYDataFrame(1);
-CreateYDataFrame(2);
-CreateYDataFrame(3);
+--CreateXDataFrame(0);
+--CreateXDataFrame(1);
+--CreateXDataFrame(2);
+--CreateXDataFrame(3);
+
+--CreateYDataFrame(0);
+--CreateYDataFrame(1);
+--CreateYDataFrame(2);
+--CreateYDataFrame(3);
