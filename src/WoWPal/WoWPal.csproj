@@ -72,6 +72,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Handlers\AddonLocator.cs" />
+    <Compile Include="InputHandler.cs" />
     <Compile Include="Runners\BotRunnerBase.cs" />
     <Compile Include="Commanders\EnemyTargettingCommander.cs" />
     <Compile Include="Commanders\LootingCommander.cs" />

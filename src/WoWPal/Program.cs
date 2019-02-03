@@ -1,47 +1,66 @@
 ﻿using System;
-using System.Diagnostics;
-using System.Runtime.InteropServices;
+using System.Drawing;
+using WoWPal.Handlers;
 using WoWPal.Runners;
 
 namespace WoWPal
 {
     static class Program
     {
-        [DllImport("user32.dll", SetLastError = true)]
-        [return: MarshalAs(UnmanagedType.Bool)]
-        private static extern bool SetWindowPos(
-            IntPtr hWnd,
-            IntPtr hWndInsertAfter,
-            int x,
-            int y,
-            int cx,
-            int cy,
-            int uFlags);
-
-        private const int HWND_TOPMOST = -1;
-        private const int SWP_NOMOVE = 0x0002;
-        private const int SWP_NOSIZE = 0x0001;
-
         static void Main()
         {
-            TopMost();
-
             var botRunner = new AutoCaster();
-            botRunner.OnLog = (string log) =>
-            {
-                Console.WriteLine(log);
-            };
-            Console.ReadLine();
+            RenderStartMessage();
+            HandleInput();
         }
 
-        static void TopMost()
+        static void RenderStartMessage()
         {
-            var hWnd = Process.GetCurrentProcess().MainWindowHandle;
+            Log($@"
+ __      __             _________        ___.                        
+/  \    /  \______  _  _\_   ___ \___.__.\_ |__   ___________  ____  
+\   \/\/   /  _ \ \/ \/ /    \  \<   |  | | __ \ /  _ \_  __ \/ ___\ 
+ \        (  <_> )     /\     \___\___  | | \_\ (  <_> )  | \/ /_/  >
+  \__/\  / \____/ \/\_/  \______  / ____| |___  /\____/|__|  \___  / 
+       \/                       \/\/          \/            /_____/  
+-----------------------------------------------------------------------
+            ", ConsoleColor.Yellow);
 
-            SetWindowPos(hWnd,
-                new IntPtr(HWND_TOPMOST),
-                0, 0, 0, 0,
-                SWP_NOMOVE | SWP_NOSIZE);
+            InputHandler.ShowHelp();
+        }
+
+        static void HandleInput()
+        {
+            Log(">> ", ConsoleColor.White, true);
+            var command = Console.ReadLine();
+
+            switch (command.ToLower())
+            {
+                case "reload addon":
+                    InputHandler.ReloadAddon();
+                    break;
+
+                case "help":
+                    InputHandler.ShowHelp();
+                    break;
+
+                default:
+                    Log("Unknown command", ConsoleColor.Red);
+                    break;
+            }
+
+            HandleInput();
+        }
+
+        public static void Log(string str, ConsoleColor color, bool inLine = false)
+        {
+            Console.ForegroundColor = color;
+            if (inLine)
+            {
+                Console.Write(str);
+                return;
+            }
+            Console.WriteLine(str);
         }
     }
 }

@@ -12,8 +12,8 @@ namespace WoWPal.Utilities
         [DllImport("user32.dll")]
         public static extern void keybd_event(byte bVk, byte bScan, uint dwFlags, uint dwExtraInfo);
 
-        [DllImport("USER32.DLL")]
-        public static extern bool SetForegroundWindow(IntPtr hWnd);
+        [DllImport("user32.dll", CharSet = CharSet.Auto, ExactSpelling = true)]
+        public static extern IntPtr GetForegroundWindow();
 
         private static Process GameProcess;
 
@@ -24,7 +24,10 @@ namespace WoWPal.Utilities
 
         public static void PressKey(Keys key, int holdMs = 0)
         {
-            SetForeground();
+            if (!IsForeground())
+            {
+                return;
+            }
             HoldKey(key);
             Thread.Sleep(holdMs);
             ReleaseKey(key);
@@ -39,7 +42,10 @@ namespace WoWPal.Utilities
                     _keydowns.Add(key);
                 }
 
-                SetForeground();
+                if (!IsForeground())
+                {
+                    return;
+                }
                 keybd_event((byte)key, 0, KEYEVENTF_KEYUP, 0);
                 keybd_event((byte)key, 0, KEYEVENTF_EXTENDEDKEY, 0);
             }
@@ -55,7 +61,11 @@ namespace WoWPal.Utilities
             {
                 if (_keydowns.Contains(key))
                 {
-                    SetForeground();
+                    if (!IsForeground())
+                    {
+                        return;
+                    }
+
                     keybd_event((byte)key, 0, KEYEVENTF_KEYUP, 0);
                     _keydowns.Remove(key);
                 }
@@ -67,14 +77,14 @@ namespace WoWPal.Utilities
 
         }
 
-        private static void SetForeground()
+        private static bool IsForeground()
         {
             if (GameProcess == null)
             {
                 GameProcess = Process.GetProcessesByName("WoW")[0];
             }
 
-            SetForegroundWindow(GameProcess.MainWindowHandle);
+            return GetForegroundWindow() == GameProcess.MainWindowHandle;
         }
     }
 }

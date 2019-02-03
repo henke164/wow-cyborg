@@ -30,8 +30,6 @@ namespace WoWPal.EventDispatchers
                 }
                 catch(Exception ex)
                 {
-                    Console.WriteLine("ERROR");
-                    Console.WriteLine(ex.Message);
                 }
             });
         }
