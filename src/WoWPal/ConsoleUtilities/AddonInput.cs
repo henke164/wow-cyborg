@@ -2,7 +2,7 @@
 using System.Linq;
 using WoWPal.Handlers;
 
-namespace WoWPal.CommandHandler
+namespace WoWPal.ConsoleUtilities
 {
     public static class AddonInput
     {
@@ -19,6 +19,10 @@ namespace WoWPal.CommandHandler
             if (commandParameters[0] == "reload")
             {
                 RelocateAddon();
+            }
+            else
+            {
+                Program.Log("Unknown command", ConsoleColor.Red);
             }
         }
 

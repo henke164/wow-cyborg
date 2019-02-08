@@ -84,15 +84,9 @@ local function RenderSingleTargetRotation(texture)
   return SetSpellRequest(texture, nil);
 end
 
-function CreateHunterMMFrame()
+function CreateRotationFrame()
+  print("Marksman hunter rotation loaded");
   local frame, texture = CreateDefaultFrame(frameSize * 2, frameSize, frameSize, frameSize);
-
-  frame:SetPropagateKeyboardInput(true);
-  frame:SetScript("OnKeyDown", function(self, key)
-    if key == "CAPSLOCK" then
-      WowCyborg_AOE_Rotation = not WowCyborg_AOE_Rotation;
-    end
-  end)
 
   frame:SetScript("OnUpdate", function(self, event, ...)
     if WowCyborg_AOE_Rotation == true then

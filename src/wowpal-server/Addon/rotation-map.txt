@@ -1,0 +1,3 @@
+furywarrior	Combat/WarriorFury.lua
+bmhunter	Combat/HunterBM.lua
+mmhunter	Combat/HunterMM.lua

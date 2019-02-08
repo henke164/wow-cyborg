@@ -98,6 +98,13 @@ function RenderFontFrame()
   local str = fontFrame:CreateFontString(nil, "OVERLAY", "GameFontNormalLarge");
   str:SetPoint("CENTER");
   str:SetTextColor(1, 1, 1);
+  
+  fontFrame:SetPropagateKeyboardInput(true);
+  fontFrame:SetScript("OnKeyDown", function(self, key)
+    if key == "CAPSLOCK" then
+      WowCyborg_AOE_Rotation = not WowCyborg_AOE_Rotation;
+    end
+  end)
 
   fontFrame:SetScript("OnUpdate", function(self, event, ...)
     if WowCyborg_AOE_Rotation == true then

@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Drawing;
-using WoWPal.CommandHandler;
-using WoWPal.Handlers;
+using WoWPal.ConsoleUtilities;
 using WoWPal.Runners;
 
 namespace WoWPal
@@ -10,6 +8,9 @@ namespace WoWPal
     {
         static void Main()
         {
+            ValidateAddonFiles();
+            AddonInstaller.DownloadRotations();
+
             var botRunner = new AutoCaster();
             RenderStartMessage();
             HandleInput();
@@ -41,6 +42,10 @@ namespace WoWPal
                     AddonInput.HandleInputParameters(command);
                     break;
 
+                case "rotation":
+                    RotationInput.HandleInputParameters(command);
+                    break;
+
                 case "help":
                     ShowHelp();
                     break;
@@ -63,15 +68,34 @@ namespace WoWPal
             }
             Console.WriteLine(str);
         }
-
+                
+        private static void ValidateAddonFiles()
+        {
+            if (!AddonInstaller.AddonExists())
+            {
+                Log("Downloading addon files...", ConsoleColor.Green);
+                while (!AddonInstaller.DownloadAddon())
+                {
+                    Log("Press enter to retry...", ConsoleColor.White);
+                    Console.ReadLine();
+                }
+                Log($"Download complete! Restart the game, and make sure you activate the addon: '{AddonInstaller.AddonName}'", ConsoleColor.Green);
+            }
+        }
 
         public static void ShowHelp()
         {
             Log($@"
 Help:
 
+Commands:                       Description:
+----------------------------------------------------------------------------------------------------------------
 addon reload                    If this program cant see the addon on startup you will need to run this command.
                                 It commands the program to find out where the addon is located on the screen.
+
+rotation list                   Display all available rotations.
+
+rotation set <rotation name>    Set the current rotation.
 
             ", ConsoleColor.White);
         }

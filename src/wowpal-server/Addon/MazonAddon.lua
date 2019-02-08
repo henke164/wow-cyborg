@@ -54,26 +54,7 @@ function CreateRangeCheckFrame()
   end)
 end
 
-function CreateCooldownCheckFrame()
-  local _, _, classId = UnitClass("player");
-
-  if classId == 7 then
-    print("shaman");
-  end
-  if classId == 9 then
-    print("warlock");
-  end
-  if classId == 10 then
-    print("monk");
-    CreateMonkBrewmasterFrame();
-  end
-  if classId == 3 then
-    print("hunter");
-    CreateHunterBMFrame();
-  end
-end
-
 CreateCombatFrame();
 CreateRangeCheckFrame();
-CreateCooldownCheckFrame();
+CreateRotationFrame();
 CreateWrapperFrame();

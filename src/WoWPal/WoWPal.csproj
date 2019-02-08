@@ -71,10 +71,14 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CommandHandler\AddonInput.cs" />
+    <Compile Include="ConsoleUtilities\ApiClient.cs" />
+    <Compile Include="ConsoleUtilities\RotationInput.cs" />
+    <Compile Include="ConsoleUtilities\AddonInput.cs" />
+    <Compile Include="ConsoleUtilities\AddonInstaller.cs" />
     <Compile Include="Handlers\AddonFolderHandler.cs" />
     <Compile Include="Handlers\AddonLocator.cs" />
     <Compile Include="InputHandler.cs" />
+    <Compile Include="Models\TextFile.cs" />
     <Compile Include="Runners\BotRunnerBase.cs" />
     <Compile Include="Commanders\EnemyTargettingCommander.cs" />
     <Compile Include="Commanders\LootingCommander.cs" />
@@ -115,17 +119,9 @@
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
     </Compile>
-    <None Include="Addon\Combat\HunterBM.lua" />
-    <None Include="Addon\Combat\MonkBrewmaster.lua" />
-    <None Include="Addon\Combat\Shared.lua" />
-    <None Include="Addon\MazonAddon.lua" />
-    <None Include="Addon\MazonAddon.toc" />
-    <None Include="Addon\Positioning\PlayerPositioning.lua" />
-    <None Include="Addon\Positioning\TankPositioning.lua" />
     <None Include="settings.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Addon\OCR.lua" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
