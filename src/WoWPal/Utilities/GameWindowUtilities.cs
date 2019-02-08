@@ -23,6 +23,12 @@ namespace WoWPal.Utilities
                 }
             }
 
+            if (GameProcess.HasExited)
+            {
+                GameProcess = null;
+                return false;
+            }
+
             return GetForegroundWindow() == GameProcess.MainWindowHandle;
         }
     }

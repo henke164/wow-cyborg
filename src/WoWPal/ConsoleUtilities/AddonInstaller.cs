@@ -57,6 +57,24 @@ namespace WoWPal.ConsoleUtilities
             return true;
         }
 
+        public static string GetRotationInstructions()
+        {
+            var addonFolderPath = AddonFolderHandler.GetAddonFolderPath();
+
+            if (string.IsNullOrEmpty(addonFolderPath))
+            {
+                Program.Log($"Addon folder location is not located. Try again when WoW is running.", ConsoleColor.Red);
+                return "";
+            }
+
+            var rotationFile = $"{addonFolderPath}/{AddonName}/Combat/Rotation.lua";
+            using (var sr = new StreamReader(rotationFile))
+            {
+                var content = sr.ReadToEnd();
+                return content.Split(new string[] { "]]--" }, StringSplitOptions.None)[0].Replace("--[[", "");
+            }
+        }
+
         public static void SetRotation(string rotationName)
         {
             if (!Rotations.ContainsKey(rotationName))

@@ -49,7 +49,14 @@ namespace WoWPal.ConsoleUtilities
             try
             {
                 AddonInstaller.SetRotation(commandParameters[1]);
-                Program.Log($"${commandParameters[1]} successfully selected. Run /reload in Wow.", ConsoleColor.Green);
+                Program.Log($"{commandParameters[1]} successfully selected.", ConsoleColor.Green);
+
+                Program.Log($"Run /reload command in WoW", ConsoleColor.White);
+                Program.Log($"The 'Single target'/'Multi target' bar is draggable.", ConsoleColor.White);
+                Program.Log($"Press Caps Lock to toggle between single or multi target.", ConsoleColor.White);
+                Program.Log($"------------------------", ConsoleColor.Yellow);
+                Program.Log($"Setup your keybindings to following:", ConsoleColor.Yellow);
+                Program.Log(AddonInstaller.GetRotationInstructions(), ConsoleColor.Yellow);
             }
             catch (Exception ex)
             {
