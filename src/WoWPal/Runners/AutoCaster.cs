@@ -1,5 +1,6 @@
 ﻿using System.Windows.Forms;
 using WoWPal.Handlers;
+using WoWPal.Models;
 using WoWPal.Models.Abstractions;
 using WoWPal.Utilities;
 
@@ -13,15 +14,18 @@ namespace WoWPal.Runners
 
         protected override void SetupBehaviour()
         {
-            EventManager.On("CastRequested", (Event ev) =>
+            EventManager.On("KeyPressRequested", (Event ev) =>
             {
-                var button = (Keys)ev.Data;
-                KeyHandler.PressKey(button);
-            });
-
-            EventManager.On("WrongFacing", (Event _) =>
-            {
-                //KeyHandler.PressKey(Keys.D, 500);
+                var keyRequest = (KeyPressRequest)ev.Data;
+                if (keyRequest.ModifierKey != Keys.None)
+                {
+                    KeyHandler.PressKey(keyRequest.ModifierKey, 50);
+                    KeyHandler.PressKey(keyRequest.Key);
+                }
+                else
+                {
+                    KeyHandler.PressKey(keyRequest.Key);
+                }
             });
         }
     }

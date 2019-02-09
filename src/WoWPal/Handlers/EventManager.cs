@@ -39,10 +39,11 @@ namespace WoWPal.Handlers
                 return;
             }
 
-            foreach(var subscriber in EventSubscribers[ev.Name])
+            var subscriberCount = EventSubscribers[ev.Name].Count;
+            for (var x = 0; x < subscriberCount; x++)
             {
-                subscriber(ev);
-            };
+                EventSubscribers[ev.Name][x](ev);
+            }
         }
     }
 }

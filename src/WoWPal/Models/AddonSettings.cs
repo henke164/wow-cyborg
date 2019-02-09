@@ -4,6 +4,5 @@
     {
         public int AddonColumnCount { get; set; }
         public int AddonRowCount { get; set; }
-        public string WaypointsPath { get; set; }
     }
 }

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.Threading;
 using System.Windows.Forms;
@@ -12,11 +11,6 @@ namespace WoWPal.Utilities
         [DllImport("user32.dll")]
         public static extern void keybd_event(byte bVk, byte bScan, uint dwFlags, uint dwExtraInfo);
 
-        [DllImport("USER32.DLL")]
-        public static extern bool SetForegroundWindow(IntPtr hWnd);
-
-        private static Process GameProcess;
-
         public const int KEYEVENTF_EXTENDEDKEY = 0x0001; //Key down flag
         public const int KEYEVENTF_KEYUP = 0x0002; //Key up flag
 
@@ -24,7 +18,10 @@ namespace WoWPal.Utilities
 
         public static void PressKey(Keys key, int holdMs = 0)
         {
-            SetForeground();
+            if (!GameWindowUtilities.IsForeground())
+            {
+                return;
+            }
             HoldKey(key);
             Thread.Sleep(holdMs);
             ReleaseKey(key);
@@ -39,7 +36,10 @@ namespace WoWPal.Utilities
                     _keydowns.Add(key);
                 }
 
-                SetForeground();
+                if (!GameWindowUtilities.IsForeground())
+                {
+                    return;
+                }
                 keybd_event((byte)key, 0, KEYEVENTF_KEYUP, 0);
                 keybd_event((byte)key, 0, KEYEVENTF_EXTENDEDKEY, 0);
             }
@@ -55,7 +55,11 @@ namespace WoWPal.Utilities
             {
                 if (_keydowns.Contains(key))
                 {
-                    SetForeground();
+                    if (!GameWindowUtilities.IsForeground())
+                    {
+                        return;
+                    }
+
                     keybd_event((byte)key, 0, KEYEVENTF_KEYUP, 0);
                     _keydowns.Remove(key);
                 }
@@ -65,16 +69,6 @@ namespace WoWPal.Utilities
                 Console.WriteLine("Could not hold key");
             }
 
-        }
-
-        private static void SetForeground()
-        {
-            if (GameProcess == null)
-            {
-                GameProcess = Process.GetProcessesByName("WoW")[0];
-            }
-
-            SetForegroundWindow(GameProcess.MainWindowHandle);
         }
     }
 }

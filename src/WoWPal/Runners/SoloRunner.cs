@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using WoWPal.Commanders;
 using WoWPal.Handlers;
+using WoWPal.Models;
 using WoWPal.Models.Abstractions;
 using WoWPal.Utilities;
 
@@ -55,10 +56,19 @@ namespace WoWPal.Runners
                 }
             });
 
-            EventManager.On("CastRequested", (Event ev) =>
+            EventManager.On("KeyPressRequested", (Event ev) =>
             {
-                var button = (Keys)ev.Data;
-                KeyHandler.PressKey(button);
+                var keyRequest = (KeyPressRequest)ev.Data;
+                if (keyRequest.ModifierKey != Keys.None)
+                {
+                    KeyHandler.HoldKey(keyRequest.ModifierKey);
+                    KeyHandler.PressKey(keyRequest.Key);
+                    KeyHandler.ReleaseKey(keyRequest.ModifierKey);
+                }
+                else
+                {
+                    KeyHandler.PressKey(keyRequest.Key);
+                }
             });
 
             EventManager.On("WrongFacing", (Event _) =>

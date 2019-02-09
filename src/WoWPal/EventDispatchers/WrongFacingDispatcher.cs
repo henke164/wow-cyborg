@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Windows.Forms;
 using WoWPal.Handlers;
+using WoWPal.Models;
 using WoWPal.Models.Abstractions;
 
 namespace WoWPal.EventDispatchers
@@ -15,9 +16,11 @@ namespace WoWPal.EventDispatchers
         {
             EventName = "WrongFacing";
 
-            EventManager.On("CastRequested", (Event ev) =>
+            EventManager.On("KeyPressRequested", (Event ev) =>
             {
-                if (_lastKey == (Keys)ev.Data)
+                var keyRequest = (KeyPressRequest)ev.Data;
+
+                if (_lastKey == keyRequest.Key)
                 {
                     _keyRepeatCount++;
                     if (_keyRepeatCount >= 5)
@@ -28,7 +31,7 @@ namespace WoWPal.EventDispatchers
                 }
                 else
                 {
-                    _lastKey = (Keys)ev.Data;
+                    _lastKey = keyRequest.Key;
                     _keyRepeatCount = 0;
                 }
             });

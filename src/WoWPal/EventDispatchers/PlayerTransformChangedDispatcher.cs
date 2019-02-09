@@ -45,7 +45,12 @@ namespace WoWPal.EventDispatchers
                 GetCharacterAt(4, 6)
             };
 
-            return int.Parse(string.Join("", numbers));
+            if (int.TryParse(string.Join("", numbers), out int zoneId))
+            {
+                return zoneId;
+            }
+
+            return 0;
         }
 
         private float GetXPosition()
@@ -58,7 +63,12 @@ namespace WoWPal.EventDispatchers
                 GetCharacterAt(4, 5)
             };
 
-            return float.Parse(string.Join("", numbers));
+            if (float.TryParse(string.Join("", numbers), out float xPosition))
+            {
+                return xPosition;
+            }
+
+            return 0;
         }
 
         private float GetZPosition()
@@ -71,7 +81,12 @@ namespace WoWPal.EventDispatchers
                 GetCharacterAt(4, 4)
             };
 
-            return float.Parse(string.Join("", numbers));
+            if (float.TryParse(string.Join("", numbers), out float yPosition))
+            {
+                return yPosition;
+            }
+
+            return 0;
         }
 
         private float GetRotation()
@@ -83,8 +98,12 @@ namespace WoWPal.EventDispatchers
                 GetCharacterAt(4, 3)
             };
 
-            var rotation = float.Parse(string.Join("", numbers));
-            return rotation / 1000;
+            if (float.TryParse(string.Join("", numbers), out float rotation))
+            {
+                return rotation / 1000;
+            }
+
+            return 0;
         }
     }
 }
