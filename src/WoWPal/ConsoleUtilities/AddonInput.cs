@@ -20,10 +20,26 @@ namespace WoWPal.ConsoleUtilities
             {
                 RelocateAddon();
             }
+            else if (commandParameters[0] == "reinstall")
+            {
+                ReinstallAddon();
+            }
             else
             {
                 Program.Log("Unknown command", ConsoleColor.Red);
             }
+        }
+
+        public static void ReinstallAddon()
+        {
+            Program.Log("Downloading addon files...", ConsoleColor.Green);
+            while (!AddonInstaller.DownloadAddon())
+            {
+                Program.Log("Press enter to retry...", ConsoleColor.White);
+                Console.ReadLine();
+            }
+            AddonInstaller.DownloadRotations();
+            Program.Log($"Download complete! Restart the game, and make sure you activate the addon: '{AddonInstaller.AddonName}'", ConsoleColor.Green);
         }
 
         private static void RelocateAddon()

@@ -10,65 +10,65 @@
   8         Bladestorm
 ]]--
 
-local rampage = 1;
-local recklessness = 2;
-local execute = 3;
-local bloodthirst = 4;
-local ragingBlow = 5;
-local whirlwind = 6;
-local siegeBreaker = 7;
-local bladestorm = 8;
+local rampage = "1";
+local recklessness = "2";
+local execute = "3";
+local bloodthirst = "4";
+local ragingBlow = "5";
+local whirlwind = "6";
+local siegeBreaker = "7";
+local bladestorm = "8";
 
-local function RenderMultiTargetRotation(texture)
+function RenderMultiTargetRotation(texture)
   if InMeleeRange() == false then
     WowCyborg_CURRENTATTACK = "-";
-    return SetSpellRequest(texture, nil);
+    return SetSpellRequest(nil);
   end
 
   local wwBuff = FindBuff("player", "Whirlwind");
   if wwBuff == nil then
     if IsCastableAtEnemyTarget("Whirlwind", 0) then
       WowCyborg_CURRENTATTACK = "Whirlwind";
-      return SetSpellRequest(texture, whirlwind);
+      return SetSpellRequest(whirlwind);
     end
   end
 
   if IsCastableAtEnemyTarget("Recklessness", 0) then
     WowCyborg_CURRENTATTACK = "Recklessness";
-    return SetSpellRequest(texture, recklessness);
+    return SetSpellRequest(recklessness);
   end
   
   if IsCastableAtEnemyTarget("Siegebreaker", 0) then
     WowCyborg_CURRENTATTACK = "Siegebreaker";
-    return SetSpellRequest(texture, siegeBreaker);
+    return SetSpellRequest(siegeBreaker);
   end
   
   local enrageBuff = FindBuff("player", "Enrage");
   if enrageBuff == nil then
     if IsCastableAtEnemyTarget("Rampage", 75) then
       WowCyborg_CURRENTATTACK = "Rampage";
-      return SetSpellRequest(texture, rampage);
+      return SetSpellRequest(rampage);
     end
   end
 
   if IsCastableAtEnemyTarget("Bladestorm", 0) then
     WowCyborg_CURRENTATTACK = "Bladestorm";
-    return SetSpellRequest(texture, bladestorm);
+    return SetSpellRequest(bladestorm);
   end
 
   if IsCastableAtEnemyTarget("Whirlwind", 0) then
     WowCyborg_CURRENTATTACK = "Whirlwind";
-    return SetSpellRequest(texture, whirlwind);
+    return SetSpellRequest(whirlwind);
   end
   
   WowCyborg_CURRENTATTACK = "-";
-  return SetSpellRequest(texture, nil);
+  return SetSpellRequest(nil);
 end
 
-local function RenderSingleTargetRotation(texture)
+function RenderSingleTargetRotation(texture)
   if InMeleeRange() == false then
     WowCyborg_CURRENTATTACK = "-";
-    return SetSpellRequest(texture, nil);
+    return SetSpellRequest(nil);
   end
 
   local rage = UnitPower("player");
@@ -76,13 +76,13 @@ local function RenderSingleTargetRotation(texture)
   if enrageBuff == nil or rage > 90 then
     if IsCastableAtEnemyTarget("Rampage", 75) then
       WowCyborg_CURRENTATTACK = "Rampage";
-      return SetSpellRequest(texture, rampage);
+      return SetSpellRequest(rampage);
     end
   end
 
   if IsCastableAtEnemyTarget("Recklessness", 0) then
     WowCyborg_CURRENTATTACK = "Recklessness";
-    return SetSpellRequest(texture, recklessness);
+    return SetSpellRequest(recklessness);
   end
 
   local enemyHP = GetHealthPercentage("target");
@@ -91,56 +91,42 @@ local function RenderSingleTargetRotation(texture)
   if enemyHP < 20 or sdBuff == "Sudden Death" then
     if enrageBuff == "Enrage" and IsCastableAtEnemyTarget("Execute", 0) then
       WowCyborg_CURRENTATTACK = "Execute";
-      return SetSpellRequest(texture, execute);
+      return SetSpellRequest(execute);
     end
   end
 
   if enrageBuff == nil and IsCastableAtEnemyTarget("Bloodthirst", 0) then
     WowCyborg_CURRENTATTACK = "Bloodthirst";
-    return SetSpellRequest(texture, bloodthirst);
+    return SetSpellRequest(bloodthirst);
   end
 
   local rbCharges = GetSpellCharges("Raging Blow")
   WowCyborg_CURRENTATTACK = "Raging Blow";
   if rbCharges == 2 and IsCastableAtEnemyTarget("Raging Blow", 0) then
-    return SetSpellRequest(texture, ragingBlow);
+    return SetSpellRequest(ragingBlow);
   end
 
   if IsCastableAtEnemyTarget("Bloodthirst", 0) then
     WowCyborg_CURRENTATTACK = "Bloodthirst";
-    return SetSpellRequest(texture, bloodthirst);
+    return SetSpellRequest(bloodthirst);
   end
   
   if rbCharges > 0 and IsCastableAtEnemyTarget("Raging Blow", 0) then
     WowCyborg_CURRENTATTACK = "Raging Blow";
-    return SetSpellRequest(texture, ragingBlow);
+    return SetSpellRequest(ragingBlow);
   end
 
   if IsCastableAtEnemyTarget("Whirlwind", 0) then
     WowCyborg_CURRENTATTACK = "Whirlwind";
-    return SetSpellRequest(texture, whirlwind);
+    return SetSpellRequest(whirlwind);
   end
 
   WowCyborg_CURRENTATTACK = "-";
-  return SetSpellRequest(texture, nil);
+  return SetSpellRequest(nil);
 end
 
 function InMeleeRange()
   return IsSpellInRange("Execute", "target") == 1;
 end
 
-function CreateRotationFrame()
-  print("Fury warrior rotation loaded");
-  local frame, texture = CreateDefaultFrame(frameSize * 2, frameSize, frameSize, frameSize);
-
-  frame:SetScript("OnUpdate", function(self, event, ...)
-    if WowCyborg_AOE_Rotation == true then
-      RenderMultiTargetRotation(texture);
-    end
-    if WowCyborg_AOE_Rotation == false then
-      RenderSingleTargetRotation(texture);
-    end
-  end)
-
-  RenderFontFrame();
-end
+print("Fury warrior rotation loaded");

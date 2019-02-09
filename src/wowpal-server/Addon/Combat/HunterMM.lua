@@ -5,38 +5,38 @@ local function RenderMultiTargetRotation(texture)
 
   if FindBuff("player", "Trick Shots") == nil then
     if IsCastableAtEnemyTarget("Multi-Shot", 15) then
-      return SetSpellRequest(texture, 6);
+      return SetSpellRequest(6);
     end
   end
 
   if IsCastableAtEnemyTarget("Rapid Fire", 0) then
     if IsCastableAtEnemyTarget("Double Tap", 0) then
-      return SetSpellRequest(texture, 1);
+      return SetSpellRequest(1);
     end
-    return SetSpellRequest(texture, 3);
+    return SetSpellRequest(3);
   end
 
   if FindBuff("player", "Precise Shots") == "Precise Shots" then
     if IsCastableAtEnemyTarget("Multi-Shot", 15) then
-      return SetSpellRequest(texture, 6);
+      return SetSpellRequest(6);
     end
   end
 
   if IsCastableAtEnemyTarget("Aimed Shot", 30) then
     if IsMoving() == false then
-      return SetSpellRequest(texture, 2);
+      return SetSpellRequest(2);
     end
   end
 
   if IsCastableAtEnemyTarget("Multi-Shot", 45) then
-    return SetSpellRequest(texture, 6);
+    return SetSpellRequest(6);
   end
   
   if IsCastableAtEnemyTarget("Steady Shot", 0) then
-    return SetSpellRequest(texture, 5);
+    return SetSpellRequest(5);
   end
 
-  return SetSpellRequest(texture, nil);
+  return SetSpellRequest(nil);
 end
 
 local function RenderSingleTargetRotation(texture)
@@ -45,57 +45,43 @@ local function RenderSingleTargetRotation(texture)
   end
 
   if IsCastableAtEnemyTarget("Double Tap", 0) then
-    return SetSpellRequest(texture, 1);
+    return SetSpellRequest(1);
   end
   
   if IsCastableAtEnemyTarget("Aimed Shot", 30) then
     asCharges = GetSpellCharges("Aimed Shot");
     if asCharges == 2 then
       if IsMoving() == false then
-        return SetSpellRequest(texture, 2);
+        return SetSpellRequest(2);
       end
     end
   end
   
   if IsCastableAtEnemyTarget("Rapid Fire", 0) then
-    return SetSpellRequest(texture, 3);
+    return SetSpellRequest(3);
   end
 
   if FindBuff("player", "Precise Shots") == "Precise Shots" then
     if IsCastableAtEnemyTarget("Arcane Shot", 15) then
-      return SetSpellRequest(texture, 4);
+      return SetSpellRequest(4);
     end
   end
 
   if IsCastableAtEnemyTarget("Aimed Shot", 30) then
     if IsMoving() == false then
-      return SetSpellRequest(texture, 2);
+      return SetSpellRequest(2);
     end
   end
 
   if IsCastableAtEnemyTarget("Arcane Shot", 45) then
-    return SetSpellRequest(texture, 4);
+    return SetSpellRequest(4);
   end
 
   if IsCastableAtEnemyTarget("Steady Shot", 0) then
-    return SetSpellRequest(texture, 5);
+    return SetSpellRequest(5);
   end
 
-  return SetSpellRequest(texture, nil);
+  return SetSpellRequest(nil);
 end
 
-function CreateRotationFrame()
-  print("Marksman hunter rotation loaded");
-  local frame, texture = CreateDefaultFrame(frameSize * 2, frameSize, frameSize, frameSize);
-
-  frame:SetScript("OnUpdate", function(self, event, ...)
-    if WowCyborg_AOE_Rotation == true then
-      RenderMultiTargetRotation(texture);
-    end
-    if WowCyborg_AOE_Rotation == false then
-      RenderSingleTargetRotation(texture);
-    end
-  end)
-
-  RenderFontFrame();
-end
+print("Marksman hunter rotation loaded");

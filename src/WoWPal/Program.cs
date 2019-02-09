@@ -9,7 +9,6 @@ namespace WoWPal
         static void Main()
         {
             ValidateAddonFiles();
-            AddonInstaller.DownloadRotations();
 
             var botRunner = new AutoCaster();
             RenderStartMessage();
@@ -73,13 +72,11 @@ namespace WoWPal
         {
             if (!AddonInstaller.AddonExists())
             {
-                Log("Downloading addon files...", ConsoleColor.Green);
-                while (!AddonInstaller.DownloadAddon())
-                {
-                    Log("Press enter to retry...", ConsoleColor.White);
-                    Console.ReadLine();
-                }
-                Log($"Download complete! Restart the game, and make sure you activate the addon: '{AddonInstaller.AddonName}'", ConsoleColor.Green);
+                AddonInput.ReinstallAddon();
+            }
+            else
+            {
+                AddonInstaller.DownloadRotations();
             }
         }
 
@@ -92,6 +89,8 @@ Commands:                       Description:
 ----------------------------------------------------------------------------------------------------------------
 addon reload                    If this program cant see the addon on startup you will need to run this command.
                                 It commands the program to find out where the addon is located on the screen.
+
+addon reinstall                 Download latest addon files, and reinstall it.
 
 rotation list                   Display all available rotations.
 

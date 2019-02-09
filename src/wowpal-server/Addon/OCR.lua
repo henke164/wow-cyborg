@@ -31,3 +31,17 @@ function GetColorFromNumber(number)
   end
   return 1, 1, 1;
 end
+
+function GetColorFromButton(button)
+  if button == "ALT" then
+    return 1,0,0;
+  end
+  if button == "SHIFT" then
+    return 0,1,0;
+  end
+  if button == "CTRL" then
+    return 0,0,1;
+  end
+
+  return 1,1,1;
+end

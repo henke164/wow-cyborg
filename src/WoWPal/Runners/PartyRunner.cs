@@ -16,12 +16,6 @@ namespace WoWPal.Runners
         
         protected override void SetupBehaviour()
         {
-            EventManager.On("CastRequested", (Event ev) =>
-            {
-                var button = (Keys)ev.Data;
-                //KeyHandler.PressKey(button);
-            });
-
             EventManager.On("WrongFacing", (Event ev) =>
             {
                 KeyHandler.PressKey(Keys.D, 500);

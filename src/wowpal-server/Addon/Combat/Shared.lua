@@ -1,10 +1,43 @@
 WowCyborg_AOE_Rotation = false;
 WowCyborg_CURRENTATTACK = "-";
-WowCyborg_PAUSE = false;
 
-function SetSpellRequest(texture, spellNumber)
-  r, g, b = GetColorFromNumber(spellNumber);
-  texture:SetColorTexture(r, g, b);
+local spellButtonTexture;
+local buttonCombinerTexture;
+
+function CreateRotationFrame()
+  frame, spellButtonTexture = CreateDefaultFrame(frameSize * 2, frameSize, frameSize, frameSize);
+  _, buttonCombinerTexture = CreateDefaultFrame(frameSize * 3, frameSize, frameSize, frameSize);
+
+  frame:SetScript("OnUpdate", function(self, event, ...)
+    if WowCyborg_AOE_Rotation == true then
+      RenderMultiTargetRotation();
+    end
+    if WowCyborg_AOE_Rotation == false then
+      RenderSingleTargetRotation();
+    end
+  end)
+
+  RenderFontFrame();
+end
+
+function SetSpellRequest(buttonCombination)
+  if buttonCombination == nil then
+    r, g, b = GetColorFromNumber(nil);
+    buttonCombinerTexture:SetColorTexture(r, g, b);
+    spellButtonTexture:SetColorTexture(r, g, b);
+    return;
+  end
+
+  local b1, b2 = strsplit("+", buttonCombination);
+
+  if b2 == nil then
+    buttonCombinerTexture:SetColorTexture(GetColorFromButton(nil));
+    spellButtonTexture:SetColorTexture(GetColorFromNumber(tonumber(b1)));
+    return
+  end
+
+  buttonCombinerTexture:SetColorTexture(GetColorFromButton(b1));
+  spellButtonTexture:SetColorTexture(GetColorFromNumber(tonumber(b2)));
 end
 
 function IsMoving()
@@ -120,16 +153,6 @@ function RenderFontFrame()
   fontFrame:SetScript("OnKeyDown", function(self, key)
     if key == "CAPSLOCK" then
       WowCyborg_AOE_Rotation = not WowCyborg_AOE_Rotation;
-    end
-    
-    if key == "LSHIFT" then
-      print("down");
-    end
-  end)
-  
-  fontFrame:SetScript("OnKeyUp", function(self, key)
-    if key == "LSHIFT" then
-      print("up");
     end
   end)
   

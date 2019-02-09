@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Windows.Forms;
+using WoWPal.Models;
 using WoWPal.Models.Abstractions;
 
 namespace WoWPal.EventDispatchers
@@ -11,7 +12,7 @@ namespace WoWPal.EventDispatchers
         public CombatCastingDispatcher(Action<Event> onEvent)
             : base(onEvent)
         {
-            EventName = "CastRequested";
+            EventName = "KeyPressRequested";
         }
 
         protected override void Update()
@@ -28,22 +29,26 @@ namespace WoWPal.EventDispatchers
                 return;
             }
 
-            var button = GetCharacterAt(3, 2);
+            var requestedKey = GetCharacterAt(3, 2);
 
-            if (button == "")
+            if (requestedKey == "")
             {
                 return;
             }
 
-            var key = GetKeyFromCharacter(button);
-
+            var key = GetKeyFromCharacter(requestedKey);
             if (key != Keys.None)
             {
+                var modifier = GetModifierKeyAt(4, 2);
                 _lastCast = now;
-                TriggerEvent(key);
+                TriggerEvent(new KeyPressRequest
+                {
+                    ModifierKey = modifier,
+                    Key = key
+                });
             }
         }
-
+        
         private Keys GetKeyFromCharacter(string character)
         {
             switch (character)

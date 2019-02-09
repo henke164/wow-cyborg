@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Drawing;
+using System.Windows.Forms;
 using WoWPal.Handlers;
 using WoWPal.Models;
 using WoWPal.Models.Abstractions;
@@ -69,18 +70,22 @@ namespace WoWPal.EventDispatchers
 
             return color.R > 250 && color.G == 0 && color.B == 0;
         }
-        
+
         protected string GetCharacterAt(int x, int y)
+            => GetCharacterFromColor(GetColorAt(x, y));
+
+        protected Keys GetModifierKeyAt(int x, int y)
+            => GetModifierKeyFromColor(GetColorAt(x, y));
+
+        protected Color GetColorAt(int x, int y)
         {
             var frameWidth = AddonScreenshotSize.Width / _appSettings.AddonColumnCount;
             var frameHeight = AddonScreenshotSize.Height / _appSettings.AddonRowCount;
             var xPos = (frameWidth * x);
             var yPos = (frameHeight * y);
 
-            var color = TryGetPixelAt(xPos - (frameWidth / 2), 
+            return TryGetPixelAt(xPos - (frameWidth / 2),
                 AddonScreenshotSize.Height - yPos + (frameHeight / 2));
-
-            return GetCharacterFromColor(color);
         }
 
         private Color TryGetPixelAt(int x, int y)
@@ -148,6 +153,26 @@ namespace WoWPal.EventDispatchers
             }
 
             return "";
+        }
+
+        private Keys GetModifierKeyFromColor(Color c)
+        {
+            if (c.R == 0 && c.G == 0 && c.B > 200)
+            {
+                return Keys.LControlKey;
+            }
+
+            if (c.R == 0 && c.G > 200 && c.B == 0)
+            {
+                return Keys.LShiftKey;
+            }
+
+            if (c.R > 200 && c.G == 0 && c.B == 0)
+            {
+                return Keys.Alt;
+            }
+            
+            return Keys.None;
         }
     }
 }
