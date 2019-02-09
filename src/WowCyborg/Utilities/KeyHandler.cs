@@ -18,10 +18,6 @@ namespace WowCyborg.Utilities
 
         public static void PressKey(Keys key, int holdMs = 0)
         {
-            if (!GameWindowUtilities.IsForeground())
-            {
-                return;
-            }
             HoldKey(key);
             Thread.Sleep(holdMs);
             ReleaseKey(key);
@@ -56,11 +52,6 @@ namespace WowCyborg.Utilities
             {
                 if (_keydowns.Contains(key))
                 {
-                    if (!GameWindowUtilities.IsForeground())
-                    {
-                        return;
-                    }
-
                     keybd_event((byte)key, 0, KEYEVENTF_KEYUP, 0);
                     _keydowns.Remove(key);
                 }
@@ -71,65 +62,29 @@ namespace WowCyborg.Utilities
             }
         }
 
-        public static void PressKeys(Keys[] keys, int holdMs = 0)
-        {
-            if (!GameWindowUtilities.IsForeground())
-            {
-                return;
-            }
-            HoldKeys(keys);
-            Thread.Sleep(holdMs);
-            ReleaseKeys(keys);
-        }
-
-        public static void HoldKeys(Keys[] keys)
+        public static void ModifiedKeypress(Keys modifier, Keys key)
         {
             if (!GameWindowUtilities.IsForeground())
             {
                 return;
             }
 
-            foreach (var key in keys)
+            try
             {
-                try
-                {
-                    if (!_keydowns.Contains(key))
-                    {
-                        _keydowns.Add(key);
-                    }
+                keybd_event((byte)key, 0, KEYEVENTF_EXTENDEDKEY | KEYEVENTF_KEYUP, 0);
+                keybd_event((byte)modifier, 0, KEYEVENTF_EXTENDEDKEY | KEYEVENTF_KEYUP, 0);
 
-                    keybd_event((byte)key, 0, KEYEVENTF_KEYUP, 0);
-                    keybd_event((byte)key, 0, KEYEVENTF_EXTENDEDKEY, 0);
+                keybd_event((byte)modifier, 0, KEYEVENTF_EXTENDEDKEY, 0);
+                Thread.Sleep(50);
+                keybd_event((byte)key, 0, KEYEVENTF_EXTENDEDKEY, 0);
+                Thread.Sleep(150);
 
-                }
-                catch
-                {
-                    Console.WriteLine("Could not hold key");
-                }
+                keybd_event((byte)key, 0, KEYEVENTF_EXTENDEDKEY | KEYEVENTF_KEYUP, 0);
+                keybd_event((byte)modifier, 0, KEYEVENTF_EXTENDEDKEY | KEYEVENTF_KEYUP, 0);
             }
-        }
-
-        public static void ReleaseKeys(Keys[] keys)
-        {
-            foreach (var key in keys)
+            catch
             {
-                try
-                {
-                    if (_keydowns.Contains(key))
-                    {
-                        _keydowns.Remove(key);
-                        if (!GameWindowUtilities.IsForeground())
-                        {
-                            continue;
-                        }
-
-                        keybd_event((byte)key, 0, KEYEVENTF_KEYUP, 0);
-                    }
-                }
-                catch
-                {
-                    Console.WriteLine("Could not release key");
-                }
+                Console.WriteLine("Could not press Modified key combination");
             }
         }
     }

@@ -19,8 +19,7 @@ namespace WowCyborg.Runners
                 var keyRequest = (KeyPressRequest)ev.Data;
                 if (keyRequest.ModifierKey != Keys.None)
                 {
-                    KeyHandler.PressKey(keyRequest.ModifierKey, 50);
-                    KeyHandler.PressKey(keyRequest.Key);
+                    KeyHandler.ModifiedKeypress(keyRequest.ModifierKey, keyRequest.Key);
                 }
                 else
                 {
