@@ -224,7 +224,7 @@ function CreateEmoteListenerFrame()
     command = ...;
     if string.find(command, "follow", 1, true) then
       print("Following");
-      FollowUnit("Focus");
+      SetSpellRequest(follow);
       isFollowing = true;
       stoppedFollowAt = 0;
     end

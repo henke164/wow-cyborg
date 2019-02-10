@@ -22,10 +22,19 @@ namespace WowCyborg.Runners
                 if (keyRequest.ModifierKey != Keys.None)
                 {
                     KeyHandler.ModifiedKeypress(keyRequest.ModifierKey, keyRequest.Key);
+                    if (keyRequest.ModifierKey == Keys.LControlKey && keyRequest.Key == Keys.D1)
+                    {
+                        _isFollowing = true;
+                    }
+
                     if (keyRequest.ModifierKey == Keys.LControlKey && keyRequest.Key == Keys.D2)
                     {
+                        if (!_isFollowing)
+                        {
+                            return;
+                        }
+                        _isFollowing = false;
                         KeyHandler.PressKey(Keys.S, 100);
-                        return;
                     }
                 }
                 else

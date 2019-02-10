@@ -20,6 +20,7 @@ local beastialWrath = "5";
 local aspectOfWild = "6";
 local cobraShot = "7";
 local multiShot = "8";
+local follow = "CTRL+1";
 local assist = "CTRL+2";
 
 local function GetBsCooldown()
@@ -230,7 +231,7 @@ function CreateEmoteListenerFrame()
     command = ...;
     if string.find(command, "follow", 1, true) then
       print("Following");
-      FollowUnit("Focus");
+      SetSpellRequest(follow);
       isFollowing = true;
       stoppedFollowAt = 0;
     end
