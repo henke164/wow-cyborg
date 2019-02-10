@@ -1,4 +1,5 @@
-﻿using System.Drawing;
+﻿using System;
+using System.Drawing;
 using System.Drawing.Imaging;
 using System.Windows.Forms;
 using WowCyborg.Models;
@@ -28,7 +29,7 @@ namespace WowCyborg.Handlers
             Bitmap clone;
             var bounds = Screen.GetBounds(Point.Empty);
             var bottomLeft = new Rectangle(0, Screen.PrimaryScreen.Bounds.Height - 100, 500, 100);
-
+            
             using (var bitmap = new Bitmap(bounds.Width, bounds.Height))
             {
                 using (var g = Graphics.FromImage(bitmap))
@@ -37,8 +38,9 @@ namespace WowCyborg.Handlers
                 }
                 clone = bitmap.Clone(bottomLeft, PixelFormat.Format24bppRgb);
             }
-
+            Console.WriteLine("Image width: " + clone.Width);
             var frameSize = CalculateFrameWidth(clone);
+            Console.WriteLine("Frame width: " + frameSize);
             var settings = SettingsLoader.LoadSettings<AppSettings>("settings.json");
 
             _inGameAddonLocation = new Rectangle(0,
@@ -58,7 +60,7 @@ namespace WowCyborg.Handlers
             for (var x = 0; x < b.Width; x++)
             {
                 var px = b.GetPixel(x, b.Height - 5);
-                if (px.R <= 250 || px.G > 0 || px.B < 150 || px.B > 200)
+                if (px.R <= 250 || px.G > 0 || px.B < 100)
                 {
                     width = x;
                     break;
