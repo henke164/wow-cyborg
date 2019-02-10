@@ -1,6 +1,5 @@
 --[[
   Button    Spell
-  CTRL+1    Macro for following focus "/follow focus"
   CTRL+2    Macro for assisting focus "/assist focus"
   1         Barbed shot
   2         Kill command
@@ -11,7 +10,8 @@
   7         Cobra shot
   8         Multi shot
 ]]--
-
+local isFollowing = false;
+local stoppedFollowAt = 0;
 local barbedShot = "1";
 local killCommand = "2";
 local chimaeraShot = "3";
@@ -20,7 +20,6 @@ local beastialWrath = "5";
 local aspectOfWild = "6";
 local cobraShot = "7";
 local multiShot = "8";
-local follow = "CTRL+1";
 local assist = "CTRL+2";
 
 local function GetBsCooldown()
@@ -34,9 +33,26 @@ local function GetBsCooldown()
   return bsCdLeft;
 end
 
+function IsFollowing()
+  if isFollowing then
+    return true;
+  end
+
+  if stoppedFollowAt == 0 then
+    return true;
+  end
+
+  if GetTime() <= stoppedFollowAt + 1 then
+    return true;
+  end
+
+  return false;
+end
+
 function RenderMultiTargetRotation(texture)
-  if ShouldFollow() then
-    return;
+  if IsFollowing() then
+    WowCyborg_CURRENTATTACK = "Following...";
+    return false;
   end
 
   if IsCastableAtEnemyTarget("Barbed Shot", 0) == false then
@@ -120,8 +136,9 @@ function RenderMultiTargetRotation(texture)
 end
 
 function RenderSingleTargetRotation(texture)
-  if ShouldFollow() then
-    return;
+  if IsFollowing() then
+    WowCyborg_CURRENTATTACK = "Following...";
+    return false;
   end
 
   if IsCastableAtEnemyTarget("Barbed Shot", 0) == false then
@@ -206,21 +223,25 @@ function IdleOrAssist()
   return SetSpellRequest(assist);
 end
 
-local isFollowing = false;
-function ShouldFollow()
-  if not WowCyborg_HasFocus then
-    return;
-  end
-
-  isFollowing = false;
-  if not isFollowing then
-    if not IsItemInRange(6450, "Focus") then
-      SetSpellRequest(follow)
+function CreateEmoteListenerFrame()
+  local frame = CreateFrame("Frame");
+  frame:RegisterEvent("CHAT_MSG_TEXT_EMOTE");
+  frame:SetScript("OnEvent", function(self, event, ...)
+    command = ...;
+    if string.find(command, "follow", 1, true) then
+      print("Following");
+      FollowUnit("Focus");
       isFollowing = true;
+      stoppedFollowAt = 0;
     end
-  end
-
-  return isFollowing;
+    if string.find(command, "wait", 1, true) then
+      print("Waiting");
+      SetSpellRequest(assist);
+      isFollowing = false;
+      stoppedFollowAt = GetTime();
+    end
+  end)
 end
 
 print("Beastmastery hunter follower rotation loaded");
+CreateEmoteListenerFrame();

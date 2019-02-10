@@ -13,6 +13,8 @@
   9         Frost Shock
 ]]--
 
+local isFollowing = false;
+local stoppedFollowAt = 0;
 local totemMastery = "1";
 local flameShock = "2";
 local earthQuake = "3";
@@ -24,6 +26,22 @@ local lightningBolt = "8";
 local frostShock = "9";
 local follow = "CTRL+1";
 local assist = "CTRL+2";
+
+function IsFollowing()
+  if isFollowing then
+    return true;
+  end
+
+  if stoppedFollowAt == 0 then
+    return true;
+  end
+
+  if GetTime() <= stoppedFollowAt + 1 then
+    return true;
+  end
+
+  return false;
+end
 
 -- Movement
 local function RenderTargetRotationInMovement()
@@ -60,8 +78,9 @@ end
 
 -- Multi target
 function RenderMultiTargetRotation()
-  if ShouldFollow() then
-    return;
+  if IsFollowing() then
+    WowCyborg_CURRENTATTACK = "Following...";
+    return false;
   end
   
   if UnitChannelInfo("player") == "Lightning Lasso" then
@@ -116,9 +135,9 @@ end
 
 -- Single target
 function RenderSingleTargetRotation()
-  if ShouldFollow() then
+  if IsFollowing() then
     WowCyborg_CURRENTATTACK = "Following...";
-    return;
+    return false;
   end
 
   if UnitChannelInfo("player") == "Lightning Lasso" then
@@ -198,22 +217,25 @@ function IdleOrAssist()
   return SetSpellRequest(assist);
 end
 
-local isFollowing = false;
-function ShouldFollow()
-  if not WowCyborg_HasFocus then
-    return;
-  end
-
-  if not isFollowing then
-    if not IsItemInRange(32321, "Focus") then
-      SetSpellRequest(follow)
+function CreateEmoteListenerFrame()
+  local frame = CreateFrame("Frame");
+  frame:RegisterEvent("CHAT_MSG_TEXT_EMOTE");
+  frame:SetScript("OnEvent", function(self, event, ...)
+    command = ...;
+    if string.find(command, "follow", 1, true) then
+      print("Following");
+      FollowUnit("Focus");
       isFollowing = true;
+      stoppedFollowAt = 0;
     end
-  else
-    isFollowing = false;
-  end
-
-  return isFollowing;
+    if string.find(command, "wait", 1, true) then
+      print("Waiting");
+      SetSpellRequest(assist);
+      isFollowing = false;
+      stoppedFollowAt = GetTime();
+    end
+  end)
 end
 
 print("Elemental shaman follower rotation loaded");
+CreateEmoteListenerFrame();
