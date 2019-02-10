@@ -57,9 +57,8 @@ function CreateFacingCheckFrame()
 
   frame:SetScript("OnEvent", function(self, event, ...)
     if event == "UI_ERROR_MESSAGE" then
-      id = ...;
-      if id == 50 then
-        print("Behind");
+      _, mesage = ...;
+      if mesage == "Target needs to be in front of you." then
         texture:SetColorTexture(1, 0, 0);
         lastCheck = GetTime();
       end

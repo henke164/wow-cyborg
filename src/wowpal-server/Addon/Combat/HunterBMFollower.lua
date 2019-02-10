@@ -116,13 +116,7 @@ function RenderMultiTargetRotation(texture)
     return SetSpellRequest(cobraShot);
   end
   
-  if not WowCyborg_HasFocus then
-    WowCyborg_CURRENTATTACK = "-";
-    return SetSpellRequest(nil);
-  else
-    WowCyborg_CURRENTATTACK = "Assist focus";
-    return SetSpellRequest(assist);
-  end
+  IdleOrAssist();
 end
 
 function RenderSingleTargetRotation(texture)
@@ -195,13 +189,21 @@ function RenderSingleTargetRotation(texture)
     return SetSpellRequest(cobraShot);
   end
 
+  IdleOrAssist();
+end
+
+function IdleOrAssist()
+  WowCyborg_CURRENTATTACK = "-";
   if not WowCyborg_HasFocus then
-    WowCyborg_CURRENTATTACK = "-";
     return SetSpellRequest(nil);
-  else
-    WowCyborg_CURRENTATTACK = "Assist focus";
-    return SetSpellRequest(assist);
+  elseif UnitGUID("focustarget") == nil then
+    return SetSpellRequest(nil);
+  elseif UnitGUID("focustarget") == UnitGUID("target") then
+    return SetSpellRequest(nil);
   end
+
+  WowCyborg_CURRENTATTACK = "Assist focus";
+  return SetSpellRequest(assist);
 end
 
 local isFollowing = false;
@@ -210,13 +212,12 @@ function ShouldFollow()
     return;
   end
 
+  isFollowing = false;
   if not isFollowing then
-    if not IsItemInRange(32321, "Focus") then
+    if not IsItemInRange(6450, "Focus") then
       SetSpellRequest(follow)
       isFollowing = true;
     end
-  else
-    isFollowing = false;
   end
 
   return isFollowing;

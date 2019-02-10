@@ -8,6 +8,8 @@ namespace WowCyborg.Runners
 {
     public class BotFollower : BotRunnerBase
     {
+        private bool _isFollowing = false;
+
         public BotFollower()
         {
         }
@@ -20,10 +22,21 @@ namespace WowCyborg.Runners
                 if (keyRequest.ModifierKey != Keys.None)
                 {
                     KeyHandler.ModifiedKeypress(keyRequest.ModifierKey, keyRequest.Key);
+                    if (keyRequest.ModifierKey == Keys.LControlKey && keyRequest.Key == Keys.D1)
+                    {
+                        _isFollowing = true;
+                        return;
+                    }
                 }
                 else
                 {
                     KeyHandler.PressKey(keyRequest.Key);
+                }
+
+                if (_isFollowing)
+                {
+                    KeyHandler.PressKey(Keys.S, 100);
+                    _isFollowing = false;
                 }
             });
 

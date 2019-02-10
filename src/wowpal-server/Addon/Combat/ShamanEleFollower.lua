@@ -4,7 +4,7 @@
   CTRL+2    Macro for assisting focus "/assist focus"
   1         Totem Mastery
   2         Flame Shock
-  3         Earthquake
+  3         Earthquake (Not used)
   4         Stormkeeper
   5         Earth Shock
   6         Lava Burst
@@ -96,12 +96,6 @@ function RenderMultiTargetRotation()
   
   local maelstrom = UnitPower("player");
 
-  if IsCastableAtEnemyTarget("Earthquake", 60) and 
-    moeBuff == "Master of the Elements" then
-    WowCyborg_CURRENTATTACK = "Earthquake";
-    return SetSpellRequest(earthQuake);
-  end
-
   if IsCastableAtEnemyTarget("Lava Burst", 0) then
     WowCyborg_CURRENTATTACK = "Lava Burst";
     return SetSpellRequest(lavaBurst);
@@ -112,25 +106,12 @@ function RenderMultiTargetRotation()
     return SetSpellRequest(flameShock);
   end
   
-  if maelstrom >= 60 then
-    if IsCastableAtEnemyTarget("Earthquake", 60) then
-      WowCyborg_CURRENTATTACK = "Earthquake";
-      return SetSpellRequest(nil);
-    end
-  end
-
   if IsCastableAtEnemyTarget("Chain Lightning", 0) then
     WowCyborg_CURRENTATTACK = "Chain Lightning";
     return SetSpellRequest(chainLightning);
   end
 
-  if not WowCyborg_HasFocus then
-    WowCyborg_CURRENTATTACK = "-";
-    return SetSpellRequest(nil);
-  else
-    WowCyborg_CURRENTATTACK = "Assist focus";
-    return SetSpellRequest(assist);
-  end
+  IdleOrAssist();
 end
 
 -- Single target
@@ -199,14 +180,22 @@ function RenderSingleTargetRotation()
     WowCyborg_CURRENTATTACK = "Lightning Bolt";
     return SetSpellRequest(lightningBolt);
   end
-  
+
+  IdleOrAssist();
+end
+
+function IdleOrAssist()
+  WowCyborg_CURRENTATTACK = "-";
   if not WowCyborg_HasFocus then
-    WowCyborg_CURRENTATTACK = "-";
     return SetSpellRequest(nil);
-  else
-    WowCyborg_CURRENTATTACK = "Assist focus";
-    return SetSpellRequest(assist);
+  elseif UnitGUID("focustarget") == nil then
+    return SetSpellRequest(nil);
+  elseif UnitGUID("focustarget") == UnitGUID("target") then
+    return SetSpellRequest(nil);
   end
+
+  WowCyborg_CURRENTATTACK = "Assist focus";
+  return SetSpellRequest(assist);
 end
 
 local isFollowing = false;

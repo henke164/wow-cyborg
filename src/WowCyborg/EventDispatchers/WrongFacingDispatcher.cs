@@ -5,6 +5,8 @@ namespace WowCyborg.EventDispatchers
 {
     public class WrongFacingDispatcher : AddonBehaviourEventDispatcher
     {
+        private bool _triggeredOnce = false;
+
         public WrongFacingDispatcher(Action<Event> onEvent)
             : base(onEvent)
         {
@@ -15,8 +17,14 @@ namespace WowCyborg.EventDispatchers
         {
             if (AddonIsRedAt(2, 2))
             {
-                TriggerEvent(true);
+                if (!_triggeredOnce)
+                {
+                    TriggerEvent(true);
+                    _triggeredOnce = true;
+                }
             }
+
+            _triggeredOnce = false;
         }
     }
 }
