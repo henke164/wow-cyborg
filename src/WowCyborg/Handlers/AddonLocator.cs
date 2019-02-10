@@ -57,10 +57,17 @@ namespace WowCyborg.Handlers
         private static int CalculateFrameWidth(Bitmap b)
         {
             var width = 0;
+            Color firstPixel = Color.White;
+
             for (var x = 0; x < b.Width; x++)
             {
-                var px = b.GetPixel(x, b.Height - 5);
-                if (px.R <= 250 || px.G > 0 || px.B < 100)
+                if (firstPixel == Color.White)
+                {
+                    firstPixel = b.GetPixel(x, b.Height - 5);
+                    continue;
+                }
+
+                if (firstPixel != b.GetPixel(x, b.Height - 5))
                 {
                     width = x;
                     break;
