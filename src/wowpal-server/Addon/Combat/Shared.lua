@@ -1,5 +1,6 @@
 WowCyborg_AOE_Rotation = false;
 WowCyborg_CURRENTATTACK = "-";
+WowCyborg_HasFocus = false;
 
 local spellButtonTexture;
 local buttonCombinerTexture;
@@ -17,6 +18,12 @@ function CreateRotationFrame()
     end
   end)
 
+  frame:RegisterEvent("PLAYER_FOCUS_CHANGED");
+  frame:SetScript("OnEvent", function(self, event, ...)
+    WowCyborg_HasFocus = UnitExists("Focus");
+  end)
+
+  
   RenderFontFrame();
 end
 

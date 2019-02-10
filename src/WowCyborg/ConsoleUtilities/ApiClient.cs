@@ -2,12 +2,29 @@
 using System.Collections.Generic;
 using System.Net;
 using WowCyborg.Models;
+using WowCyborg.Utilities;
 
 namespace WowCyborg.ConsoleUtilities
 {
     public class ApiClient
     {
-        public string BaseUrl { get; set; } = "http://localhost:3000";
+        private static string _baseUrl;
+        public string BaseUrl
+        {
+            get
+            {
+                if (string.IsNullOrEmpty(_baseUrl))
+                {
+                    var settings = SettingsLoader.LoadSettings<AppSettings>("settings.json");
+                    _baseUrl = settings.ServerAddress;
+                    if (_baseUrl.EndsWith("/"))
+                    {
+                        _baseUrl = _baseUrl.Substring(0, _baseUrl.Length - 1);
+                    }
+                }
+                return _baseUrl;
+            }
+        }
 
         public Dictionary<string, string> GetRotations()
         {

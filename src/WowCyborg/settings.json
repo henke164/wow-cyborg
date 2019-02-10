@@ -1,4 +1,5 @@
 ﻿{
+  "serverAddress": "http://34.243.63.185:8080/",
   "addonColumnCount": 4,
-  "addonRowCount":  6
+  "addonRowCount": 6
 }

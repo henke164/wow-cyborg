@@ -40,21 +40,35 @@ function TargetIsAlive()
   return hp > 0;
 end
 
-function CreateRangeCheckFrame()
+function CreateFacingCheckFrame()
   local frame, texture = CreateDefaultFrame(frameSize, frameSize, frameSize, frameSize);
+  frame:RegisterEvent("UI_ERROR_MESSAGE");
+  frame:RegisterEvent("PLAYER_DAMAGE_DONE_MODS");
+  texture:SetColorTexture(1, 0, 0);
+  
+  local lastCheck = GetTime();
   frame:SetScript("OnUpdate", function(self, event, ...)
-    texture:SetColorTexture(1, 0, 0);
-    if CheckInteractDistance("target", 4) then
-      if (UnitCanAttack("player","target")) then
-	    if TargetIsAlive() then
-		  texture:SetColorTexture(0, 1, 0);
-		end;
+    local time = GetTime();
+    if time > lastCheck + 1 then
+      lastCheck = time;
+      texture:SetColorTexture(0, 1, 0);
+    end
+  end)
+
+  frame:SetScript("OnEvent", function(self, event, ...)
+    if event == "UI_ERROR_MESSAGE" then
+      id = ...;
+      if id == 50 then
+        print("Behind");
+        texture:SetColorTexture(1, 0, 0);
+        lastCheck = GetTime();
       end
+      return
     end
   end)
 end
 
 CreateCombatFrame();
-CreateRangeCheckFrame();
+CreateFacingCheckFrame();
 CreateRotationFrame();
 CreateWrapperFrame();

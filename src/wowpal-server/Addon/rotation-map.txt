@@ -3,3 +3,4 @@ protwarrior	Combat/WarriorProt.lua
 bmhunter	Combat/HunterBM.lua
 mmhunter	Combat/HunterMM.lua
 eleshaman	Combat/ShamanEle.lua
+eleshamanfollower	Combat/ShamanEleFollower.lua

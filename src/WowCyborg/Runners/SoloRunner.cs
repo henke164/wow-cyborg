@@ -34,11 +34,6 @@ namespace WowCyborg.Runners
                 }
             });
 
-            EventManager.On("TargetInRange", (Event ev) =>
-            {
-                HandleTargetInRange((bool)ev.Data);
-            });
-
             EventManager.On("CombatChanged", (Event ev) =>
             {
                 _isInCombat = (bool)ev.Data;
@@ -75,33 +70,6 @@ namespace WowCyborg.Runners
             {
                 KeyHandler.PressKey(Keys.D, 500);
             });
-        }
-
-
-        private void HandleTargetInRange(bool inRange)
-        {
-            if (inRange)
-            {
-                StopMovement();
-                _isInCombat = true;
-                _isInRange = true;
-                OnLog("Target in range: Stopping movement and starting combat.");
-            }
-            else
-            {
-                _isInRange = false;
-                _isInCombat = false;
-
-                _lootingCommander.Loot(() => {
-                    if (TargetLocation != null)
-                    {
-                        _enemyTargettingCommander.TargetNearestEnemy();
-                        Thread.Sleep(1000);
-                        ResumeMovement();
-                    }
-                    OnLog("No targets in range: Continue moving.");
-                });
-            }
         }
     }
 }

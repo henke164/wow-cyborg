@@ -6,11 +6,13 @@ namespace WowCyborg
 {
     static class Program
     {
+        public static BotRunnerBase BotRunner;
+
         static void Main()
         {
             ValidateAddonFiles();
 
-            var botRunner = new AutoCaster();
+            BotRunner = new BotFollower();
             RenderStartMessage();
             HandleInput();
         }
@@ -43,6 +45,10 @@ namespace WowCyborg
 
                 case "rotation":
                     RotationInput.HandleInputParameters(command);
+                    break;
+
+                case "server":
+                    ServerHandler.HandleInput(command);
                     break;
 
                 case "help":
@@ -96,6 +102,9 @@ rotation list                   Display all available rotations.
 
 rotation set <rotation name>    Set the current rotation.
 
+server start                    Starts a server on localhost with endpoints to control the bot.
+
+server stop                     Stops the running server.
             ", ConsoleColor.White);
         }
     }

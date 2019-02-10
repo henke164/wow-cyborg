@@ -12,7 +12,7 @@ namespace WowCyborg.Runners
     public abstract class BotRunnerBase
     {
         public Action<string> OnLog { get; set; } = (string s) => { };
-        protected Vector3 CurrentLocation;
+        public Vector3 CurrentLocation { get; protected set; }
         protected Vector3 TargetLocation;
         protected Func<bool> ShouldPauseMovement = () => false;
 
@@ -133,7 +133,6 @@ namespace WowCyborg.Runners
             EventManager.StartEventDispatcher(typeof(LeaderTransformChangedDispatcher));
             EventManager.StartEventDispatcher(typeof(CombatChangedDispatcher));
             EventManager.StartEventDispatcher(typeof(CombatCastingDispatcher));
-            EventManager.StartEventDispatcher(typeof(NewTargetDispatcher));
             EventManager.StartEventDispatcher(typeof(WrongFacingDispatcher));
         }
     }

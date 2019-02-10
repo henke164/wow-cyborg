@@ -38,57 +38,8 @@ function RenderMultiTargetRotation()
   end
 
   local hpPercentage = GetHealthPercentage("player");
-
-  if hpPercentage < 95 then
-    if meleeDamageInLast5Seconds > rangedDamageInLast5Seconds then
-      local ipBuff = FindBuff("player", "Ignore Pain")
-      if ipBuff == nil and IsCastableAtEnemyTarget("Ignore Pain", 40) then
-        WowCyborg_CURRENTATTACK = "Ignore Pain";
-        return SetSpellRequest(ignorePain);
-      end
-    else
-      local sbBuff = FindBuff("player", "Shield Block")
-      if sbBuff == nil and IsCastableAtEnemyTarget("Shield Block", 30) then
-        WowCyborg_CURRENTATTACK = "Shield Block";
-        return SetSpellRequest(shieldBlock);
-      end
-    end
-  end
-
-  if IsCastableAtEnemyTarget("Thunder Clap", 0) then
-    WowCyborg_CURRENTATTACK = "Thunder Clap";
-    return SetSpellRequest(thunderClap);
-  end
-
-  if IsCastableAtEnemyTarget("Revenge", 30) then
-    WowCyborg_CURRENTATTACK = "Revenge";
-    return SetSpellRequest(revenge);
-  end
-
-  if IsCastableAtEnemyTarget("Shield Slam", 0) then
-    WowCyborg_CURRENTATTACK = "Shield Slam";
-    return SetSpellRequest(shieldSlam);
-  end
   
-  if IsCastableAtEnemyTarget("Devastate", 0) then
-    WowCyborg_CURRENTATTACK = "Devastate";
-    return SetSpellRequest(devastate);
-  end
-  WowCyborg_CURRENTATTACK = "-";
-  return SetSpellRequest(nil);
-end
-
-function RenderSingleTargetRotation()
-  if InMeleeRange() == false then
-    WowCyborg_CURRENTATTACK = "-";
-    return SetSpellRequest(nil);
-  end
-
-  local maxHp = UnitHealthMax("player");
-  local rage = UnitPower("player");
-  local hpPercentage = GetHealthPercentage("player");
-  
-  local dangerHpLossLimit = UnitHealthMax("player") * 0.3;
+  local dangerHpLossLimit = UnitHealthMax("player") * 0.5;
 
   local vrBuff = FindBuff("player", "Victorious")
   if hpPercentage < 80 and 
@@ -119,17 +70,112 @@ function RenderSingleTargetRotation()
   end
 
   if hpPercentage < 95 then
-    if meleeDamageInLast5Seconds > rangedDamageInLast5Seconds then
+    local hpLossLimit = UnitHealthMax("player") * 0.1;
+    if meleeDamageInLast5Seconds > hpLossLimit then
+      local sbBuff = FindBuff("player", "Shield Block")
+      if sbBuff == nil and IsCastableAtEnemyTarget("Shield Block", 30) then
+        WowCyborg_CURRENTATTACK = "Shield Block";
+        return SetSpellRequest(shieldBlock);
+      end
+    end
+
+    if rangedDamageInLast5Seconds > hpLossLimit then
       local ipBuff = FindBuff("player", "Ignore Pain")
       if ipBuff == nil and IsCastableAtEnemyTarget("Ignore Pain", 40) then
         WowCyborg_CURRENTATTACK = "Ignore Pain";
         return SetSpellRequest(ignorePain);
       end
-    else
+    end
+  end
+
+  if IsCastableAtEnemyTarget("Thunder Clap", 0) then
+    WowCyborg_CURRENTATTACK = "Thunder Clap";
+    return SetSpellRequest(thunderClap);
+  end
+
+  if IsCastableAtEnemyTarget("Revenge", 30) then
+    WowCyborg_CURRENTATTACK = "Revenge";
+    return SetSpellRequest(revenge);
+  end
+
+  if IsCastableAtEnemyTarget("Avatar", 0) then
+    WowCyborg_CURRENTATTACK = "Avatar";
+    return SetSpellRequest(avatar);
+  end
+  
+  if IsCastableAtEnemyTarget("Demoralizing Shout", 0) then
+    WowCyborg_CURRENTATTACK = "Demoralizing Shout";
+    return SetSpellRequest(demoralizingShout);
+  end
+
+  if IsCastableAtEnemyTarget("Shield Slam", 0) then
+    WowCyborg_CURRENTATTACK = "Shield Slam";
+    return SetSpellRequest(shieldSlam);
+  end
+  
+  if IsCastableAtEnemyTarget("Devastate", 0) then
+    WowCyborg_CURRENTATTACK = "Devastate";
+    return SetSpellRequest(devastate);
+  end
+  WowCyborg_CURRENTATTACK = "-";
+  return SetSpellRequest(nil);
+end
+
+function RenderSingleTargetRotation()
+  if InMeleeRange() == false then
+    WowCyborg_CURRENTATTACK = "-";
+    return SetSpellRequest(nil);
+  end
+
+  local maxHp = UnitHealthMax("player");
+  local rage = UnitPower("player");
+  local hpPercentage = GetHealthPercentage("player");
+  
+  local dangerHpLossLimit = UnitHealthMax("player") * 0.5;
+
+  local vrBuff = FindBuff("player", "Victorious")
+  if hpPercentage < 80 and 
+    IsCastableAtEnemyTarget("Victory Rush", 0) and 
+    vrBuff == "Victorious" then
+    WowCyborg_CURRENTATTACK = "Victory Rush";
+    return SetSpellRequest(victoryRush);
+  end
+
+  if meleeDamageInLast5Seconds > dangerHpLossLimit or 
+    rangedDamageInLast5Seconds > dangerHpLossLimit or
+    hpPercentage < 50 then
+
+    if IsCastableAtEnemyTarget("Last Stand", 0) then
+      WowCyborg_CURRENTATTACK = "Last Stand";
+      return SetSpellRequest(lastStand);
+    end
+
+    if IsCastableAtEnemyTarget("Shield Wall", 0) then
+      WowCyborg_CURRENTATTACK = "Shield Wall";
+      return SetSpellRequest(shieldWall);
+    end
+
+    if IsCastableAtEnemyTarget("Rallying Cry", 0) then
+      WowCyborg_CURRENTATTACK = "Rallying Cry";
+      return SetSpellRequest(rallyingCry);
+    end
+  end
+
+  if hpPercentage < 95 then
+    local hpLossLimit = UnitHealthMax("player") * 0.1;
+    if meleeDamageInLast5Seconds > hpLossLimit then
       local sbBuff = FindBuff("player", "Shield Block")
       if sbBuff == nil and IsCastableAtEnemyTarget("Shield Block", 30) then
         WowCyborg_CURRENTATTACK = "Shield Block";
         return SetSpellRequest(shieldBlock);
+      end
+    end
+
+    if rangedDamageInLast5Seconds > hpLossLimit then
+      local ipBuff = FindBuff("player", "Ignore Pain")
+      if ipBuff == nil and IsCastableAtEnemyTarget("Ignore Pain", 40) then
+        WowCyborg_CURRENTATTACK = "Ignore Pain";
+        return SetSpellRequest(ignorePain);
       end
     end
   end
@@ -179,6 +225,14 @@ function RenderSingleTargetRotation()
     end
   end
 
+  if rage > 90 then
+    local ipBuff = FindBuff("player", "Ignore Pain")
+    if ipBuff == nil and IsCastableAtEnemyTarget("Ignore Pain", 40) then
+      WowCyborg_CURRENTATTACK = "Ignore Pain";
+      return SetSpellRequest(ignorePain);
+    end
+  end
+
   if IsCastableAtEnemyTarget("Devastate", 0) then
     WowCyborg_CURRENTATTACK = "Devastate";
     return SetSpellRequest(devastate);
@@ -215,12 +269,6 @@ function CreateDamageTakenFrame()
     end
 
     if DamageDetails and DamageDetails.damage then
-      if DamageDetails.melee then
-        print(DamageDetails.damage .. " was blockable");
-      else
-        print(DamageDetails.damage .. " was not blockable");
-      end
-
       DamageDetails.timestamp = timestamp;
 
       tinsert(incomingDamage, 1, DamageDetails);

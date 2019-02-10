@@ -75,11 +75,13 @@
     <Compile Include="ConsoleUtilities\RotationInput.cs" />
     <Compile Include="ConsoleUtilities\AddonInput.cs" />
     <Compile Include="ConsoleUtilities\AddonInstaller.cs" />
+    <Compile Include="ConsoleUtilities\ServerHandler.cs" />
     <Compile Include="Handlers\AddonFolderHandler.cs" />
     <Compile Include="Handlers\AddonLocator.cs" />
     <Compile Include="InputHandler.cs" />
     <Compile Include="Models\KeyPressRequest.cs" />
     <Compile Include="Models\TextFile.cs" />
+    <Compile Include="Runners\AutoFollower.cs" />
     <Compile Include="Runners\BotRunnerBase.cs" />
     <Compile Include="Commanders\EnemyTargettingCommander.cs" />
     <Compile Include="Commanders\LootingCommander.cs" />
@@ -90,7 +92,6 @@
     <Compile Include="EventDispatchers\WrongFacingDispatcher.cs" />
     <Compile Include="EventDispatchers\CombatChangedDispatcher.cs" />
     <Compile Include="EventDispatchers\CombatCastingDispatcher.cs" />
-    <Compile Include="EventDispatchers\NewTargetDispatcher.cs" />
     <Compile Include="EventDispatchers\PlayerTransformChangedDispatcher.cs" />
     <Compile Include="EventDispatchers\ScreenChangedDispatcher.cs" />
     <Compile Include="Handlers\EventManager.cs" />
@@ -100,7 +101,6 @@
     <Compile Include="Models\WaypointCollection.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Runners\PartyRunner.cs" />
     <Compile Include="Runners\AutoCaster.cs" />
     <Compile Include="Runners\SoloRunner.cs" />
     <Compile Include="Utilities\GameWindowUtilities.cs" />
@@ -139,9 +139,6 @@
   <ItemGroup>
     <PackageReference Include="Newtonsoft.Json">
       <Version>11.0.2</Version>
-    </PackageReference>
-    <PackageReference Include="Tesseract">
-      <Version>3.3.0</Version>
     </PackageReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
