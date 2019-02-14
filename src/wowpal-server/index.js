@@ -1,6 +1,6 @@
 const express = require('express')
 const app = express()
-const port = 8080
+const port = 3000
 
 app.get('/map', (req, res) => {
     res.sendFile('./Addon/addon-map.txt', { root : __dirname});

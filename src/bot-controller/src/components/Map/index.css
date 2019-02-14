@@ -1,0 +1,13 @@
+.Map {
+  position: fixed;
+  min-width: 100%;
+  min-height: 100%;
+}
+
+#image-map {
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  border: 1px solid #ccc;
+  margin-bottom: 10px;
+}
