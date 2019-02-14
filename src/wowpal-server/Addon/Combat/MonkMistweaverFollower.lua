@@ -5,6 +5,8 @@
   Ctrl+3    Macro: /target party2
   Ctrl+4    Macro: /target party3
   Ctrl+5    Macro: /target party4
+  Ctrl+6    Macro for following focus "/follow focus"
+  Ctrl+7    Macro for assisting focus "/assist focus"
   1         Renewing Mist
   2         Soothing Mist
   3         Enveloping Mist
@@ -12,6 +14,8 @@
   5         Essence Font
 ]]--
 
+local isFollowing = false;
+local stoppedFollowAt = 0;
 local incomingDamage = {};
 local damageInLast5Seconds = {};
 local renewingMist = 1;
@@ -19,6 +23,24 @@ local soothingMist = 2;
 local envelopingMist = 3;
 local vivify = 4;
 local essenceFont = 5;
+local follow = "CTRL+6";
+local assist = "CTRL+7";
+
+function IsFollowing()
+  if isFollowing then
+    return true;
+  end
+
+  if stoppedFollowAt == 0 then
+    return true;
+  end
+
+  if GetTime() <= stoppedFollowAt + 1 then
+    return true;
+  end
+
+  return false;
+end
 
 function GetTargetFullName()
   local name, realm = UnitName("target");
@@ -118,6 +140,11 @@ local lastTarget = {
 };
 
 function RenderSingleTargetRotation()
+  if IsFollowing() then
+    WowCyborg_CURRENTATTACK = "Following...";
+    return false;
+  end
+  
   if lastTarget.time + 2 < GetTime() then
     local friendlyTargetName = FindFriendlyHealingTarget();
     if friendlyTargetName ~= nil then
@@ -225,5 +252,27 @@ function CreateDamageTakenFrame()
 
   end)
 end
+
+function CreateEmoteListenerFrame()
+  local frame = CreateFrame("Frame");
+  frame:RegisterEvent("CHAT_MSG_TEXT_EMOTE");
+  frame:SetScript("OnEvent", function(self, event, ...)
+    command = ...;
+    if string.find(command, "follow", 1, true) then
+      print("Following");
+      SetSpellRequest(follow);
+      isFollowing = true;
+      stoppedFollowAt = 0;
+    end
+    if string.find(command, "wait", 1, true) then
+      print("Waiting");
+      SetSpellRequest(assist);
+      isFollowing = false;
+      stoppedFollowAt = GetTime();
+    end
+  end)
+end
+
 print("Mistweaver monk rotation loaded");
 CreateDamageTakenFrame();
+CreateEmoteListenerFrame();
