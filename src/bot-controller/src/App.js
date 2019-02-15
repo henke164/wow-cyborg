@@ -49,7 +49,11 @@ class App extends Component {
   render() {
     return (
       <div>
-        <Map units={this.state.bots}></Map>
+        <Map 
+          units={this.state.bots}
+          onBotSelected={id => this.setBotSelected(id, true)}
+          onBotUnselected={id => this.setBotSelected(id, false)}>
+        </Map>
         <BotList
           onBotAdded={this.connectBot}
           bots={this.state.bots}

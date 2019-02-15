@@ -28,7 +28,7 @@ class Map extends Component {
       if (this.state.units.map(m => m.id).indexOf(unit.id) === -1) {
         this.addUnitMarker(unit.id, unit.position);
       } else {
-        this.updateUnitMarker(unit.id, unit.position);
+        this.updateUnitMarker(unit.id, unit.position, unit.selected);
       }
     });
   }
@@ -48,24 +48,34 @@ class Map extends Component {
       icon: window.L.icon({
         iconUrl: './images/unmarked.png',  
         iconSize: [20, 20],
-      }),
-      onClick: function() {
-        alert('click');
-      }
+      })
     });
 
     this.state.units.push({ id, marker });
-    
+    marker.on('click', () => {
+      const unit = this.state.units.filter(u => u.id === id)[0];
+      if (unit.selected) {
+        this.props.onBotUnselected(id);
+      } else {
+        this.props.onBotSelected(id);
+      }
+    });
+
     marker.addTo(this.state.map);
   }
 
-  updateUnitMarker(id, position) {
+  updateUnitMarker(id, position, selected) {
     const unit = this.state.units.filter(m => m.id === id)[0];
     const mapPosition = this.convertToMapPosition(position);
     
     const southWest = this.state.map.unproject([0, mapPosition.y], this.state.map.getMaxZoom()-1);
     const northEast = this.state.map.unproject([mapPosition.x, 0], this.state.map.getMaxZoom()-1);
+    unit.selected = selected;
     unit.marker.setLatLng(new window.L.LatLng(southWest.lat, northEast.lng));
+    unit.marker.setIcon(window.L.icon({
+      iconUrl: unit.selected ? './images/marked.png' : './images/unmarked.png',  
+      iconSize: [20, 20],
+    }));
   }
 
   loadMap(id) {
@@ -80,8 +90,8 @@ class Map extends Component {
 
     const img = new Image();
     img.onload = function() {
-      const mapWidth = img.width * 10;
-      const mapHeight = img.height * 10;
+      const mapWidth = img.width * 20;
+      const mapHeight = img.height * 20;
 
       this.setState({
         map,

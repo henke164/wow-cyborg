@@ -21,7 +21,7 @@ class BotList extends Component {
   addBot() {
     if (this.props.onBotAdded) {
       this.props.onBotAdded({
-        id: Math.random() * 10000,
+        id: Math.floor(Math.random() * 100000),
         name: this.addBotName.current.value, 
         ip: `127.0.0.1`,// this.addBotIp.current.value,
         position: { 
