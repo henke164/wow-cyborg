@@ -48,7 +48,10 @@ class Map extends Component {
       icon: window.L.icon({
         iconUrl: './images/unmarked.png',  
         iconSize: [20, 20],
-      })
+      }),
+      onClick: function() {
+        alert('click');
+      }
     });
 
     this.state.units.push({ id, marker });
@@ -77,8 +80,8 @@ class Map extends Component {
 
     const img = new Image();
     img.onload = function() {
-      const mapWidth = img.width;
-      const mapHeight = img.height;
+      const mapWidth = img.width * 10;
+      const mapHeight = img.height * 10;
 
       this.setState({
         map,

@@ -1,27 +1,62 @@
 import React, { Component } from 'react';
 import Map from './components/Map/index';
-import './App.css';
+import BotList from './components/BotList';
+const fetch = require('no-fetch');
 
 class App extends Component {
   constructor() {
     super();
 
-    const player = { id: 1, position: { x: 0.5, y: 0.5 }};
+    this.updateBotLocations = this.updateBotLocations.bind(this);
+    this.connectBot = this.connectBot.bind(this);
+    this.setBotSelected = this.setBotSelected.bind(this);
 
     this.state = {
-      players: [player]
+      bots: []
     };
 
-    setInterval(() => {
-      player.position.x += 0.01;
-      player.position.y += 0.01;
-      this.forceUpdate();
-    }, 1000);
+    //setInterval(this.updateBotLocations, 1000);
+  }
+
+  updateBotLocations() {
+    this.state.bots.forEach(bot => {
+      fetch(`http://${bot.ip}/currentPosition`)
+      .then(response => {
+        return response.json();
+      })
+      .then(resp => {
+        bot.position = resp;
+        this.setState({bots: this.state.bots});
+      })
+      .catch(e => {
+        console.log(e);
+      });
+    });
+  }
+
+  setBotSelected(id, selected) {
+    const bot = this.state.bots.filter(b => b.id === id)[0];
+    bot.selected = selected;
+    this.setState({bots: this.state.bots});
+  }
+
+  connectBot(bot) {
+    const bots = this.state.bots;
+    bots.push(bot);
+    this.setState({bots});
   }
 
   render() {
     return (
-      <Map units={this.state.players}></Map>
+      <div>
+        <Map units={this.state.bots}></Map>
+        <BotList
+          onBotAdded={this.connectBot}
+          bots={this.state.bots}
+          onBotSelected={id => this.setBotSelected(id, true)}
+          onBotUnselected={id => this.setBotSelected(id, false)}>
+        </BotList>
+      </div>
     );
   }
 }

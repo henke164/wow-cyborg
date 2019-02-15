@@ -71,6 +71,8 @@ namespace WowCyborg.ConsoleUtilities
         private static void WriteToResponse(HttpListenerContext context, string content)
         {
             var response = context.Response;
+            response.Headers.Add("Access-Control-Allow-Origin", "*");
+
             var buffer = Encoding.UTF8.GetBytes(content);
             response.ContentLength64 = buffer.Length;
             var output = response.OutputStream;
