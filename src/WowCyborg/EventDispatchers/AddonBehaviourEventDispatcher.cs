@@ -22,7 +22,7 @@ namespace WowCyborg.EventDispatchers
             AddonScreenshot.SetPixel(0, 0, Color.White);
 
             EventManager.On("ScreenChanged", (Event ev) => {
-                var screenshot = (Bitmap)ev.Data;
+                var screenshot = (Bitmap)((Bitmap)ev.Data).Clone();
 
                 try
                 {
@@ -94,7 +94,7 @@ namespace WowCyborg.EventDispatchers
             {
                 return AddonScreenshot.GetPixel(x, y);
             }
-            catch
+            catch(Exception ex)
             {
                 return Color.Magenta;
             }

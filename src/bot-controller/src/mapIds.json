@@ -1,0 +1,2412 @@
+[
+    {
+      "id": 226,
+      "oldId": "8647",
+      "name": "Gnomeregan"
+    },
+    {
+      "id": 934,
+      "oldId": "9028",
+      "name": "Atal'Dazar"
+    },
+    {
+      "id": 242,
+      "oldId": "9666",
+      "name": "Blackrock Depths"
+    },
+    {
+      "id": 1162,
+      "oldId": "9354",
+      "name": "Siege of Boralus"
+    },
+    {
+      "id": 974,
+      "oldId": "9327",
+      "name": "Tol Dagor"
+    },
+    {
+      "id": 62,
+      "oldId": "10227",
+      "name": "Darkshore"
+    },
+    {
+      "id": 367,
+      "oldId": "10022",
+      "name": "Firelands"
+    },
+    {
+      "id": 936,
+      "oldId": "9164",
+      "name": "Freehold"
+    },
+    {
+      "id": 543,
+      "oldId": "9786",
+      "name": "Gorgrond"
+    },
+    {
+      "id": 1004,
+      "oldId": "9526",
+      "name": "Kings' Rest"
+    },
+    {
+      "id": 1010,
+      "oldId": "8064",
+      "name": "The MOTHERLODE!!"
+    },
+    {
+      "id": 1038,
+      "oldId": "9527",
+      "name": "Temple of Sethraliss"
+    },
+    {
+      "id": 1039,
+      "oldId": "9525",
+      "name": "Shrine of the Storm"
+    },
+    {
+      "id": 1148,
+      "oldId": "9389",
+      "name": "Uldir"
+    },
+    {
+      "id": 1042,
+      "oldId": "9391",
+      "name": "The Underrot"
+    },
+    {
+      "id": 1015,
+      "oldId": "9424",
+      "name": "Waycrest Manor"
+    },
+    {
+      "id": 843,
+      "oldId": "8624",
+      "name": "Shado-Pan Showdown"
+    },
+    {
+      "id": 147,
+      "oldId": "8161",
+      "name": "Ulduar"
+    },
+    {
+      "id": 864,
+      "oldId": "8501",
+      "name": "Vol'dun"
+    },
+    {
+      "id": 896,
+      "oldId": "8721",
+      "name": "Drustvar"
+    },
+    {
+      "id": 863,
+      "oldId": "8500",
+      "name": "Nazmir"
+    },
+    {
+      "id": 942,
+      "oldId": "9042",
+      "name": "Stormsong Valley"
+    },
+    {
+      "id": 895,
+      "oldId": "8567",
+      "name": "Tiragarde Sound"
+    },
+    {
+      "id": 862,
+      "oldId": "8499",
+      "name": "Zuldazar"
+    },
+    {
+      "id": 933,
+      "oldId": "9012",
+      "name": "Forge of Aeons"
+    },
+    {
+      "id": 630,
+      "oldId": "8625",
+      "name": "Azsuna"
+    },
+    {
+      "id": 427,
+      "oldId": "8640",
+      "name": "Coldridge Valley"
+    },
+    {
+      "id": 888,
+      "oldId": "8657",
+      "name": "Hall of Communion"
+    },
+    {
+      "id": 650,
+      "oldId": "8646",
+      "name": "Highmountain"
+    },
+    {
+      "id": 824,
+      "oldId": "8489",
+      "name": "Islands"
+    },
+    {
+      "id": 634,
+      "oldId": "8596",
+      "name": "Stormheim"
+    },
+    {
+      "id": 84,
+      "oldId": "9553",
+      "name": "Stormwind City"
+    },
+    {
+      "id": 973,
+      "oldId": "9318",
+      "name": "The Sunwell"
+    },
+    {
+      "id": 971,
+      "oldId": "9188",
+      "name": "Telogrus Rift"
+    },
+    {
+      "id": 641,
+      "oldId": "8570",
+      "name": "Val'sharah"
+    },
+    {
+      "id": 93,
+      "oldId": "3358",
+      "name": "Arathi Basin"
+    },
+    {
+      "id": 838,
+      "oldId": "8597",
+      "name": "Battle for Blackrock Mountain"
+    },
+    {
+      "id": 519,
+      "oldId": "6665",
+      "name": "Deepwind Gorge"
+    },
+    {
+      "id": 275,
+      "oldId": "5449",
+      "name": "The Battle for Gilneas"
+    },
+    {
+      "id": 417,
+      "oldId": "6051",
+      "name": "Temple of Kotmogu"
+    },
+    {
+      "id": 907,
+      "oldId": "9136",
+      "name": "Seething Shore"
+    },
+    {
+      "id": 423,
+      "oldId": "6126",
+      "name": "Silvershard Mines"
+    },
+    {
+      "id": 92,
+      "oldId": "3277",
+      "name": "Warsong Gulch"
+    },
+    {
+      "id": 55,
+      "oldId": "8630",
+      "name": "The Deadmines"
+    },
+    {
+      "id": 909,
+      "oldId": "8638",
+      "name": "Antorus, the Burning Throne"
+    },
+    {
+      "id": 749,
+      "oldId": "8423",
+      "name": "The Arcway"
+    },
+    {
+      "id": 751,
+      "oldId": "7805",
+      "name": "Black Rook Hold"
+    },
+    {
+      "id": 646,
+      "oldId": "7543",
+      "name": "Broken Shore"
+    },
+    {
+      "id": 897,
+      "oldId": "9051",
+      "name": "The Deaths of Chromie"
+    },
+    {
+      "id": 877,
+      "oldId": "8641",
+      "name": "Fields of the Eternal Hunt"
+    },
+    {
+      "id": 871,
+      "oldId": "8676",
+      "name": "The Lost Glacier"
+    },
+    {
+      "id": 908,
+      "oldId": "8950",
+      "name": "Ruins of Lordaeron"
+    },
+    {
+      "id": 764,
+      "oldId": "8025",
+      "name": "The Nighthold"
+    },
+    {
+      "id": 777,
+      "oldId": "8026",
+      "name": "The Emerald Nightmare"
+    },
+    {
+      "id": 200,
+      "oldId": "8672",
+      "name": "The Ruby Sanctum"
+    },
+    {
+      "id": 850,
+      "oldId": "8524",
+      "name": "Tomb of Sargeras"
+    },
+    {
+      "id": 680,
+      "oldId": "7637",
+      "name": "Suramar"
+    },
+    {
+      "id": 806,
+      "oldId": "8440",
+      "name": "Trial of Valor"
+    },
+    {
+      "id": 677,
+      "oldId": "7787",
+      "name": "Vault of the Wardens"
+    },
+    {
+      "id": 11,
+      "oldId": "8528",
+      "name": "Wailing Caverns"
+    },
+    {
+      "id": 276,
+      "oldId": "8549",
+      "name": "The Maelstrom"
+    },
+    {
+      "id": 439,
+      "oldId": "8531",
+      "name": "Stormstout Brewery"
+    },
+    {
+      "id": 974,
+      "oldId": "10272",
+      "name": "Tol Dagor"
+    },
+    {
+      "id": 630,
+      "oldId": "7334",
+      "name": "Azsuna"
+    },
+    {
+      "id": 732,
+      "oldId": "7996",
+      "name": "Violet Hold"
+    },
+    {
+      "id": 650,
+      "oldId": "7503",
+      "name": "Highmountain"
+    },
+    {
+      "id": 641,
+      "oldId": "7558",
+      "name": "Val'sharah"
+    },
+    {
+      "id": 645,
+      "oldId": "7576",
+      "name": "Twisting Nether"
+    },
+    {
+      "id": 758,
+      "oldId": "8017",
+      "name": "Gloaming Reef"
+    },
+    {
+      "id": 671,
+      "oldId": "7658",
+      "name": "The Cove of Nashal"
+    },
+    {
+      "id": 634,
+      "oldId": "7541",
+      "name": "Stormheim"
+    },
+    {
+      "id": 596,
+      "oldId": "6967",
+      "name": "Blackrock Foundry"
+    },
+    {
+      "id": 616,
+      "oldId": "7307",
+      "name": "Upper Blackrock Spire"
+    },
+    {
+      "id": 646,
+      "oldId": "7534",
+      "name": "Broken Shore"
+    },
+    {
+      "id": 620,
+      "oldId": "7109",
+      "name": "The Everbloom"
+    },
+    {
+      "id": 606,
+      "oldId": "6984",
+      "name": "Grimrail Depot"
+    },
+    {
+      "id": 661,
+      "oldId": "7545",
+      "name": "Hellfire Citadel"
+    },
+    {
+      "id": 610,
+      "oldId": "6996",
+      "name": "Highmaul"
+    },
+    {
+      "id": 534,
+      "oldId": "6723",
+      "name": "Tanaan Jungle"
+    },
+    {
+      "id": 574,
+      "oldId": "6932",
+      "name": "Shadowmoon Burial Grounds"
+    },
+    {
+      "id": 317,
+      "oldId": "8556",
+      "name": "Stratholme"
+    },
+    {
+      "id": 672,
+      "oldId": "8651",
+      "name": "Mardum, the Shattered Abyss"
+    },
+    {
+      "id": 588,
+      "oldId": "6941",
+      "name": "Ashran"
+    },
+    {
+      "id": 141,
+      "oldId": "8518",
+      "name": "The Eye of Eternity"
+    },
+    {
+      "id": 703,
+      "oldId": "8594",
+      "name": "Halls of Valor"
+    },
+    {
+      "id": 328,
+      "oldId": "8660",
+      "name": "Throne of the Four Winds"
+    },
+    {
+      "id": 677,
+      "oldId": "7814",
+      "name": "Vault of the Wardens"
+    },
+    {
+      "id": 672,
+      "oldId": "8022",
+      "name": "Mardum, the Shattered Abyss"
+    },
+    {
+      "id": 226,
+      "oldId": "8514",
+      "name": "Gnomeregan"
+    },
+    {
+      "id": 645,
+      "oldId": "8538",
+      "name": "Twisting Nether"
+    },
+    {
+      "id": 826,
+      "oldId": "8546",
+      "name": "Cave of the Bloodtotem"
+    },
+    {
+      "id": 141,
+      "oldId": "8483",
+      "name": "The Eye of Eternity"
+    },
+    {
+      "id": 703,
+      "oldId": "8645",
+      "name": "Halls of Valor"
+    },
+    {
+      "id": 186,
+      "oldId": "7695",
+      "name": "Icecrown Citadel"
+    },
+    {
+      "id": 350,
+      "oldId": "7969",
+      "name": "Karazhan"
+    },
+    {
+      "id": 714,
+      "oldId": "7737",
+      "name": "Niskara"
+    },
+    {
+      "id": 339,
+      "oldId": "8239",
+      "name": "Black Temple"
+    },
+    {
+      "id": 713,
+      "oldId": "8040",
+      "name": "Eye of Azshara"
+    },
+    {
+      "id": 733,
+      "oldId": "7673",
+      "name": "Darkheart Thicket"
+    },
+    {
+      "id": 703,
+      "oldId": "7672",
+      "name": "Halls of Valor"
+    },
+    {
+      "id": 731,
+      "oldId": "7546",
+      "name": "Neltharion's Lair"
+    },
+    {
+      "id": 107,
+      "oldId": "6755",
+      "name": "Nagrand"
+    },
+    {
+      "id": 672,
+      "oldId": "7705",
+      "name": "Mardum, the Shattered Abyss"
+    },
+    {
+      "id": 742,
+      "oldId": "8106",
+      "name": "Abyssal Maw"
+    },
+    {
+      "id": 244,
+      "oldId": "8309",
+      "name": "Tol Barad"
+    },
+    {
+      "id": 736,
+      "oldId": "8094",
+      "name": "The Beyond"
+    },
+    {
+      "id": 646,
+      "oldId": "7796",
+      "name": "Broken Shore"
+    },
+    {
+      "id": 207,
+      "oldId": "7955",
+      "name": "Deepholm"
+    },
+    {
+      "id": 717,
+      "oldId": "7918",
+      "name": "Dreadscar Rift"
+    },
+    {
+      "id": 276,
+      "oldId": "8046",
+      "name": "The Maelstrom"
+    },
+    {
+      "id": 142,
+      "oldId": "8252",
+      "name": "The Oculus"
+    },
+    {
+      "id": 672,
+      "oldId": "7945",
+      "name": "Mardum, the Shattered Abyss"
+    },
+    {
+      "id": 350,
+      "oldId": "8265",
+      "name": "Karazhan"
+    },
+    {
+      "id": 429,
+      "oldId": "8262",
+      "name": "Temple of the Jade Serpent"
+    },
+    {
+      "id": 740,
+      "oldId": "8142",
+      "name": "Shadowgore Citadel"
+    },
+    {
+      "id": 716,
+      "oldId": "7960",
+      "name": "Skywall"
+    },
+    {
+      "id": 757,
+      "oldId": "7974",
+      "name": "Ursoc's Lair"
+    },
+    {
+      "id": 18,
+      "oldId": "8044",
+      "name": "Tirisfal Glades"
+    },
+    {
+      "id": 601,
+      "oldId": "6988",
+      "name": "Skyreach"
+    },
+    {
+      "id": 542,
+      "oldId": "6722",
+      "name": "Spires of Arak"
+    },
+    {
+      "id": 593,
+      "oldId": "6912",
+      "name": "Auchindoun"
+    },
+    {
+      "id": 535,
+      "oldId": "6662",
+      "name": "Talador"
+    },
+    {
+      "id": 595,
+      "oldId": "6951",
+      "name": "Iron Docks"
+    },
+    {
+      "id": 543,
+      "oldId": "6721",
+      "name": "Gorgrond"
+    },
+    {
+      "id": 573,
+      "oldId": "6874",
+      "name": "Bloodmaul Slag Mines"
+    },
+    {
+      "id": 525,
+      "oldId": "6720",
+      "name": "Frostfire Ridge"
+    },
+    {
+      "id": 104,
+      "oldId": "6719",
+      "name": "Shadowmoon Valley"
+    },
+    {
+      "id": 451,
+      "oldId": "6328",
+      "name": "Assault on Zan'vess"
+    },
+    {
+      "id": 524,
+      "oldId": "6567",
+      "name": "Battle on the High Seas"
+    },
+    {
+      "id": 447,
+      "oldId": "6101",
+      "name": "A Brewing Storm"
+    },
+    {
+      "id": 452,
+      "oldId": "6426",
+      "name": "Brewmoon Festival"
+    },
+    {
+      "id": 488,
+      "oldId": "6565",
+      "name": "Dagger in the Dark"
+    },
+    {
+      "id": 456,
+      "oldId": "6067",
+      "name": "Terrace of Endless Spring"
+    },
+    {
+      "id": 481,
+      "oldId": "6208",
+      "name": "Crypt of Forgotten Kings"
+    },
+    {
+      "id": 480,
+      "oldId": "6852",
+      "name": "Proving Grounds"
+    },
+    {
+      "id": 474,
+      "oldId": "6297",
+      "name": "Heart of Fear"
+    },
+    {
+      "id": 450,
+      "oldId": "6309",
+      "name": "Unga Ingoo"
+    },
+    {
+      "id": 534,
+      "oldId": "7025",
+      "name": "Tanaan Jungle"
+    },
+    {
+      "id": 471,
+      "oldId": "6125",
+      "name": "Mogu'shan Vaults"
+    },
+    {
+      "id": 556,
+      "oldId": "6738",
+      "name": "Siege of Orgrimmar"
+    },
+    {
+      "id": 487,
+      "oldId": "6616",
+      "name": "A Little Patience"
+    },
+    {
+      "id": 522,
+      "oldId": "6731",
+      "name": "The Secrets of Ragefire"
+    },
+    {
+      "id": 504,
+      "oldId": "6507",
+      "name": "Isle of Thunder"
+    },
+    {
+      "id": 508,
+      "oldId": "6622",
+      "name": "Throne of Thunder"
+    },
+    {
+      "id": 571,
+      "oldId": "6771",
+      "name": "Celestial Tournament"
+    },
+    {
+      "id": 433,
+      "oldId": "6006",
+      "name": "The Veiled Stair"
+    },
+    {
+      "id": 293,
+      "oldId": "4950",
+      "name": "Grim Batol"
+    },
+    {
+      "id": 390,
+      "oldId": "5840",
+      "name": "Vale of Eternal Blossoms"
+    },
+    {
+      "id": 507,
+      "oldId": "6661",
+      "name": "Isle of Giants"
+    },
+    {
+      "id": 554,
+      "oldId": "6757",
+      "name": "Timeless Isle"
+    },
+    {
+      "id": 282,
+      "oldId": "5600",
+      "name": "Baradin Hold"
+    },
+    {
+      "id": 285,
+      "oldId": "5094",
+      "name": "Blackwing Descent"
+    },
+    {
+      "id": 409,
+      "oldId": "5892",
+      "name": "Dragon Soul"
+    },
+    {
+      "id": 398,
+      "oldId": "5788",
+      "name": "Well of Eternity"
+    },
+    {
+      "id": 367,
+      "oldId": "5723",
+      "name": "Firelands"
+    },
+    {
+      "id": 338,
+      "oldId": "5733",
+      "name": "Molten Front"
+    },
+    {
+      "id": 245,
+      "oldId": "5389",
+      "name": "Tol Barad Peninsula"
+    },
+    {
+      "id": 328,
+      "oldId": "5638",
+      "name": "Throne of the Four Winds"
+    },
+    {
+      "id": 401,
+      "oldId": "5789",
+      "name": "End Time"
+    },
+    {
+      "id": 294,
+      "oldId": "5334",
+      "name": "The Bastion of Twilight"
+    },
+    {
+      "id": 399,
+      "oldId": "5844",
+      "name": "Hour of Twilight"
+    },
+    {
+      "id": 333,
+      "oldId": "3805",
+      "name": "Zul'Aman"
+    },
+    {
+      "id": 233,
+      "oldId": "1977",
+      "name": "Zul'Gurub"
+    },
+    {
+      "id": 244,
+      "oldId": "5095",
+      "name": "Tol Barad"
+    },
+    {
+      "id": 241,
+      "oldId": "4922",
+      "name": "Twilight Highlands"
+    },
+    {
+      "id": 297,
+      "oldId": "4945",
+      "name": "Halls of Origination"
+    },
+    {
+      "id": 422,
+      "oldId": "6138",
+      "name": "Dread Wastes"
+    },
+    {
+      "id": 437,
+      "oldId": "5976",
+      "name": "Gate of the Setting Sun"
+    },
+    {
+      "id": 277,
+      "oldId": "5396",
+      "name": "Lost City of the Tol'vir"
+    },
+    {
+      "id": 457,
+      "oldId": "6214",
+      "name": "Siege of Niuzao Temple"
+    },
+    {
+      "id": 388,
+      "oldId": "5842",
+      "name": "Townlong Steppes"
+    },
+    {
+      "id": 249,
+      "oldId": "5034",
+      "name": "Uldum"
+    },
+    {
+      "id": 443,
+      "oldId": "5918",
+      "name": "Shado-Pan Monastery"
+    },
+    {
+      "id": 324,
+      "oldId": "5088",
+      "name": "The Stonecore"
+    },
+    {
+      "id": 207,
+      "oldId": "5042",
+      "name": "Deepholm"
+    },
+    {
+      "id": 379,
+      "oldId": "5841",
+      "name": "Kun-Lai Summit"
+    },
+    {
+      "id": 453,
+      "oldId": "6182",
+      "name": "Mogu'shan Palace"
+    },
+    {
+      "id": 325,
+      "oldId": "5035",
+      "name": "The Vortex Pinnacle"
+    },
+    {
+      "id": 418,
+      "oldId": "6134",
+      "name": "Krasarang Wilds"
+    },
+    {
+      "id": 376,
+      "oldId": "5805",
+      "name": "Valley of the Four Winds"
+    },
+    {
+      "id": 283,
+      "oldId": "4926",
+      "name": "Blackrock Caverns"
+    },
+    {
+      "id": 439,
+      "oldId": "5963",
+      "name": "Stormstout Brewery"
+    },
+    {
+      "id": 371,
+      "oldId": "5785",
+      "name": "The Jade Forest"
+    },
+    {
+      "id": 198,
+      "oldId": "616",
+      "name": "Mount Hyjal"
+    },
+    {
+      "id": 201,
+      "oldId": "4815",
+      "name": "Kelp'thar Forest"
+    },
+    {
+      "id": 429,
+      "oldId": "5956",
+      "name": "Temple of the Jade Serpent"
+    },
+    {
+      "id": 322,
+      "oldId": "5004",
+      "name": "Throne of the Tides"
+    },
+    {
+      "id": 156,
+      "oldId": "4603",
+      "name": "Vault of Archavon"
+    },
+    {
+      "id": 141,
+      "oldId": "4500",
+      "name": "The Eye of Eternity"
+    },
+    {
+      "id": 186,
+      "oldId": "4812",
+      "name": "Icecrown Citadel"
+    },
+    {
+      "id": 162,
+      "oldId": "3456",
+      "name": "Naxxramas"
+    },
+    {
+      "id": 155,
+      "oldId": "4493",
+      "name": "The Obsidian Sanctum"
+    },
+    {
+      "id": 248,
+      "oldId": "2159",
+      "name": "Onyxia's Lair"
+    },
+    {
+      "id": 200,
+      "oldId": "4987",
+      "name": "The Ruby Sanctum"
+    },
+    {
+      "id": 147,
+      "oldId": "4273",
+      "name": "Ulduar"
+    },
+    {
+      "id": 204,
+      "oldId": "5145",
+      "name": "Abyssal Depths"
+    },
+    {
+      "id": 205,
+      "oldId": "5144",
+      "name": "Shimmering Expanse"
+    },
+    {
+      "id": 203,
+      "oldId": "5146",
+      "name": "Vashj'ir"
+    },
+    {
+      "id": 183,
+      "oldId": "4809",
+      "name": "The Forge of Souls"
+    },
+    {
+      "id": 185,
+      "oldId": "4820",
+      "name": "Halls of Reflection"
+    },
+    {
+      "id": 184,
+      "oldId": "4813",
+      "name": "Pit of Saron"
+    },
+    {
+      "id": 330,
+      "oldId": "3923",
+      "name": "Gruul's Lair"
+    },
+    {
+      "id": 350,
+      "oldId": "3457",
+      "name": "Karazhan"
+    },
+    {
+      "id": 331,
+      "oldId": "3836",
+      "name": "Magtheridon's Lair"
+    },
+    {
+      "id": 335,
+      "oldId": "4075",
+      "name": "Sunwell Plateau"
+    },
+    {
+      "id": 122,
+      "oldId": "4080",
+      "name": "Isle of Quel'Danas"
+    },
+    {
+      "id": 332,
+      "oldId": "3607",
+      "name": "Serpentshrine Cavern"
+    },
+    {
+      "id": 329,
+      "oldId": "3606",
+      "name": "Hyjal Summit"
+    },
+    {
+      "id": 339,
+      "oldId": "3959",
+      "name": "Black Temple"
+    },
+    {
+      "id": 269,
+      "oldId": "3848",
+      "name": "The Arcatraz"
+    },
+    {
+      "id": 348,
+      "oldId": "4131",
+      "name": "Magisters' Terrace"
+    },
+    {
+      "id": 130,
+      "oldId": "4100",
+      "name": "The Culling of Stratholme"
+    },
+    {
+      "id": 266,
+      "oldId": "3847",
+      "name": "The Botanica"
+    },
+    {
+      "id": 127,
+      "oldId": "2817",
+      "name": "Crystalsong Forest"
+    },
+    {
+      "id": 170,
+      "oldId": "4742",
+      "name": "Hrothgar's Landing"
+    },
+    {
+      "id": 118,
+      "oldId": "210",
+      "name": "Icecrown"
+    },
+    {
+      "id": 260,
+      "oldId": "3789",
+      "name": "Shadow Labyrinth"
+    },
+    {
+      "id": 138,
+      "oldId": "4272",
+      "name": "Halls of Lightning"
+    },
+    {
+      "id": 267,
+      "oldId": "3849",
+      "name": "The Mechanar"
+    },
+    {
+      "id": 109,
+      "oldId": "3523",
+      "name": "Netherstorm"
+    },
+    {
+      "id": 142,
+      "oldId": "4228",
+      "name": "The Oculus"
+    },
+    {
+      "id": 120,
+      "oldId": "67",
+      "name": "The Storm Peaks"
+    },
+    {
+      "id": 136,
+      "oldId": "1196",
+      "name": "Utgarde Pinnacle"
+    },
+    {
+      "id": 104,
+      "oldId": "3520",
+      "name": "Shadowmoon Valley"
+    },
+    {
+      "id": 246,
+      "oldId": "3714",
+      "name": "The Shattered Halls"
+    },
+    {
+      "id": 263,
+      "oldId": "3715",
+      "name": "The Steamvault"
+    },
+    {
+      "id": 123,
+      "oldId": "4197",
+      "name": "Wintergrasp"
+    },
+    {
+      "id": 119,
+      "oldId": "3711",
+      "name": "Sholazar Basin"
+    },
+    {
+      "id": 140,
+      "oldId": "4264",
+      "name": "Halls of Stone"
+    },
+    {
+      "id": 105,
+      "oldId": "3522",
+      "name": "Blade's Edge Mountains"
+    },
+    {
+      "id": 258,
+      "oldId": "3791",
+      "name": "Sethekk Halls"
+    },
+    {
+      "id": 273,
+      "oldId": "2366",
+      "name": "The Black Morass"
+    },
+    {
+      "id": 153,
+      "oldId": "4416",
+      "name": "Gundrak"
+    },
+    {
+      "id": 107,
+      "oldId": "3518",
+      "name": "Nagrand"
+    },
+    {
+      "id": 121,
+      "oldId": "66",
+      "name": "Zul'Drak"
+    },
+    {
+      "id": 256,
+      "oldId": "3790",
+      "name": "Auchenai Crypts"
+    },
+    {
+      "id": 116,
+      "oldId": "394",
+      "name": "Grizzly Hills"
+    },
+    {
+      "id": 168,
+      "oldId": "4415",
+      "name": "The Violet Hold"
+    },
+    {
+      "id": 274,
+      "oldId": "2367",
+      "name": "Old Hillsbrad Foothills"
+    },
+    {
+      "id": 160,
+      "oldId": "4196",
+      "name": "Drak'Tharon Keep"
+    },
+    {
+      "id": 272,
+      "oldId": "3792",
+      "name": "Mana-Tombs"
+    },
+    {
+      "id": 108,
+      "oldId": "3519",
+      "name": "Terokkar Forest"
+    },
+    {
+      "id": 132,
+      "oldId": "4494",
+      "name": "Ahn'kahet: The Old Kingdom"
+    },
+    {
+      "id": 115,
+      "oldId": "65",
+      "name": "Dragonblight"
+    },
+    {
+      "id": 262,
+      "oldId": "3716",
+      "name": "The Underbog"
+    },
+    {
+      "id": 157,
+      "oldId": "4277",
+      "name": "Azjol-Nerub"
+    },
+    {
+      "id": 265,
+      "oldId": "3717",
+      "name": "The Slave Pens"
+    },
+    {
+      "id": 102,
+      "oldId": "3521",
+      "name": "Zangarmarsh"
+    },
+    {
+      "id": 247,
+      "oldId": "3429",
+      "name": "Ruins of Ahn'Qiraj"
+    },
+    {
+      "id": 287,
+      "oldId": "2677",
+      "name": "Blackwing Lair"
+    },
+    {
+      "id": 232,
+      "oldId": "2717",
+      "name": "Molten Core"
+    },
+    {
+      "id": 261,
+      "oldId": "3713",
+      "name": "The Blood Furnace"
+    },
+    {
+      "id": 129,
+      "oldId": "4265",
+      "name": "The Nexus"
+    },
+    {
+      "id": 114,
+      "oldId": "3537",
+      "name": "Borean Tundra"
+    },
+    {
+      "id": 347,
+      "oldId": "3562",
+      "name": "Hellfire Ramparts"
+    },
+    {
+      "id": 117,
+      "oldId": "495",
+      "name": "Howling Fjord"
+    },
+    {
+      "id": 100,
+      "oldId": "3483",
+      "name": "Hellfire Peninsula"
+    },
+    {
+      "id": 133,
+      "oldId": "206",
+      "name": "Utgarde Keep"
+    },
+    {
+      "id": 250,
+      "oldId": "1583",
+      "name": "Blackrock Spire"
+    },
+    {
+      "id": 124,
+      "oldId": "4298",
+      "name": "Plaguelands: The Scarlet Enclave"
+    },
+    {
+      "id": 242,
+      "oldId": "1584",
+      "name": "Blackrock Depths"
+    },
+    {
+      "id": 128,
+      "oldId": "4384",
+      "name": "Strand of the Ancients"
+    },
+    {
+      "id": 33,
+      "oldId": "25",
+      "name": "Blackrock Mountain"
+    },
+    {
+      "id": 42,
+      "oldId": "41",
+      "name": "Deadwind Pass"
+    },
+    {
+      "id": 317,
+      "oldId": "2017",
+      "name": "Stratholme"
+    },
+    {
+      "id": 219,
+      "oldId": "1176",
+      "name": "Zul'Farrak"
+    },
+    {
+      "id": 904,
+      "oldId": "9043",
+      "name": "Silithus Brawl"
+    },
+    {
+      "id": 234,
+      "oldId": "2557",
+      "name": "Dire Maul"
+    },
+    {
+      "id": 16,
+      "oldId": "1337",
+      "name": "Uldaman"
+    },
+    {
+      "id": 15,
+      "oldId": "3",
+      "name": "Badlands"
+    },
+    {
+      "id": 17,
+      "oldId": "4",
+      "name": "Blasted Lands"
+    },
+    {
+      "id": 36,
+      "oldId": "46",
+      "name": "Burning Steppes"
+    },
+    {
+      "id": 78,
+      "oldId": "490",
+      "name": "Un'Goro Crater"
+    },
+    {
+      "id": 77,
+      "oldId": "361",
+      "name": "Felwood"
+    },
+    {
+      "id": 23,
+      "oldId": "139",
+      "name": "Eastern Plaguelands"
+    },
+    {
+      "id": 32,
+      "oldId": "51",
+      "name": "Searing Gorge"
+    },
+    {
+      "id": 81,
+      "oldId": "1377",
+      "name": "Silithus"
+    },
+    {
+      "id": 51,
+      "oldId": "8",
+      "name": "Swamp of Sorrows"
+    },
+    {
+      "id": 71,
+      "oldId": "440",
+      "name": "Tanaris"
+    },
+    {
+      "id": 64,
+      "oldId": "400",
+      "name": "Thousand Needles"
+    },
+    {
+      "id": 83,
+      "oldId": "618",
+      "name": "Winterspring"
+    },
+    {
+      "id": 476,
+      "oldId": "6066",
+      "name": "Scholomance"
+    },
+    {
+      "id": 300,
+      "oldId": "722",
+      "name": "Razorfen Downs"
+    },
+    {
+      "id": 67,
+      "oldId": "2100",
+      "name": "Maraudon"
+    },
+    {
+      "id": 70,
+      "oldId": "15",
+      "name": "Dustwallow Marsh"
+    },
+    {
+      "id": 69,
+      "oldId": "357",
+      "name": "Feralas"
+    },
+    {
+      "id": 22,
+      "oldId": "28",
+      "name": "Western Plaguelands"
+    },
+    {
+      "id": 301,
+      "oldId": "491",
+      "name": "Razorfen Kraul"
+    },
+    {
+      "id": 206,
+      "oldId": "5031",
+      "name": "Twin Peaks"
+    },
+    {
+      "id": 66,
+      "oldId": "405",
+      "name": "Desolace"
+    },
+    {
+      "id": 26,
+      "oldId": "47",
+      "name": "The Hinterlands"
+    },
+    {
+      "id": 210,
+      "oldId": "5287",
+      "name": "The Cape of Stranglethorn"
+    },
+    {
+      "id": 224,
+      "oldId": "5339",
+      "name": "Stranglethorn Vale"
+    },
+    {
+      "id": 302,
+      "oldId": "6109",
+      "name": "Scarlet Monastery"
+    },
+    {
+      "id": 431,
+      "oldId": "6052",
+      "name": "Scarlet Halls"
+    },
+    {
+      "id": 226,
+      "oldId": "721",
+      "name": "Gnomeregan"
+    },
+    {
+      "id": 56,
+      "oldId": "11",
+      "name": "Wetlands"
+    },
+    {
+      "id": 14,
+      "oldId": "45",
+      "name": "Arathi Highlands"
+    },
+    {
+      "id": 199,
+      "oldId": "4709",
+      "name": "Southern Barrens"
+    },
+    {
+      "id": 50,
+      "oldId": "33",
+      "name": "Northern Stranglethorn"
+    },
+    {
+      "id": 225,
+      "oldId": "717",
+      "name": "The Stockade"
+    },
+    {
+      "id": 221,
+      "oldId": "719",
+      "name": "Blackfathom Deeps"
+    },
+    {
+      "id": 91,
+      "oldId": "2597",
+      "name": "Alterac Valley"
+    },
+    {
+      "id": 169,
+      "oldId": "4710",
+      "name": "Isle of Conquest"
+    },
+    {
+      "id": 47,
+      "oldId": "10",
+      "name": "Duskwood"
+    },
+    {
+      "id": 65,
+      "oldId": "406",
+      "name": "Stonetalon Mountains"
+    },
+    {
+      "id": 310,
+      "oldId": "209",
+      "name": "Shadowfang Keep"
+    },
+    {
+      "id": 11,
+      "oldId": "718",
+      "name": "Wailing Caverns"
+    },
+    {
+      "id": 112,
+      "oldId": "3820",
+      "name": "Eye of the Storm"
+    },
+    {
+      "id": 49,
+      "oldId": "44",
+      "name": "Redridge Mountains"
+    },
+    {
+      "id": 63,
+      "oldId": "331",
+      "name": "Ashenvale"
+    },
+    {
+      "id": 25,
+      "oldId": "267",
+      "name": "Hillsbrad Foothills"
+    },
+    {
+      "id": 55,
+      "oldId": "1581",
+      "name": "The Deadmines"
+    },
+    {
+      "id": 213,
+      "oldId": "2437",
+      "name": "Ragefire Chasm"
+    },
+    {
+      "id": 62,
+      "oldId": "10226",
+      "name": "Darkshore"
+    },
+    {
+      "id": 217,
+      "oldId": "4706",
+      "name": "Ruins of Gilneas"
+    },
+    {
+      "id": 62,
+      "oldId": "10288",
+      "name": "Darkshore"
+    },
+    {
+      "id": 106,
+      "oldId": "3525",
+      "name": "Bloodmyst Isle"
+    },
+    {
+      "id": 62,
+      "oldId": "148",
+      "name": "Darkshore"
+    },
+    {
+      "id": 48,
+      "oldId": "38",
+      "name": "Loch Modan"
+    },
+    {
+      "id": 52,
+      "oldId": "40",
+      "name": "Westfall"
+    },
+    {
+      "id": 76,
+      "oldId": "16",
+      "name": "Azshara"
+    },
+    {
+      "id": 95,
+      "oldId": "3433",
+      "name": "Ghostlands"
+    },
+    {
+      "id": 10,
+      "oldId": "17",
+      "name": "Northern Barrens"
+    },
+    {
+      "id": 21,
+      "oldId": "130",
+      "name": "Silverpine Forest"
+    },
+    {
+      "id": 97,
+      "oldId": "8840",
+      "name": "Azuremyst Isle"
+    },
+    {
+      "id": 174,
+      "oldId": "4720",
+      "name": "The Lost Isles"
+    },
+    {
+      "id": 103,
+      "oldId": "3557",
+      "name": "The Exodar"
+    },
+    {
+      "id": 87,
+      "oldId": "1537",
+      "name": "Ironforge"
+    },
+    {
+      "id": 393,
+      "oldId": "6142",
+      "name": "Shrine of Seven Stars"
+    },
+    {
+      "id": 622,
+      "oldId": "7332",
+      "name": "Stormshield"
+    },
+    {
+      "id": 84,
+      "oldId": "1519",
+      "name": "Stormwind City"
+    },
+    {
+      "id": 974,
+      "oldId": "8978",
+      "name": "Tol Dagor"
+    },
+    {
+      "id": 974,
+      "oldId": "10015",
+      "name": "Tol Dagor"
+    },
+    {
+      "id": 1163,
+      "oldId": "8670",
+      "name": "Dazar'alor"
+    },
+    {
+      "id": 652,
+      "oldId": "7731",
+      "name": "Thunder Totem"
+    },
+    {
+      "id": 168,
+      "oldId": "7777",
+      "name": "The Violet Hold"
+    },
+    {
+      "id": 168,
+      "oldId": "7895",
+      "name": "The Violet Hold"
+    },
+    {
+      "id": 85,
+      "oldId": "1637",
+      "name": "Orgrimmar"
+    },
+    {
+      "id": 88,
+      "oldId": "1638",
+      "name": "Thunder Bluff"
+    },
+    {
+      "id": 90,
+      "oldId": "1497",
+      "name": "Undercity"
+    },
+    {
+      "id": 624,
+      "oldId": "7333",
+      "name": "Warspear"
+    },
+    {
+      "id": 647,
+      "oldId": "7679",
+      "name": "Acherus: The Ebon Hold"
+    },
+    {
+      "id": 41,
+      "oldId": "4395",
+      "name": "Dalaran"
+    },
+    {
+      "id": 41,
+      "oldId": "7502",
+      "name": "Dalaran"
+    },
+    {
+      "id": 717,
+      "oldId": "7875",
+      "name": "Dreadscar Rift"
+    },
+    {
+      "id": 747,
+      "oldId": "7846",
+      "name": "The Dreamgrove"
+    },
+    {
+      "id": 103,
+      "oldId": "8700",
+      "name": "The Exodar"
+    },
+    {
+      "id": 734,
+      "oldId": "7879",
+      "name": "Hall of the Guardian"
+    },
+    {
+      "id": 276,
+      "oldId": "7745",
+      "name": "The Maelstrom"
+    },
+    {
+      "id": 702,
+      "oldId": "7834",
+      "name": "Netherlight Temple"
+    },
+    {
+      "id": 111,
+      "oldId": "3703",
+      "name": "Shattrath City"
+    },
+    {
+      "id": 695,
+      "oldId": "7813",
+      "name": "Skyhold"
+    },
+    {
+      "id": 739,
+      "oldId": "7877",
+      "name": "Trueshot Lodge"
+    },
+    {
+      "id": 89,
+      "oldId": "1657",
+      "name": "Darnassus"
+    },
+    {
+      "id": 499,
+      "oldId": "2257",
+      "name": "Deeprun Tram"
+    },
+    {
+      "id": 407,
+      "oldId": "5861",
+      "name": "Darkmoon Island"
+    },
+    {
+      "id": 80,
+      "oldId": "493",
+      "name": "Moonglade"
+    },
+    {
+      "id": 110,
+      "oldId": "3487",
+      "name": "Silvermoon City"
+    },
+    {
+      "id": 468,
+      "oldId": "6456",
+      "name": "Ammen Vale"
+    },
+    {
+      "id": 427,
+      "oldId": "6176",
+      "name": "Coldridge Valley"
+    },
+    {
+      "id": 37,
+      "oldId": "12",
+      "name": "Elwynn Forest"
+    },
+    {
+      "id": 202,
+      "oldId": "4755",
+      "name": "Gilneas City"
+    },
+    {
+      "id": 27,
+      "oldId": "1",
+      "name": "Dun Morogh"
+    },
+    {
+      "id": 425,
+      "oldId": "6170",
+      "name": "Northshire"
+    },
+    {
+      "id": 460,
+      "oldId": "6450",
+      "name": "Shadowglen"
+    },
+    {
+      "id": 57,
+      "oldId": "141",
+      "name": "Teldrassil"
+    },
+    {
+      "id": 30,
+      "oldId": "6457",
+      "name": "New Tinkertown"
+    },
+    {
+      "id": 465,
+      "oldId": "6454",
+      "name": "Deathknell"
+    },
+    {
+      "id": 1,
+      "oldId": "14",
+      "name": "Durotar"
+    },
+    {
+      "id": 94,
+      "oldId": "3430",
+      "name": "Eversong Woods"
+    },
+    {
+      "id": 463,
+      "oldId": "6453",
+      "name": "Echo Isles"
+    },
+    {
+      "id": 7,
+      "oldId": "215",
+      "name": "Mulgore"
+    },
+    {
+      "id": 462,
+      "oldId": "6452",
+      "name": "Camp Narache"
+    },
+    {
+      "id": 467,
+      "oldId": "6455",
+      "name": "Sunstrider Isle"
+    },
+    {
+      "id": 18,
+      "oldId": "85",
+      "name": "Tirisfal Glades"
+    },
+    {
+      "id": 461,
+      "oldId": "6451",
+      "name": "Valley of Trials"
+    },
+    {
+      "id": 179,
+      "oldId": "4714",
+      "name": "Gilneas"
+    },
+    {
+      "id": 97,
+      "oldId": "3524",
+      "name": "Azuremyst Isle"
+    },
+    {
+      "id": 378,
+      "oldId": "5736",
+      "name": "The Wandering Isle"
+    },
+    {
+      "id": 194,
+      "oldId": "4737",
+      "name": "Kezan"
+    },
+    {
+      "id": 378,
+      "oldId": "7902",
+      "name": "The Wandering Isle"
+    },
+    {
+      "id": 889,
+      "oldId": "8911",
+      "name": "Arcatraz"
+    },
+    {
+      "id": 751,
+      "oldId": "8406",
+      "name": "Black Rook Hold"
+    },
+    {
+      "id": 93,
+      "oldId": "8526",
+      "name": "Arathi Basin"
+    },
+    {
+      "id": 97,
+      "oldId": "8275",
+      "name": "Azuremyst Isle"
+    },
+    {
+      "id": 226,
+      "oldId": "10263",
+      "name": "Gnomeregan"
+    },
+    {
+      "id": 971,
+      "oldId": "9415",
+      "name": "Telogrus Rift"
+    },
+    {
+      "id": 883,
+      "oldId": "9359",
+      "name": "The Vindicaar"
+    },
+    {
+      "id": 327,
+      "oldId": "5695",
+      "name": "Ahn'Qiraj: The Fallen Kingdom"
+    },
+    {
+      "id": 928,
+      "oldId": "9300",
+      "name": "Greater Invasion Point: Mistress Alluradel"
+    },
+    {
+      "id": 885,
+      "oldId": "8899",
+      "name": "Antoran Wastes"
+    },
+    {
+      "id": 749,
+      "oldId": "7855",
+      "name": "The Arcway"
+    },
+    {
+      "id": 588,
+      "oldId": "8485",
+      "name": "Ashran"
+    },
+    {
+      "id": 858,
+      "oldId": "8581",
+      "name": "Assault on Broken Shore"
+    },
+    {
+      "id": 713,
+      "oldId": "7578",
+      "name": "Eye of Azshara"
+    },
+    {
+      "id": 630,
+      "oldId": "8000",
+      "name": "Azsuna"
+    },
+    {
+      "id": 751,
+      "oldId": "8583",
+      "name": "Black Rook Hold"
+    },
+    {
+      "id": 242,
+      "oldId": "10028",
+      "name": "Blackrock Depths"
+    },
+    {
+      "id": 390,
+      "oldId": "9105",
+      "name": "Vale of Eternal Blossoms"
+    },
+    {
+      "id": 1161,
+      "oldId": "8568",
+      "name": "Boralus"
+    },
+    {
+      "id": 845,
+      "oldId": "8527",
+      "name": "Cathedral of Eternal Night"
+    },
+    {
+      "id": 1021,
+      "oldId": "9667",
+      "name": "Chamber of Heart"
+    },
+    {
+      "id": 888,
+      "oldId": "9653",
+      "name": "Hall of Communion"
+    },
+    {
+      "id": 761,
+      "oldId": "8079",
+      "name": "Court of Stars"
+    },
+    {
+      "id": 974,
+      "oldId": "10043",
+      "name": "Tol Dagor"
+    },
+    {
+      "id": 62,
+      "oldId": "10058",
+      "name": "Darkshore"
+    },
+    {
+      "id": 62,
+      "oldId": "10059",
+      "name": "Darkshore"
+    },
+    {
+      "id": 62,
+      "oldId": "10084",
+      "name": "Darkshore"
+    },
+    {
+      "id": 62,
+      "oldId": "10085",
+      "name": "Darkshore"
+    },
+    {
+      "id": 715,
+      "oldId": "7979",
+      "name": "Emerald Dreamway"
+    },
+    {
+      "id": 456,
+      "oldId": "8005",
+      "name": "Terrace of Endless Spring"
+    },
+    {
+      "id": 367,
+      "oldId": "8125",
+      "name": "Firelands"
+    },
+    {
+      "id": 590,
+      "oldId": "7004",
+      "name": "Frostwall"
+    },
+    {
+      "id": 938,
+      "oldId": "9331",
+      "name": "Gilneas Island"
+    },
+    {
+      "id": 218,
+      "oldId": "5351",
+      "name": "Ruins of Gilneas City"
+    },
+    {
+      "id": 1156,
+      "oldId": "7656",
+      "name": "The Great Sea"
+    },
+    {
+      "id": 1156,
+      "oldId": "8445",
+      "name": "The Great Sea"
+    },
+    {
+      "id": 1156,
+      "oldId": "8566",
+      "name": "The Great Sea"
+    },
+    {
+      "id": 1156,
+      "oldId": "8600",
+      "name": "The Great Sea"
+    },
+    {
+      "id": 1156,
+      "oldId": "9800",
+      "name": "The Great Sea"
+    },
+    {
+      "id": 1156,
+      "oldId": "9937",
+      "name": "The Great Sea"
+    },
+    {
+      "id": 649,
+      "oldId": "7588",
+      "name": "Helheim"
+    },
+    {
+      "id": 694,
+      "oldId": "7830",
+      "name": "Helmouth Shallows"
+    },
+    {
+      "id": 14,
+      "oldId": "9168",
+      "name": "Arathi Highlands"
+    },
+    {
+      "id": 14,
+      "oldId": "9439",
+      "name": "Arathi Highlands"
+    },
+    {
+      "id": 14,
+      "oldId": "9679",
+      "name": "Arathi Highlands"
+    },
+    {
+      "id": 14,
+      "oldId": "9734",
+      "name": "Arathi Highlands"
+    },
+    {
+      "id": 186,
+      "oldId": "7734",
+      "name": "Icecrown Citadel"
+    },
+    {
+      "id": 186,
+      "oldId": "10355",
+      "name": "Icecrown Citadel"
+    },
+    {
+      "id": 930,
+      "oldId": "9297",
+      "name": "Greater Invasion Point: Inquisitor Meto"
+    },
+    {
+      "id": 921,
+      "oldId": "9100",
+      "name": "Invasion Point: Aurinor"
+    },
+    {
+      "id": 922,
+      "oldId": "9180",
+      "name": "Invasion Point: Bonich"
+    },
+    {
+      "id": 923,
+      "oldId": "9126",
+      "name": "Invasion Point: Cen'gar"
+    },
+    {
+      "id": 929,
+      "oldId": "9295",
+      "name": "Greater Invasion Point: Matron Folnuna"
+    },
+    {
+      "id": 927,
+      "oldId": "9296",
+      "name": "Greater Invasion Point: Pit Lord Vilemus"
+    },
+    {
+      "id": 924,
+      "oldId": "9102",
+      "name": "Invasion Point: Naigtal"
+    },
+    {
+      "id": 926,
+      "oldId": "9127",
+      "name": "Invasion Point: Val"
+    },
+    {
+      "id": 925,
+      "oldId": "9128",
+      "name": "Invasion Point: Sangua"
+    },
+    {
+      "id": 13,
+      "oldId": "9808",
+      "name": "Eastern Kingdoms"
+    },
+    {
+      "id": 417,
+      "oldId": "6449",
+      "name": "Temple of Kotmogu"
+    },
+    {
+      "id": 830,
+      "oldId": "8574",
+      "name": "Krokuun"
+    },
+    {
+      "id": 379,
+      "oldId": "7952",
+      "name": "Kun-Lai Summit"
+    },
+    {
+      "id": 582,
+      "oldId": "7078",
+      "name": "Lunarfall"
+    },
+    {
+      "id": 882,
+      "oldId": "8701",
+      "name": "Mac'Aree"
+    },
+    {
+      "id": 276,
+      "oldId": "8469",
+      "name": "The Maelstrom"
+    },
+    {
+      "id": 302,
+      "oldId": "8285",
+      "name": "Scarlet Monastery"
+    },
+    {
+      "id": 129,
+      "oldId": "5786",
+      "name": "The Nexus"
+    },
+    {
+      "id": 760,
+      "oldId": "8180",
+      "name": "Malorne's Nightmare"
+    },
+    {
+      "id": 714,
+      "oldId": "8105",
+      "name": "Niskara"
+    },
+    {
+      "id": 932,
+      "oldId": "9298",
+      "name": "Greater Invasion Point: Occularus"
+    },
+    {
+      "id": 556,
+      "oldId": "10047",
+      "name": "Siege of Orgrimmar"
+    },
+    {
+      "id": 325,
+      "oldId": "8093",
+      "name": "The Vortex Pinnacle"
+    },
+    {
+      "id": 1173,
+      "oldId": "9772",
+      "name": "Rastakhan's Might"
+    },
+    {
+      "id": 981,
+      "oldId": "9469",
+      "name": "Un'gol Ruins"
+    },
+    {
+      "id": 184,
+      "oldId": "8529",
+      "name": "Pit of Saron"
+    },
+    {
+      "id": 307,
+      "oldId": "2057",
+      "name": "ScholomanceOLD"
+    },
+    {
+      "id": 111,
+      "oldId": "6980",
+      "name": "Shattrath City"
+    },
+    {
+      "id": 635,
+      "oldId": "7744",
+      "name": "Shield's Rest"
+    },
+    {
+      "id": 1039,
+      "oldId": "10266",
+      "name": "Shrine of the Storm"
+    },
+    {
+      "id": 110,
+      "oldId": "9313",
+      "name": "Silvermoon City"
+    },
+    {
+      "id": 931,
+      "oldId": "9299",
+      "name": "Greater Invasion Point: Sotanathor"
+    },
+    {
+      "id": 634,
+      "oldId": "7921",
+      "name": "Stormheim"
+    },
+    {
+      "id": 680,
+      "oldId": "7767",
+      "name": "Suramar"
+    },
+    {
+      "id": 1183,
+      "oldId": "9562",
+      "name": "Thornheart"
+    },
+    {
+      "id": 1171,
+      "oldId": "8956",
+      "name": "Gol Thovas"
+    },
+    {
+      "id": 903,
+      "oldId": "8910",
+      "name": "The Seat of the Triumvirate"
+    },
+    {
+      "id": 939,
+      "oldId": "9101",
+      "name": "Tropical Isle 8.0"
+    },
+    {
+      "id": 883,
+      "oldId": "8714",
+      "name": "The Vindicaar"
+    },
+    {
+      "id": 883,
+      "oldId": "8915",
+      "name": "The Vindicaar"
+    },
+    {
+      "id": 883,
+      "oldId": "8916",
+      "name": "The Vindicaar"
+    },
+    {
+      "id": 1166,
+      "oldId": "8726",
+      "name": "Zanchul"
+    },
+    {
+      "id": 862,
+      "oldId": "9570",
+      "name": "Zuldazar"
+    },
+    {
+      "id": 503,
+      "oldId": "6298",
+      "name": "Brawl'gar Arena"
+    },
+    {
+      "id": 302,
+      "oldId": "796",
+      "name": "Scarlet Monastery"
+    },
+    {
+      "id": 18,
+      "oldId": "7976",
+      "name": "Tirisfal Glades"
+    },
+    {
+      "id": 112,
+      "oldId": "5799",
+      "name": "Eye of the Storm"
+    },
+    {
+      "id": 92,
+      "oldId": "8685",
+      "name": "Warsong Gulch"
+    },
+    {
+      "id": 76,
+      "oldId": "7838",
+      "name": "Azshara"
+    },
+    {
+      "id": 103,
+      "oldId": "8277",
+      "name": "The Exodar"
+    },
+    {
+      "id": 103,
+      "oldId": "8842",
+      "name": "The Exodar"
+    },
+    {
+      "id": 276,
+      "oldId": "5416",
+      "name": "The Maelstrom"
+    }
+  ]

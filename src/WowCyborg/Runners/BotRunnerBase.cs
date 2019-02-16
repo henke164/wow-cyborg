@@ -12,7 +12,7 @@ namespace WowCyborg.Runners
     public abstract class BotRunnerBase
     {
         public Action<string> OnLog { get; set; } = (string s) => { };
-        public Vector3 CurrentLocation { get; protected set; }
+        public Transform CurrentTransform { get; protected set; }
         protected Vector3 TargetLocation;
         protected Func<bool> ShouldPauseMovement = () => false;
 
@@ -75,7 +75,7 @@ namespace WowCyborg.Runners
 
         private void HandleOnPlayerTransformChanged(Transform currentTransform)
         {
-            CurrentLocation = currentTransform.Position;
+            CurrentTransform = currentTransform;
             _rotationCommander.UpdateCurrentTransform(currentTransform);
 
             if (TargetLocation == null)
@@ -113,7 +113,7 @@ namespace WowCyborg.Runners
                     }
                 }
 
-                var distanceToTarget = Vector3.Distance(TargetLocation, CurrentLocation);
+                var distanceToTarget = Vector3.Distance(TargetLocation, CurrentTransform.Position);
                 if (distanceToTarget < 0.03)
                 {
                     _movementCommander.Stop();

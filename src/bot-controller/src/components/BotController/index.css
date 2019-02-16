@@ -1,0 +1,42 @@
+.BotControllerHeader {
+  width: 100%;
+  background-color: rgba(141, 13, 13, 0.8);
+  border-bottom: 1px solid #777;
+}
+
+.BotControllerHeader span {
+  margin: 5px;
+  color: white;
+}
+
+.BotControllerFooter {
+  position: absolute;
+  background-color: rgba(141, 13, 13, 0.8);
+  bottom: 0;
+  width: 100%;
+  text-align: right;
+  border-top: 1px solid #777;
+}
+
+.BotController {
+  width: 120px;
+  height: 200px;
+  background-color: rgba(0, 0, 0, 0.8);
+  border-top: 2px solid #eee;
+  border-left: 2px solid #ccc;
+  border-right: 2px solid #aaa;
+  border-bottom: 2px solid #777;
+}
+
+.BotController button {
+  width: 100%;
+}
+
+.BotController button.selected {
+  background-color: red;
+}
+
+.BotControllerContent {
+  padding: 10px;
+  color:white;
+}

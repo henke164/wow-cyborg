@@ -84,7 +84,7 @@ namespace WowCyborg.ConsoleUtilities
         {
             if (rawUrl == "/currentPosition")
             {
-                if (Program.BotRunner.CurrentLocation == null)
+                if (Program.BotRunner.CurrentTransform == null)
                 {
                     return JsonConvert.SerializeObject(new
                     {
@@ -94,8 +94,9 @@ namespace WowCyborg.ConsoleUtilities
 
                 return JsonConvert.SerializeObject(new
                 {
-                    x = Program.BotRunner.CurrentLocation.X,
-                    z = Program.BotRunner.CurrentLocation.Z
+                    x = Program.BotRunner.CurrentTransform.Position.X,
+                    z = Program.BotRunner.CurrentTransform.Position.Z,
+                    zone = Program.BotRunner.CurrentTransform.ZoneId
                 });
             }
             else if (rawUrl.IndexOf("/moveTo?") == 0)
@@ -105,9 +106,33 @@ namespace WowCyborg.ConsoleUtilities
                     var xParam = Regex.Match(rawUrl, @"(x)\=([^&]+)").Value.Split('=')[1];
                     var zParam = Regex.Match(rawUrl, @"(z)\=([^&]+)").Value.Split('=')[1];
 
-                    var x = float.Parse(xParam.Replace('.',','));
+                    var x = float.Parse(xParam.Replace('.', ','));
                     var z = float.Parse(zParam.Replace('.', ','));
                     Program.BotRunner.MoveTo(new Vector3(x, 0, z));
+
+                    return JsonConvert.SerializeObject(new
+                    {
+                        message = "ok"
+                    });
+                }
+                catch
+                {
+                    return JsonConvert.SerializeObject(new
+                    {
+                        error = "Wrong parameters"
+                    });
+                }
+            }
+            else if (rawUrl.IndexOf("/face?") == 0)
+            {
+                try
+                {
+                    var xParam = Regex.Match(rawUrl, @"(x)\=([^&]+)").Value.Split('=')[1];
+                    var zParam = Regex.Match(rawUrl, @"(z)\=([^&]+)").Value.Split('=')[1];
+
+                    var x = float.Parse(xParam.Replace('.', ','));
+                    var z = float.Parse(zParam.Replace('.', ','));
+                    Program.BotRunner.FaceTowards(new Vector3(x, 0, z));
 
                     return JsonConvert.SerializeObject(new
                     {
