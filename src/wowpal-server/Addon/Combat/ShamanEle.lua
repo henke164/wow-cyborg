@@ -65,7 +65,6 @@ function RenderMultiTargetRotation()
   end
 
   local fsDot, fsDotTimeLeft = FindDebuff("target", "Flame Shock");
-  local moeBuff = FindBuff("player", "Master of the Elements");
 
   if IsCastableAtEnemyTarget("Lightning Bolt", 0) then
     local totemBuff = FindBuff("player", "Storm Totem");
@@ -89,6 +88,7 @@ function RenderMultiTargetRotation()
   local maelstrom = UnitPower("player");
 
   if IsCastableAtEnemyTarget("Earthquake", 60) and 
+    local moeBuff = FindBuff("player", "Master of the Elements");
     moeBuff == "Master of the Elements" then
     WowCyborg_CURRENTATTACK = "Earthquake";
     return SetSpellRequest(earthQuake);
@@ -131,7 +131,6 @@ function RenderSingleTargetRotation()
   end
 
   local fsDot, fsDotTimeLeft = FindDebuff("target", "Flame Shock");
-  local moeBuff = FindBuff("player", "Master of the Elements");
 
   if IsCastableAtEnemyTarget("Lightning Bolt", 0) then
     local totemBuff = FindBuff("player", "Storm Totem");
@@ -155,6 +154,7 @@ function RenderSingleTargetRotation()
   local maelstrom = UnitPower("player");
 
   if IsCastableAtEnemyTarget("Earth Shock", 60) and 
+    local moeBuff = FindBuff("player", "Master of the Elements");
     moeBuff == "Master of the Elements" then
     WowCyborg_CURRENTATTACK = "Earth Shock";
     return SetSpellRequest(earthShock);

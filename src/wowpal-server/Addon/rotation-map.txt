@@ -4,6 +4,7 @@ bmhunter	Combat/HunterBM.lua
 mmhunter	Combat/HunterMM.lua
 eleshaman	Combat/ShamanEle.lua
 mwmonk	Combat/MonkMistweaver.lua
+blooddk	Combat/DKBlood.lua
 mwmonkfollower	Combat/MonkMistweaverFollower.lua
 eleshamanfollower	Combat/ShamanEleFollower.lua
 bmhunterfollower	Combat/HunterBMFollower.lua

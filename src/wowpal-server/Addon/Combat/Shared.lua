@@ -54,10 +54,10 @@ end
 
 function FindBuff(target, buffName)
   for i=1,40 do
-    local name, _, _, _, _, etime = UnitBuff(target, i);
+    local name, _, stacks, _, _, etime = UnitBuff(target, i);
     if name == buffName then
       local time = GetTime();
-      return name, etime - time;
+      return name, etime - time, stacks;
     end
   end
 end
