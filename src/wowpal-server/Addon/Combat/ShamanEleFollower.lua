@@ -26,6 +26,7 @@ local lightningBolt = "8";
 local frostShock = "9";
 local follow = "CTRL+1";
 local assist = "CTRL+2";
+local back = "CTRL+9";
 
 function IsFollowing()
   if isFollowing then
@@ -44,7 +45,7 @@ function IsFollowing()
 end
 
 -- Movement
-local function RenderTargetRotationInMovement()
+function RenderTargetRotationInMovement()
   local lsBuff = FindBuff("player", "Lava Surge");
   local fsDot, fsDotTimeLeft = FindDebuff("target", "Flame Shock");
 
@@ -130,7 +131,7 @@ function RenderMultiTargetRotation()
     return SetSpellRequest(chainLightning);
   end
 
-  IdleOrAssist();
+  return IdleOrAssist();
 end
 
 -- Single target
@@ -200,7 +201,7 @@ function RenderSingleTargetRotation()
     return SetSpellRequest(lightningBolt);
   end
 
-  IdleOrAssist();
+  return IdleOrAssist();
 end
 
 function IdleOrAssist()
@@ -231,6 +232,12 @@ function CreateEmoteListenerFrame()
     if string.find(command, "wait", 1, true) then
       print("Waiting");
       SetSpellRequest(assist);
+      isFollowing = false;
+      stoppedFollowAt = GetTime();
+    end
+    if string.find(command, "waves", 1, true) then
+      print("Fall back");
+      SetSpellRequest(back);
       isFollowing = false;
       stoppedFollowAt = GetTime();
     end

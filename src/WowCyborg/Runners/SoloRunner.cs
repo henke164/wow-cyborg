@@ -1,23 +1,25 @@
-﻿using System.Threading;
+﻿using System;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using WowCyborg.Commanders;
 using WowCyborg.Handlers;
 using WowCyborg.Models;
 using WowCyborg.Models.Abstractions;
-using WowCyborg.Utilities;
 
 namespace WowCyborg.Runners
 {
     public class SoloRunner : BotRunnerBase
     {
-        private EnemyTargettingCommander _enemyTargettingCommander = new EnemyTargettingCommander();
+        private EnemyTargettingCommander _enemyTargettingCommander;
         private LootingCommander _lootingCommander = new LootingCommander();
         private bool _isInCombat = false;
         private bool _isInRange = false;
 
-        public SoloRunner()
+        public SoloRunner(IntPtr gameHandle)
+            : base(gameHandle)
         {
+            _enemyTargettingCommander = new EnemyTargettingCommander(KeyHandler);
             ShouldPauseMovement = () =>
             {
                 return _isInCombat || _isInRange;

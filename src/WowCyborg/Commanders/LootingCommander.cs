@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Drawing;
 using System.Windows.Forms;
-using WowCyborg.Utilities;
+using WowCyborg.Handlers;
 
 namespace WowCyborg.Commanders
 {

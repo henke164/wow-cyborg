@@ -1,12 +1,18 @@
 ﻿using System;
 using System.Windows.Forms;
-using WowCyborg.Utilities;
+using WowCyborg.Handlers;
 
 namespace WowCyborg.Commanders
 {
     public class EnemyTargettingCommander
     {
         private int _framesSinceLastTargetCheck = 0;
+        private KeyHandler _keyHandler;
+
+        public EnemyTargettingCommander(KeyHandler keyHandler)
+        {
+            _keyHandler = keyHandler;
+        }
 
         public void Update()
         {
@@ -21,7 +27,7 @@ namespace WowCyborg.Commanders
 
         public void TargetNearestEnemy()
         {
-            KeyHandler.PressKey(Keys.Tab);
+            _keyHandler.PressKey(Keys.Tab);
             Console.WriteLine("check target");
         }
     }

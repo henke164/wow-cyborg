@@ -1,8 +1,7 @@
-﻿using System;
-using System.Runtime.InteropServices;
+﻿using System.Runtime.InteropServices;
 using System.Threading;
 
-namespace WowCyborg.Utilities
+namespace WowCyborg.Handlers
 {
     public static class MouseHandler
     {

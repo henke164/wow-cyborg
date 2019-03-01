@@ -22,7 +22,6 @@ function CreateRotationFrame()
   frame:SetScript("OnEvent", function(self, event, ...)
     WowCyborg_HasFocus = UnitExists("Focus");
   end)
-
   
   RenderFontFrame();
 end

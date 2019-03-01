@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Diagnostics;
 using WowCyborg.ConsoleUtilities;
+using WowCyborg.Handlers;
 using WowCyborg.Runners;
 
 namespace WowCyborg
@@ -8,11 +10,35 @@ namespace WowCyborg
     {
         public static BotRunnerBase BotRunner;
 
+        static IntPtr GetGameHandle()
+        {
+            var processes = Process.GetProcessesByName("Wow");
+            if (processes.Length == 1)
+            {
+                return processes[0].MainWindowHandle;
+            }
+
+            if (processes.Length > 1)
+            {
+                Console.WriteLine("Select process");
+                for (var x = 0; x < processes.Length; x++)
+                {
+                    Console.WriteLine($"{x}. {processes[x].MainWindowTitle} ({processes[x].Id})");
+                }
+                var index = int.Parse(Console.ReadLine());
+                return processes[index].MainWindowHandle;
+            }
+
+            return IntPtr.Zero;
+        }
+
         static void Main()
         {
             ValidateAddonFiles();
+            var gameHandle = GetGameHandle();
+            AddonLocator.SetGameHandle(gameHandle);
 
-            BotRunner = new BotFollower();
+            BotRunner = new BotFollower(gameHandle);
             RenderStartMessage();
             HandleInput();
         }

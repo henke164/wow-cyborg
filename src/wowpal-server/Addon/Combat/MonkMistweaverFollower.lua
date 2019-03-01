@@ -1,12 +1,12 @@
 --[[
   Button    Spell
-  Ctrl+1    Macro: /target player
-  Ctrl+2    Macro: /target party1
-  Ctrl+3    Macro: /target party2
-  Ctrl+4    Macro: /target party3
-  Ctrl+5    Macro: /target party4
-  Ctrl+6    Macro for following focus "/follow focus"
-  Ctrl+7    Macro for assisting focus "/assist focus"
+  SHIFT+1    Macro: /target player
+  SHIFT+2    Macro: /target party1
+  SHIFT+3    Macro: /target party2
+  SHIFT+4    Macro: /target party3
+  SHIFT+5    Macro: /target party4
+  Ctrl+1    Macro for following focus "/follow focus"
+  Ctrl+2    Macro for assisting focus "/assist focus"
   1         Renewing Mist
   2         Soothing Mist
   3         Enveloping Mist
@@ -16,6 +16,7 @@
 
 local isFollowing = false;
 local stoppedFollowAt = 0;
+local startedFollowAt = 0;
 local incomingDamage = {};
 local damageInLast5Seconds = {};
 local renewingMist = 1;
@@ -23,8 +24,9 @@ local soothingMist = 2;
 local envelopingMist = 3;
 local vivify = 4;
 local essenceFont = 5;
-local follow = "CTRL+6";
-local assist = "CTRL+7";
+local follow = "CTRL+1";
+local assist = "CTRL+2";
+local back = "CTRL+9";
 
 function IsFollowing()
   if isFollowing then
@@ -142,7 +144,10 @@ local lastTarget = {
 function RenderSingleTargetRotation()
   if IsFollowing() then
     WowCyborg_CURRENTATTACK = "Following...";
-    return false;
+      
+    --if GetTime() <= startedFollowAt + 1 then
+      return false;
+    --end
   end
   
   if lastTarget.time + 2 < GetTime() then
@@ -162,7 +167,7 @@ function RenderSingleTargetRotation()
 
   if lastTarget ~= nil and lastTarget.name ~= nil and lastTarget.name ~= GetTargetFullName() then
     WowCyborg_CURRENTATTACK = "Target partymember " .. lastTarget.name;
-    return SetSpellRequest("CTRL+" .. lastTarget.index);
+    return SetSpellRequest("SHIFT+" .. lastTarget.index);
   end
 
   if UnitChannelInfo("player") == "Essence Font" then
@@ -170,15 +175,18 @@ function RenderSingleTargetRotation()
   end
   
   if AoeHealingRequired() and IsCastable("Essence Font", 7200) then
+    WowCyborg_CURRENTATTACK = "Essence Font";
     return SetSpellRequest(essenceFont);
   end
 
   if UnitCanAttack("player", "target") == true then
+    WowCyborg_CURRENTATTACK = "-";
     return SetSpellRequest(nil);
   end
 
   local hp = GetHealthPercentage("target");
   if hp == 100 then
+    WowCyborg_CURRENTATTACK = "Target has full hp";
     return SetSpellRequest(nil);
   end
 
@@ -186,23 +194,28 @@ function RenderSingleTargetRotation()
   if rmBuff == nil then
     local rmCharges = GetSpellCharges("Renewing Mist");
     if rmCharges > 0 and IsCastableAtFriendlyTarget("Renewing Mist", 2800) then
+      WowCyborg_CURRENTATTACK = "Renewing Mist";
       return SetSpellRequest(renewingMist);
     end
   end
 
   if hp <= 80 and IsCastableAtFriendlyTarget("Soothing Mist", 800) and UnitChannelInfo("player") ~= "Soothing Mist" then
+    WowCyborg_CURRENTATTACK = "Soothing Mist";
     return SetSpellRequest(soothingMist);
   end
 
   local emBuff = FindBuff("target", "Enveloping Mist");
   if emBuff == nil and hp <= 60 and IsCastableAtFriendlyTarget("Enveloping Mist", 5200) then
+    WowCyborg_CURRENTATTACK = "Enveloping Mist";
     return SetSpellRequest(envelopingMist);
   end
 
   if hp <= 75 and IsCastableAtFriendlyTarget("Vivify", 3500) then
+    WowCyborg_CURRENTATTACK = "Vivify";
     return SetSpellRequest(vivify);
   end
 
+  WowCyborg_CURRENTATTACK = "-";
   return SetSpellRequest(nil);
 end
 
@@ -262,11 +275,19 @@ function CreateEmoteListenerFrame()
       print("Following");
       SetSpellRequest(follow);
       isFollowing = true;
+      startedFollowAt = GetTime();
       stoppedFollowAt = 0;
     end
     if string.find(command, "wait", 1, true) then
       print("Waiting");
       SetSpellRequest(assist);
+      isFollowing = false;
+      startedFollowAt = 0;
+      stoppedFollowAt = GetTime();
+    end
+    if string.find(command, "waves", 1, true) then
+      print("Fall back");
+      SetSpellRequest(back);
       isFollowing = false;
       stoppedFollowAt = GetTime();
     end

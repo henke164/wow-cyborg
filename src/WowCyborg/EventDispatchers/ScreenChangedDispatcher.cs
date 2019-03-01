@@ -18,11 +18,6 @@ namespace WowCyborg.EventDispatchers
 
         protected override void Update()
         {
-            if (!GameWindowUtilities.IsForeground())
-            {
-                return;
-            }
-
             var screenshot = CaptureScreenShot();
             TriggerEvent(screenshot);
         }

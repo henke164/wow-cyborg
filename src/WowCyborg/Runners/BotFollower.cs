@@ -1,8 +1,8 @@
-﻿using System.Windows.Forms;
+﻿using System;
+using System.Windows.Forms;
 using WowCyborg.Handlers;
 using WowCyborg.Models;
 using WowCyborg.Models.Abstractions;
-using WowCyborg.Utilities;
 
 namespace WowCyborg.Runners
 {
@@ -10,7 +10,8 @@ namespace WowCyborg.Runners
     {
         private bool _isFollowing = false;
 
-        public BotFollower()
+        public BotFollower(IntPtr gameHandle)
+            : base(gameHandle)
         {
         }
 
@@ -27,6 +28,11 @@ namespace WowCyborg.Runners
                         _isFollowing = true;
                     }
 
+                    if (keyRequest.ModifierKey == Keys.LControlKey && keyRequest.Key == Keys.D9)
+                    {
+                        KeyHandler.PressKey(Keys.S, 1500);
+                    }
+
                     if (keyRequest.ModifierKey == Keys.LControlKey && keyRequest.Key == Keys.D2)
                     {
                         if (!_isFollowing)
@@ -34,7 +40,7 @@ namespace WowCyborg.Runners
                             return;
                         }
                         _isFollowing = false;
-                        KeyHandler.PressKey(Keys.S, 100);
+                        KeyHandler.PressKey(Keys.S, 10);
                     }
                 }
                 else

@@ -2,17 +2,25 @@
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using WowCyborg.Handlers;
 using WowCyborg.Utilities;
 
 namespace WowCyborg.Commanders
 {
     public class RotationCommander
     {
+        private KeyHandler _keyHandler;
+
         private Transform _currentTransform;
 
         private Task _facingTask;
 
         private Vector3 _targetPoint;
+
+        public RotationCommander(KeyHandler keyHandler)
+        {
+            _keyHandler = keyHandler;
+        }
 
         public void FaceLocation(Vector3 targetPoint, Action onDone)
         {
@@ -70,11 +78,11 @@ namespace WowCyborg.Commanders
 
                     if (rotationInstructions.Direction == Direction.Right)
                     {
-                        KeyHandler.PressKey(Keys.D, keyDownTime);
+                        _keyHandler.PressKey(Keys.D, keyDownTime);
                     }
                     else
                     {
-                        KeyHandler.PressKey(Keys.A, keyDownTime);
+                        _keyHandler.PressKey(Keys.A, keyDownTime);
                     }
                 }
                 else

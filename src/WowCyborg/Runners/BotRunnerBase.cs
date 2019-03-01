@@ -13,16 +13,22 @@ namespace WowCyborg.Runners
     {
         public Action<string> OnLog { get; set; } = (string s) => { };
         public Transform CurrentTransform { get; protected set; }
-        protected Vector3 TargetLocation;
+        public Vector3 TargetLocation { get; protected set; }
         protected Func<bool> ShouldPauseMovement = () => false;
+        protected KeyHandler KeyHandler;
 
         private Action _onDestinationReached;
-        private RotationCommander _rotationCommander = new RotationCommander();
-        private MovementCommander _movementCommander = new MovementCommander();
+        private RotationCommander _rotationCommander;
+        private MovementCommander _movementCommander;
         private Task _runningTask;
 
-        public BotRunnerBase()
+        public BotRunnerBase(IntPtr gameHandle)
         {
+            KeyHandler = new KeyHandler(gameHandle);
+
+            _rotationCommander = new RotationCommander(KeyHandler);
+            _movementCommander = new MovementCommander(KeyHandler);
+
             StartEventDispatchers();
             SetupBehaviour();
             SetupTransformBehaviour();
@@ -130,7 +136,6 @@ namespace WowCyborg.Runners
         {
             EventManager.StartEventDispatcher(typeof(ScreenChangedDispatcher));
             EventManager.StartEventDispatcher(typeof(PlayerTransformChangedDispatcher));
-            EventManager.StartEventDispatcher(typeof(LeaderTransformChangedDispatcher));
             EventManager.StartEventDispatcher(typeof(CombatChangedDispatcher));
             EventManager.StartEventDispatcher(typeof(CombatCastingDispatcher));
             EventManager.StartEventDispatcher(typeof(WrongFacingDispatcher));

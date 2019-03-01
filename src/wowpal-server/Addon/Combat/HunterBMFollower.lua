@@ -22,6 +22,7 @@ local cobraShot = "7";
 local multiShot = "8";
 local follow = "CTRL+1";
 local assist = "CTRL+2";
+local back = "CTRL+9";
 
 local function GetBsCooldown()
   local bsCharges = GetSpellCharges("Barbed Shot");
@@ -53,7 +54,7 @@ end
 function RenderMultiTargetRotation(texture)
   if IsFollowing() then
     WowCyborg_CURRENTATTACK = "Following...";
-    return false;
+    return SetSpellRequest(nil);
   end
 
   if IsCastableAtEnemyTarget("Barbed Shot", 0) == false then
@@ -238,6 +239,12 @@ function CreateEmoteListenerFrame()
     if string.find(command, "wait", 1, true) then
       print("Waiting");
       SetSpellRequest(assist);
+      isFollowing = false;
+      stoppedFollowAt = GetTime();
+    end
+    if string.find(command, "waves", 1, true) then
+      print("Fall back");
+      SetSpellRequest(back);
       isFollowing = false;
       stoppedFollowAt = GetTime();
     end

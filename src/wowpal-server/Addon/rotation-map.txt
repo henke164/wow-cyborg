@@ -8,6 +8,7 @@ bmmonk	Combat/MonkBrewmaster.lua
 mwmonk	Combat/MonkMistweaver.lua
 blooddk	Combat/DKBlood.lua
 pvpdk	Combat/DKPvp.lua
+mmhunterfollower	Combat/HunterMMFollower.lua
 mwmonkfollower	Combat/MonkMistweaverFollower.lua
 eleshamanfollower	Combat/ShamanEleFollower.lua
 bmhunterfollower	Combat/HunterBMFollower.lua
