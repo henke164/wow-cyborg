@@ -1,10 +1,13 @@
 furywarrior	Combat/WarriorFury.lua
 protwarrior	Combat/WarriorProt.lua
+armswarrior	Combat/WarriorArms.lua
 bmhunter	Combat/HunterBM.lua
 mmhunter	Combat/HunterMM.lua
 eleshaman	Combat/ShamanEle.lua
+bmmonk	Combat/MonkBrewmaster.lua
 mwmonk	Combat/MonkMistweaver.lua
 blooddk	Combat/DKBlood.lua
+pvpdk	Combat/DKPvp.lua
 mwmonkfollower	Combat/MonkMistweaverFollower.lua
 eleshamanfollower	Combat/ShamanEleFollower.lua
 bmhunterfollower	Combat/HunterBMFollower.lua

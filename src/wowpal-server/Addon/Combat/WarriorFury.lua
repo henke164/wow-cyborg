@@ -66,6 +66,14 @@ function RenderMultiTargetRotation(texture)
 end
 
 function RenderSingleTargetRotation(texture)
+  local thornsBuff = FindBuff("target", "Thorns");
+
+  if thornsBuff ~= nil then
+    print("THORNS!");
+    WowCyborg_CURRENTATTACK = "THORNS!";
+    return SetSpellRequest(nil);
+  end
+
   if InMeleeRange() == false then
     WowCyborg_CURRENTATTACK = "-";
     return SetSpellRequest(nil);
@@ -73,12 +81,12 @@ function RenderSingleTargetRotation(texture)
 
   local rage = UnitPower("player");
   local enrageBuff = FindBuff("player", "Enrage");
-  if enrageBuff == nil or rage > 90 then
+  --if enrageBuff == nil or rage > 90 then
     if IsCastableAtEnemyTarget("Rampage", 75) then
       WowCyborg_CURRENTATTACK = "Rampage";
       return SetSpellRequest(rampage);
     end
-  end
+  --end
 
   if IsCastableAtEnemyTarget("Recklessness", 0) then
     WowCyborg_CURRENTATTACK = "Recklessness";
@@ -89,7 +97,7 @@ function RenderSingleTargetRotation(texture)
   local sdBuff = FindBuff("player", "Sudden Death");
 
   if enemyHP < 20 or sdBuff == "Sudden Death" then
-    if enrageBuff == "Enrage" and IsCastableAtEnemyTarget("Execute", 0) then
+    if IsCastableAtEnemyTarget("Execute", 0) then
       WowCyborg_CURRENTATTACK = "Execute";
       return SetSpellRequest(execute);
     end

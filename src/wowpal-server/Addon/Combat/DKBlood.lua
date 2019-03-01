@@ -32,9 +32,11 @@ function RenderSingleTargetRotation()
   local bsBuff, bsTs, bsStacks = FindBuff("player", "Bone Shield");
 
   if bsBuff == nil or bsStacks == nil or bsStacks < 6 or bsTs < 4 then
-    if IsCastableAtEnemyTarget("Marrowrend", 30) then
+    if IsCastableAtEnemyTarget("Marrowrend", 0) then
       WowCyborg_CURRENTATTACK = "Marrowrend";
       return SetSpellRequest(marrowrend);
+    else
+      return SetSpellRequest(nil);
     end
   end
 
@@ -73,7 +75,7 @@ function RenderSingleTargetRotation()
   end
 
   WowCyborg_CURRENTATTACK = "-";
-  return SetSpellRequest(deathsCaress);
+  return SetSpellRequest(nil);
 end
 
 function GetRuneCount()
@@ -87,4 +89,4 @@ function GetRuneCount()
   return runeAmount;
 end
 
-print("DK blood  n  npip rotation loaded");
+print("DK blood rotation loaded");

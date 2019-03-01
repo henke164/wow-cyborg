@@ -64,10 +64,10 @@ end
 
 function FindDebuff(target, buffName)
   for i=1,40 do
-    local name, _, _, _, _, etime = UnitDebuff(target, i);
+    local name, _, stack, _, _, etime = UnitDebuff(target, i);
     if name == buffName then
       local time = GetTime();
-      return name, etime - time;
+      return name, etime - time, stack;
     end
   end
 end
