@@ -12,3 +12,6 @@
 /WoWPal.CombatHandler/obj/Debug
 /MigrationBackup/eb218848/WoWPal
 src/wowpal-server/node_modules
+/.vs/WowCyborg
+/src/WowCyborgUI/bin/Debug
+/src/WowCyborgUI/obj/Debug

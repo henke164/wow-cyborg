@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Linq;
 using WowCyborg.Handlers;
+using WowCyborgUI.Services;
 
-namespace WowCyborg.ConsoleUtilities
+namespace WowCyborgUI.InputHandlers
 {
-    public static class AddonInput
+    public static class AddonInputHandler
     {
         public static void HandleInputParameters(string[] parameters)
         {

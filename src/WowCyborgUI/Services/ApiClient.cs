@@ -4,7 +4,7 @@ using System.Net;
 using WowCyborg.Models;
 using WowCyborg.Utilities;
 
-namespace WowCyborg.ConsoleUtilities
+namespace WowCyborgUI.Services
 {
     public class ApiClient
     {

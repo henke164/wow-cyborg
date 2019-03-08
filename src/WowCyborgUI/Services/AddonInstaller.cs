@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using WowCyborg.Handlers;
 
-namespace WowCyborg.ConsoleUtilities
+namespace WowCyborgUI.Services
 {
     public static class AddonInstaller
     {

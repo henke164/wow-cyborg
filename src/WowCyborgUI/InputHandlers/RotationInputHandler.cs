@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using WowCyborgUI.Services;
 
-namespace WowCyborg.ConsoleUtilities
+namespace WowCyborgUI.InputHandlers
 {
-    public static class RotationInput
+    public static class RotationInputHandler
     {
         public static void HandleInputParameters(string[] parameters)
         {

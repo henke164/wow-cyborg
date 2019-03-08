@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Diagnostics;
-using WowCyborg.ConsoleUtilities;
 using WowCyborg.Handlers;
 using WowCyborg.Runners;
+using WowCyborgUI.InputHandlers;
+using WowCyborgUI.Services;
 
-namespace WowCyborg
+namespace WowCyborgUI
 {
-    static class Program
+    class Program
     {
         public static BotRunnerBase BotRunner;
 
@@ -66,15 +67,15 @@ namespace WowCyborg
             switch (command[0])
             {
                 case "addon":
-                    AddonInput.HandleInputParameters(command);
+                    AddonInputHandler.HandleInputParameters(command);
                     break;
 
                 case "rotation":
-                    RotationInput.HandleInputParameters(command);
+                    RotationInputHandler.HandleInputParameters(command);
                     break;
 
                 case "server":
-                    ServerHandler.HandleInput(command);
+                    ServerInputHandler.HandleInput(command);
                     break;
 
                 case "help":
@@ -99,12 +100,12 @@ namespace WowCyborg
             }
             Console.WriteLine(str);
         }
-                
+
         private static void ValidateAddonFiles()
         {
             if (!AddonInstaller.AddonExists())
             {
-                AddonInput.ReinstallAddon();
+                AddonInputHandler.ReinstallAddon();
             }
             else
             {

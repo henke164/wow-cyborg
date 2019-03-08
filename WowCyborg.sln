@@ -5,6 +5,8 @@ VisualStudioVersion = 15.0.27703.2042
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WowCyborg", "src\WowCyborg\WowCyborg.csproj", "{C1985AD8-5618-4713-BEC8-AC0F300DDE07}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WowCyborgUI", "src\WowCyborgUI\WowCyborgUI.csproj", "{F73A9FA8-EBB7-4720-9BF0-FF1FA60FE806}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,14 @@ Global
 		{C1985AD8-5618-4713-BEC8-AC0F300DDE07}.Release|Any CPU.Build.0 = Release|Any CPU
 		{C1985AD8-5618-4713-BEC8-AC0F300DDE07}.Release|x64.ActiveCfg = Release|x64
 		{C1985AD8-5618-4713-BEC8-AC0F300DDE07}.Release|x64.Build.0 = Release|x64
+		{F73A9FA8-EBB7-4720-9BF0-FF1FA60FE806}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F73A9FA8-EBB7-4720-9BF0-FF1FA60FE806}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F73A9FA8-EBB7-4720-9BF0-FF1FA60FE806}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{F73A9FA8-EBB7-4720-9BF0-FF1FA60FE806}.Debug|x64.Build.0 = Debug|Any CPU
+		{F73A9FA8-EBB7-4720-9BF0-FF1FA60FE806}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F73A9FA8-EBB7-4720-9BF0-FF1FA60FE806}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F73A9FA8-EBB7-4720-9BF0-FF1FA60FE806}.Release|x64.ActiveCfg = Release|Any CPU
+		{F73A9FA8-EBB7-4720-9BF0-FF1FA60FE806}.Release|x64.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

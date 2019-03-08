@@ -8,9 +8,9 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using WowCyborg.Utilities;
 
-namespace WowCyborg.ConsoleUtilities
+namespace WowCyborgUI.InputHandlers
 {
-    public static class ServerHandler
+    public static class ServerInputHandler
     {
         private static HttpListener _listener;
 
