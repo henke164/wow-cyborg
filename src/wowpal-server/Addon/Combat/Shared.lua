@@ -75,9 +75,18 @@ function IsCastable(spellName, requiredEnergy)
   local spell, _, _, _, endTime = UnitCastingInfo("player");
 
   local energy = UnitPower("player");
-  local cd = GetSpellCooldown(spellName, "spell");
+  local lastCast, totalCd = GetSpellCooldown(spellName, "spell");
 
-  if cd == 0 then
+  if lastCast == 0 then
+    if energy >= requiredEnergy then
+      return true;
+    end
+  end
+
+  local time = GetTime();
+  local timeLeft = ((lastCast + totalCd) - time);
+
+  if timeLeft < 0.5 then
     if energy >= requiredEnergy then
       return true;
     end

@@ -31,17 +31,9 @@ function RenderSingleTargetRotation()
   local runeCount = GetRuneCount();
 
   local fwDebuff, fwTimeLeft, fwStacks = FindDebuff("target", "Festering Wound");
-
-  local coiDebuff = FindDebuff("target", "Chains of Ice");
+    
+  local coiDebuff = FindDebuff("target", "Virulent Plague");
   if coiDebuff == nil then
-    if IsCastableAtEnemyTarget("Chains of Ice", 0) and runeCount > 0 then
-      WowCyborg_CURRENTATTACK = "Chains of Ice";
-      return SetSpellRequest(chainsOfIce);
-    end
-  end
-  
-  local vpDebuff = FindDebuff("target", "Virulent Plague");
-  if vpDebuff == nil then
     if IsCastableAtEnemyTarget("Outbreak", 0) and runeCount > 0 then
       WowCyborg_CURRENTATTACK = "Outbreak";
       return SetSpellRequest(outbreak);
@@ -78,8 +70,8 @@ function RenderSingleTargetRotation()
   end
 
   if fwDebuff ~= nil then
-    if IsCastableAtEnemyTarget("Necrotic Strike", 0) and runeCount > 0 and fwStacks > 0 then
-      WowCyborg_CURRENTATTACK = "Necrotic Strike";
+    if IsCastableAtEnemyTarget("Scourge Strike", 0) and runeCount > 0 and fwStacks > 0 then
+      WowCyborg_CURRENTATTACK = "Scourge Strike";
       return SetSpellRequest(necroticStrike);
     end
   end

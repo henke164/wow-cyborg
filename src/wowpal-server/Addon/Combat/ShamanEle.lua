@@ -1,6 +1,7 @@
 --[[
   Button    Spell
-  1         Totem Mastery
+  CTRL+1    Totem Mastery
+  1         Icefury
   2         Flame Shock
   3         Earthquake
   4         Stormkeeper
@@ -11,7 +12,8 @@
   9         Frost Shock
 ]]--
 
-local totemMastery = "1";
+local totemMastery = "CTRL+1";
+local icefury = "1";
 local flameShock = "2";
 local earthQuake = "3";
 local stormKeeper = "4";
@@ -94,21 +96,14 @@ function RenderMultiTargetRotation()
     return SetSpellRequest(earthQuake);
   end
 
-  if IsCastableAtEnemyTarget("Lava Burst", 0) then
-    WowCyborg_CURRENTATTACK = "Lava Burst";
-    return SetSpellRequest(lavaBurst);
-  end
-
   if fsDot == "Flame Shock" and fsDotTimeLeft <= 7 then
     WowCyborg_CURRENTATTACK = "Flame Shock";
     return SetSpellRequest(flameShock);
   end
-  
-  if maelstrom >= 60 then
-    if IsCastableAtEnemyTarget("Earthquake", 60) then
-      WowCyborg_CURRENTATTACK = "Earthquake";
-      return SetSpellRequest(nil);
-    end
+
+  if IsCastableAtEnemyTarget("Earthquake", 60) then
+    WowCyborg_CURRENTATTACK = "Earthquake";
+    return SetSpellRequest(earthQuake);
   end
 
   if IsCastableAtEnemyTarget("Chain Lightning", 0) then
@@ -153,28 +148,29 @@ function RenderSingleTargetRotation()
   
   local maelstrom = UnitPower("player");
 
-  local moeBuff = FindBuff("player", "Master of the Elements");
   if IsCastableAtEnemyTarget("Earth Shock", 60) and 
-    moeBuff == "Master of the Elements" then
     WowCyborg_CURRENTATTACK = "Earth Shock";
     return SetSpellRequest(earthShock);
   end
 
-  if IsCastableAtEnemyTarget("Lava Burst", 0) then
+  if IsCastableAtEnemyTarget("Lava Burst", 0) and fsDot ~= nil then
     WowCyborg_CURRENTATTACK = "Lava Burst";
     return SetSpellRequest(lavaBurst);
   end
 
-  if fsDot == "Flame Shock" and fsDotTimeLeft <= 7 then
+  if fsDot == "Flame Shock" and fsDotTimeLeft <= 6 then
     WowCyborg_CURRENTATTACK = "Flame Shock";
     return SetSpellRequest(flameShock);
   end
-  
-  if maelstrom >= 60 then
-    if IsCastableAtEnemyTarget("Earth Shock", 60) then
-      WowCyborg_CURRENTATTACK = "Earth Shock";
-      return SetSpellRequest(earthShock);
-    end
+
+  if IsCastableAtEnemyTarget("Earth Shock", 60) then
+    WowCyborg_CURRENTATTACK = "Earth Shock";
+    return SetSpellRequest(earthShock);
+  end
+
+  if IsCastableAtEnemyTarget("Icefury", 0) then
+    WowCyborg_CURRENTATTACK = "Icefury";
+    return SetSpellRequest(icefury);
   end
 
   if IsCastableAtEnemyTarget("Lightning Bolt", 0) then

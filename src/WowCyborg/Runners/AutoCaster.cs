@@ -1,5 +1,4 @@
-﻿using System;
-using System.Windows.Forms;
+﻿using System.Windows.Forms;
 using WowCyborg.Handlers;
 using WowCyborg.Models;
 using WowCyborg.Models.Abstractions;
@@ -8,11 +7,6 @@ namespace WowCyborg.Runners
 {
     public class AutoCaster : BotRunnerBase
     {
-        public AutoCaster(IntPtr gameHandle)
-            : base(gameHandle)
-        {
-
-        }
         protected override void SetupBehaviour()
         {
             EventManager.On("KeyPressRequested", (Event ev) =>

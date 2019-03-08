@@ -22,9 +22,9 @@ namespace WowCyborg.Runners
         private MovementCommander _movementCommander;
         private Task _runningTask;
 
-        public BotRunnerBase(IntPtr gameHandle)
+        public BotRunnerBase()
         {
-            KeyHandler = new KeyHandler(gameHandle);
+            KeyHandler = new KeyHandler();
 
             _rotationCommander = new RotationCommander(KeyHandler);
             _movementCommander = new MovementCommander(KeyHandler);

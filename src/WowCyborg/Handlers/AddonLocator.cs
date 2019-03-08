@@ -70,11 +70,12 @@ namespace WowCyborg.Handlers
                     clone = bitmap.Clone(bottomLeft, PixelFormat.Format24bppRgb);
                 }
 
-                var frameSize = CalculateFrameWidth(clone);
+                var pxOffset = bottomLeft.X > 0 ? 9 : 1;
+
+                var frameSize = CalculateFrameWidth(clone, pxOffset);
 
                 var settings = SettingsLoader.LoadSettings<AppSettings>("settings.json");
 
-                var pxOffset = 9;
                 InGameAddonLocation = new Rectangle(
                     bottomLeft.X + pxOffset,
                     bottomLeft.Y + bottomLeft.Height - pxOffset - frameSize * settings.AddonRowCount,
@@ -93,9 +94,8 @@ namespace WowCyborg.Handlers
             }
         }
 
-        private static int CalculateFrameWidth(Bitmap b)
+        private static int CalculateFrameWidth(Bitmap b, int pxOffset)
         {
-            var pxOffset = 9;
             var width = 0;
             Color firstPixel = Color.White;
 

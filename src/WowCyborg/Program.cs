@@ -38,7 +38,7 @@ namespace WowCyborg
             var gameHandle = GetGameHandle();
             AddonLocator.SetGameHandle(gameHandle);
 
-            BotRunner = new BotFollower(gameHandle);
+            BotRunner = new AutoCaster();
             RenderStartMessage();
             HandleInput();
         }

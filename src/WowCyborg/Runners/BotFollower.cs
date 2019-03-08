@@ -1,5 +1,4 @@
-﻿using System;
-using System.Windows.Forms;
+﻿using System.Windows.Forms;
 using WowCyborg.Handlers;
 using WowCyborg.Models;
 using WowCyborg.Models.Abstractions;
@@ -9,11 +8,6 @@ namespace WowCyborg.Runners
     public class BotFollower : BotRunnerBase
     {
         private bool _isFollowing = false;
-
-        public BotFollower(IntPtr gameHandle)
-            : base(gameHandle)
-        {
-        }
 
         protected override void SetupBehaviour()
         {

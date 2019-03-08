@@ -1,5 +1,4 @@
-﻿using System;
-using System.Threading;
+﻿using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using WowCyborg.Commanders;
@@ -16,8 +15,7 @@ namespace WowCyborg.Runners
         private bool _isInCombat = false;
         private bool _isInRange = false;
 
-        public SoloRunner(IntPtr gameHandle)
-            : base(gameHandle)
+        public SoloRunner()
         {
             _enemyTargettingCommander = new EnemyTargettingCommander(KeyHandler);
             ShouldPauseMovement = () =>

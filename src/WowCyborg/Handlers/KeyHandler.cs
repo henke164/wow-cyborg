@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
 using System.Runtime.InteropServices;
 using System.Threading;
 using System.Windows.Forms;
@@ -10,24 +8,13 @@ namespace WowCyborg.Handlers
 {
     public class KeyHandler
     {
-        [DllImport("User32.dll")]
-        private static extern IntPtr FindWindowEx(IntPtr hwndParent, IntPtr hwndChildAfter, string lpszClass, string lpszWindows);
-
         [DllImport("user32.dll")]
-        private static extern bool PostMessage(IntPtr hWnd, UInt32 Msg, Int32 wParam, Int32 lParam);
+        public static extern void keybd_event(byte bVk, byte bScan, uint dwFlags, uint dwExtraInfo);
 
-        static uint WM_KEYDOWN = 0x100;
+        public const int KEYEVENTF_EXTENDEDKEY = 0x0001; //Key down flag
+        public const int KEYEVENTF_KEYUP = 0x0002; //Key up flag
 
-        static uint WM_KEYUP = 0x101;
-
-        private static IntPtr _gameHandle = IntPtr.Zero;
-
-        private static IList<Keys> _keydowns = new List<Keys>();
-
-        public KeyHandler(IntPtr gameHandle)
-        {
-            _gameHandle = gameHandle;
-        }
+        private IList<Keys> _keydowns = new List<Keys>();
 
         public void PressKey(Keys key, int holdMs = 0)
         {
@@ -40,11 +27,18 @@ namespace WowCyborg.Handlers
         {
             try
             {
-                PostMessage(_gameHandle, WM_KEYUP, (int)Keys.LControlKey, 0);
-                PostMessage(_gameHandle, WM_KEYUP, (int)Keys.LShiftKey, 0);
-                PostMessage(_gameHandle, WM_KEYUP, (int)Keys.Alt, 0);
-                PostMessage(_gameHandle, WM_KEYUP, (int)key, 0);
-                PostMessage(_gameHandle, WM_KEYDOWN, (int)key, 0);
+                if (!GameWindowUtilities.IsForeground())
+                {
+                    return;
+                }
+
+                if (!_keydowns.Contains(key))
+                {
+                    _keydowns.Add(key);
+                }
+
+                keybd_event((byte)key, 0, KEYEVENTF_KEYUP, 0);
+                keybd_event((byte)key, 0, KEYEVENTF_EXTENDEDKEY, 0);
             }
             catch
             {
@@ -56,7 +50,11 @@ namespace WowCyborg.Handlers
         {
             try
             {
-                PostMessage(_gameHandle, WM_KEYUP, (int)key, 0);
+                if (_keydowns.Contains(key))
+                {
+                    keybd_event((byte)key, 0, KEYEVENTF_KEYUP, 0);
+                    _keydowns.Remove(key);
+                }
             }
             catch
             {
@@ -66,18 +64,23 @@ namespace WowCyborg.Handlers
 
         public void ModifiedKeypress(Keys modifier, Keys key)
         {
+            if (!GameWindowUtilities.IsForeground())
+            {
+                return;
+            }
+
             try
             {
-                PostMessage(_gameHandle, WM_KEYUP, (int)key, 0);
-                PostMessage(_gameHandle, WM_KEYUP, (int)modifier, 0);
+                keybd_event((byte)key, 0, KEYEVENTF_EXTENDEDKEY | KEYEVENTF_KEYUP, 0);
+                keybd_event((byte)modifier, 0, KEYEVENTF_EXTENDEDKEY | KEYEVENTF_KEYUP, 0);
 
-                PostMessage(_gameHandle, WM_KEYDOWN, (int)modifier, 0);
+                keybd_event((byte)modifier, 0, KEYEVENTF_EXTENDEDKEY, 0);
                 Thread.Sleep(50);
-                PostMessage(_gameHandle, WM_KEYDOWN, (int)key, 0);
+                keybd_event((byte)key, 0, KEYEVENTF_EXTENDEDKEY, 0);
                 Thread.Sleep(150);
 
-                PostMessage(_gameHandle, WM_KEYUP, (int)key, 0);
-                PostMessage(_gameHandle, WM_KEYUP, (int)modifier, 0);
+                keybd_event((byte)key, 0, KEYEVENTF_EXTENDEDKEY | KEYEVENTF_KEYUP, 0);
+                keybd_event((byte)modifier, 0, KEYEVENTF_EXTENDEDKEY | KEYEVENTF_KEYUP, 0);
             }
             catch
             {
