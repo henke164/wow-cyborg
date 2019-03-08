@@ -15,3 +15,11 @@ src/wowpal-server/node_modules
 /.vs/WowCyborg
 /src/WowCyborgUI/bin/Debug
 /src/WowCyborgUI/obj/Debug
+/src/Addons/CombatRotator/bin/Debug
+/src/Addons/CombatRotator/obj/Debug
+/src/Addons/WowAddonInstaller/bin/Debug
+/src/Addons/WowAddonInstaller/obj/Debug
+/src/WowCyborgAddonUtilities/obj/Debug
+/src/WowCyborgAddonUtilities/bin/Debug
+/ServerController/bin/Debug
+/ServerController/obj/Debug

@@ -1,52 +1,60 @@
 ﻿using System;
-using System.Diagnostics;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Reflection;
 using WowCyborg.Handlers;
+using WowCyborg.Models;
 using WowCyborg.Runners;
-using WowCyborgUI.InputHandlers;
-using WowCyborgUI.Services;
+using WowCyborg.Utilities;
+using WowCyborgAddonUtilities;
 
 namespace WowCyborgUI
 {
     class Program
     {
+        public static IList<PluginBase> Plugins = new List<PluginBase>();
+
         public static BotRunnerBase BotRunner;
-
-        static IntPtr GetGameHandle()
-        {
-            var processes = Process.GetProcessesByName("Wow");
-            if (processes.Length == 1)
-            {
-                return processes[0].MainWindowHandle;
-            }
-
-            if (processes.Length > 1)
-            {
-                Console.WriteLine("Select process");
-                for (var x = 0; x < processes.Length; x++)
-                {
-                    Console.WriteLine($"{x}. {processes[x].MainWindowTitle} ({processes[x].Id})");
-                }
-                var index = int.Parse(Console.ReadLine());
-                return processes[index].MainWindowHandle;
-            }
-
-            return IntPtr.Zero;
-        }
 
         static void Main()
         {
-            ValidateAddonFiles();
-            var gameHandle = GetGameHandle();
-            AddonLocator.SetGameHandle(gameHandle);
-
+            AddonLocator.InitializeGameHandle();
             BotRunner = new AutoCaster();
+            Plugins = PluginLoader.GetPlugins(GetApplicationSettings());
             RenderStartMessage();
             HandleInput();
         }
 
-        static void RenderStartMessage()
+        static ApplicationSettings GetApplicationSettings()
         {
-            Log($@"
+            var settings = SettingsLoader.LoadSettings<AppSettings>("settings.json");
+            return new ApplicationSettings
+            {
+                ServerUrl = settings.ServerAddress,
+                WowAddonPath = $"{AddonFolderHandler.GetAddonFolderPath()}\\MazonAddon",
+                BotApi = new BotApi(BotRunner)
+            };
+        }
+
+        static void HandleInput()
+        {
+            Logger.Log(">> ", ConsoleColor.White, true);
+            var input = Console.ReadLine().Split(' ');
+
+            foreach (var plugin in Plugins)
+            {
+                var command = input[0];
+                var args = input.ToList().Skip(1).Take(input.Length - 1).ToArray();
+                plugin.HandleInput(command, args);
+            }
+
+            HandleInput();
+        }
+
+        private static void RenderStartMessage()
+        {
+            Logger.Log($@"
  __      __             _________        ___.                        
 /  \    /  \______  _  _\_   ___ \___.__.\_ |__   ___________  ____  
 \   \/\/   /  _ \ \/ \/ /    \  \<   |  | | __ \ /  _ \_  __ \/ ___\ 
@@ -56,83 +64,17 @@ namespace WowCyborgUI
 -----------------------------------------------------------------------
             ", ConsoleColor.Yellow);
 
-            ShowHelp();
-        }
-
-        static void HandleInput()
-        {
-            Log(">> ", ConsoleColor.White, true);
-            var command = Console.ReadLine().Split(' ');
-
-            switch (command[0])
-            {
-                case "addon":
-                    AddonInputHandler.HandleInputParameters(command);
-                    break;
-
-                case "rotation":
-                    RotationInputHandler.HandleInputParameters(command);
-                    break;
-
-                case "server":
-                    ServerInputHandler.HandleInput(command);
-                    break;
-
-                case "help":
-                    ShowHelp();
-                    break;
-
-                default:
-                    Log("Unknown command", ConsoleColor.Red);
-                    break;
-            }
-
-            HandleInput();
-        }
-
-        public static void Log(string str, ConsoleColor color, bool inLine = false)
-        {
-            Console.ForegroundColor = color;
-            if (inLine)
-            {
-                Console.Write(str);
-                return;
-            }
-            Console.WriteLine(str);
-        }
-
-        private static void ValidateAddonFiles()
-        {
-            if (!AddonInstaller.AddonExists())
-            {
-                AddonInputHandler.ReinstallAddon();
-            }
-            else
-            {
-                AddonInstaller.DownloadRotations();
-            }
-        }
-
-        public static void ShowHelp()
-        {
-            Log($@"
+            Logger.Log($@"
 Help:
 
 Commands:                       Description:
 ----------------------------------------------------------------------------------------------------------------
-addon reload                    If this program cant see the addon on startup you will need to run this command.
-                                It commands the program to find out where the addon is located on the screen.
-
-addon reinstall                 Download latest addon files, and reinstall it.
-
-rotation list                   Display all available rotations.
-
-rotation set <rotation name>    Set the current rotation.
-
-server start                    Starts a server on localhost with endpoints to control the bot.
-
-server stop                     Stops the running server.
             ", ConsoleColor.White);
+
+            foreach (var plugin in Plugins)
+            {
+                plugin.ShowCommands();
+            }
         }
     }
 }

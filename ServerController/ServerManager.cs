@@ -1,49 +1,35 @@
 ﻿using Newtonsoft.Json;
 using System;
-using System.IO;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using WowCyborg.Utilities;
+using WowCyborgAddonUtilities;
 
-namespace WowCyborgUI.InputHandlers
+namespace ServerController
 {
-    public static class ServerInputHandler
+    class ServerManager
     {
-        private static HttpListener _listener;
+        private string ipAddress = "127.0.0.1";
 
-        private static string ipAddress = "127.0.0.1";
+        private BotApi _botApi;
 
-        public static void HandleInput(string[] parameters)
+        private HttpListener _listener;
+
+        public ServerManager(BotApi botApi)
         {
-            var commandParameters = parameters.ToList().Skip(1).ToList();
-
-            if (commandParameters.Count() == 0)
-            {
-                Program.ShowHelp();
-                return;
-            }
-
-            switch (commandParameters[0])
-            {
-                case "start":
-                    StartServer();
-                    break;
-                case "stop":
-                    StopServer();
-                    break;
-            }
+            _botApi = botApi;
         }
 
-        private static void StartServer()
+        public void StartServer()
         {
             _listener = new HttpListener();
             _listener.Prefixes.Add($"http://{ipAddress}/");
 
             _listener.Start();
-            Program.Log($"Server successfully started, GET examples:\r\n" +
+            Logger.Log($"Server successfully started, GET examples:\r\n" +
                 $"http://{ipAddress}/currentPosition\r\n" +
                 $"http://{ipAddress}/moveTo?x=0.43&z=0.51\r\n", ConsoleColor.Green);
 
@@ -59,7 +45,7 @@ namespace WowCyborgUI.InputHandlers
 
                         WriteToResponse(context, responseString);
                     }
-                    catch(Exception ex)
+                    catch (Exception ex)
                     {
                         StopServer();
                         break;
@@ -68,7 +54,7 @@ namespace WowCyborgUI.InputHandlers
             });
         }
 
-        private static void WriteToResponse(HttpListenerContext context, string content)
+        private void WriteToResponse(HttpListenerContext context, string content)
         {
             var response = context.Response;
             response.Headers.Add("Access-Control-Allow-Origin", "*");
@@ -80,24 +66,11 @@ namespace WowCyborgUI.InputHandlers
             output.Close();
         }
 
-        private static string HandleHTTPRequest(string rawUrl)
+        private string HandleHTTPRequest(string rawUrl)
         {
             if (rawUrl == "/currentPosition")
             {
-                if (Program.BotRunner.CurrentTransform == null)
-                {
-                    return JsonConvert.SerializeObject(new
-                    {
-                        error = "Location not found"
-                    });
-                }
-
-                return JsonConvert.SerializeObject(new
-                {
-                    x = Program.BotRunner.CurrentTransform.Position.X,
-                    z = Program.BotRunner.CurrentTransform.Position.Z,
-                    zone = Program.BotRunner.CurrentTransform.ZoneId
-                });
+                return _botApi.GetCurrentTransform();
             }
             else if (rawUrl.IndexOf("/moveTo?") == 0)
             {
@@ -108,7 +81,7 @@ namespace WowCyborgUI.InputHandlers
 
                     var x = float.Parse(xParam.Replace('.', ','));
                     var z = float.Parse(zParam.Replace('.', ','));
-                    Program.BotRunner.MoveTo(new Vector3(x, 0, z));
+                    _botApi.MoveTo(x, z);
 
                     return JsonConvert.SerializeObject(new
                     {
@@ -132,7 +105,7 @@ namespace WowCyborgUI.InputHandlers
 
                     var x = float.Parse(xParam.Replace('.', ','));
                     var z = float.Parse(zParam.Replace('.', ','));
-                    Program.BotRunner.FaceTowards(new Vector3(x, 0, z));
+                    _botApi.FaceTowards(x, z);
 
                     return JsonConvert.SerializeObject(new
                     {
@@ -151,16 +124,16 @@ namespace WowCyborgUI.InputHandlers
             return "Empty result";
         }
 
-        private static void StopServer()
+        public void StopServer()
         {
             if (_listener == null || !_listener.IsListening)
             {
-                Program.Log("Server is not running.", ConsoleColor.Red);
+                Logger.Log("Server is not running.", ConsoleColor.Red);
                 return;
             }
 
             _listener.Stop();
-            Program.Log("Server stopped", ConsoleColor.Green);
+            Logger.Log("Server stopped", ConsoleColor.Green);
         }
     }
 }

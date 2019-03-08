@@ -75,7 +75,6 @@
     <Compile Include="Handlers\AddonLocator.cs" />
     <Compile Include="Handlers\GameWindowUtilities.cs" />
     <Compile Include="Models\KeyPressRequest.cs" />
-    <Compile Include="Models\TextFile.cs" />
     <Compile Include="Runners\BotFollower.cs" />
     <Compile Include="Runners\BotRunnerBase.cs" />
     <Compile Include="Commanders\EnemyTargettingCommander.cs" />

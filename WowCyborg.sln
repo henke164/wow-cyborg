@@ -7,6 +7,16 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WowCyborg", "src\WowCyborg\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WowCyborgUI", "src\WowCyborgUI\WowCyborgUI.csproj", "{F73A9FA8-EBB7-4720-9BF0-FF1FA60FE806}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CombatRotator", "src\Addons\CombatRotator\CombatRotator.csproj", "{A51C7427-3901-48A8-B0D2-F514E61288EC}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Plugins", "Plugins", "{57009647-FBA0-49C7-8FFF-B2826D3DBEC2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WowCyborgPluginUtilities", "src\WowCyborgAddonUtilities\WowCyborgPluginUtilities.csproj", "{BDCF2EF0-F3FD-4E3D-BD7E-FA7A8E2B93DF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WowAddonInstaller", "src\Addons\WowAddonInstaller\WowAddonInstaller.csproj", "{64035C88-B9AF-4FEB-839D-A9D599AA66A9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ServerController", "ServerController\ServerController.csproj", "{04665CA8-C580-4729-BDCE-5DC29F18D3CF}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -31,9 +41,47 @@ Global
 		{F73A9FA8-EBB7-4720-9BF0-FF1FA60FE806}.Release|Any CPU.Build.0 = Release|Any CPU
 		{F73A9FA8-EBB7-4720-9BF0-FF1FA60FE806}.Release|x64.ActiveCfg = Release|Any CPU
 		{F73A9FA8-EBB7-4720-9BF0-FF1FA60FE806}.Release|x64.Build.0 = Release|Any CPU
+		{A51C7427-3901-48A8-B0D2-F514E61288EC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A51C7427-3901-48A8-B0D2-F514E61288EC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A51C7427-3901-48A8-B0D2-F514E61288EC}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{A51C7427-3901-48A8-B0D2-F514E61288EC}.Debug|x64.Build.0 = Debug|Any CPU
+		{A51C7427-3901-48A8-B0D2-F514E61288EC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A51C7427-3901-48A8-B0D2-F514E61288EC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A51C7427-3901-48A8-B0D2-F514E61288EC}.Release|x64.ActiveCfg = Release|Any CPU
+		{A51C7427-3901-48A8-B0D2-F514E61288EC}.Release|x64.Build.0 = Release|Any CPU
+		{BDCF2EF0-F3FD-4E3D-BD7E-FA7A8E2B93DF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BDCF2EF0-F3FD-4E3D-BD7E-FA7A8E2B93DF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BDCF2EF0-F3FD-4E3D-BD7E-FA7A8E2B93DF}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{BDCF2EF0-F3FD-4E3D-BD7E-FA7A8E2B93DF}.Debug|x64.Build.0 = Debug|Any CPU
+		{BDCF2EF0-F3FD-4E3D-BD7E-FA7A8E2B93DF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BDCF2EF0-F3FD-4E3D-BD7E-FA7A8E2B93DF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BDCF2EF0-F3FD-4E3D-BD7E-FA7A8E2B93DF}.Release|x64.ActiveCfg = Release|Any CPU
+		{BDCF2EF0-F3FD-4E3D-BD7E-FA7A8E2B93DF}.Release|x64.Build.0 = Release|Any CPU
+		{64035C88-B9AF-4FEB-839D-A9D599AA66A9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{64035C88-B9AF-4FEB-839D-A9D599AA66A9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{64035C88-B9AF-4FEB-839D-A9D599AA66A9}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{64035C88-B9AF-4FEB-839D-A9D599AA66A9}.Debug|x64.Build.0 = Debug|Any CPU
+		{64035C88-B9AF-4FEB-839D-A9D599AA66A9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{64035C88-B9AF-4FEB-839D-A9D599AA66A9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{64035C88-B9AF-4FEB-839D-A9D599AA66A9}.Release|x64.ActiveCfg = Release|Any CPU
+		{64035C88-B9AF-4FEB-839D-A9D599AA66A9}.Release|x64.Build.0 = Release|Any CPU
+		{04665CA8-C580-4729-BDCE-5DC29F18D3CF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{04665CA8-C580-4729-BDCE-5DC29F18D3CF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{04665CA8-C580-4729-BDCE-5DC29F18D3CF}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{04665CA8-C580-4729-BDCE-5DC29F18D3CF}.Debug|x64.Build.0 = Debug|Any CPU
+		{04665CA8-C580-4729-BDCE-5DC29F18D3CF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{04665CA8-C580-4729-BDCE-5DC29F18D3CF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{04665CA8-C580-4729-BDCE-5DC29F18D3CF}.Release|x64.ActiveCfg = Release|Any CPU
+		{04665CA8-C580-4729-BDCE-5DC29F18D3CF}.Release|x64.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{A51C7427-3901-48A8-B0D2-F514E61288EC} = {57009647-FBA0-49C7-8FFF-B2826D3DBEC2}
+		{BDCF2EF0-F3FD-4E3D-BD7E-FA7A8E2B93DF} = {57009647-FBA0-49C7-8FFF-B2826D3DBEC2}
+		{64035C88-B9AF-4FEB-839D-A9D599AA66A9} = {57009647-FBA0-49C7-8FFF-B2826D3DBEC2}
+		{04665CA8-C580-4729-BDCE-5DC29F18D3CF} = {57009647-FBA0-49C7-8FFF-B2826D3DBEC2}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {EF41591D-10D0-48B9-8F6F-34415C6EAEB4}

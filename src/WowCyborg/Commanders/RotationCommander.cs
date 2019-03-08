@@ -33,7 +33,7 @@ namespace WowCyborg.Commanders
             _facingTask = Task.Run(() =>
             {
                 HandleRotation();
-                onDone();
+                onDone?.Invoke();
             });
         }
 

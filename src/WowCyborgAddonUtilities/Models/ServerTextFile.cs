@@ -1,6 +1,6 @@
-﻿namespace WowCyborg.Models
+﻿namespace WowCyborgAddonUtilities.Models
 {
-    public class TextFile
+    public class ServerTextFile
     {
         public string FileName { get; set; }
         public string Content { get; set; }

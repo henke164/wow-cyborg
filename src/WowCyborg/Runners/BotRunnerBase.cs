@@ -34,10 +34,10 @@ namespace WowCyborg.Runners
             SetupTransformBehaviour();
         }
 
-        public void FaceTowards(Vector3 target)
+        public void FaceTowards(Vector3 target, Action onFacing = null)
         {
             TargetLocation = null;
-            _rotationCommander.FaceLocation(target, () => { });
+            _rotationCommander.FaceLocation(target, onFacing);
         }
 
         public void MoveTo(Vector3 target, Action onDestinationReached = null)
