@@ -7,6 +7,7 @@
   SHIFT+5    Macro: /target party4
   Ctrl+1    Macro for following focus "/follow focus"
   Ctrl+2    Macro for assisting focus "/assist focus"
+  Ctrl+3    Mount
   1         Renewing Mist
   2         Soothing Mist
   3         Enveloping Mist
@@ -26,6 +27,7 @@ local vivify = 4;
 local essenceFont = 5;
 local follow = "CTRL+1";
 local assist = "CTRL+2";
+local mount = "CTRL+3";
 local back = "CTRL+9";
 
 function IsFollowing()
@@ -144,10 +146,7 @@ local lastTarget = {
 function RenderSingleTargetRotation()
   if IsFollowing() then
     WowCyborg_CURRENTATTACK = "Following...";
-      
-    --if GetTime() <= startedFollowAt + 1 then
       return false;
-    --end
   end
   
   if lastTarget.time + 2 < GetTime() then
@@ -281,6 +280,13 @@ function CreateEmoteListenerFrame()
     if string.find(command, "wait", 1, true) then
       print("Waiting");
       SetSpellRequest(assist);
+      isFollowing = false;
+      startedFollowAt = 0;
+      stoppedFollowAt = GetTime();
+    end
+    if string.find(command, "fart", 1, true) then
+      print("Mounting");
+      SetSpellRequest(mount);
       isFollowing = false;
       startedFollowAt = 0;
       stoppedFollowAt = GetTime();

@@ -104,12 +104,12 @@ function IsCastable(spellName, requiredEnergy)
   return false;
 end
 
-function IsCastableAtFriendlyTarget(spellName, requiredEnergy)
-  if IsSpellInRange(spellName, "target") == 0 then
+function IsCastableAtFriendlyUnit(unitName, spellName, requiredEnergy)
+  if IsSpellInRange(spellName, unitName) == 0 then
     return false;
   end
 
-  if UnitCanAttack("player", "target") == true then
+  if UnitCanAttack("player", unitName) == true then
     return false;
   end
 
@@ -118,6 +118,10 @@ function IsCastableAtFriendlyTarget(spellName, requiredEnergy)
   end;
   
   return IsCastable(spellName, requiredEnergy);
+end
+
+function IsCastableAtFriendlyTarget(spellName, requiredEnergy)
+  return IsCastableAtFriendlyUnit("target", spellName, requiredEnergy);
 end
 
 function IsCastableAtEnemyTarget(spellName, requiredEnergy)

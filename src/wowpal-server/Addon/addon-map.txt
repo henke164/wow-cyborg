@@ -1,5 +1,5 @@
-MazonAddon.toc
-MazonAddon.lua
-OCR.lua
-Positioning/PlayerPositioning.lua
+Addon/MazonAddon.toc
+Addon/MazonAddon.lua
+Addon/OCR.lua
+Addon/Positioning/PlayerPositioning.lua
 Combat/Shared.lua

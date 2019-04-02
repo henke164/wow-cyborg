@@ -13,14 +13,13 @@ namespace WowCyborg.Runners
         private EnemyTargettingCommander _enemyTargettingCommander;
         private LootingCommander _lootingCommander = new LootingCommander();
         private bool _isInCombat = false;
-        private bool _isInRange = false;
 
         public SoloRunner()
         {
             _enemyTargettingCommander = new EnemyTargettingCommander(KeyHandler);
             ShouldPauseMovement = () =>
             {
-                return _isInCombat || _isInRange;
+                return _isInCombat;
             };
         }
 
@@ -28,7 +27,7 @@ namespace WowCyborg.Runners
         {
             EventManager.On("PlayerTransformChanged", (Event _) =>
             {
-                if (TargetLocation != null && !_isInRange)
+                if (TargetLocation != null && !_isInCombat)
                 {
                     _enemyTargettingCommander.Update();
                 }
@@ -38,16 +37,9 @@ namespace WowCyborg.Runners
             {
                 _isInCombat = (bool)ev.Data;
 
-                if (_isInCombat)
+                if (!_isInCombat)
                 {
-                    StopMovement();
-                    Task.Run(() => {
-                        while (!_isInRange)
-                        {
-                            _enemyTargettingCommander.TargetNearestEnemy();
-                            Thread.Sleep(500);
-                        }
-                    });
+                    ResumeMovement();
                 }
             });
 
@@ -56,9 +48,7 @@ namespace WowCyborg.Runners
                 var keyRequest = (KeyPressRequest)ev.Data;
                 if (keyRequest.ModifierKey != Keys.None)
                 {
-                    KeyHandler.HoldKey(keyRequest.ModifierKey);
-                    KeyHandler.PressKey(keyRequest.Key);
-                    KeyHandler.ReleaseKey(keyRequest.ModifierKey);
+                    KeyHandler.ModifiedKeypress(keyRequest.ModifierKey, keyRequest.Key);
                 }
                 else
                 {
@@ -68,7 +58,7 @@ namespace WowCyborg.Runners
 
             EventManager.On("WrongFacing", (Event _) =>
             {
-                KeyHandler.PressKey(Keys.D, 500);
+                KeyHandler.PressKey(Keys.D, 200);
             });
         }
     }

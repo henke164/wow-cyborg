@@ -2,6 +2,7 @@
   Button    Spell
   CTRL+1    Macro for following focus "/follow focus"
   CTRL+2    Macro for assisting focus "/assist focus"
+  Ctrl+3    Mount
   1         Double Tap
   2         Aimed Shot
   3         Rapid Fire
@@ -19,6 +20,7 @@ local steadyShot = "5";
 local multiShot = "6";
 local follow = "CTRL+1";
 local assist = "CTRL+2";
+local mount = "CTRL+3";
 local back = "CTRL+9";
 
 function IsFollowing()
@@ -163,6 +165,13 @@ function CreateEmoteListenerFrame()
       print("Waiting");
       SetSpellRequest(assist);
       isFollowing = false;
+      stoppedFollowAt = GetTime();
+    end
+    if string.find(command, "fart", 1, true) then
+      print("Mounting");
+      SetSpellRequest(mount);
+      isFollowing = false;
+      startedFollowAt = 0;
       stoppedFollowAt = GetTime();
     end
     if string.find(command, "waves", 1, true) then

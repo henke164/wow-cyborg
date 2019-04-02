@@ -2,6 +2,7 @@
 using System;
 using WowCyborg.Runners;
 using WowCyborg.Utilities;
+using WowCyborgAddonUtilities.Models;
 
 namespace WowCyborgAddonUtilities
 {
@@ -24,23 +25,21 @@ namespace WowCyborgAddonUtilities
             _botRunner.FaceTowards(new Vector3(x, 0, z), onDestinationReached);
         }
 
-        public string GetCurrentTransform()
+        public BotTransform GetCurrentTransform()
         {
-            if (_botRunner.CurrentTransform == null)
+            var currentTransform = _botRunner.CurrentTransform;
+            if (currentTransform == null)
             {
-                return JsonConvert.SerializeObject(new
-                {
-                    error = "Location not found"
-                });
+                return null;
             }
 
-            return JsonConvert.SerializeObject(new
+            return new BotTransform
             {
-                x = _botRunner.CurrentTransform.Position.X,
-                z = _botRunner.CurrentTransform.Position.Z,
-                r = _botRunner.CurrentTransform.Rotation,
-                zone = _botRunner.CurrentTransform.ZoneId
-            });
+                X = currentTransform.Position.X,
+                Z = currentTransform.Position.Z,
+                R = currentTransform.Rotation,
+                ZoneId = currentTransform.ZoneId
+            };
         }
     }
 }

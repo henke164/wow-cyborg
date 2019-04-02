@@ -4,16 +4,15 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{F73A9FA8-EBB7-4720-9BF0-FF1FA60FE806}</ProjectGuid>
-    <OutputType>Exe</OutputType>
-    <RootNamespace>WowCyborgUI</RootNamespace>
-    <AssemblyName>WowCyborgUI</AssemblyName>
+    <ProjectGuid>{04665CA8-C580-4729-BDCE-5DC29F18D3CF}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>ServerController</RootNamespace>
+    <AssemblyName>ServerController</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <PlatformTarget>x64</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -21,68 +20,41 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <PlatformTarget>x64</PlatformTarget>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <PlatformTarget>x64</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <PlatformTarget>x64</PlatformTarget>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.12.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\src\WowCyborgUI\bin\Debug\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Drawing" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Xml" />
-    <Reference Include="WowCyborg, Version=1.0.0.0, Culture=neutral, processorArchitecture=AMD64">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\WowCyborg\bin\x64\Debug\WowCyborg.dll</HintPath>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="PluginLoader.cs" />
-    <Compile Include="Program.cs" />
+    <Compile Include="Plugin.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ServerManager.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.config" />
-    <None Include="packages.config" />
-    <None Include="settings.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Addons\CombatRotator\CombatRotator.csproj">
-      <Project>{a51c7427-3901-48a8-b0d2-f514e61288ec}</Project>
-      <Name>CombatRotator</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Addons\ServerController\ServerController.csproj">
-      <Project>{04665ca8-c580-4729-bdce-5dc29f18d3cf}</Project>
-      <Name>ServerController</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Addons\WaypointRunner\WaypointRunner.csproj">
-      <Project>{ac219a66-2627-4dfc-9f65-959772de9014}</Project>
-      <Name>WaypointRunner</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Addons\WowAddonInstaller\WowAddonInstaller.csproj">
-      <Project>{64035c88-b9af-4feb-839d-a9d599aa66a9}</Project>
-      <Name>WowAddonInstaller</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\WowCyborgAddonUtilities\WowCyborgPluginUtilities.csproj">
+    <ProjectReference Include="..\..\WowCyborgAddonUtilities\WowCyborgPluginUtilities.csproj">
       <Project>{BDCF2EF0-F3FD-4E3D-BD7E-FA7A8E2B93DF}</Project>
       <Name>WowCyborgPluginUtilities</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

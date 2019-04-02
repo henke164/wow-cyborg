@@ -24,7 +24,7 @@ namespace WowCyborg.EventDispatchers
 
             var now = DateTime.Now;
 
-            if ((now - _lastCast).TotalMilliseconds < 500)
+            if ((now - _lastCast).TotalMilliseconds < 300)
             {
                 return;
             }

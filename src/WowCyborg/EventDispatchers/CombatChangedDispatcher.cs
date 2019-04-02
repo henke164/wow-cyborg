@@ -15,7 +15,7 @@ namespace WowCyborg.EventDispatchers
 
         protected override void Update()
         {
-            if (AddonIsRedAt(1, 1))
+            if (AddonIsRedAt(1, 2))
             {
                 if (!_inCombat)
                 {
@@ -25,7 +25,7 @@ namespace WowCyborg.EventDispatchers
                 _inCombat = false;
                 TriggerEvent(false);
             }
-            else if (AddonIsGreenAt(1, 1))
+            else if (AddonIsGreenAt(1, 2))
             {
                 if (_inCombat)
                 {

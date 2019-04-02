@@ -9,8 +9,9 @@ namespace WowAddonInstaller
         private WowAddonInstaller _addonInstaller;
 
         public Plugin(ApplicationSettings settings)
+            : base(settings)
         {
-            _addonInstaller = new WowAddonInstaller(settings.ServerUrl, settings.WowAddonPath);
+            _addonInstaller = new WowAddonInstaller(Settings.ServerUrl, Settings.WowAddonPath);
         }
 
         private void ValidateAddonFiles()

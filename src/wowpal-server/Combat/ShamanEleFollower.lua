@@ -26,6 +26,7 @@ local lightningBolt = "8";
 local frostShock = "9";
 local follow = "CTRL+1";
 local assist = "CTRL+2";
+local mount = "CTRL+3";
 local back = "CTRL+9";
 
 function IsFollowing()
@@ -233,6 +234,13 @@ function CreateEmoteListenerFrame()
       print("Waiting");
       SetSpellRequest(assist);
       isFollowing = false;
+      stoppedFollowAt = GetTime();
+    end
+    if string.find(command, "fart", 1, true) then
+      print("Mounting");
+      SetSpellRequest(mount);
+      isFollowing = false;
+      startedFollowAt = 0;
       stoppedFollowAt = GetTime();
     end
     if string.find(command, "waves", 1, true) then

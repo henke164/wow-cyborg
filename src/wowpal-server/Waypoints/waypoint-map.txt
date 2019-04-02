@@ -1,1 +1,0 @@
-1337	Waypoints/wp-1337.json

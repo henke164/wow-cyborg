@@ -14,9 +14,6 @@ namespace WowCyborg.Handlers
         [DllImport("user32.dll")]
         private static extern int GetWindowRect(IntPtr hwnd, out Rectangle rect);
 
-        [DllImport("user32.dll")]
-        private static extern bool SetForegroundWindow(IntPtr hWnd);
-
         private static Rectangle InGameAddonLocation;
 
         private static IntPtr GameHandle;
@@ -25,7 +22,6 @@ namespace WowCyborg.Handlers
         {
             var gameHandle = SetupGameHandle();
             GameHandle = gameHandle;
-            SetForegroundWindow(gameHandle);
         }
 
         private static IntPtr GetGameHandle()

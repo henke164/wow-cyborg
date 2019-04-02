@@ -9,6 +9,7 @@ mwmonk	Combat/MonkMistweaver.lua
 blooddk	Combat/DKBlood.lua
 unholydk	Combat/DKUnholy.lua
 pvpdk	Combat/DKPvp.lua
+restodruid	Combat/DruidResto.lua
 mmhunterfollower	Combat/HunterMMFollower.lua
 mwmonkfollower	Combat/MonkMistweaverFollower.lua
 eleshamanfollower	Combat/ShamanEleFollower.lua

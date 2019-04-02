@@ -12,7 +12,7 @@ app.get('/rotations', (req, res) => {
 
 app.get('/file/', (req, res) => {
     const filePath = req.query["file"];
-    res.sendFile(`./Addon/${filePath}`, { root : __dirname});
+    res.sendFile(`./${filePath}`, { root : __dirname});
 });
 
 app.listen(port, () => console.log(`Example app listening on port ${port}!`))

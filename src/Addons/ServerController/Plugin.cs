@@ -8,8 +8,9 @@ namespace ServerController
         private ServerManager _serverManager;
 
         public Plugin(ApplicationSettings settings)
+            : base(settings)
         {
-            _serverManager = new ServerManager(settings.BotApi);
+            _serverManager = new ServerManager(Settings.BotApi);
         }
 
         public override bool HandleInput(string command, string[] args)

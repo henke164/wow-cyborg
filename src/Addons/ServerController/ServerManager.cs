@@ -70,7 +70,16 @@ namespace ServerController
         {
             if (rawUrl == "/currentPosition")
             {
-                return _botApi.GetCurrentTransform();
+                var currentTransform = _botApi.GetCurrentTransform();
+                if (currentTransform == null)
+                {
+                    return JsonConvert.SerializeObject(new
+                    {
+                        error = "Location not found"
+                    });
+                }
+
+                return JsonConvert.SerializeObject(currentTransform);
             }
             else if (rawUrl.IndexOf("/moveTo?") == 0)
             {

@@ -1,4 +1,4 @@
-﻿using System;
+﻿using System.Threading;
 using System.Windows.Forms;
 using WowCyborg.Handlers;
 
@@ -28,7 +28,8 @@ namespace WowCyborg.Commanders
         public void TargetNearestEnemy()
         {
             _keyHandler.PressKey(Keys.Tab);
-            Console.WriteLine("check target");
+            Thread.Sleep(200);
+            _keyHandler.PressKey(Keys.D0);
         }
     }
 }

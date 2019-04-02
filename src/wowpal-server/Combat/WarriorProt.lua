@@ -33,6 +33,10 @@ local victoryRush = "7";
 
 function RenderMultiTargetRotation()
   if InMeleeRange() == false then
+    if IsCastableAtEnemyTarget("Thunder Clap", 0) and CheckInteractDistance("target", 3) then
+      WowCyborg_CURRENTATTACK = "Thunder Clap";
+      return SetSpellRequest(thunderClap);
+    end
     WowCyborg_CURRENTATTACK = "-";
     return SetSpellRequest(nil);
   end
@@ -40,14 +44,6 @@ function RenderMultiTargetRotation()
   local hpPercentage = GetHealthPercentage("player");
   
   local dangerHpLossLimit = UnitHealthMax("player") * 0.5;
-
-  local vrBuff = FindBuff("player", "Victorious")
-  if hpPercentage < 80 and 
-    IsCastableAtEnemyTarget("Victory Rush", 0) and 
-    vrBuff == "Victorious" then
-    WowCyborg_CURRENTATTACK = "Victory Rush";
-    return SetSpellRequest(victoryRush);
-  end
 
   if meleeDamageInLast5Seconds > dangerHpLossLimit or 
     rangedDamageInLast5Seconds > dangerHpLossLimit or
@@ -93,6 +89,14 @@ function RenderMultiTargetRotation()
     return SetSpellRequest(thunderClap);
   end
 
+  local revBuff = FindBuff("player", "Revenge!");
+  if (revBuff == "Revenge!") then
+    if IsCastableAtEnemyTarget("Revenge", 0) then
+      WowCyborg_CURRENTATTACK = "Revenge";
+      return SetSpellRequest(revenge);
+    end
+  end
+
   if IsCastableAtEnemyTarget("Revenge", 30) then
     WowCyborg_CURRENTATTACK = "Revenge";
     return SetSpellRequest(revenge);
@@ -103,6 +107,14 @@ function RenderMultiTargetRotation()
     return SetSpellRequest(avatar);
   end
   
+  local vrBuff = FindBuff("player", "Victorious")
+  if hpPercentage < 80 and 
+    IsCastableAtEnemyTarget("Victory Rush", 0) and 
+    vrBuff == "Victorious" then
+    WowCyborg_CURRENTATTACK = "Victory Rush";
+    return SetSpellRequest(victoryRush);
+  end
+
   if IsCastableAtEnemyTarget("Demoralizing Shout", 0) then
     WowCyborg_CURRENTATTACK = "Demoralizing Shout";
     return SetSpellRequest(demoralizingShout);
@@ -123,6 +135,11 @@ end
 
 function RenderSingleTargetRotation()
   if InMeleeRange() == false then
+    if IsCastableAtEnemyTarget("Thunder Clap", 0) and CheckInteractDistance("target", 3) then
+      WowCyborg_CURRENTATTACK = "Thunder Clap";
+      return SetSpellRequest(thunderClap);
+    end
+
     WowCyborg_CURRENTATTACK = "-";
     return SetSpellRequest(nil);
   end
@@ -183,7 +200,7 @@ function RenderSingleTargetRotation()
   local avatarBuff = FindBuff("player", "Avatar")
 
   if avatarBuff == "Avatar" then
-    if IsCastableAtEnemyTarget("Thunder Clap", 0) then
+    if IsCastableAtEnemyTarget("Thunder Clap", 0) and IsItemInRange(63427, "player") then
       WowCyborg_CURRENTATTACK = "Thunder Clap";
       return SetSpellRequest(thunderClap);
     end
@@ -219,13 +236,13 @@ function RenderSingleTargetRotation()
   
   local revBuff = FindBuff("player", "Revenge!");
   if (revBuff == "Revenge!") then
-    if IsCastableAtEnemyTarget("Revenge", 30) then
+    if IsCastableAtEnemyTarget("Revenge", 0) then
       WowCyborg_CURRENTATTACK = "Revenge";
       return SetSpellRequest(revenge);
     end
   end
 
-  if rage > 90 then
+  if rage > 80 then
     local ipBuff = FindBuff("player", "Ignore Pain")
     if ipBuff == nil and IsCastableAtEnemyTarget("Ignore Pain", 40) then
       WowCyborg_CURRENTATTACK = "Ignore Pain";

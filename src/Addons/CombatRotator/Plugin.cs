@@ -8,8 +8,9 @@ namespace CombatRotator
         private WowAddonInstaller _addonInstaller;
 
         public Plugin(ApplicationSettings settings)
+            : base(settings)
         {
-            _addonInstaller = new WowAddonInstaller(settings.ServerUrl, settings.WowAddonPath);
+            _addonInstaller = new WowAddonInstaller(Settings.ServerUrl, Settings.WowAddonPath);
         }
         
         public override bool HandleInput(string command, string[] args)

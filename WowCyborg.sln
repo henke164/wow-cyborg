@@ -15,7 +15,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WowCyborgPluginUtilities", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WowAddonInstaller", "src\Addons\WowAddonInstaller\WowAddonInstaller.csproj", "{64035C88-B9AF-4FEB-839D-A9D599AA66A9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ServerController", "ServerController\ServerController.csproj", "{04665CA8-C580-4729-BDCE-5DC29F18D3CF}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ServerController", "src\Addons\ServerController\ServerController.csproj", "{04665CA8-C580-4729-BDCE-5DC29F18D3CF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WaypointRunner", "src\Addons\WaypointRunner\WaypointRunner.csproj", "{AC219A66-2627-4DFC-9F65-959772DE9014}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -73,6 +75,14 @@ Global
 		{04665CA8-C580-4729-BDCE-5DC29F18D3CF}.Release|Any CPU.Build.0 = Release|Any CPU
 		{04665CA8-C580-4729-BDCE-5DC29F18D3CF}.Release|x64.ActiveCfg = Release|Any CPU
 		{04665CA8-C580-4729-BDCE-5DC29F18D3CF}.Release|x64.Build.0 = Release|Any CPU
+		{AC219A66-2627-4DFC-9F65-959772DE9014}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AC219A66-2627-4DFC-9F65-959772DE9014}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AC219A66-2627-4DFC-9F65-959772DE9014}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{AC219A66-2627-4DFC-9F65-959772DE9014}.Debug|x64.Build.0 = Debug|Any CPU
+		{AC219A66-2627-4DFC-9F65-959772DE9014}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AC219A66-2627-4DFC-9F65-959772DE9014}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AC219A66-2627-4DFC-9F65-959772DE9014}.Release|x64.ActiveCfg = Release|Any CPU
+		{AC219A66-2627-4DFC-9F65-959772DE9014}.Release|x64.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -82,6 +92,7 @@ Global
 		{BDCF2EF0-F3FD-4E3D-BD7E-FA7A8E2B93DF} = {57009647-FBA0-49C7-8FFF-B2826D3DBEC2}
 		{64035C88-B9AF-4FEB-839D-A9D599AA66A9} = {57009647-FBA0-49C7-8FFF-B2826D3DBEC2}
 		{04665CA8-C580-4729-BDCE-5DC29F18D3CF} = {57009647-FBA0-49C7-8FFF-B2826D3DBEC2}
+		{AC219A66-2627-4DFC-9F65-959772DE9014} = {57009647-FBA0-49C7-8FFF-B2826D3DBEC2}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {EF41591D-10D0-48B9-8F6F-34415C6EAEB4}

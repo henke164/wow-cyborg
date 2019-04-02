@@ -48,6 +48,7 @@
     <Compile Include="Logger.cs" />
     <Compile Include="Models\ApplicationSettings.cs" />
     <Compile Include="Models\ServerTextFile.cs" />
+    <Compile Include="Models\BotTransform.cs" />
     <Compile Include="PluginBase.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

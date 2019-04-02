@@ -19,7 +19,7 @@ namespace WowCyborgUI
             var files = Directory.GetFiles(AppDomain.CurrentDomain.BaseDirectory);
             var plugins = new List<PluginBase>();
 
-            foreach (var file in files)
+            foreach (var file in files.Where(f => f.Contains(".dll")))
             {
                 try
                 {

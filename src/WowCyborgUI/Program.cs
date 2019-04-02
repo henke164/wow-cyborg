@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Reflection;
 using WowCyborg.Handlers;
 using WowCyborg.Models;
 using WowCyborg.Runners;
@@ -20,15 +18,32 @@ namespace WowCyborgUI
         static void Main()
         {
             AddonLocator.InitializeGameHandle();
-            BotRunner = new AutoCaster();
-            Plugins = PluginLoader.GetPlugins(GetApplicationSettings());
+
+            var settings = SettingsLoader.LoadSettings<AppSettings>("settings.json");
+            InitializeBotRunner(settings);
+            Plugins = PluginLoader.GetPlugins(GetApplicationSettings(settings));
             RenderStartMessage();
             HandleInput();
         }
 
-        static ApplicationSettings GetApplicationSettings()
+        static void InitializeBotRunner(AppSettings settings)
         {
-            var settings = SettingsLoader.LoadSettings<AppSettings>("settings.json");
+            switch (settings.BotType)
+            {
+                case "soloRunner":
+                    BotRunner = new SoloRunner();
+                    break;
+                case "follower":
+                    BotRunner = new BotFollower();
+                    break;
+                default:
+                    BotRunner = new AutoCaster();
+                    break;
+            }
+        }
+
+        static ApplicationSettings GetApplicationSettings(AppSettings settings)
+        {
             return new ApplicationSettings
             {
                 ServerUrl = settings.ServerAddress,

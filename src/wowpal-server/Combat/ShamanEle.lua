@@ -1,7 +1,6 @@
 --[[
   Button    Spell
-  CTRL+1    Totem Mastery
-  1         Icefury
+  1         Totem Mastery
   2         Flame Shock
   3         Earthquake
   4         Stormkeeper
@@ -12,8 +11,7 @@
   9         Frost Shock
 ]]--
 
-local totemMastery = "CTRL+1";
-local icefury = "1";
+local totemMastery = "1";
 local flameShock = "2";
 local earthQuake = "3";
 local stormKeeper = "4";
@@ -22,23 +20,24 @@ local lavaBurst = "6";
 local chainLightning = "7";
 local lightningBolt = "8";
 local frostShock = "9";
+local recentlyCastedLavaBurst = false;
 
 -- Movement
 local function RenderTargetRotationInMovement()
   local lsBuff = FindBuff("player", "Lava Surge");
   local fsDot, fsDotTimeLeft = FindDebuff("target", "Flame Shock");
 
-  if lsBuff == "Lava Surge" then
-    if IsCastableAtEnemyTarget("Lava Burst", 0) then
-      WowCyborg_CURRENTATTACK = "Lava Burst";
-      return SetSpellRequest(lavaBurst);
-    end
-  end
-
   if fsDot == nil or fsDotTimeLeft <= 6.5 then
     if IsCastableAtEnemyTarget("Flame Shock", 0) then
       WowCyborg_CURRENTATTACK = "Flame Shock";
       return SetSpellRequest(flameShock);
+    end
+  end
+
+  if lsBuff == "Lava Surge" then
+    if IsCastableAtEnemyTarget("Lava Burst", 0) then
+      WowCyborg_CURRENTATTACK = "Lava Burst";
+      return SetSpellRequest(lavaBurst);
     end
   end
 
@@ -117,8 +116,26 @@ end
 
 -- Single target
 function RenderSingleTargetRotation()
+  local castingSpell = UnitCastingInfo("player");
+  recentlyCastedLavaBurst = castingSpell == "Lava Burst";
+
   if UnitChannelInfo("player") == "Lightning Lasso" then
+    WowCyborg_CURRENTATTACK = "-";
     return SetSpellRequest(nil);
+  end
+
+  local gwBuff = FindBuff("player", "Ghost Wolf");
+  if gwBuff ~= nil then
+    WowCyborg_CURRENTATTACK = "-";
+    return SetSpellRequest(nil);
+  end
+
+  local skBuff = FindBuff("player", "Stormkeeper");
+  if skBuff ~= nil then
+    if IsCastableAtEnemyTarget("Lightning Bolt", 0) then
+      WowCyborg_CURRENTATTACK = "Lightning Bolt";
+      return SetSpellRequest(lightningBolt);
+    end
   end
 
   if IsMoving() == true then
@@ -135,8 +152,13 @@ function RenderSingleTargetRotation()
       
     if IsCastableAtEnemyTarget("Flame Shock", 0) then
       if fsDot == nil then
-        WowCyborg_CURRENTATTACK = "Flame Shock";
-        return SetSpellRequest(flameShock);
+        if IsCastableAtEnemyTarget("Lava Burst", 0) and recentlyCastedLavaBurst == false then
+          WowCyborg_CURRENTATTACK = "Lava Burst";
+          return SetSpellRequest(lavaBurst);
+        else
+          WowCyborg_CURRENTATTACK = "Flame Shock";
+          return SetSpellRequest(flameShock);
+        end
       end
     end
 
@@ -147,8 +169,14 @@ function RenderSingleTargetRotation()
   end
   
   local maelstrom = UnitPower("player");
+  local moeBuff = FindBuff("player", "Master of the Elements");
 
-  if IsCastableAtEnemyTarget("Earth Shock", 60) and 
+  if IsCastableAtEnemyTarget("Earth Shock", 90) then 
+    WowCyborg_CURRENTATTACK = "Earth Shock";
+    return SetSpellRequest(earthShock);
+  end
+  
+  if IsCastableAtEnemyTarget("Earth Shock", 60) and moeBuff ~= nil then 
     WowCyborg_CURRENTATTACK = "Earth Shock";
     return SetSpellRequest(earthShock);
   end
@@ -166,11 +194,6 @@ function RenderSingleTargetRotation()
   if IsCastableAtEnemyTarget("Earth Shock", 60) then
     WowCyborg_CURRENTATTACK = "Earth Shock";
     return SetSpellRequest(earthShock);
-  end
-
-  if IsCastableAtEnemyTarget("Icefury", 0) then
-    WowCyborg_CURRENTATTACK = "Icefury";
-    return SetSpellRequest(icefury);
   end
 
   if IsCastableAtEnemyTarget("Lightning Bolt", 0) then

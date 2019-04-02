@@ -20,10 +20,10 @@ local heartstrike = "5";
 local bonestorm = "6";
 
 function RenderMultiTargetRotation()
-  if IsCastableAtEnemyTarget("Bonestorm", 0) then
-    WowCyborg_CURRENTATTACK = "Bonestorm";
-    return SetSpellRequest(bonestorm);
-  end
+  --if IsCastableAtEnemyTarget("Bonestorm", 0) then
+    --WowCyborg_CURRENTATTACK = "Bonestorm";
+    --return SetSpellRequest(bonestorm);
+  --end
 
   return RenderSingleTargetRotation();
 end

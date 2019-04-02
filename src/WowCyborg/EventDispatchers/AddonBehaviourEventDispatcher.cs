@@ -42,13 +42,7 @@ namespace WowCyborg.EventDispatchers
                 return false;
             }
 
-            var frameWidth = AddonScreenshotSize.Width / _appSettings.AddonColumnCount;
-            var frameHeight = AddonScreenshotSize.Height / _appSettings.AddonRowCount;
-            var xPos = (frameWidth * x);
-            var yPos = (frameHeight * y);
-
-            var color = TryGetPixelAt(xPos - (frameWidth / 2), 
-                AddonScreenshotSize.Height - yPos + (frameHeight / 2));
+            var color = GetColorAt(x, y);
 
             return color.R == 0 && color.G > 250 && color.B == 0;
         }
@@ -60,13 +54,7 @@ namespace WowCyborg.EventDispatchers
                 return false;
             }
 
-            var frameWidth = AddonScreenshotSize.Width / _appSettings.AddonColumnCount;
-            var frameHeight = AddonScreenshotSize.Height / _appSettings.AddonRowCount;
-            var xPos = (frameWidth * x);
-            var yPos = (frameHeight * y);
-
-            var color = TryGetPixelAt(xPos - (frameWidth / 2), 
-                AddonScreenshotSize.Height - yPos + (frameHeight / 2));
+            var color = GetColorAt(x, y);
 
             return color.R > 250 && color.G == 0 && color.B == 0;
         }
