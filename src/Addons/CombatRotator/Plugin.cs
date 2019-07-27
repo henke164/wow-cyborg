@@ -1,7 +1,8 @@
 ﻿using System;
-using WowCyborgAddonUtilities;
+using WowCyborg.PluginUtilities;
+using WowCyborg.PluginUtilities.Models;
 
-namespace CombatRotator
+namespace CombatRotationInstaller
 {
     public class Plugin : PluginBase
     {

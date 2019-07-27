@@ -1,5 +1,5 @@
 ﻿using System.IO;
-using WowCyborgAddonUtilities;
+using WowCyborg.PluginUtilities;
 
 namespace WowAddonInstaller
 {

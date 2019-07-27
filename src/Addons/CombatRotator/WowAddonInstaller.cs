@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using WowCyborgAddonUtilities;
+using WowCyborg.PluginUtilities;
 
-namespace CombatRotator
+namespace CombatRotationInstaller
 {
     public class WowAddonInstaller
     {

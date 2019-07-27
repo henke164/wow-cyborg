@@ -1,6 +1,7 @@
 ﻿using System;
-using WowCyborg.Handlers;
-using WowCyborgAddonUtilities;
+using WowCyborg.Core.Handlers;
+using WowCyborg.PluginUtilities;
+using WowCyborg.PluginUtilities.Models;
 
 namespace WowAddonInstaller
 {

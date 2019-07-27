@@ -48,13 +48,13 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\WowCyborgAddonUtilities\WowCyborgPluginUtilities.csproj">
-      <Project>{BDCF2EF0-F3FD-4E3D-BD7E-FA7A8E2B93DF}</Project>
-      <Name>WowCyborgPluginUtilities</Name>
+    <ProjectReference Include="..\..\WowCyborg.Core\WowCyborg.Core.csproj">
+      <Project>{c1985ad8-5618-4713-bec8-ac0f300dde07}</Project>
+      <Name>WowCyborg.Core</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\WowCyborg\WowCyborg.csproj">
-      <Project>{C1985AD8-5618-4713-BEC8-AC0F300DDE07}</Project>
-      <Name>WowCyborg</Name>
+    <ProjectReference Include="..\..\WowCyborg.PluginUtilities\WowCyborg.PluginUtilities.csproj">
+      <Project>{f6c2529f-4366-41db-b1b0-a6b84d581616}</Project>
+      <Name>WowCyborg.PluginUtilities</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

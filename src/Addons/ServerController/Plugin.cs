@@ -1,5 +1,6 @@
 ﻿using System;
-using WowCyborgAddonUtilities;
+using WowCyborg.PluginUtilities;
+using WowCyborg.PluginUtilities.Models;
 
 namespace ServerController
 {
@@ -10,7 +11,7 @@ namespace ServerController
         public Plugin(ApplicationSettings settings)
             : base(settings)
         {
-            _serverManager = new ServerManager(Settings.BotApi);
+            _serverManager = new ServerManager(Settings.Bot);
         }
 
         public override bool HandleInput(string command, string[] args)

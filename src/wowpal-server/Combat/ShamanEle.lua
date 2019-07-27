@@ -68,11 +68,6 @@ function RenderMultiTargetRotation()
   local fsDot, fsDotTimeLeft = FindDebuff("target", "Flame Shock");
 
   if IsCastableAtEnemyTarget("Lightning Bolt", 0) then
-    local totemBuff = FindBuff("player", "Storm Totem");
-    if totemBuff == nil then 
-      return SetSpellRequest(totemMastery);
-    end
-      
     if IsCastableAtEnemyTarget("Flame Shock", 0) then
       if fsDot == nil then
         WowCyborg_CURRENTATTACK = "Flame Shock";
@@ -145,11 +140,6 @@ function RenderSingleTargetRotation()
   local fsDot, fsDotTimeLeft = FindDebuff("target", "Flame Shock");
 
   if IsCastableAtEnemyTarget("Lightning Bolt", 0) then
-    local totemBuff = FindBuff("player", "Storm Totem");
-    if totemBuff == nil then 
-      return SetSpellRequest(totemMastery);
-    end
-      
     if IsCastableAtEnemyTarget("Flame Shock", 0) then
       if fsDot == nil then
         if IsCastableAtEnemyTarget("Lava Burst", 0) and recentlyCastedLavaBurst == false then

@@ -4,16 +4,13 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{C1985AD8-5618-4713-BEC8-AC0F300DDE07}</ProjectGuid>
-    <OutputType>Library</OutputType>
+    <ProjectGuid>{F73A9FA8-EBB7-4720-9BF0-FF1FA60FE806}</ProjectGuid>
+    <OutputType>Exe</OutputType>
     <RootNamespace>WowCyborg</RootNamespace>
     <AssemblyName>WowCyborg</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
-    <NuGetPackageImportStamp>
-    </NuGetPackageImportStamp>
-    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>x64</PlatformTarget>
@@ -23,7 +20,7 @@
     <OutputPath>bin\Debug\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>2</WarningLevel>
+    <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <PlatformTarget>x64</PlatformTarget>
@@ -34,97 +31,54 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
-    <DebugSymbols>true</DebugSymbols>
-    <OutputPath>bin\x64\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <DebugType>full</DebugType>
-    <PlatformTarget>x64</PlatformTarget>
-    <ErrorReport>prompt</ErrorReport>
-    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
-    <Prefer32Bit>true</Prefer32Bit>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
-    <OutputPath>bin\x64\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <Optimize>true</Optimize>
-    <DebugType>pdbonly</DebugType>
-    <PlatformTarget>x64</PlatformTarget>
-    <ErrorReport>prompt</ErrorReport>
-    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
-    <Prefer32Bit>true</Prefer32Bit>
-  </PropertyGroup>
-  <PropertyGroup>
-    <StartupObject />
-  </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
-    <Reference Include="System.Deployment" />
-    <Reference Include="System.Drawing" />
     <Reference Include="System.Net.Http" />
-    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Handlers\AddonFolderHandler.cs" />
-    <Compile Include="Handlers\AddonLocator.cs" />
-    <Compile Include="Handlers\GameWindowUtilities.cs" />
-    <Compile Include="Models\KeyPressRequest.cs" />
-    <Compile Include="Runners\BotFollower.cs" />
-    <Compile Include="Runners\BotRunnerBase.cs" />
-    <Compile Include="Commanders\EnemyTargettingCommander.cs" />
-    <Compile Include="Commanders\LootingCommander.cs" />
-    <Compile Include="Commanders\MovementCommander.cs" />
-    <Compile Include="Commanders\RotationCommander.cs" />
-    <Compile Include="EventDispatchers\AddonBehaviourEventDispatcher.cs" />
-    <Compile Include="EventDispatchers\WrongFacingDispatcher.cs" />
-    <Compile Include="EventDispatchers\CombatChangedDispatcher.cs" />
-    <Compile Include="EventDispatchers\CombatCastingDispatcher.cs" />
-    <Compile Include="EventDispatchers\PlayerTransformChangedDispatcher.cs" />
-    <Compile Include="EventDispatchers\ScreenChangedDispatcher.cs" />
-    <Compile Include="Handlers\EventManager.cs" />
-    <Compile Include="Models\Abstractions\Event.cs" />
-    <Compile Include="Models\Abstractions\EventDispatcherBase.cs" />
-    <Compile Include="Models\AddonSettings.cs" />
-    <Compile Include="Models\WaypointCollection.cs" />
+    <Compile Include="BotProfiles\AutoCaster.cs" />
+    <Compile Include="BotProfiles\BotFollower.cs" />
+    <Compile Include="BotProfiles\SoloRunner.cs" />
+    <Compile Include="PluginLoader.cs" />
+    <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Runners\AutoCaster.cs" />
-    <Compile Include="Runners\SoloRunner.cs" />
-    <Compile Include="Handlers\KeyHandler.cs" />
-    <Compile Include="Handlers\MouseHandler.cs" />
-    <Compile Include="Utilities\Rect.cs" />
-    <Compile Include="Utilities\SettingsLoader.cs" />
-    <Compile Include="Utilities\Transform.cs" />
-    <Compile Include="Utilities\Vector3.cs" />
-    <EmbeddedResource Include="Properties\Resources.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <Compile Include="Properties\Resources.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Resources.resx</DependentUpon>
-      <DesignTime>True</DesignTime>
-    </Compile>
-    <None Include="Properties\Settings.settings">
-      <Generator>SettingsSingleFileGenerator</Generator>
-      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
-    </None>
-    <Compile Include="Properties\Settings.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Settings.settings</DependentUpon>
-      <DesignTimeSharedInput>True</DesignTimeSharedInput>
-    </Compile>
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Newtonsoft.Json">
-      <Version>12.0.1</Version>
-    </PackageReference>
+    <None Include="App.config" />
+    <None Include="settings.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Addons\CombatRotator\CombatRotationInstaller.csproj">
+      <Project>{a51c7427-3901-48a8-b0d2-f514e61288ec}</Project>
+      <Name>CombatRotationInstaller</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Addons\ServerController\ServerController.csproj">
+      <Project>{04665ca8-c580-4729-bdce-5dc29f18d3cf}</Project>
+      <Name>ServerController</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Addons\WowAddonInstaller\WowAddonInstaller.csproj">
+      <Project>{64035c88-b9af-4feb-839d-a9d599aa66a9}</Project>
+      <Name>WowAddonInstaller</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\WowCyborg.Core\WowCyborg.Core.csproj">
+      <Project>{c1985ad8-5618-4713-bec8-ac0f300dde07}</Project>
+      <Name>WowCyborg.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\WowCyborg.PluginUtilities\WowCyborg.PluginUtilities.csproj">
+      <Project>{F6C2529F-4366-41DB-B1B0-A6B84D581616}</Project>
+      <Name>WowCyborg.PluginUtilities</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

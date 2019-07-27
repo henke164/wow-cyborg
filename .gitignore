@@ -28,3 +28,8 @@ src/WowCyborgAddonUtilities/bin/
 src/WowCyborgAddonUtilities/obj/
 /src/WoWPal.Events/obj/
 /src/WoWPal.Events/bin/
+/src/WowCyborg/bin/Debug
+/src/WowCyborg/obj/Debug
+/src/WowCyborg.PluginUtilities/bin/Debug/netstandard2.0
+/src/WowCyborg.PluginUtilities/obj/Debug/netstandard2.0
+/src/WowCyborg.PluginUtilities/obj

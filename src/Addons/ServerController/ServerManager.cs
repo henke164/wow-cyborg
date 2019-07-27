@@ -1,12 +1,11 @@
 ﻿using Newtonsoft.Json;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using WowCyborgAddonUtilities;
+using WowCyborg.Core;
+using WowCyborg.PluginUtilities;
 
 namespace ServerController
 {
@@ -18,9 +17,9 @@ namespace ServerController
 
         private HttpListener _listener;
 
-        public ServerManager(BotApi botApi)
+        public ServerManager(Bot bot)
         {
-            _botApi = botApi;
+            _botApi = new BotApi(bot);
         }
 
         public void StartServer()

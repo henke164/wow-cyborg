@@ -30,12 +30,12 @@ function RenderSingleTargetRotation(texture)
   end
 
   local hamstringDebuff, hamstringTimeLeft = FindDebuff("target", "Hamstring");
-  if hamstringDebuff == nil or hamstringTimeLeft < 3 then
-    if IsCastableAtEnemyTarget("Hamstring", 10) then
-      WowCyborg_CURRENTATTACK = "Hamstring";
-      return SetSpellRequest(hamstring);
-    end
-  end
+  --if hamstringDebuff == nil or hamstringTimeLeft < 3 then
+  --  if IsCastableAtEnemyTarget("Hamstring", 10) then
+  --    WowCyborg_CURRENTATTACK = "Hamstring";
+  --    return SetSpellRequest(hamstring);
+  --  end
+  --end
 
   local caBuff = FindBuff("player", "Crushing Assault");
   if caBuff ~= nil then
