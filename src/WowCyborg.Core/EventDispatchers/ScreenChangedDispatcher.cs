@@ -19,6 +19,11 @@ namespace WowCyborg.Core.EventDispatchers
         protected override void Update()
         {
             var screenshot = CaptureScreenShot();
+            if (screenshot.Size == new Size(1, 1))
+            {
+                return;
+            }
+
             TriggerEvent(screenshot);
         }
         
@@ -41,7 +46,6 @@ namespace WowCyborg.Core.EventDispatchers
                 }
 
                 clone = bitmap.Clone(addonLocation, PixelFormat.Format24bppRgb);
-                clone.Save("test.png");
             }
             return clone;
         }

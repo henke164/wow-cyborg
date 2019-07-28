@@ -69,19 +69,32 @@ namespace WowCyborg.Core.Handlers
 
                 var pxOffset = bottomLeft.X > 0 ? 9 : 1;
 
-                var frameSize = CalculateFrameWidth(clone, pxOffset);
+                var addonWidth = CalculateFrameWidth(clone, pxOffset) + pxOffset;
+
+                if (addonWidth <= pxOffset * 2)
+                {
+                    return;
+                }
 
                 var settings = SettingsLoader.LoadSettings<AppSettings>("settings.json");
 
+                var ratio = (decimal)settings.AddonRowCount / settings.AddonColumnCount;
+
+                var addonHeight = (int)(addonWidth * ratio);
+
                 InGameAddonLocation = new Rectangle(
                     bottomLeft.X + pxOffset,
-                    bottomLeft.Y + bottomLeft.Height - pxOffset - frameSize * settings.AddonRowCount,
-                    frameSize * settings.AddonColumnCount,
-                    frameSize * settings.AddonRowCount);
+                    bottomLeft.Y + bottomLeft.Height - pxOffset - addonHeight,
+                    addonWidth,
+                    addonHeight);
 
                 if (InGameAddonLocation.Height == 0 || InGameAddonLocation.Width == 0)
                 {
                     InGameAddonLocation = Rectangle.Empty;
+                }
+                else
+                {
+                    Console.WriteLine("Ingame addon successfully located on screen: " + InGameAddonLocation);
                 }
             }
             catch (Exception ex)
@@ -111,7 +124,7 @@ namespace WowCyborg.Core.Handlers
                     break;
                 }
             }
-            return width / 4;
+            return width;
         }
 
 

@@ -37,7 +37,7 @@ namespace WowCyborg.Core.EventDispatchers
 
         protected bool AddonIsGreenAt(int x, int y)
         {
-            if (AddonScreenshotSize.Width == 1 || AddonScreenshotSize.Height == 1)
+            if (AddonScreenshotSize.Width <= 1 || AddonScreenshotSize.Height <= 1)
             {
                 return false;
             }
@@ -49,7 +49,7 @@ namespace WowCyborg.Core.EventDispatchers
 
         protected bool AddonIsRedAt(int x, int y)
         {
-            if (AddonScreenshotSize.Width == 1 || AddonScreenshotSize.Height == 1)
+            if (AddonScreenshotSize.Width <= 1 || AddonScreenshotSize.Height <= 1)
             {
                 return false;
             }
@@ -67,6 +67,11 @@ namespace WowCyborg.Core.EventDispatchers
 
         protected Color GetColorAt(int x, int y)
         {
+            if (AddonScreenshotSize.Width <= 1 || AddonScreenshotSize.Height <= 1)
+            {
+                return Color.Magenta;
+            }
+
             var frameWidth = AddonScreenshotSize.Width / _appSettings.AddonColumnCount;
             var frameHeight = AddonScreenshotSize.Height / _appSettings.AddonRowCount;
             var xPos = (frameWidth * x);
@@ -78,6 +83,11 @@ namespace WowCyborg.Core.EventDispatchers
 
         private Color TryGetPixelAt(int x, int y)
         {
+            if (AddonScreenshotSize.Width <= 1 || AddonScreenshotSize.Height <= 1)
+            {
+                return Color.Magenta;
+            }
+
             try
             {
                 return AddonScreenshot.GetPixel(x, y);

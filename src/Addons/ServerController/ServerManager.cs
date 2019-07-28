@@ -30,6 +30,7 @@ namespace ServerController
             _listener.Start();
             Logger.Log($"Server successfully started, GET examples:\r\n" +
                 $"http://{ipAddress}/currentPosition\r\n" +
+                $"http://{ipAddress}/isRunning\r\n" +
                 $"http://{ipAddress}/moveTo?x=0.43&z=0.51\r\n", ConsoleColor.Green);
 
             Task.Run(() => {
@@ -79,6 +80,11 @@ namespace ServerController
                 }
 
                 return JsonConvert.SerializeObject(currentTransform);
+            }
+            else if(rawUrl == "/isRunning")
+            {
+                var isRunning = _botApi.IsRunning();
+                return isRunning.ToString();
             }
             else if (rawUrl.IndexOf("/moveTo?") == 0)
             {

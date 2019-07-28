@@ -24,6 +24,9 @@ namespace WowCyborg.PluginUtilities
             _botRunner.FaceTowards(new Vector3(x, 0, z), onDestinationReached);
         }
 
+        public bool IsRunning()
+            => _botRunner.TargetLocation != null;
+        
         public BotTransform GetCurrentTransform()
         {
             var currentTransform = _botRunner.CurrentTransform;
