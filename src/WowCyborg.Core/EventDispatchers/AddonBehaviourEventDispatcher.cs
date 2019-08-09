@@ -59,6 +59,18 @@ namespace WowCyborg.Core.EventDispatchers
             return color.R > 250 && color.G == 0 && color.B == 0;
         }
 
+        protected bool AddonIsBlueAt(int x, int y)
+        {
+            if (AddonScreenshotSize.Width <= 1 || AddonScreenshotSize.Height <= 1)
+            {
+                return false;
+            }
+
+            var color = GetColorAt(x, y);
+
+            return color.R == 0 && color.G == 0 && color.B > 250;
+        }
+
         protected string GetCharacterAt(int x, int y)
             => GetCharacterFromColor(GetColorAt(x, y));
 

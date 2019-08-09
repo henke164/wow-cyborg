@@ -42,6 +42,8 @@ namespace WowCyborg.Core
 
         public void MoveTo(Vector3 target, Action onDestinationReached = null)
         {
+            StopMovement();
+
             _onDestinationReached = onDestinationReached;
 
             OnLog("Move to:" + target.X + "," + target.Z);
@@ -139,6 +141,7 @@ namespace WowCyborg.Core
             EventManager.StartEventDispatcher(typeof(CombatChangedDispatcher));
             EventManager.StartEventDispatcher(typeof(CombatCastingDispatcher));
             EventManager.StartEventDispatcher(typeof(WrongFacingDispatcher));
+            EventManager.StartEventDispatcher(typeof(TooFarAwayDispatcher));
         }
     }
 }

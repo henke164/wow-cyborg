@@ -1,5 +1,5 @@
 ﻿{
-  "botType": "",
+  "botType": "soloRunner",
   "serverAddress": "http://betmate.io:3000",
   "addonColumnCount": 4,
   "addonRowCount": 6

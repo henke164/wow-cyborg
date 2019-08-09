@@ -1,9 +1,24 @@
 WowCyborg_AOE_Rotation = false;
+WowCyborg_CLASSIC = true;
 WowCyborg_CURRENTATTACK = "-";
-WowCyborg_HasFocus = false;
 
 local spellButtonTexture;
 local buttonCombinerTexture;
+
+function CreateDefaultFrame(x, y, width, height)
+  local frame = CreateFrame("Frame");
+  frame:ClearAllPoints();
+  frame:SetPoint("BOTTOMLEFT", UIParent, "BOTTOMLEFT", x, y);
+  frame:SetWidth(width);
+  frame:SetHeight(height);
+  local texture = frame:CreateTexture("WhiteTexture", "ARTWORK");
+  texture:SetWidth(width);
+  texture:SetHeight(height);
+  texture:ClearAllPoints();
+  texture:SetColorTexture(0, 0, 0);
+  texture:SetAllPoints(frame);
+  return frame, texture;
+end
 
 function CreateRotationFrame()
   frame, spellButtonTexture = CreateDefaultFrame(frameSize * 2, frameSize, frameSize, frameSize);
@@ -18,11 +33,6 @@ function CreateRotationFrame()
     end
   end)
 
-  frame:RegisterEvent("PLAYER_FOCUS_CHANGED");
-  frame:SetScript("OnEvent", function(self, event, ...)
-    WowCyborg_HasFocus = UnitExists("Focus");
-  end)
-  
   RenderFontFrame();
 end
 
@@ -72,8 +82,6 @@ function FindDebuff(target, buffName)
 end
 
 function IsCastable(spellName, requiredEnergy)
-  local spell, _, _, _, endTime = UnitCastingInfo("player");
-
   local energy = UnitPower("player");
   local lastCast, totalCd = GetSpellCooldown(spellName, "spell");
 
@@ -91,7 +99,7 @@ function IsCastable(spellName, requiredEnergy)
       return true;
     end
   end
-
+  
   local charges = GetSpellCharges(spellName);
   if (charges == nil) == false then
     if charges > 0 then
@@ -128,7 +136,6 @@ function IsCastableAtEnemyTarget(spellName, requiredEnergy)
   if IsSpellInRange(spellName, "target") == 0 then
     return false;
   end
-
   if UnitCanAttack("player", "target") == false then
     return false;
   end

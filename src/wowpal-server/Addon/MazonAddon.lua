@@ -1,23 +1,8 @@
 frameSize = 5;
 
-function CreateDefaultFrame(x, y, width, height)
-  local frame = CreateFrame("Frame");
-  frame:ClearAllPoints();
-  frame:SetPoint("BOTTOMLEFT", UIParent, "BOTTOMLEFT", x, y);
-  frame:SetWidth(width);
-  frame:SetHeight(height);
-  local texture = frame:CreateTexture("WhiteTexture", "ARTWORK");
-  texture:SetWidth(width);
-  texture:SetHeight(height);
-  texture:ClearAllPoints();
-  texture:SetColorTexture(0, 0, 0);
-  texture:SetAllPoints(frame);
-  return frame, texture;
-end
-
 function CreateWrapperFrame()
   local frame, texture = CreateDefaultFrame(0, 0, frameSize * 4, frameSize);
-  texture:SetColorTexture(1, 0, 0.5);
+  texture:SetColorTexture(1, 0, 1);
 end
 
 function CreateCombatFrame()
@@ -57,12 +42,16 @@ function CreateFacingCheckFrame()
 
   frame:SetScript("OnEvent", function(self, event, ...)
     if event == "UI_ERROR_MESSAGE" then
-      _, mesage = ...;
-      if mesage == "Target needs to be in front of you." then
+      code, mesage = ...;
+      if code == 254 or code == 50 then
         texture:SetColorTexture(1, 0, 0);
         lastCheck = GetTime();
       end
-      return
+
+      if code == 255 then
+        texture:SetColorTexture(0, 0, 1);
+        lastCheck = GetTime();
+      end
     end
   end)
 end

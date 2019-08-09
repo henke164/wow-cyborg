@@ -30,9 +30,9 @@ namespace WowCyborg
 
         static void InitializeBotRunner(AppSettings settings)
         {
-            switch (settings.BotType)
+            switch (settings.BotType.ToLower())
             {
-                case "soloRunner":
+                case "solorunner":
                     BotRunner = new SoloRunner();
                     break;
                 case "follower":

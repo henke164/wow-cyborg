@@ -1,6 +1,4 @@
-﻿using System.Threading;
-using System.Threading.Tasks;
-using System.Windows.Forms;
+﻿using System.Windows.Forms;
 using WowCyborg.Core;
 using WowCyborg.Core.Commanders;
 using WowCyborg.Core.Handlers;
@@ -47,6 +45,11 @@ namespace WowCyborg.BotProfiles
             EventManager.On("KeyPressRequested", (Event ev) =>
             {
                 var keyRequest = (KeyPressRequest)ev.Data;
+                if (keyRequest.Key == Keys.D1)
+                {
+                    _isInCombat = true;
+                }
+
                 if (keyRequest.ModifierKey != Keys.None)
                 {
                     KeyHandler.ModifiedKeypress(keyRequest.ModifierKey, keyRequest.Key);
@@ -59,7 +62,12 @@ namespace WowCyborg.BotProfiles
 
             EventManager.On("WrongFacing", (Event _) =>
             {
-                KeyHandler.PressKey(Keys.D, 200);
+                KeyHandler.PressKey(Keys.D, 100);
+            });
+
+            EventManager.On("TooFarAway", (Event _) =>
+            {
+                KeyHandler.PressKey(Keys.Tab);
             });
         }
     }
