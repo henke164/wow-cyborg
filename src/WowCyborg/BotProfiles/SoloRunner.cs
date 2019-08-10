@@ -20,10 +20,6 @@ namespace WowCyborg.BotProfiles
         public SoloRunner()
         {
             _enemyTargettingCommander = new EnemyTargettingCommander(KeyHandler);
-            ShouldPauseMovement = () =>
-            {
-                return _isInCombat;
-            };
         }
 
         // Check if player is in combat without pressing any keys.
@@ -60,6 +56,7 @@ namespace WowCyborg.BotProfiles
 
                 if (_isInCombat)
                 {
+                    PauseMovement();
                     RunTargetSwitchHandler();
                     return;
                 }
@@ -84,6 +81,16 @@ namespace WowCyborg.BotProfiles
                 else
                 {
                     KeyHandler.PressKey(keyRequest.Key);
+                    if (keyRequest.Key == Keys.D9 && !_isInCombat && !Paused)
+                    {
+                        Console.WriteLine("Pausing movement...");
+                        Task.Run(() =>
+                        {
+                            PauseMovement();
+                            Thread.Sleep(10000);
+                            ResumeMovement();
+                        });
+                    }
                 }
 
                 if (_isInCombat)
@@ -94,7 +101,14 @@ namespace WowCyborg.BotProfiles
 
             EventManager.On("WrongFacing", (Event _) =>
             {
-                KeyHandler.PressKey(Keys.S, 1500);
+                if (_isInCombat)
+                {
+                    KeyHandler.PressKey(Keys.S, 1500);
+                }
+                else
+                {
+                    KeyHandler.PressKey(Keys.D, 500);
+                }
             });
 
             EventManager.On("TooFarAway", (Event _) =>

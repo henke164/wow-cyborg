@@ -28,7 +28,8 @@ namespace WowCyborg.Core.Commanders
                 {
                     if (IsLootLocation(scanArea.X + x, scanArea.Y + y))
                     {
-                        lootLocation = new Point(scanArea.X + x, scanArea.Y + y);
+                        var offset = 20;
+                        lootLocation = new Point(scanArea.X + x + offset, scanArea.Y + y + offset);
                     }
                 }
             }

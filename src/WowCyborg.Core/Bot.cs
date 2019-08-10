@@ -14,8 +14,8 @@ namespace WowCyborg.Core
         public Action<string> OnLog { get; set; } = (string s) => { };
         public Transform CurrentTransform { get; protected set; }
         public Vector3 TargetLocation { get; protected set; }
-        protected Func<bool> ShouldPauseMovement = () => false;
         protected KeyHandler KeyHandler;
+        protected bool Paused = false;
 
         private Action _onDestinationReached;
         private RotationCommander _rotationCommander;
@@ -50,7 +50,7 @@ namespace WowCyborg.Core
             TargetLocation = target;
 
             _rotationCommander.FaceLocation(TargetLocation, () => {
-                if (TargetLocation == null || ShouldPauseMovement())
+                if (TargetLocation == null || Paused)
                 {
                     return;
                 }
@@ -66,8 +66,20 @@ namespace WowCyborg.Core
             _movementCommander.Stop();
         }
 
+        public void PauseMovement()
+        {
+            Paused = true;
+        }
+
         public void ResumeMovement()
         {
+            if (!Paused)
+            {
+                return;
+            }
+
+            Paused = false;
+
             if (TargetLocation == null)
             {
                 return;
@@ -118,7 +130,7 @@ namespace WowCyborg.Core
                 {
                     Thread.Sleep(1000);
 
-                    if (TargetLocation == null || ShouldPauseMovement())
+                    if (TargetLocation == null || Paused)
                     {
                         _rotationCommander.Abort();
                         _movementCommander.Stop();

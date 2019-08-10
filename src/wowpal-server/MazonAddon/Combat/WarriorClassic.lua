@@ -14,6 +14,7 @@ local heroicStrike = "3";
 local thunderClap = "4";
 local battleshout = "5";
 local attack = "6";
+local eat = "9";
 
 
 -- Multi target
@@ -42,14 +43,17 @@ function RenderSingleTargetRotation()
     end
   end
   
+  local tcDebuff = FindDebuff("target", "Thunder Clap");
+  if tcDebuff ~= nil then
+    if IsCastableAtEnemyTarget("Heroic Strike", 15) then
+      WowCyborg_CURRENTATTACK = "Heroic Strike";
+      return SetSpellRequest(heroicStrike);
+    end
+  end
+
   if IsCastableAtEnemyTarget("Thunder Clap", 15) then
     WowCyborg_CURRENTATTACK = "Thunder Clap";
     return SetSpellRequest(thunderClap);
-  end
-
-  if IsCastableAtEnemyTarget("Heroic Strike", 15) then
-    WowCyborg_CURRENTATTACK = "Heroic Strike";
-    return SetSpellRequest(heroicStrike);
   end
   
   if IsCastableAtEnemyTarget("Rend", 0) then
@@ -59,11 +63,17 @@ function RenderSingleTargetRotation()
     end
     
     if IsCastableAtEnemyTarget("Rend", 0) then
-      WowCyborg_CURRENTATTACK = "Thunder Clap";
-      return SetSpellRequest(thunderClap);
+      WowCyborg_CURRENTATTACK = "Heroic Strike";
+      return SetSpellRequest(heroicStrike);
     end  
   end
   
+  local hp = GetHealthPercentage("player");
+  if hp < 70 then
+    WowCyborg_CURRENTATTACK = "eat";
+    return SetSpellRequest(eat);
+  end
+
   WowCyborg_CURRENTATTACK = "-";
   return SetSpellRequest(nil);
 end
