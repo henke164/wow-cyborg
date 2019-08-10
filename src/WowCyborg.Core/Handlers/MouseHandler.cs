@@ -54,5 +54,10 @@ namespace WowCyborg.Core.Handlers
 
             Thread.Sleep(200);
         }
+
+        public static void SetMousePosition(int x, int y)
+        {
+            SetCursorPos(x, y);
+        }
     }
 }

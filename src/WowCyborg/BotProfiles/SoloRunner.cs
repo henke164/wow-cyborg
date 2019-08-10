@@ -38,7 +38,9 @@ namespace WowCyborg.BotProfiles
 
                 if (!_isInCombat)
                 {
-                    ResumeMovement();
+                    _lootingCommander.Loot(() => { 
+                        ResumeMovement();
+                    });
                 }
             });
 

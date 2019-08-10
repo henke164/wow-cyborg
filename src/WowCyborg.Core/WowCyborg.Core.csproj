@@ -95,6 +95,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Handlers\KeyHandler.cs" />
     <Compile Include="Handlers\MouseHandler.cs" />
+    <Compile Include="Utilities\CursorUtilities.cs" />
     <Compile Include="Utilities\Rect.cs" />
     <Compile Include="Utilities\SettingsLoader.cs" />
     <Compile Include="Utilities\Transform.cs" />
@@ -123,6 +124,11 @@
     <PackageReference Include="Newtonsoft.Json">
       <Version>12.0.1</Version>
     </PackageReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Images\loot-cursor.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

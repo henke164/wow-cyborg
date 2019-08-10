@@ -44,7 +44,7 @@ namespace WowCyborg.Core.EventDispatchers
 
             var color = GetColorAt(x, y);
 
-            return color.R == 0 && color.G > 250 && color.B == 0;
+            return color.R == 0 && color.G > 230 && color.B == 0;
         }
 
         protected bool AddonIsRedAt(int x, int y)
@@ -56,7 +56,7 @@ namespace WowCyborg.Core.EventDispatchers
 
             var color = GetColorAt(x, y);
 
-            return color.R > 250 && color.G == 0 && color.B == 0;
+            return color.R > 230 && color.G == 0 && color.B == 0;
         }
 
         protected bool AddonIsBlueAt(int x, int y)

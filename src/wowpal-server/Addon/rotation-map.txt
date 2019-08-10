@@ -16,3 +16,4 @@ mwmonkfollower	Combat/MonkMistweaverFollower.lua
 eleshamanfollower	Combat/ShamanEleFollower.lua
 bmhunterfollower	Combat/HunterBMFollower.lua
 classicwarrior	Combat/WarriorClassic.lua
+classicdruid	Combat/DruidClassic.lua
