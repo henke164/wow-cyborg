@@ -83,6 +83,7 @@ namespace WowCyborg.BotProfiles
                 }
                 else
                 {
+                    Console.WriteLine(keyRequest.Key);
                     KeyHandler.PressKey(keyRequest.Key);
                 }
 

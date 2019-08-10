@@ -52,13 +52,13 @@ function RenderSingleTargetRotation()
     return SetSpellRequest(heroicStrike);
   end
   
-  if IsCastableAtEnemyTarget("Heroic Strike", 0) then
+  if IsCastableAtEnemyTarget("Rend", 0) then
     if IsCurrentSpell(6603) == false then
       WowCyborg_CURRENTATTACK = "Attack";
       return SetSpellRequest(attack);
     end
     
-    if IsCastableAtEnemyTarget("Heroic Strike", 0) then
+    if IsCastableAtEnemyTarget("Rend", 0) then
       WowCyborg_CURRENTATTACK = "Thunder Clap";
       return SetSpellRequest(thunderClap);
     end  
