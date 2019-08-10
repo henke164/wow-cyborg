@@ -83,7 +83,6 @@ namespace WowCyborg.BotProfiles
                     KeyHandler.PressKey(keyRequest.Key);
                     if (keyRequest.Key == Keys.D9 && !_isInCombat && !Paused)
                     {
-                        Console.WriteLine("Pausing movement...");
                         Task.Run(() =>
                         {
                             PauseMovement();
@@ -101,14 +100,8 @@ namespace WowCyborg.BotProfiles
 
             EventManager.On("WrongFacing", (Event _) =>
             {
-                if (_isInCombat)
-                {
-                    KeyHandler.PressKey(Keys.S, 1500);
-                }
-                else
-                {
-                    KeyHandler.PressKey(Keys.D, 500);
-                }
+                PauseMovement();
+                KeyHandler.PressKey(Keys.S, 1500);
             });
 
             EventManager.On("TooFarAway", (Event _) =>
