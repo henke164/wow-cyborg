@@ -58,7 +58,7 @@ namespace CombatRotationInstaller
             try
             {
                 _addonInstaller.FetchRotations();
-                _addonInstaller.SetRotation(commandParameters[1]);
+                var addonPath = _addonInstaller.SetRotation(commandParameters[1]);
                 Logger.Log($"{commandParameters[1]} successfully selected.", ConsoleColor.Green);
 
                 Logger.Log($"Run /reload command in WoW", ConsoleColor.White);
@@ -66,7 +66,7 @@ namespace CombatRotationInstaller
                 Logger.Log($"Press Caps Lock to toggle between single or multi target.", ConsoleColor.White);
                 Logger.Log($"------------------------", ConsoleColor.Yellow);
                 Logger.Log($"Setup your keybindings to following:", ConsoleColor.Yellow);
-                Logger.Log(_addonInstaller.GetRotationInstructions(), ConsoleColor.Yellow);
+                Logger.Log(_addonInstaller.GetRotationInstructions(addonPath), ConsoleColor.Yellow);
             }
             catch (Exception ex)
             {

@@ -68,6 +68,11 @@ namespace WowCyborg.Core
 
         public void ResumeMovement()
         {
+            if (TargetLocation == null)
+            {
+                return;
+            }
+
             MoveTo(TargetLocation, _onDestinationReached);
         }
 

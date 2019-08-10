@@ -34,7 +34,7 @@ function CreateFacingCheckFrame()
   local lastCheck = GetTime();
   frame:SetScript("OnUpdate", function(self, event, ...)
     local time = GetTime();
-    if time > lastCheck + 1 then
+    if time > lastCheck + 0.5 then
       lastCheck = time;
       texture:SetColorTexture(0, 1, 0);
     end
@@ -42,8 +42,8 @@ function CreateFacingCheckFrame()
 
   frame:SetScript("OnEvent", function(self, event, ...)
     if event == "UI_ERROR_MESSAGE" then
-      code, mesage = ...;
-      if code == 254 or code == 50 then
+      code, msg = ...;
+      if code == 254 then
         texture:SetColorTexture(1, 0, 0);
         lastCheck = GetTime();
       end

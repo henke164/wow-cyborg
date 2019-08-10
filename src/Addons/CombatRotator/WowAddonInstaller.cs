@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
+using System.Text.RegularExpressions;
 using WowCyborg.PluginUtilities;
 
 namespace CombatRotationInstaller
@@ -26,29 +28,31 @@ namespace CombatRotationInstaller
             Console.WriteLine($"Successfully downloaded {Rotations.Count} rotations");
         }
 
-        public string GetRotationInstructions()
+        public string GetRotationInstructions(string rotationFilePath)
         {
-            var rotationFile = $"{_addonFolderPath}/Combat/Rotation.lua";
-            using (var sr = new StreamReader(rotationFile))
+            using (var sr = new StreamReader(rotationFilePath))
             {
                 var content = sr.ReadToEnd();
                 return content.Split(new string[] { "]]--" }, StringSplitOptions.None)[0].Replace("--[[", "");
             }
         }
 
-        public void SetRotation(string rotationName)
+        public string SetRotation(string rotationName)
         {
             if (string.IsNullOrEmpty(_addonFolderPath))
             {
                 Console.WriteLine($"Addon folder location is not located. Try again when WoW is running.", ConsoleColor.Red);
-                return;
+                return string.Empty;
             }
 
             var fileName = Rotations[rotationName];
             
             var rotationFile = _apiClient.GetFile(fileName);
-
-            WriteFile($"{_addonFolderPath}/Combat/Rotation.lua", rotationFile.Content);
+            var filePathArray = rotationFile.FileName.Split('/').ToList();
+            var filePath = string.Join("/", filePathArray.Take(filePathArray.Count() - 1));
+            var addonPath = $"{_addonFolderPath}/{filePath}/Rotation.lua";
+            WriteFile(addonPath, rotationFile.Content);
+            return addonPath;
         }
 
         private static void WriteFile(string fullPath, string content)

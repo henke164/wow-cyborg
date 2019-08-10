@@ -49,7 +49,7 @@ namespace WowCyborg
             return new ApplicationSettings
             {
                 ServerUrl = settings.ServerAddress,
-                WowAddonPath = $"{AddonFolderHandler.GetAddonFolderPath()}\\MazonAddon",
+                WowAddonPath = $"{AddonFolderHandler.GetAddonFolderPath()}",
                 Bot = BotRunner
             };
         }

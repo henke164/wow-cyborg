@@ -35,7 +35,7 @@ namespace WowAddonInstaller
             
             foreach (var file in addonFiles)
             {
-                WriteFile($"{_addonFolderPath}/{file.FileName}", file.Content);
+                WriteFile($"{_addonFolderPath}\\{file.FileName}", file.Content);
             }
 
             return true;

@@ -3,13 +3,17 @@
   1         Charge
   2         Rend
   3         Heroic strike
-  4         Battleshout
+  4         Thunder Clap
+  5         Battleshout
+  6         Attack
 ]]--
 
 local charge = "1";
 local rend = "2";
 local heroicStrike = "3";
-local battleshout = "4";
+local thunderClap = "4";
+local battleshout = "5";
+local attack = "6";
 
 
 -- Multi target
@@ -24,6 +28,12 @@ function RenderSingleTargetRotation()
     return SetSpellRequest(charge);
   end
 
+  local bsBuff = FindBuff("player", "Battle Shout");
+  if bsBuff == nil and IsCastable("Battle Shout", 10) then
+    WowCyborg_CURRENTATTACK = "Battle Shout";
+    return SetSpellRequest(battleshout);
+  end
+
   local rendDot = FindDebuff("target", "Rend");
   if rendDot == nil then
     if IsCastableAtEnemyTarget("Rend", 10) then
@@ -32,10 +42,9 @@ function RenderSingleTargetRotation()
     end
   end
   
-  local bsBuff = FindBuff("player", "Battle Shout");
-  if bsBuff == nil and IsCastable("Battle Shout", 10) then
-    WowCyborg_CURRENTATTACK = "Battle Shout";
-    return SetSpellRequest(battleshout);
+  if IsCastableAtEnemyTarget("Thunder Clap", 15) then
+    WowCyborg_CURRENTATTACK = "Thunder Clap";
+    return SetSpellRequest(thunderClap);
   end
 
   if IsCastableAtEnemyTarget("Heroic Strike", 15) then
@@ -43,8 +52,16 @@ function RenderSingleTargetRotation()
     return SetSpellRequest(heroicStrike);
   end
   
+  if IsCastableAtEnemyTarget("Attack", 0) then
+    print(IsCurrentSpell(6603));
+    if IsCurrentSpell(6603) == false then
+      WowCyborg_CURRENTATTACK = "Attack";
+      return SetSpellRequest(attack);
+    end
+  end
+  
   WowCyborg_CURRENTATTACK = "-";
   return SetSpellRequest(nil);
 end
 
-print("Test rotation loaded");
+print("Classic warrior rotation loaded!");

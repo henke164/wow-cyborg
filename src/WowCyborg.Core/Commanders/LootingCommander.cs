@@ -54,7 +54,7 @@ namespace WowCyborg.Core.Commanders
                 Screen.PrimaryScreen.Bounds.Width / 2,
                 Screen.PrimaryScreen.Bounds.Height / 2);
 
-            var size = new Size(400, 200);
+            var size = new Size(200, 200);
 
             return new Rectangle(
                 center.X - (size.Width / 2),

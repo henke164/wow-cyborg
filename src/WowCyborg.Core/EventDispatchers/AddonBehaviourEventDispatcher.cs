@@ -68,7 +68,7 @@ namespace WowCyborg.Core.EventDispatchers
 
             var color = GetColorAt(x, y);
 
-            return color.R == 0 && color.G == 0 && color.B > 250;
+            return color.R == 0 && color.G == 0 && color.B > 230;
         }
 
         protected string GetCharacterAt(int x, int y)
