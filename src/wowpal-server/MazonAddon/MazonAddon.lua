@@ -43,7 +43,8 @@ function CreateFacingCheckFrame()
   frame:SetScript("OnEvent", function(self, event, ...)
     if event == "UI_ERROR_MESSAGE" then
       code, msg = ...;
-      if code == 254 then
+      if msg == "Target needs to be in front of you" or
+        msg == "You are facing the wrong way!" then
         texture:SetColorTexture(1, 0, 0);
         lastCheck = GetTime();
       end

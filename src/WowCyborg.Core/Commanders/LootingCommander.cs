@@ -38,6 +38,7 @@ namespace WowCyborg.Core.Commanders
                 MouseHandler.RightClick(lootLocation.X, lootLocation.Y);
             }
 
+            Thread.Sleep(1500);
             onDone();
         }
 

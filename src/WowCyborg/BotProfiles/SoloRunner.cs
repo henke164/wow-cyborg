@@ -94,7 +94,7 @@ namespace WowCyborg.BotProfiles
 
             EventManager.On("WrongFacing", (Event _) =>
             {
-                KeyHandler.PressKey(Keys.S, 500);
+                KeyHandler.PressKey(Keys.S, 1500);
             });
 
             EventManager.On("TooFarAway", (Event _) =>
