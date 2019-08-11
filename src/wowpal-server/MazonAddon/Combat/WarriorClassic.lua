@@ -18,7 +18,7 @@ local bloodrage = "7";
 local eat = "9";
 
 function IsMelee()
-  return IsCastableAtEnemyTarget("Rend", 0);
+  return IsSpellInRange("Rend", "target") == 1;
 end
 
 -- Multi target

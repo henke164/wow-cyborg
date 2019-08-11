@@ -82,6 +82,11 @@ function FindDebuff(target, buffName)
 end
 
 function IsCastable(spellName, requiredEnergy)
+  local _, known = IsUsableSpell(spellName);
+  if (known == false) then
+    return false;
+  end
+
   local energy = UnitPower("player");
   local lastCast, totalCd = GetSpellCooldown(spellName, "spell");
 
