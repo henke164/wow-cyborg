@@ -16,6 +16,7 @@ namespace WowCyborg.BotProfiles
         private LootingCommander _lootingCommander = new LootingCommander();
         private bool _isInCombat = false;
         private DateTime _timeSinceLastAttackInCombat;
+        private Task _restingTask;
 
         public SoloRunner()
         {
@@ -44,7 +45,7 @@ namespace WowCyborg.BotProfiles
         {
             EventManager.On("PlayerTransformChanged", (Event _) =>
             {
-                if (TargetLocation != null && !_isInCombat)
+                if (TargetLocation != null && !_isInCombat && !Paused)
                 {
                     _enemyTargettingCommander.Update();
                 }
@@ -61,7 +62,12 @@ namespace WowCyborg.BotProfiles
                     return;
                 }
 
-                _lootingCommander.Loot(() => { 
+                while (_restingTask != null && _restingTask.Status != TaskStatus.RanToCompletion)
+                {
+                    Thread.Sleep(1000);
+                }
+
+                _lootingCommander.Loot(() => {
                     ResumeMovement();
                 });
             });
@@ -69,6 +75,12 @@ namespace WowCyborg.BotProfiles
             EventManager.On("KeyPressRequested", (Event ev) =>
             {
                 var keyRequest = (KeyPressRequest)ev.Data;
+
+                if (Paused && keyRequest.Key == Keys.D1)
+                {
+                    return;
+                }
+
                 if (keyRequest.Key == Keys.D1)
                 {
                     _isInCombat = true;
@@ -80,14 +92,18 @@ namespace WowCyborg.BotProfiles
                 }
                 else
                 {
+                    
                     KeyHandler.PressKey(keyRequest.Key);
-                    if (keyRequest.Key == Keys.D9 && !_isInCombat && !Paused)
+                    if (keyRequest.Key == Keys.D9)
                     {
-                        Task.Run(() =>
+                        _restingTask = Task.Run(() =>
                         {
                             PauseMovement();
-                            Thread.Sleep(10000);
-                            ResumeMovement();
+                            Thread.Sleep(1000);
+                            if (!_isInCombat)
+                            {
+                                Paused = false;
+                            }
                         });
                     }
                 }

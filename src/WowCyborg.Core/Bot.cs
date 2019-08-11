@@ -73,11 +73,6 @@ namespace WowCyborg.Core
 
         public void ResumeMovement()
         {
-            if (!Paused)
-            {
-                return;
-            }
-
             Paused = false;
 
             if (TargetLocation == null)

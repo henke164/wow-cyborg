@@ -36,7 +36,7 @@ function RenderSingleTargetRotation()
   end
 
   if IsMelee() ~= true then
-    if hp < 70 then
+    if hp < 80 then
       WowCyborg_CURRENTATTACK = "eat";
       return SetSpellRequest(eat);
     end

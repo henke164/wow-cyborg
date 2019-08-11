@@ -11,6 +11,9 @@ namespace WowCyborg.Core.Handlers
 {
     public static class AddonLocator
     {
+        [DllImport("User32.dll")]
+        static extern int SetForegroundWindow(IntPtr point);
+
         [DllImport("user32.dll")]
         private static extern int GetWindowRect(IntPtr hwnd, out Rectangle rect);
 
@@ -50,7 +53,9 @@ namespace WowCyborg.Core.Handlers
             try
             {
                 Rectangle rect;
-                GetWindowRect(GetGameHandle(), out rect);
+                var handle = GetGameHandle();
+                GetWindowRect(handle, out rect);
+                SetForegroundWindow(handle);
                 rect.Width -= rect.X;
                 rect.Height -= rect.Y;
 
