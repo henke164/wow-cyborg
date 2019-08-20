@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.Runtime.InteropServices;
+using System.Threading;
 using System.Windows.Forms;
 using WowCyborg.Core.Models;
 using WowCyborg.Core.Utilities;
@@ -56,42 +57,38 @@ namespace WowCyborg.Core.Handlers
                 var handle = GetGameHandle();
                 GetWindowRect(handle, out rect);
                 SetForegroundWindow(handle);
+                Thread.Sleep(500);
                 rect.Width -= rect.X;
                 rect.Height -= rect.Y;
 
                 Bitmap clone;
                 var bounds = Screen.GetBounds(Point.Empty);
-                var bottomLeft = new Rectangle(rect.X, rect.Y + rect.Height - 100, 400, 100);
-
+                var winBottomLeft = new Point(rect.X, rect.Y + rect.Height);
+                var scanArea = new Rectangle(winBottomLeft.X, winBottomLeft.Y - 500, 500, 500);
                 using (var bitmap = new Bitmap(bounds.Width, bounds.Height))
                 {
                     using (var g = Graphics.FromImage(bitmap))
                     {
                         g.CopyFromScreen(Point.Empty, Point.Empty, bounds.Size);
                     }
-                    clone = bitmap.Clone(bottomLeft, PixelFormat.Format24bppRgb);
+                    clone = bitmap.Clone(scanArea, PixelFormat.Format24bppRgb);
                 }
 
-                var pxOffset = bottomLeft.X > 0 ? 9 : 1;
+                var addonBottomLeft = FindAddonBottomLeft(clone);
+                var frameSize = CalculateFrameSize(addonBottomLeft, clone);
 
-                var addonWidth = CalculateFrameWidth(clone, pxOffset) + pxOffset;
-
-                if (addonWidth <= pxOffset * 2)
+                if (frameSize <= 1)
                 {
                     return;
                 }
 
                 var settings = SettingsLoader.LoadSettings<AppSettings>("settings.json");
 
-                var ratio = (decimal)settings.AddonRowCount / settings.AddonColumnCount;
-
-                var addonHeight = (int)(addonWidth * ratio);
-
                 InGameAddonLocation = new Rectangle(
-                    bottomLeft.X + pxOffset,
-                    bottomLeft.Y + bottomLeft.Height - pxOffset - addonHeight,
-                    addonWidth,
-                    addonHeight);
+                    scanArea.X + addonBottomLeft.X,
+                    scanArea.Y + addonBottomLeft.Y - (frameSize * settings.AddonRowCount) + 1,
+                    frameSize * settings.AddonColumnCount,
+                    frameSize * settings.AddonRowCount);
 
                 if (InGameAddonLocation.Height == 0 || InGameAddonLocation.Width == 0)
                 {
@@ -109,27 +106,38 @@ namespace WowCyborg.Core.Handlers
             }
         }
 
-        private static int CalculateFrameWidth(Bitmap b, int pxOffset)
+        private static bool IsMarkerColor(Color c)
+            => c.R > 250 && c.G == 0 && c.B > 120 && c.B < 150;
+        private static Point FindAddonBottomLeft(Bitmap b)
+        {
+            var bottomLeft = new Point(0, b.Height - 1);
+            for (var x = 0; x < 100; x++)
+            {
+                var pixel = b.GetPixel(bottomLeft.X + x, bottomLeft.Y - x);
+                if (IsMarkerColor(pixel))
+                {
+                    return new Point(bottomLeft.X + x, bottomLeft.Y - x);
+                }
+            }
+            return bottomLeft;
+        }
+
+        private static int CalculateFrameSize(Point bottomLeft, Bitmap b)
         {
             var width = 0;
-            Color firstPixel = Color.White;
-
-            for (var x = 0; x < b.Width; x++)
+            for (var x = bottomLeft.X; x < b.Width; x++)
             {
-                var nextPixel = b.GetPixel(x + pxOffset, b.Height - pxOffset);
-                if (firstPixel == Color.White)
+                var pixel = b.GetPixel(x, bottomLeft.Y);
+                if (IsMarkerColor(pixel))
                 {
-                    firstPixel = nextPixel;
-                    continue;
+                    width++;
                 }
-
-                if (firstPixel != nextPixel)
+                else
                 {
-                    width = x;
                     break;
                 }
             }
-            return width;
+            return width / 4;
         }
 
 

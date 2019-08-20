@@ -12,9 +12,11 @@ function CreateCombatFrame()
 
   frame:SetScript("OnEvent", function(self, event, ...)
     if event == "PLAYER_REGEN_DISABLED" then
+      WowCyborg_INCOMBAT = true;
       texture:SetColorTexture(0, 1, 0);
     end
     if event == "PLAYER_REGEN_ENABLED" then
+      WowCyborg_INCOMBAT = false;
       texture:SetColorTexture(1, 0, 0);
     end
   end)

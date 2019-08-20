@@ -86,11 +86,10 @@ namespace WowCyborg.Core.EventDispatchers
 
             var frameWidth = AddonScreenshotSize.Width / _appSettings.AddonColumnCount;
             var frameHeight = AddonScreenshotSize.Height / _appSettings.AddonRowCount;
-            var xPos = (frameWidth * x);
-            var yPos = (frameHeight * y);
+            var xPos = (frameWidth * x) - 1;
+            var yPos = (frameHeight * y) - 1;
 
-            return TryGetPixelAt(xPos - (frameWidth / 2),
-                AddonScreenshotSize.Height - yPos + (frameHeight / 2));
+            return TryGetPixelAt(xPos, AddonScreenshotSize.Height - yPos);
         }
 
         private Color TryGetPixelAt(int x, int y)

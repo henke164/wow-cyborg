@@ -1,6 +1,7 @@
 WowCyborg_AOE_Rotation = false;
 WowCyborg_CLASSIC = true;
 WowCyborg_CURRENTATTACK = "-";
+WowCyborg_INCOMBAT = false;
 
 local spellButtonTexture;
 local buttonCombinerTexture;
@@ -141,6 +142,7 @@ function IsCastableAtEnemyTarget(spellName, requiredEnergy)
   if IsSpellInRange(spellName, "target") == 0 then
     return false;
   end
+  
   if UnitCanAttack("player", "target") == false then
     return false;
   end
