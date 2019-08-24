@@ -34,3 +34,13 @@ src/WowCyborgAddonUtilities/obj/
 /src/WowCyborg.PluginUtilities/obj/Debug/netstandard2.0
 /src/WowCyborg.PluginUtilities/obj
 /src/WowCyborg.PluginUtilities/bin/Debug
+/src/Plugins/CombatRotator/bin
+/src/Plugins/CombatRotator/obj
+/src/Plugins/ServerController/bin
+/src/Plugins/ServerController/obj
+/src/Plugins/WaypointRunner/bin
+/src/Plugins/WaypointRunner/obj
+/src/Plugins/WindowResize/bin/Debug
+/src/Plugins/WindowResize/obj/Debug
+/src/Plugins/WowAddonInstaller/bin
+/src/Plugins/WowAddonInstaller/obj

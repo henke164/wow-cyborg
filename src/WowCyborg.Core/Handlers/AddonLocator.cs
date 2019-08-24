@@ -22,10 +22,11 @@ namespace WowCyborg.Core.Handlers
 
         private static IntPtr GameHandle;
 
-        public static void InitializeGameHandle()
+        public static IntPtr InitializeGameHandle()
         {
             var gameHandle = SetupGameHandle();
             GameHandle = gameHandle;
+            return GameHandle;
         }
 
         private static IntPtr GetGameHandle()
@@ -79,6 +80,8 @@ namespace WowCyborg.Core.Handlers
 
                 if (frameSize <= 1)
                 {
+                    Console.WriteLine("Could not locate addon on screen.");
+                    InGameAddonLocation = new Rectangle(1, 1, 1, 1);
                     return;
                 }
 
@@ -92,7 +95,8 @@ namespace WowCyborg.Core.Handlers
 
                 if (InGameAddonLocation.Height == 0 || InGameAddonLocation.Width == 0)
                 {
-                    InGameAddonLocation = Rectangle.Empty;
+                    Console.WriteLine("Could not locate addon on screen.");
+                    InGameAddonLocation = new Rectangle(1, 1, 1, 1);
                 }
                 else
                 {
@@ -107,7 +111,8 @@ namespace WowCyborg.Core.Handlers
         }
 
         private static bool IsMarkerColor(Color c)
-            => c.R > 250 && c.G == 0 && c.B > 120 && c.B < 150;
+            => c.R > 230 && c.G == 0 && c.B > 120 && c.B < 180;
+
         private static Point FindAddonBottomLeft(Bitmap b)
         {
             var bottomLeft = new Point(0, b.Height - 1);

@@ -59,6 +59,7 @@ namespace WowAddonInstaller
 
         private void RelocateAddon()
         {
+            Console.WriteLine("Relocating addon...");
             AddonLocator.ReCalculateAddonPosition();
             var addonLocation = AddonLocator.GetAddonLocation();
             if (addonLocation.Width == 1 || addonLocation.Height == 1)

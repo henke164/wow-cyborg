@@ -1,4 +1,5 @@
-﻿using System.Windows.Forms;
+﻿using System;
+using System.Windows.Forms;
 using WowCyborg.Core;
 using WowCyborg.Core.Handlers;
 using WowCyborg.Core.Models;
@@ -8,6 +9,11 @@ namespace WowCyborg.BotProfiles
 {
     public class AutoCaster : Bot
     {
+        public AutoCaster(IntPtr hWnd) 
+            : base(hWnd)
+        {
+        }
+
         protected override void SetupBehaviour()
         {
             EventManager.On("KeyPressRequested", (Event ev) =>

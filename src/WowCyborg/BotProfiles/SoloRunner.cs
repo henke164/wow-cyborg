@@ -18,7 +18,8 @@ namespace WowCyborg.BotProfiles
         private DateTime _timeSinceLastAttackInCombat;
         private Task _restingTask;
 
-        public SoloRunner()
+        public SoloRunner(IntPtr hWnd)
+            : base (hWnd)
         {
             _enemyTargettingCommander = new EnemyTargettingCommander(KeyHandler);
         }

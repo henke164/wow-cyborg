@@ -11,6 +11,21 @@
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <PublishUrl>publish\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>x64</PlatformTarget>
@@ -61,15 +76,19 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Addons\CombatRotator\CombatRotationInstaller.csproj">
+    <ProjectReference Include="..\Plugins\CombatRotator\CombatRotationInstaller.csproj">
       <Project>{a51c7427-3901-48a8-b0d2-f514e61288ec}</Project>
       <Name>CombatRotationInstaller</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Addons\ServerController\ServerController.csproj">
+    <ProjectReference Include="..\Plugins\ServerController\ServerController.csproj">
       <Project>{04665ca8-c580-4729-bdce-5dc29f18d3cf}</Project>
       <Name>ServerController</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Addons\WowAddonInstaller\WowAddonInstaller.csproj">
+    <ProjectReference Include="..\Plugins\WindowResize\WindowResize.csproj">
+      <Project>{70510364-196d-44bc-99ce-008a37957df2}</Project>
+      <Name>WindowResize</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Plugins\WowAddonInstaller\WowAddonInstaller.csproj">
       <Project>{64035c88-b9af-4feb-839d-a9d599aa66a9}</Project>
       <Name>WowAddonInstaller</Name>
     </ProjectReference>
@@ -82,6 +101,17 @@
       <Name>WowCyborg.PluginUtilities</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <BootstrapperPackage Include=".NETFramework,Version=v4.6.1">
+      <Visible>False</Visible>
+      <ProductName>Microsoft .NET Framework 4.6.1 %28x86 and x64%29</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

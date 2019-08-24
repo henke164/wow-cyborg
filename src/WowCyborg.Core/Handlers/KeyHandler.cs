@@ -9,12 +9,20 @@ namespace WowCyborg.Core.Handlers
     public class KeyHandler
     {
         [DllImport("user32.dll")]
-        public static extern void keybd_event(byte bVk, byte bScan, uint dwFlags, uint dwExtraInfo);
+        public static extern IntPtr SendMessage(IntPtr hWnd, int Msg, int wParam, int lParam);
 
-        public const int KEYEVENTF_EXTENDEDKEY = 0x0001; //Key down flag
-        public const int KEYEVENTF_KEYUP = 0x0002; //Key up flag
+        private const int WM_KEYDOWN = 0x100;
+
+        private const int WM_KEYUP = 0x101;
 
         private IList<Keys> _keydowns = new List<Keys>();
+
+        private IntPtr _hWnd;
+
+        public KeyHandler(IntPtr hWnd)
+        {
+            _hWnd = hWnd;
+        }
 
         public void PressKey(Keys key, int holdMs = 0)
         {
@@ -27,18 +35,13 @@ namespace WowCyborg.Core.Handlers
         {
             try
             {
-                if (!GameWindowUtilities.IsForeground())
-                {
-                    return;
-                }
-
                 if (!_keydowns.Contains(key))
                 {
                     _keydowns.Add(key);
                 }
 
-                keybd_event((byte)key, 0, KEYEVENTF_KEYUP, 0);
-                keybd_event((byte)key, 0, KEYEVENTF_EXTENDEDKEY, 0);
+                SendMessage(_hWnd, WM_KEYUP, Convert.ToInt32(key), 0);
+                SendMessage(_hWnd, WM_KEYDOWN, Convert.ToInt32(key), 0);
             }
             catch
             {
@@ -52,7 +55,7 @@ namespace WowCyborg.Core.Handlers
             {
                 if (_keydowns.Contains(key))
                 {
-                    keybd_event((byte)key, 0, KEYEVENTF_KEYUP, 0);
+                    SendMessage(_hWnd, WM_KEYUP, Convert.ToInt32(key), 0);
                     _keydowns.Remove(key);
                 }
             }
@@ -64,23 +67,18 @@ namespace WowCyborg.Core.Handlers
 
         public void ModifiedKeypress(Keys modifier, Keys key)
         {
-            if (!GameWindowUtilities.IsForeground())
-            {
-                return;
-            }
-
             try
             {
-                keybd_event((byte)key, 0, KEYEVENTF_EXTENDEDKEY | KEYEVENTF_KEYUP, 0);
-                keybd_event((byte)modifier, 0, KEYEVENTF_EXTENDEDKEY | KEYEVENTF_KEYUP, 0);
+                SendMessage(_hWnd, WM_KEYUP, Convert.ToInt32(key), 0);
+                SendMessage(_hWnd, WM_KEYUP, Convert.ToInt32(modifier), 0);
 
-                keybd_event((byte)modifier, 0, KEYEVENTF_EXTENDEDKEY, 0);
+                SendMessage(_hWnd, WM_KEYDOWN, Convert.ToInt32(modifier), 0);
                 Thread.Sleep(50);
-                keybd_event((byte)key, 0, KEYEVENTF_EXTENDEDKEY, 0);
+                SendMessage(_hWnd, WM_KEYDOWN, Convert.ToInt32(key), 0);
                 Thread.Sleep(150);
 
-                keybd_event((byte)key, 0, KEYEVENTF_EXTENDEDKEY | KEYEVENTF_KEYUP, 0);
-                keybd_event((byte)modifier, 0, KEYEVENTF_EXTENDEDKEY | KEYEVENTF_KEYUP, 0);
+                SendMessage(_hWnd, WM_KEYUP, Convert.ToInt32(key), 0);
+                SendMessage(_hWnd, WM_KEYUP, Convert.ToInt32(modifier), 0);
             }
             catch
             {

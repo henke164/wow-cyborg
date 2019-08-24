@@ -22,9 +22,9 @@ namespace WowCyborg.Core
         private MovementCommander _movementCommander;
         private Task _runningTask;
 
-        public Bot()
+        public Bot(IntPtr hWnd)
         {
-            KeyHandler = new KeyHandler();
+            KeyHandler = new KeyHandler(hWnd);
 
             _rotationCommander = new RotationCommander(KeyHandler);
             _movementCommander = new MovementCommander(KeyHandler);

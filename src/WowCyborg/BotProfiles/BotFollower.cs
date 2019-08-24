@@ -1,4 +1,5 @@
-﻿using System.Windows.Forms;
+﻿using System;
+using System.Windows.Forms;
 using WowCyborg.Core;
 using WowCyborg.Core.Handlers;
 using WowCyborg.Core.Models;
@@ -8,6 +9,12 @@ namespace WowCyborg.BotProfiles
 {
     public class BotFollower : Bot
     {
+        public BotFollower(IntPtr hWnd)
+            : base(hWnd)
+        {
+                
+        }
+
         private bool _isFollowing = false;
 
         protected override void SetupBehaviour()

@@ -19,27 +19,27 @@ namespace WowCyborg
 
         static void Main()
         {
-            AddonLocator.InitializeGameHandle();
+            var gameHandle = AddonLocator.InitializeGameHandle();
 
             var settings = SettingsLoader.LoadSettings<AppSettings>("settings.json");
-            InitializeBotRunner(settings);
+            InitializeBotRunner(gameHandle, settings);
             Plugins = PluginLoader.GetPlugins(GetApplicationSettings(settings));
             RenderStartMessage();
             HandleInput();
         }
 
-        static void InitializeBotRunner(AppSettings settings)
+        static void InitializeBotRunner(IntPtr hWnd, AppSettings settings)
         {
             switch (settings.BotType.ToLower())
             {
                 case "solorunner":
-                    BotRunner = new SoloRunner();
+                    BotRunner = new SoloRunner(hWnd);
                     break;
                 case "follower":
-                    BotRunner = new BotFollower();
+                    BotRunner = new BotFollower(hWnd);
                     break;
                 default:
-                    BotRunner = new AutoCaster();
+                    BotRunner = new AutoCaster(hWnd);
                     break;
             }
         }
