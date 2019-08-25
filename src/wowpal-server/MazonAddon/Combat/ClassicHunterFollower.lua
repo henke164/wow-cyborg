@@ -8,6 +8,7 @@
 local startedFollowingAt = 0;
 local startedAssistAt = 0;
 local startedWaitAt = 0;
+local cobraShot = "1";
 local follow = "CTRL+1";
 local assist = "CTRL+2";
 local mount = "CTRL+3";
@@ -31,6 +32,12 @@ function RenderSingleTargetRotation()
   if startedWaitAt > GetTime() - 0.5 then
     WowCyborg_CURRENTATTACK = "Waiting...";
     return SetSpellRequest(back);
+  end
+  
+  local energy = UnitPower("player");
+  if IsCastableAtEnemyTarget("Cobra Shot", 0) and energy > 90 then
+    WowCyborg_CURRENTATTACK = "Cobra Shot";
+    return SetSpellRequest(cobraShot);
   end
   
   WowCyborg_CURRENTATTACK = "-";

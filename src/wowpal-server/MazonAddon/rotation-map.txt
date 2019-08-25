@@ -18,4 +18,5 @@ bmhunterfollower	MazonAddon/Combat/HunterBMFollower.lua
 classicwarrior	MazonAddon/Combat/WarriorClassic.lua
 classicshaman	MazonAddon/Combat/ShamanClassic.lua
 classicdruid	MazonAddon/Combat/DruidClassic.lua
+classicdruidfollower	MazonAddon/Combat/ClassicDruidFollower.lua
 classichunter	MazonAddon/Combat/ClassicHunterFollower.lua

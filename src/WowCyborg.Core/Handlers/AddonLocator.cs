@@ -111,7 +111,7 @@ namespace WowCyborg.Core.Handlers
         }
 
         private static bool IsMarkerColor(Color c)
-            => c.R > 230 && c.G == 0 && c.B > 120 && c.B < 180;
+            => c.R > 230 && c.G == 0 && c.B > 120;
 
         private static Point FindAddonBottomLeft(Bitmap b)
         {

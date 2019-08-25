@@ -25,7 +25,7 @@ namespace ServerController
             switch (args[0])
             {
                 case "start":
-                    _serverManager.StartServer();
+                    _serverManager.StartServer(args[1]);
                     break;
                 case "stop":
                     _serverManager.StopServer();
@@ -41,7 +41,7 @@ namespace ServerController
         public override void ShowCommands()
         {
             Logger.Log($@"
-server start                    Starts a server on localhost with endpoints to control the bot.
+server start 3000               Starts a server on localhost port 3000 with endpoints to control the bot.
 
 server stop                     Stops the running server.
             ");

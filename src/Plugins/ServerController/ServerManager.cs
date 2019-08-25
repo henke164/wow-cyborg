@@ -22,16 +22,17 @@ namespace ServerController
             _botApi = new BotApi(bot);
         }
 
-        public void StartServer()
+        public void StartServer(string port)
         {
+            var url = $"http://{ipAddress}:{port}/";
             _listener = new HttpListener();
-            _listener.Prefixes.Add($"http://{ipAddress}/");
+            _listener.Prefixes.Add(url);
 
             _listener.Start();
             Logger.Log($"Server successfully started, GET examples:\r\n" +
-                $"http://{ipAddress}/currentPosition\r\n" +
-                $"http://{ipAddress}/isRunning\r\n" +
-                $"http://{ipAddress}/moveTo?x=0.43&z=0.51\r\n", ConsoleColor.Green);
+                $"{url}currentPosition\r\n" +
+                $"{url}isRunning\r\n" +
+                $"{url}moveTo?x=0.43&z=0.51\r\n", ConsoleColor.Green);
 
             Task.Run(() => {
                 while (true)
