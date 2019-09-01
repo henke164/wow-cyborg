@@ -46,6 +46,12 @@ namespace WowCyborg.Core
 
             _onDestinationReached = onDestinationReached;
 
+            if (target == null)
+            {
+                onDestinationReached();
+                return;
+            }
+
             OnLog("Move to:" + target.X + "," + target.Z);
             TargetLocation = target;
 

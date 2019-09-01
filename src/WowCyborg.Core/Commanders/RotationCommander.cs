@@ -13,7 +13,7 @@ namespace WowCyborg.Core.Commanders
 
         private Transform _currentTransform;
 
-        private Task _facingTask;
+        private Thread _facingTask;
 
         private Vector3 _targetPoint;
 
@@ -27,14 +27,15 @@ namespace WowCyborg.Core.Commanders
             _targetPoint = targetPoint;
             if (_facingTask != null)
             {
-                _facingTask = null;
+                _facingTask.Abort();
             }
 
-            _facingTask = Task.Run(() =>
+            _facingTask = new Thread(() =>
             {
                 HandleRotation();
                 onDone?.Invoke();
             });
+            _facingTask.Start();
         }
 
         public void Abort()
