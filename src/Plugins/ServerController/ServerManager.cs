@@ -28,12 +28,21 @@ namespace ServerController
             _listener = new HttpListener();
             _listener.Prefixes.Add(url);
 
-            _listener.Start();
-            Logger.Log($"Server successfully started, GET examples:\r\n" +
-                $"{url}currentPosition\r\n" +
-                $"{url}isRunning\r\n" +
-                $"{url}moveTo?x=0.43&z=0.51\r\n", ConsoleColor.Green);
+            try
+            {
+                _listener.Start();
+                Logger.Log($"Server successfully started, GET examples:\r\n" +
+                    $"{url}currentPosition\r\n" +
+                    $"{url}isRunning\r\n" +
+                    $"{url}moveTo?x=0.43&z=0.51\r\n" +
+                    $"{url}isAlive\r\n", ConsoleColor.Green);
 
+            }
+            catch
+            {
+                Console.WriteLine("Server could not be started...");
+                return;
+            }
             Task.Run(() => {
                 while (true)
                 {
@@ -82,10 +91,20 @@ namespace ServerController
 
                 return JsonConvert.SerializeObject(currentTransform);
             }
-            else if(rawUrl == "/isRunning")
+            else if (rawUrl == "/isRunning")
             {
                 var isRunning = _botApi.IsRunning();
                 return isRunning.ToString();
+            }
+            else if (rawUrl == "/isAlive")
+            {
+                var isAlive = _botApi.IsAlive();
+                return isAlive.ToString();
+            }
+            else if (rawUrl == "/corpseTransform")
+            {
+                var deathLocation = _botApi.GetCorpseTransform();
+                return JsonConvert.SerializeObject(deathLocation);
             }
             else if (rawUrl.IndexOf("/moveTo?") == 0)
             {

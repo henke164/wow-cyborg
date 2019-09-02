@@ -26,7 +26,27 @@ namespace WowCyborg.PluginUtilities
 
         public bool IsRunning()
             => _botRunner.TargetLocation != null;
-        
+
+        public bool IsAlive()
+            => _botRunner.CorpseTransform == null;
+
+        public BotTransform GetCorpseTransform()
+        {
+            var corpseTransform = _botRunner.CorpseTransform;
+            if (corpseTransform == null)
+            {
+                return null;
+            }
+
+            return new BotTransform
+            {
+                X = corpseTransform.Position.X,
+                Z = corpseTransform.Position.Z,
+                R = corpseTransform.Rotation,
+                ZoneId = corpseTransform.ZoneId
+            };
+        }
+
         public BotTransform GetCurrentTransform()
         {
             var currentTransform = _botRunner.CurrentTransform;
