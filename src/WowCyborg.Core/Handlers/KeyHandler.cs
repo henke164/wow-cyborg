@@ -73,7 +73,7 @@ namespace WowCyborg.Core.Handlers
                 SendMessage(_hWnd, WM_KEYUP, Convert.ToInt32(modifier), 0);
 
                 SendMessage(_hWnd, WM_KEYDOWN, Convert.ToInt32(modifier), 0);
-                Thread.Sleep(50);
+                Thread.Sleep(150);
                 SendMessage(_hWnd, WM_KEYDOWN, Convert.ToInt32(key), 0);
                 Thread.Sleep(150);
 

@@ -71,6 +71,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="EventDispatchers\DeathDispatcher.cs" />
     <Compile Include="EventDispatchers\TooFarAwayDispatcher.cs" />
     <Compile Include="Handlers\AddonFolderHandler.cs" />
     <Compile Include="Handlers\AddonLocator.cs" />

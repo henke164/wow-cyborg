@@ -28,6 +28,7 @@ namespace WowCyborg.Core.Commanders
             if (_facingTask != null)
             {
                 _facingTask.Abort();
+                _facingTask = null;
             }
 
             _facingTask = new Thread(() =>
@@ -35,7 +36,11 @@ namespace WowCyborg.Core.Commanders
                 HandleRotation();
                 onDone?.Invoke();
             });
-            _facingTask.Start();
+
+            if (_facingTask.ThreadState != ThreadState.Running)
+            {
+                _facingTask.Start();
+            }
         }
 
         public void Abort()

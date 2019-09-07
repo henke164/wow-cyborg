@@ -47,12 +47,29 @@ namespace WowCyborg.BotProfiles
         {
             EventManager.On("PlayerTransformChanged", (Event _) =>
             {
-                if (TargetLocation != null && !_isInCombat && !Paused)
+                if (TargetLocation != null && !_isInCombat && !Paused && CorpseTransform == null)
                 {
                     _enemyTargettingCommander.Update();
                 }
+                else if (CorpseTransform != null)
+                {
+                    KeyHandler.PressKey(Keys.Space);
+                    KeyHandler.PressKey(Keys.F8);
+                }
             });
 
+            EventManager.On("DeathChanged", (Event ev) =>
+            {
+                if ((bool)ev.Data)
+                {
+                    Task.Run(() =>
+                    {
+                        Thread.Sleep(6000);
+                        KeyHandler.PressKey(Keys.F8);
+                    });
+                }
+            });
+            
             EventManager.On("CombatChanged", (Event ev) =>
             {
                 _isInCombat = (bool)ev.Data;

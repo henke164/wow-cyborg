@@ -14,6 +14,8 @@ namespace WowCyborg.Core
         public Action<string> OnLog { get; set; } = (string s) => { };
         public Transform CurrentTransform { get; protected set; }
         public Vector3 TargetLocation { get; protected set; }
+        public Transform CorpseTransform { get; protected set; }
+
         protected KeyHandler KeyHandler;
         protected bool Paused = false;
 
@@ -31,7 +33,7 @@ namespace WowCyborg.Core
 
             StartEventDispatchers();
             SetupBehaviour();
-            SetupTransformBehaviour();
+            SetupEventBehaviours();
         }
 
         public void FaceTowards(Vector3 target, Action onFacing = null)
@@ -90,11 +92,30 @@ namespace WowCyborg.Core
 
         protected abstract void SetupBehaviour();
 
-        private void SetupTransformBehaviour()
+        private void SetupEventBehaviours()
         {
             EventManager.On("PlayerTransformChanged", (Event ev) =>
             {
                 HandleOnPlayerTransformChanged((Transform)ev.Data);
+            });
+
+            EventManager.On("DeathChanged", (Event ev) =>
+            {
+                if ((bool)ev.Data)
+                {
+                    CorpseTransform = new Transform(
+                        CurrentTransform.Position.X,
+                        CurrentTransform.Position.Y,
+                        CurrentTransform.Position.Z,
+                        CurrentTransform.Rotation);
+
+                    TargetLocation = null;
+                    Paused = false;
+                }
+                else
+                {
+                    CorpseTransform = null;
+                }
             });
         }
 
@@ -159,6 +180,7 @@ namespace WowCyborg.Core
             EventManager.StartEventDispatcher(typeof(CombatCastingDispatcher));
             EventManager.StartEventDispatcher(typeof(WrongFacingDispatcher));
             EventManager.StartEventDispatcher(typeof(TooFarAwayDispatcher));
+            EventManager.StartEventDispatcher(typeof(DeathDispatcher));
         }
     }
 }
