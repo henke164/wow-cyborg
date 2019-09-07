@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Drawing;
+using System.Runtime.InteropServices;
 using System.Threading;
 using System.Windows.Forms;
 using WowCyborg.Core.Handlers;
@@ -9,16 +10,27 @@ namespace WowCyborg.Core.Commanders
 {
     public class LootingCommander
     {
+        public static bool IsSkinner { get; set; } = true;
+
+        [DllImport("user32.dll")]
+        private static extern int GetWindowRect(IntPtr hwnd, out Rectangle rect);
+
+        private IntPtr _hWnd;
         private Bitmap _lootCursor;
 
-        public LootingCommander()
+        public LootingCommander(IntPtr hWnd)
         {
             _lootCursor = (Bitmap)Image.FromFile("Images/loot-cursor.png");
+            _hWnd = hWnd;
         }
 
         public void Loot(Action onDone)
         {
-            var scanArea = GetScanArea();
+            Rectangle windowRectangle;
+
+            GetWindowRect(_hWnd, out windowRectangle);
+
+            var scanArea = GetScanArea(windowRectangle);
 
             var lootLocation = Point.Empty;
 
@@ -37,6 +49,13 @@ namespace WowCyborg.Core.Commanders
             if (lootLocation != Point.Empty)
             {
                 MouseHandler.RightClick(lootLocation.X, lootLocation.Y);
+
+                if (IsSkinner)
+                {
+                    Thread.Sleep(2000);
+                    MouseHandler.RightClick(lootLocation.X, lootLocation.Y);
+                    Thread.Sleep(2500);
+                }
             }
 
             Thread.Sleep(1500);
@@ -50,11 +69,11 @@ namespace WowCyborg.Core.Commanders
             return CursorUtilities.IsCursorIcon(_lootCursor);
         }
 
-        public Rectangle GetScanArea()
+        public Rectangle GetScanArea(Rectangle windowRectangle)
         {
             var center = new Point(
-                Screen.PrimaryScreen.Bounds.Width / 2,
-                Screen.PrimaryScreen.Bounds.Height / 2);
+                windowRectangle.Width / 2,
+                windowRectangle.Height / 2);
 
             var size = new Size(200, 200);
 

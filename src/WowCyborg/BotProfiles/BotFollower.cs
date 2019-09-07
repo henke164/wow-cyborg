@@ -11,6 +11,8 @@ namespace WowCyborg.BotProfiles
 {
     public class BotFollower : Bot
     {
+        private bool _isInCombat = false;
+
         public BotFollower(IntPtr hWnd)
             : base(hWnd)
         {
@@ -19,15 +21,23 @@ namespace WowCyborg.BotProfiles
 
         private void DoRandomJumping()
         {
-            KeyHandler.PressKey(Keys.Space);
+            if (!_isInCombat)
+            {
+                KeyHandler.PressKey(Keys.Space);
+            }
             Thread.Sleep(new Random().Next(1000, 20000));
             Task.Run(() => DoRandomJumping());
         }
-
+        
         private bool _isFollowing = false;
 
         protected override void SetupBehaviour()
         {
+            EventManager.On("CombatChanged", (Event ev) =>
+            {
+                _isInCombat = (bool)ev.Data;
+            });
+            
             EventManager.On("KeyPressRequested", (Event ev) =>
             {
                 var keyRequest = (KeyPressRequest)ev.Data;
@@ -52,6 +62,8 @@ namespace WowCyborg.BotProfiles
                         }
                         _isFollowing = false;
 
+                        KeyHandler.PressKey(Keys.S, 10);
+                        /*
                         Task.Run(() =>
                         {
                             var random = new Random().Next(0, 6);
@@ -78,7 +90,7 @@ namespace WowCyborg.BotProfiles
                                     KeyHandler.PressKey(Keys.W, 1500);
                                     break;
                             }
-                        });
+                        });*/
                     }
                 }
                 else

@@ -13,7 +13,7 @@ namespace WowCyborg.BotProfiles
     public class SoloRunner : Bot
     {
         private EnemyTargettingCommander _enemyTargettingCommander;
-        private LootingCommander _lootingCommander = new LootingCommander();
+        private LootingCommander _lootingCommander;
         private bool _isInCombat = false;
         private DateTime _timeSinceLastAttackInCombat;
         private Task _restingTask;
@@ -22,7 +22,8 @@ namespace WowCyborg.BotProfiles
             : base (hWnd)
         {
             _enemyTargettingCommander = new EnemyTargettingCommander(KeyHandler);
-        }
+        _lootingCommander = new LootingCommander(hWnd);
+    }
 
         // Check if player is in combat without pressing any keys.
         // Player might be targetting something else than the enemy target.

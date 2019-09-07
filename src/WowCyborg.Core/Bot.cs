@@ -48,7 +48,6 @@ namespace WowCyborg.Core
 
             if (target == null)
             {
-                onDestinationReached();
                 return;
             }
 
