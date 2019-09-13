@@ -16,6 +16,7 @@ mwmonkfollower	MazonAddon/Combat/MonkMistweaverFollower.lua
 eleshamanfollower	MazonAddon/Combat/ShamanEleFollower.lua
 bmhunterfollower	MazonAddon/Combat/HunterBMFollower.lua
 classicwarrior	MazonAddon/Combat/WarriorClassic.lua
+classictank	MazonAddon/Combat/WarriorClassicTank.lua
 classicshaman	MazonAddon/Combat/ShamanClassic.lua
 classicdruid	MazonAddon/Combat/DruidClassic.lua
 classicdruidfollower	MazonAddon/Combat/ClassicDruidFollower.lua

@@ -17,9 +17,10 @@ local attack = "6";
 local bloodrage = "7";
 local execute = "8";
 local eat = "9";
+local mortalStrike = "0";
 
 function IsMelee()
-  return IsSpellInRange("Rend", "target") == 1;
+  return CheckInteractDistance("target", 5) and IsCastableAtEnemyTarget("Rend", 0) ;
 end
 
 -- Multi target
@@ -29,8 +30,14 @@ end
 
 -- Single target
 function RenderSingleTargetRotation()
-  local hp = GetHealthPercentage("player");
+  local targetFaction = UnitFactionGroup("target");
+  if targetFaction ~= nil then
+    WowCyborg_CURRENTATTACK = "Player targetted";
+    return SetSpellRequest(nil);
+  end
 
+  local hp = GetHealthPercentage("player");
+  
   if IsCastableAtEnemyTarget("Charge", 0) then
     WowCyborg_CURRENTATTACK = "Charge";
     return SetSpellRequest(charge);
@@ -75,6 +82,19 @@ function RenderSingleTargetRotation()
     end
   end
 
+  if IsCastableAtEnemyTarget("Mortal Strike", 15) then
+    if IsCastableAtEnemyTarget("Mortal Strike", 30) then
+      WowCyborg_CURRENTATTACK = "Mortal Strike";
+      return SetSpellRequest(mortalStrike);
+    elseif IsCurrentSpell(6603) == false then
+      WowCyborg_CURRENTATTACK = "Attack";
+      return SetSpellRequest(attack);
+    else
+      WowCyborg_CURRENTATTACK = "-";
+      return SetSpellRequest(nil);
+    end
+  end
+
   local rendDot = FindDebuff("target", "Rend");
   if rendDot == nil then
     if IsCastableAtEnemyTarget("Rend", 10) then
@@ -87,13 +107,13 @@ function RenderSingleTargetRotation()
     WowCyborg_CURRENTATTACK = "Heroic Strike";
     return SetSpellRequest(heroicStrike);
   end
-
-  if IsCurrentSpell(6603) == false then
-    WowCyborg_CURRENTATTACK = "Attack";
-    return SetSpellRequest(attack);
-  end
   
   if IsMelee() then
+    if IsCurrentSpell(6603) == false then
+      WowCyborg_CURRENTATTACK = "Attack";
+      return SetSpellRequest(attack);
+    end
+
     WowCyborg_CURRENTATTACK = "Heroic Strike";
     return SetSpellRequest(heroicStrike);
   end
