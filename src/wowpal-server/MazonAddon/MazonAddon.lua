@@ -1,5 +1,6 @@
 WowCyborg_ISDEAD = false;
 frameSize = 5;
+WowCyborg_INCOMBAT = false;
 
 function CreateWrapperFrame()
   local frame, texture = CreateDefaultFrame(0, 0, frameSize * 4, frameSize);

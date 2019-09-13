@@ -1,8 +1,5 @@
 --[[
   Button    Spell
-  1         Wrath
-  2         Moonfire
-  6         Attack
   SHIFT+1   Rejuvenation
   SHIFT+2   Thorns
   SHIFT+3   Healing Wave
@@ -23,9 +20,6 @@ local damageInLast5Seconds = {};
 local startedFollowingAt = 0;
 local startedAssistAt = 0;
 local startedWaitAt = 0;
-local wrath = "1";
-local moonfire = "2";
-local attack = "6";
 
 local rejuvenation = "SHIFT+1";
 local thorns = "SHIFT+2";
@@ -115,15 +109,17 @@ function FindFriendlyHealingTarget()
     local hp = GetHealthPercentage(members[groupindex].name);
     if tostring(hp) ~= "-nan(ind)" and hp > 1 and hp < 100 then
       if lowestHealth == nil or hp <= lowestHealth.hp then
-        --if IsCastableAtFriendlyUnit(members[groupindex].name, "Healing Wave", 0) then
+        if IsSpellInRange("Healing Touch", members[groupindex].name) then
           lowestHealth = { hp = hp, name = members[groupindex].name }
-        -- end
+        end
       end
     end
   end
 
   if lowestHealth ~= nil then
-    return lowestHealth.name, 0;
+    if IsSpellInRange("Healing Touch", lowestHealth.name) then
+      return lowestHealth.name, 0;
+    end
   end
 
   return nil; 
@@ -157,6 +153,9 @@ function RenderSingleTargetRotation()
   
   if lastTarget.time + 2 < GetTime() then
     local friendlyTargetName, damageAmount = FindFriendlyHealingTarget();
+    
+    local petOneHp = GetHealthPercentage("Petsson");
+    
     if friendlyTargetName ~= nil then
       local memberindex = GetMemberIndex(friendlyTargetName);
       if memberindex ~= nil then
@@ -167,11 +166,19 @@ function RenderSingleTargetRotation()
           time = GetTime()
         };
       end
+    elseif petOneHp > 1 and petOneHp < 100 then
+      lastTarget = {
+        name = "Petsson",
+        index = 5,
+        damageAmount = 10,
+        time = GetTime()
+      };
     end
   end
-
+  
   if lastTarget ~= nil and lastTarget.name ~= nil and lastTarget.name ~= GetTargetFullName() then
     local playerHp = GetHealthPercentage(lastTarget.name);
+      
     if playerHp < 100 then
       WowCyborg_CURRENTATTACK = "Target partymember " .. lastTarget.name;
       return SetSpellRequest("CTRL+" .. lastTarget.index + 3);
@@ -179,32 +186,28 @@ function RenderSingleTargetRotation()
   end
 
   local hp = GetHealthPercentage("target");
-
-  local motwBuff = FindBuff("player", "Mark of the Wild");
+  local currentCastingSpell = CastingInfo("player");
+  
+  local motwBuff = FindBuff("target", "Mark of the Wild");
   if motwBuff == nil then
-    if IsCastable("Mark of the Wild", 20) then
+    if IsCastableAtFriendlyTarget("Mark of the Wild", 20) then
       WowCyborg_CURRENTATTACK = "Mark of the Wild";
       return SetSpellRequest(motw);
     end
   end
   
-  local thornsBuff = FindBuff("player", "Thorns");
-  if thornsBuff == nil then
-    if IsCastable("Thorns", 35) then
-      WowCyborg_CURRENTATTACK = "Thorns";
-      return SetSpellRequest(thorns);
-    end
-  end
-
   if hp < 90 then
-    if IsCastable("Rejuvenation", 25) then
+    local rejBuff = FindBuff("target", "Rejuvenation");
+    if rejBuff == nil and IsCastableAtFriendlyTarget("Rejuvenation", 25) then
       WowCyborg_CURRENTATTACK = "Rejuvenation";
       return SetSpellRequest(rejuvenation);
     end
   end
 
   if hp < 50 then
-    if IsCastable("Healing Touch", 25) then
+    if IsCastableAtFriendlyTarget("Healing Touch", 25) and 
+      currentCastingSpell ~= "Healing Touch" 
+    then
       WowCyborg_CURRENTATTACK = "Healing Touch";
       return SetSpellRequest(healingTouch);
     end

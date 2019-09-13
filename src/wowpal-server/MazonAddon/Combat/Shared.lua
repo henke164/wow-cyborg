@@ -1,7 +1,6 @@
 WowCyborg_AOE_Rotation = false;
 WowCyborg_CLASSIC = true;
 WowCyborg_CURRENTATTACK = "-";
-WowCyborg_INCOMBAT = false;
 
 local spellButtonTexture;
 local buttonCombinerTexture;
