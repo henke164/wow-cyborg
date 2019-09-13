@@ -16,7 +16,7 @@ namespace WowCyborg.BotProfiles
         private LootingCommander _lootingCommander;
         private bool _isInCombat = false;
         private DateTime _timeSinceLastAttackInCombat;
-        private Task _restingTask;
+        private Thread _restingTask;
 
         public SoloRunner(IntPtr hWnd)
             : base (hWnd)
@@ -81,13 +81,7 @@ namespace WowCyborg.BotProfiles
                     return;
                 }
 
-                while (_restingTask != null && _restingTask.Status != TaskStatus.RanToCompletion)
-                {
-                    Thread.Sleep(1000);
-                }
-
                 _lootingCommander.Loot(() => {
-                    ResumeMovement();
                 });
             });
 
@@ -115,15 +109,21 @@ namespace WowCyborg.BotProfiles
                     KeyHandler.PressKey(keyRequest.Key);
                     if (keyRequest.Key == Keys.D9)
                     {
-                        _restingTask = Task.Run(() =>
+                        if (_restingTask != null)
+                        {
+                            _restingTask.Abort();
+                        }
+
+                        _restingTask = new Thread(() =>
                         {
                             PauseMovement();
-                            Thread.Sleep(1000);
+                            Thread.Sleep(2000);
                             if (!_isInCombat)
                             {
-                                Paused = false;
+                                ResumeMovement();
                             }
                         });
+                        _restingTask.Start();
                     }
                 }
 
