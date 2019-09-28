@@ -26,6 +26,8 @@ namespace WowCyborg.Core.Commanders
 
         public void Loot(Action onDone)
         {
+            var foundLoot = false;
+
             Rectangle windowRectangle;
 
             GetWindowRect(_hWnd, out windowRectangle);
@@ -42,6 +44,7 @@ namespace WowCyborg.Core.Commanders
                     {
                         var offset = 20;
                         lootLocation = new Point(scanArea.X + x + offset, scanArea.Y + y + offset);
+                        foundLoot = true;
                     }
                 }
             }
@@ -52,14 +55,21 @@ namespace WowCyborg.Core.Commanders
 
                 if (IsSkinner)
                 {
-                    Thread.Sleep(2000);
+                    Thread.Sleep(4000);
                     MouseHandler.RightClick(lootLocation.X, lootLocation.Y);
                     Thread.Sleep(2500);
                 }
             }
 
             Thread.Sleep(1500);
-            onDone();
+            if (foundLoot)
+            {
+                Loot(onDone);
+            }
+            else
+            {
+                onDone();
+            }
         }
 
         private bool IsLootLocation(int x, int y)
@@ -75,7 +85,7 @@ namespace WowCyborg.Core.Commanders
                 windowRectangle.Width / 2,
                 windowRectangle.Height / 2);
 
-            var size = new Size(200, 200);
+            var size = new Size(300, 200);
 
             return new Rectangle(
                 center.X - (size.Width / 2),

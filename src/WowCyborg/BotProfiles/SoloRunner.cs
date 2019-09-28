@@ -82,17 +82,16 @@ namespace WowCyborg.BotProfiles
                 }
 
                 _lootingCommander.Loot(() => {
+                    if (!_isInCombat)
+                    {
+                        ResumeMovement();
+                    }
                 });
             });
 
             EventManager.On("KeyPressRequested", (Event ev) =>
             {
                 var keyRequest = (KeyPressRequest)ev.Data;
-
-                if (Paused && keyRequest.Key == Keys.D1)
-                {
-                    return;
-                }
 
                 if (keyRequest.Key == Keys.D1)
                 {
@@ -117,7 +116,7 @@ namespace WowCyborg.BotProfiles
                         _restingTask = new Thread(() =>
                         {
                             PauseMovement();
-                            Thread.Sleep(2000);
+                            Thread.Sleep(3500);
                             if (!_isInCombat)
                             {
                                 ResumeMovement();

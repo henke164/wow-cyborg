@@ -28,7 +28,11 @@ namespace WowCyborg.Core.Commanders
         public void TargetNearestEnemy()
         {
             _keyHandler.PressKey(Keys.Tab);
-            _keyHandler.PressKey(Keys.Space);
+            var rnd = new System.Random().Next(0, 4);
+            if (rnd == 1)
+            {
+                _keyHandler.PressKey(Keys.Space);
+            }
             Thread.Sleep(200);
         }
     }
