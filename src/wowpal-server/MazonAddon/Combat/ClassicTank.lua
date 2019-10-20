@@ -9,7 +9,7 @@
 ]]--
 
 local charge = "1";
-local rend = "2";
+local sunderArmor = "2";
 local heroicStrike = "3";
 local overpower = "4";
 local battleshout = "5";
