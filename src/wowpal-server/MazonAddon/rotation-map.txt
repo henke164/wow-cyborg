@@ -23,3 +23,5 @@ classicdruidfollower	MazonAddon/Combat/ClassicDruidFollower.lua
 classichunterfollower	MazonAddon/Combat/ClassicHunterFollower.lua
 classichunter	MazonAddon/Combat/ClassicHunterRunner.lua
 classicferal	MazonAddon/Combat/ClassicFeral.lua
+classicfury	MazonAddon/Combat/WarriorClassicFury.lua
+classicmage	MazonAddon/Combat/MageClassic.lua
