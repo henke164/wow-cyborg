@@ -20,6 +20,7 @@ classictank	MazonAddon/Combat/WarriorClassicTank.lua
 classicshaman	MazonAddon/Combat/ShamanClassic.lua
 classicdruid	MazonAddon/Combat/DruidClassic.lua
 classicdruidfollower	MazonAddon/Combat/ClassicDruidFollower.lua
+classicshamanfollower	MazonAddon/Combat/ClassicShamanFollower.lua
 classichunterfollower	MazonAddon/Combat/ClassicHunterFollower.lua
 classichunter	MazonAddon/Combat/ClassicHunterRunner.lua
 classicferal	MazonAddon/Combat/ClassicFeral.lua

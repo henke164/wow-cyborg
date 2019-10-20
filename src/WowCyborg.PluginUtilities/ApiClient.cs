@@ -42,7 +42,7 @@ namespace WowCyborg.PluginUtilities
                 rotationDictionary.Add(columns[0], columns[1]);
             }
             return rotationDictionary;
-        }
+        }   
 
         protected string DownloadString(string path)
         {

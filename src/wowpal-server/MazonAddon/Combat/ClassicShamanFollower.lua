@@ -1,9 +1,5 @@
 --[[
   Button    Spell
-  SHIFT+1   Rejuvenation
-  SHIFT+2   Thorns
-  SHIFT+3   Healing Wave
-  SHIFT+4   Mark of the Wild
   Ctrl+1    Macro for following focus "/follow focus"
   Ctrl+2    Macro for assisting focus "/assist focus"
   Ctrl+3    Mount
@@ -21,14 +17,12 @@ local startedFollowingAt = 0;
 local startedAssistAt = 0;
 local startedMountingAt = 0;
 local startedWaitAt = 0;
-local lastRegrowthAt = 0;
+local nextHealAt = 0
+local healAt = 0;
 
-local regrowth = "1";
-local rejuvenation = "2";
-local healingTouch = "3";
-local healingTouchLow = "4";
-local thorns = "7";
-local motw = "8";
+local lesserHealingWave = "1";
+local healingWave = "2";
+local healingWaveLow = "3";
 
 local follow = "CTRL+1";
 local assist = "CTRL+2";
@@ -95,7 +89,7 @@ function FindFriendlyHealingTarget()
     local hpp = GetHealthPercentage(highestDamageTaken.name);
     if tostring(hpp) ~= "-nan(ind)" and hpp > 0 and hpp < 80 then
       if GetTargetFullName() ~= highestDamageTaken.name then
-        if IsCastableAtFriendlyUnit(highestDamageTaken.name, "Healing Touch", 0) then
+        if IsCastableAtFriendlyUnit(highestDamageTaken.name, "Healing Wave", 0) then
           return highestDamageTaken.name, highestDamageTaken.amount;
         end
       end
@@ -113,7 +107,7 @@ function FindFriendlyHealingTarget()
     local hp = GetHealthPercentage(members[groupindex].name);
     if tostring(hp) ~= "-nan(ind)" and hp > 1 and hp < 100 then
       if lowestHealth == nil or hp <= lowestHealth.hp then
-        if IsSpellInRange("Healing Touch", members[groupindex].name) then
+        if IsSpellInRange("Healing Wave", members[groupindex].name) then
           lowestHealth = { hp = hp, name = members[groupindex].name }
         end
       end
@@ -121,16 +115,12 @@ function FindFriendlyHealingTarget()
   end
 
   if lowestHealth ~= nil then
-    if IsSpellInRange("Healing Touch", lowestHealth.name) then
+    if IsSpellInRange("Healing Wave", lowestHealth.name) then
       return lowestHealth.name, 0;
     end
   end
 
   return nil; 
-end
-
-function IsMelee()
-  return CheckInteractDistance("target", 5);
 end
 
 -- Multi target
@@ -188,49 +178,41 @@ function RenderSingleTargetRotation()
   local hp = GetHealthPercentage("target");
   local currentCastingSpell = CastingInfo("player");
   
-  local motwBuff = FindBuff("target", "Mark of the Wild");
-  if motwBuff == nil then
-    if IsCastableAtFriendlyTarget("Mark of the Wild", 20) then
-      WowCyborg_CURRENTATTACK = "Mark of the Wild";
-      return SetSpellRequest(motw);
-    end
-  end
-  
-  if hp < 90 then
-    local rejBuff = FindBuff("target", "Rejuvenation");
-    if rejBuff == nil and IsCastableAtFriendlyTarget("Rejuvenation", 135) then
-      WowCyborg_CURRENTATTACK = "Rejuvenation";
-      return SetSpellRequest(rejuvenation);
-    end
+  if healAt + 1 > GetTime() then
+    WowCyborg_CURRENTATTACK = "Recent";
+    return;
   end
 
+  if nextHealAt > GetTime() then
+    WowCyborg_CURRENTATTACK = "Next";
+    return SetSpellRequest(nil);
+  end
+  
   if hp < 80 then
-    local rejBuff = FindBuff("target", "Regrowth");
-    if lastRegrowthAt == 0 and rejBuff == nil and IsCastableAtFriendlyTarget("Regrowth", 350) then
-      lastRegrowthAt = GetTime();
-    end
-
-    if lastRegrowthAt > 0 and lastRegrowthAt > GetTime() - 1 then
-      WowCyborg_CURRENTATTACK = "Regrowth";
-      return SetSpellRequest(regrowth);
-    end
-  
-    if lastRegrowthAt > 0 and lastRegrowthAt + 5 < GetTime() then
-      lastRegrowthAt = 0;
+    if IsCastableAtFriendlyTarget("Healing Wave", 265) and 
+      currentCastingSpell ~= "Healing Wave" 
+    then
+      healAt = GetTime();
+      nextHealAt = GetTime() + 4;
+      WowCyborg_CURRENTATTACK = "Healing Wave";
+      return SetSpellRequest(healingWave);
+    elseif IsCastableAtFriendlyTarget("Healing Wave", 80) and 
+      currentCastingSpell ~= "Healing Wave" 
+    then
+      healAt = GetTime();
+      nextHealAt = GetTime() + 4;
+      WowCyborg_CURRENTATTACK = "Healing Wave Low";
+      return SetSpellRequest(healingWaveLow);
     end
   end
 
-  if hp < 60 then
-    if IsCastableAtFriendlyTarget("Healing Touch", 302) and 
-      currentCastingSpell ~= "Healing Touch" 
-    then
-      WowCyborg_CURRENTATTACK = "Healing Touch";
-      return SetSpellRequest(healingTouch);
-    elseif IsCastableAtFriendlyTarget("Healing Touch", 90) and 
-      currentCastingSpell ~= "Healing Touch" 
-    then
-      WowCyborg_CURRENTATTACK = "Healing Touch Low";
-      return SetSpellRequest(healingTouchLow);
+  if hp < 90 then
+    local rejBuff = FindBuff("target", "Lesser Healing Wave");
+    if rejBuff == nil and IsCastableAtFriendlyTarget("Lesser Healing Wave", 145) then
+      healAt = GetTime();
+      nextHealAt = GetTime() + 3;
+      WowCyborg_CURRENTATTACK = "Lesser Healing Wave";
+      return SetSpellRequest(lesserHealingWave);
     end
   end
 
@@ -309,6 +291,6 @@ function CreateDamageTakenFrame()
   end)
 end
 
-print("Classic druid follower rotation loaded");
+print("Classic shaman follower rotation loaded");
 CreateEmoteListenerFrame();
 CreateDamageTakenFrame();

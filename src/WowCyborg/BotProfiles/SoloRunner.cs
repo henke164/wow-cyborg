@@ -15,15 +15,17 @@ namespace WowCyborg.BotProfiles
         private EnemyTargettingCommander _enemyTargettingCommander;
         private LootingCommander _lootingCommander;
         private bool _isInCombat = false;
+        private bool _isAlive = true;
         private DateTime _timeSinceLastAttackInCombat;
         private Thread _restingTask;
+        private bool _initialResting = true;
 
         public SoloRunner(IntPtr hWnd)
             : base (hWnd)
         {
             _enemyTargettingCommander = new EnemyTargettingCommander(KeyHandler);
-        _lootingCommander = new LootingCommander(hWnd);
-    }
+            _lootingCommander = new LootingCommander(hWnd, ref _isInCombat);
+        }
 
         // Check if player is in combat without pressing any keys.
         // Player might be targetting something else than the enemy target.
@@ -51,29 +53,34 @@ namespace WowCyborg.BotProfiles
                 {
                     _enemyTargettingCommander.Update();
                 }
-                else if (CorpseTransform != null)
-                {
-                    KeyHandler.PressKey(Keys.Space);
-                    KeyHandler.PressKey(Keys.F8);
-                }
             });
 
             EventManager.On("DeathChanged", (Event ev) =>
             {
                 if ((bool)ev.Data)
                 {
+                    _isAlive = false;
                     Task.Run(() =>
                     {
                         Thread.Sleep(6000);
                         KeyHandler.PressKey(Keys.F8);
+                        while (!_isAlive)
+                        {
+                            KeyHandler.PressKey(Keys.F8);
+                            Thread.Sleep(1000);
+                        }
                     });
+                }
+                else
+                {
+                    _isAlive = true;
                 }
             });
             
             EventManager.On("CombatChanged", (Event ev) =>
             {
                 _isInCombat = (bool)ev.Data;
-
+                Console.WriteLine("Combat: " + _isInCombat);
                 if (_isInCombat)
                 {
                     PauseMovement();
@@ -93,21 +100,20 @@ namespace WowCyborg.BotProfiles
             {
                 var keyRequest = (KeyPressRequest)ev.Data;
 
-                if (keyRequest.Key == Keys.D1)
-                {
-                    _isInCombat = true;
-                }
-
                 if (keyRequest.ModifierKey != Keys.None)
                 {
                     KeyHandler.ModifiedKeypress(keyRequest.ModifierKey, keyRequest.Key);
                 }
                 else
                 {
-                    
-                    KeyHandler.PressKey(keyRequest.Key);
                     if (keyRequest.Key == Keys.D9)
                     {
+                        if (_initialResting)
+                        {
+                            _initialResting = false;
+                            KeyHandler.PressKey(keyRequest.Key);
+                        }
+
                         if (_restingTask != null)
                         {
                             _restingTask.Abort();
@@ -119,10 +125,15 @@ namespace WowCyborg.BotProfiles
                             Thread.Sleep(3500);
                             if (!_isInCombat)
                             {
-                                ResumeMovement();
+                                _initialResting = true;
+                                //ResumeMovement();
                             }
                         });
                         _restingTask.Start();
+                    }
+                    else
+                    {
+                        KeyHandler.PressKey(keyRequest.Key);
                     }
                 }
 

@@ -16,17 +16,6 @@ namespace WowCyborg.BotProfiles
         public BotFollower(IntPtr hWnd)
             : base(hWnd)
         {
-            Task.Run(() => DoRandomJumping());
-        }
-
-        private void DoRandomJumping()
-        {
-            if (!_isInCombat)
-            {
-                KeyHandler.PressKey(Keys.Space);
-            }
-            Thread.Sleep(new Random().Next(1000, 20000));
-            Task.Run(() => DoRandomJumping());
         }
         
         private bool _isFollowing = false;
@@ -63,34 +52,6 @@ namespace WowCyborg.BotProfiles
                         _isFollowing = false;
 
                         KeyHandler.PressKey(Keys.S, 10);
-                        /*
-                        Task.Run(() =>
-                        {
-                            var random = new Random().Next(0, 6);
-                            switch (random)
-                            {
-                                case 0:
-                                    KeyHandler.PressKey(Keys.E, 1500);
-                                    break;
-                                case 1:
-                                    KeyHandler.PressKey(Keys.W, 1500);
-                                    break;
-                                case 2:
-                                    KeyHandler.PressKey(Keys.E, 1500);
-                                    break;
-                                case 3:
-                                    KeyHandler.PressKey(Keys.S, 10);
-                                    break;
-                                case 4:
-                                    KeyHandler.PressKey(Keys.E, 1500);
-                                    KeyHandler.PressKey(Keys.W, 1500);
-                                    break;
-                                case 5:
-                                    KeyHandler.PressKey(Keys.Q, 1500);
-                                    KeyHandler.PressKey(Keys.W, 1500);
-                                    break;
-                            }
-                        });*/
                     }
                 }
                 else

@@ -17,11 +17,13 @@ namespace WowCyborg.Core.Commanders
 
         private IntPtr _hWnd;
         private Bitmap _lootCursor;
+        private bool _inCombat = false;
 
-        public LootingCommander(IntPtr hWnd)
+        public LootingCommander(IntPtr hWnd, ref bool inCombat)
         {
             _lootCursor = (Bitmap)Image.FromFile("Images/loot-cursor.png");
             _hWnd = hWnd;
+            _inCombat = inCombat;
         }
 
         public void Loot(Action onDone)
@@ -40,6 +42,11 @@ namespace WowCyborg.Core.Commanders
             {
                 for (var x = 0; x < scanArea.Width && lootLocation == Point.Empty; x += 20)
                 {
+                    if (_inCombat)
+                    {
+                        return;
+                    }
+
                     if (IsLootLocation(scanArea.X + x, scanArea.Y + y))
                     {
                         var offset = 20;

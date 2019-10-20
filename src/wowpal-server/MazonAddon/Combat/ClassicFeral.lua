@@ -5,10 +5,13 @@
 ]]--
 
 local faerieFire = "1";
-local claw = "2";
 local regrowth = "2";
-local rip = "3";
+
+local rake = "2";
+local claw = "3";
+local rip = "4";
 local attack = "6";
+
 local toggleBear = "SHIFT+1";
 local toggleCat = "SHIFT+3";
 local thorns = "7";
@@ -36,15 +39,26 @@ end
 
 -- Single target
 function RenderSingleTargetRotation()
+  local targetFaction = UnitFactionGroup("target");
+  if targetFaction ~= nil then
+    WowCyborg_CURRENTATTACK = "Player targetted";
+    return SetSpellRequest(nil);
+  end
+  
+  local mana = (UnitPower("player") / UnitPowerMax("player")) * 100;
+  local hp = GetHealthPercentage("player");
   local shape = "CASTER";
 
-  if IsCat() then
-    shape = "CAT";
-  elseif IsBear() then
-    shape = "BEAR";
+  if hp > 1 then
+    if IsCat() then
+      shape = "CAT";
+    elseif IsBear() then
+      shape = "BEAR";
+    end
+  else
+    WowCyborg_CURRENTATTACK = "-";
+    return SetSpellRequest(nil);
   end
-
-  local hp = GetHealthPercentage("player");
 
   if WowCyborg_INCOMBAT == false then
     if shape == "CAT" then
@@ -73,15 +87,13 @@ function RenderSingleTargetRotation()
       return SetSpellRequest(faerieFire);
     end
 
-    if IsMelee() == false then
-      if hp < 80 then
-        WowCyborg_CURRENTATTACK = "Regrowth";
-        return SetSpellRequest(regrowth);
-      end
-      
-      WowCyborg_CURRENTATTACK = "-";
-      return SetSpellRequest(nil);
+    if hp < 80 or mana < 50 then
+      WowCyborg_CURRENTATTACK = "Regrowth";
+      return SetSpellRequest(eat);
     end
+    
+    WowCyborg_CURRENTATTACK = "-";
+    return SetSpellRequest(nil);
   else
     if shape == "CASTER" then
       WowCyborg_CURRENTATTACK = "Catform";
@@ -90,20 +102,28 @@ function RenderSingleTargetRotation()
 
     local points = GetComboPoints("player", "target");
 
-    if points == 5 then
+    if points > 2 then
       if IsCastableAtEnemyTarget("Rip", 30) then
         WowCyborg_CURRENTATTACK = "Rip";
         return SetSpellRequest(rip);
       end
     end
 
-    if IsCastableAtEnemyTarget("Claw", 40) then
+    local rakeDebuff = FindDebuff("target", "Rake");
+    if rakeDebuff == nil then
+      if IsCastableAtEnemyTarget("Rake", 0) then
+        WowCyborg_CURRENTATTACK = "Rake";
+        return SetSpellRequest(rake);
+      end
+    end
+
+    if IsCastableAtEnemyTarget("Claw", 0) then
       WowCyborg_CURRENTATTACK = "Claw";
       return SetSpellRequest(claw);
     end
   end
 
-  if IsMelee() and IsCastableAtEnemyTarget("Attack") and IsCurrentSpell(6603) == false then
+  if IsMelee() and IsCastableAtEnemyTarget("Attack", 0) and IsCurrentSpell(6603) == false then
     WowCyborg_CURRENTATTACK = "Attack";
     return SetSpellRequest(attack);
   end

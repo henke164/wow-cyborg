@@ -20,7 +20,7 @@ local eat = "9";
 local mortalStrike = "0";
 
 function IsMelee()
-  return CheckInteractDistance("target", 5) and IsCastableAtEnemyTarget("Rend", 0) ;
+  return CheckInteractDistance("target", 5) and IsCastableAtEnemyTarget("Rend", 0);
 end
 
 -- Multi target
