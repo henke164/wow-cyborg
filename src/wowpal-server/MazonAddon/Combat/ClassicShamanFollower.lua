@@ -17,12 +17,12 @@ local startedFollowingAt = 0;
 local startedAssistAt = 0;
 local startedMountingAt = 0;
 local startedWaitAt = 0;
-local nextHealAt = 0
-local healAt = 0;
 
 local lesserHealingWave = "1";
-local healingWave = "2";
-local healingWaveLow = "3";
+local healingWaveMed = "2";
+local healingWave = "3";
+local manatide = "4";
+local stopcasting = "9";
 
 local follow = "CTRL+1";
 local assist = "CTRL+2";
@@ -125,7 +125,8 @@ end
 
 -- Multi target
 function RenderMultiTargetRotation()
-  return RenderSingleTargetRotation();
+  WowCyborg_CURRENTATTACK = "-";
+  return SetSpellRequest(nil);
 end
 
 -- Single target
@@ -176,53 +177,67 @@ function RenderSingleTargetRotation()
   end
 
   local hp = GetHealthPercentage("target");
-  local currentCastingSpell = CastingInfo("player");
+  local currentCastingSpell = CastingInfo("player");  
+  local mana = (UnitPower("player") / UnitPowerMax("player")) * 100;
   
-  if healAt + 1 > GetTime() then
-    WowCyborg_CURRENTATTACK = "Recent";
-    return;
-  end
-
-  if nextHealAt > GetTime() then
-    WowCyborg_CURRENTATTACK = "Next";
-    return SetSpellRequest(nil);
-  end
-  
-  if hp < 80 then
-    if IsCastableAtFriendlyTarget("Healing Wave", 265) and 
-      currentCastingSpell ~= "Healing Wave" 
-    then
-      healAt = GetTime();
-      nextHealAt = GetTime() + 4;
-      WowCyborg_CURRENTATTACK = "Healing Wave";
-      return SetSpellRequest(healingWave);
-    elseif IsCastableAtFriendlyTarget("Healing Wave", 80) and 
-      currentCastingSpell ~= "Healing Wave" 
-    then
-      healAt = GetTime();
-      nextHealAt = GetTime() + 4;
-      WowCyborg_CURRENTATTACK = "Healing Wave Low";
-      return SetSpellRequest(healingWaveLow);
+  if mana < 50 then
+    if IsCastable("Mana Tide Totem", 40) then
+      return SetSpellRequest(manatide);
     end
   end
 
-  if hp < 90 then
-    local rejBuff = FindBuff("target", "Lesser Healing Wave");
-    if rejBuff == nil and IsCastableAtFriendlyTarget("Lesser Healing Wave", 145) then
-      healAt = GetTime();
-      nextHealAt = GetTime() + 3;
+  local lesserHealAt = 70;
+  local mediumHealAt = 85;
+  local greaterHealAt = 60;
+  
+  local currentCastingSpell, _, _, _, _, _, _, _, id = CastingInfo("player");
+
+  if currentCastingSpell == "Healing Wave" then
+    if id == 10396 and hp >= greaterHealAt then
+      return SetSpellRequest(stopcasting);
+    end
+
+    if id == 939 and hp >= mediumHealAt then
+      return SetSpellRequest(stopcasting);
+    end
+  end
+  
+  if currentCastingSpell == "Lesser Healing Wave" then
+    if hp >= lesserHealAt then
+      return SetSpellRequest(stopcasting);
+    end
+  end
+
+  if hp < greaterHealAt then
+    if IsCastableAtFriendlyTarget("Healing Wave", 532) and 
+      currentCastingSpell ~= "Healing Wave" 
+    then
+      WowCyborg_CURRENTATTACK = "Healing Wave";
+      return SetSpellRequest(healingWave);
+    end
+  end
+
+  if hp < mediumHealAt then
+    if IsCastableAtFriendlyTarget("Healing Wave", 190) then
+      WowCyborg_CURRENTATTACK = "Healing Wave Med";
+      return SetSpellRequest(healingWaveMed);
+    end
+  end
+
+  if hp < lesserHealAt then
+    if IsCastableAtFriendlyTarget("Lesser Healing Wave", 290) then
       WowCyborg_CURRENTATTACK = "Lesser Healing Wave";
       return SetSpellRequest(lesserHealingWave);
     end
   end
-
+  
   WowCyborg_CURRENTATTACK = "-";
   return SetSpellRequest(nil);
 end
 
 function CreateEmoteListenerFrame()
   local frame = CreateFrame("Frame");
-  frame:RegisterEvent("CHAT_MSG_TEXT_EMOTE");
+  frame:RegisterEvent("CHAT_MSG_WHISPER");
   frame:SetScript("OnEvent", function(self, event, ...)
     command = ...;
     if string.find(command, "follow", 1, true) then
@@ -233,8 +248,8 @@ function CreateEmoteListenerFrame()
       print("Waiting");
       startedAssistAt = GetTime();
     end
-    if string.find(command, "fart", 1, true) then
-      print("Mounting");
+    if string.find(command, "drink", 1, true) then
+      print("Drinking");
       startedMountingAt = GetTime();
     end
     if string.find(command, "waves", 1, true) then
