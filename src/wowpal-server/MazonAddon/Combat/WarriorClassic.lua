@@ -20,7 +20,7 @@ local eat = "9";
 local bloodthirst = "0";
 
 function IsMelee()
-  return CheckInteractDistance("target", 5) and IsCastableAtEnemyTarget("Rend", 0);
+  return IsSpellInRange("Rend", "target") == 1;
 end
 
 -- Multi target

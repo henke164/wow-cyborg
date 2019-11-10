@@ -1,6 +1,7 @@
 WowCyborg_AOE_Rotation = false;
 WowCyborg_CLASSIC = true;
 WowCyborg_CURRENTATTACK = "-";
+WowCyborg_DISABLED = false;
 
 local spellButtonTexture;
 local buttonCombinerTexture;
@@ -25,6 +26,11 @@ function CreateRotationFrame()
   _, buttonCombinerTexture = CreateDefaultFrame(frameSize * 3, frameSize, frameSize, frameSize);
 
   frame:SetScript("OnUpdate", function(self, event, ...)
+    if WowCyborg_DISABLED == true then
+      WowCyborg_CURRENTATTACK = "-";
+      return SetSpellRequest(nil);
+    end
+
     if WowCyborg_AOE_Rotation == true then
       RenderMultiTargetRotation();
     end
@@ -184,21 +190,33 @@ function RenderFontFrame()
 
   fontFrame:SetScript("OnKeyDown", function(self, key)
     if key == "CAPSLOCK" then
-      WowCyborg_AOE_Rotation = not WowCyborg_AOE_Rotation;
+      if IsShiftKeyDown() then
+        WowCyborg_DISABLED = true;
+      elseif WowCyborg_DISABLED == true then
+        WowCyborg_DISABLED = false;
+      else
+        WowCyborg_AOE_Rotation = not WowCyborg_AOE_Rotation;
+      end
     end
   end)
   
   fontFrame:SetScript("OnUpdate", function(self, event, ...)
-    if WowCyborg_AOE_Rotation == true then
-      fontTexture:SetColorTexture(1, 0, 0);
-      str:SetText("Multi target");
+    if WowCyborg_DISABLED == true then
+      fontTexture:SetColorTexture(1, 1, 0);
+      str:SetText("Disabled");
       infoStr:SetText(WowCyborg_CURRENTATTACK);
-    end
-    
-    if WowCyborg_AOE_Rotation == false then
-      fontTexture:SetColorTexture(0, 0, 1);
-      str:SetText("Single target");
-      infoStr:SetText(WowCyborg_CURRENTATTACK);
+    else
+      if WowCyborg_AOE_Rotation == true then
+        fontTexture:SetColorTexture(1, 0, 0);
+        str:SetText("Multi target");
+        infoStr:SetText(WowCyborg_CURRENTATTACK);
+      end
+      
+      if WowCyborg_AOE_Rotation == false then
+        fontTexture:SetColorTexture(0, 0, 1);
+        str:SetText("Single target");
+        infoStr:SetText(WowCyborg_CURRENTATTACK);
+      end
     end
   end)
 end
