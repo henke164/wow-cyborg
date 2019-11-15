@@ -22,6 +22,7 @@ local lesserHealingWave = "1";
 local healingWaveMed = "2";
 local healingWave = "3";
 local manatide = "4";
+local chainHeal = "5";
 local stopcasting = "9";
 
 local follow = "CTRL+1";
@@ -123,6 +124,24 @@ function FindFriendlyHealingTarget()
   return nil; 
 end
 
+function AoeHealingRequired()
+  local lowCount = 0;
+  local hp = GetHealthPercentage("player");
+
+  if hp < 95 then
+    lowCount = lowCount + 1;
+  end
+
+  for groupindex = 1,10 do
+    local php = GetHealthPercentage("raid" .. groupindex);
+    if tostring(php) ~= "-nan(ind)" and php > 1 and php < 90 then
+      lowCount = lowCount + 1;
+    end
+  end
+  
+  return lowCount > 2;
+end
+
 -- Multi target
 function RenderMultiTargetRotation()
   WowCyborg_CURRENTATTACK = "-";
@@ -151,31 +170,6 @@ function RenderSingleTargetRotation()
     return SetSpellRequest(mount);
   end  
   
-  if lastTarget.time + 2 < GetTime() then
-    local friendlyTargetName, damageAmount = FindFriendlyHealingTarget();
-    
-    if friendlyTargetName ~= nil then
-      local memberindex = GetMemberIndex(friendlyTargetName);
-      if memberindex ~= nil then
-        lastTarget = {
-          name = friendlyTargetName,
-          index = memberindex,
-          damageAmount = damageAmount,
-          time = GetTime()
-        };
-      end
-    end
-  end
-  
-  if lastTarget ~= nil and lastTarget.name ~= nil and lastTarget.name ~= GetTargetFullName() then
-    local playerHp = GetHealthPercentage(lastTarget.name);
-      
-    if playerHp < 100 then
-      WowCyborg_CURRENTATTACK = "Target partymember " .. lastTarget.name;
-      return SetSpellRequest("CTRL+" .. lastTarget.index + 3);
-    end
-  end
-
   local hp = GetHealthPercentage("target");
   local currentCastingSpell = CastingInfo("player");  
   local mana = (UnitPower("player") / UnitPowerMax("player")) * 100;
@@ -205,6 +199,15 @@ function RenderSingleTargetRotation()
   if currentCastingSpell == "Lesser Healing Wave" then
     if hp >= lesserHealAt then
       return SetSpellRequest(stopcasting);
+    end
+  end
+
+  if AoeHealingRequired() then
+    if IsCastableAtFriendlyTarget("Chain Heal", 385) and 
+      currentCastingSpell ~= "Chain Heal" 
+    then
+      WowCyborg_CURRENTATTACK = "Chain Heal";
+      return SetSpellRequest(chainHeal);
     end
   end
 
