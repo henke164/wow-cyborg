@@ -7,6 +7,7 @@
 local frostbolt = "1";
 local fireBlast = "2";
 local attack = "6";
+local eat = "9";
 local frostArmor = "SHIFT+1";
 local arcaneIntellect = "SHIFT+2";
 
@@ -21,6 +22,14 @@ end
 
 -- Single target
 function RenderSingleTargetRotation()
+  local hp = GetHealthPercentage("player");
+  if WowCyborg_INCOMBAT == false then
+    if hp < 80 and hp > 1 then
+      WowCyborg_CURRENTATTACK = "eat";
+      return SetSpellRequest(eat);
+    end
+  end
+
   local targetFaction = UnitFactionGroup("target");
   if targetFaction ~= nil then
     WowCyborg_CURRENTATTACK = "Player targetted";
@@ -53,9 +62,6 @@ function RenderSingleTargetRotation()
       WowCyborg_CURRENTATTACK = "Attack";
       return SetSpellRequest(attack);
     end
-
-    WowCyborg_CURRENTATTACK = "-";
-    return SetSpellRequest(nil);
   end
 
   if IsCastableAtEnemyTarget("Frostbolt", 0) then

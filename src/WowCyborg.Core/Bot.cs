@@ -44,33 +44,42 @@ namespace WowCyborg.Core
 
         public void MoveTo(Vector3 target, Action onDestinationReached = null)
         {
-            StopMovement();
+            StopMovement(() => {
+                _onDestinationReached = onDestinationReached;
 
-            _onDestinationReached = onDestinationReached;
-
-            if (target == null)
-            {
-                return;
-            }
-
-            OnLog("Move to:" + target.X + "," + target.Z);
-            TargetLocation = target;
-
-            _rotationCommander.FaceLocation(TargetLocation, () => {
-                if (TargetLocation == null || Paused)
+                if (target == null)
                 {
                     return;
                 }
-                _movementCommander.MoveToLocation(TargetLocation);
-            });
 
-            StartMovementTask();
+                OnLog("Move to:" + target.X + "," + target.Z);
+                TargetLocation = target;
+
+                _rotationCommander.FaceLocation(TargetLocation, () => {
+                    if (TargetLocation == null || Paused)
+                    {
+                        return;
+                    }
+                    _movementCommander.MoveToLocation(TargetLocation);
+                });
+
+                StartMovementTask();
+            });
         }
 
-        public void StopMovement()
+        public void StopMovement(Action onStopped)
         {
+            TargetLocation = null;
             _rotationCommander.Abort();
             _movementCommander.Stop();
+
+            while (_runningTask != null && !_runningTask.IsCompleted)
+            {
+                OnLog("Waiting for runningtask to complete");
+                Thread.Sleep(1000);
+            }
+
+            onStopped();
         }
 
         public void PauseMovement()
@@ -181,6 +190,7 @@ namespace WowCyborg.Core
             EventManager.StartEventDispatcher(typeof(WrongFacingDispatcher));
             EventManager.StartEventDispatcher(typeof(TooFarAwayDispatcher));
             EventManager.StartEventDispatcher(typeof(DeathDispatcher));
+            EventManager.StartEventDispatcher(typeof(TargetPositionChangedDispatcher));
         }
     }
 }

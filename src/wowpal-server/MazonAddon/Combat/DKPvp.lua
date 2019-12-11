@@ -24,7 +24,68 @@ local necroticStrike = "7";
 local soulReaper = "8";
 
 function RenderMultiTargetRotation()
-  return RenderSingleTargetRotation();
+  local runeCount = GetRuneCount();
+
+  local fwDebuff, fwTimeLeft, fwStacks = FindDebuff("target", "Festering Wound");
+
+  local vpDebuff = FindDebuff("target", "Virulent Plague");
+  if vpDebuff == nil then
+    if IsCastableAtEnemyTarget("Outbreak", 0) and runeCount > 0 then
+      WowCyborg_CURRENTATTACK = "Outbreak";
+      return SetSpellRequest(outbreak);
+    end
+  end
+  
+  if fwDebuff ~= nil and fwStacks == 1 then
+    if IsCastableAtEnemyTarget("Festering Strike", 0) and runeCount > 1 then
+      WowCyborg_CURRENTATTACK = "Festering Strike";
+      return SetSpellRequest(festeringStrike);
+    end
+  end
+
+  if fwDebuff ~= nil and IsCastableAtEnemyTarget("Scourge Strike", 0) then
+    if fwStacks > 3 and IsCastableAtEnemyTarget("Apocalypse", 0) then
+      WowCyborg_CURRENTATTACK = "Apocalypse";
+      return SetSpellRequest(apocalypse);
+    elseif IsCastableAtEnemyTarget("Unholy Frenzy", 0) and fwStacks > 1 then
+      WowCyborg_CURRENTATTACK = "Unholy Frenzy";
+      return SetSpellRequest(unholyFrenzy);
+    end
+  end
+  
+  local sdBuff = FindBuff("player", "Sudden Doom");
+  
+  if sdBuff ~= nil and IsCastableAtEnemyTarget("Death Coil", 0) then
+    WowCyborg_CURRENTATTACK = "Death Coil";
+    return SetSpellRequest(deathCoil);
+  end
+
+  if fwDebuff ~= nil then
+    if IsCastableAtEnemyTarget("Necrotic Strike", 0) and runeCount > 0 and fwStacks > 0 then
+      WowCyborg_CURRENTATTACK = "Necrotic Strike";
+      return SetSpellRequest(necroticStrike);
+    end
+  end
+
+  if IsCastableAtEnemyTarget("Soul Reaper", 0) and runeCount < 4 then
+    WowCyborg_CURRENTATTACK = "Soul Reaper";
+    return SetSpellRequest(soulReaper);
+  end
+
+  if fwDebuff == nil or (fwTimeLeft < 5 or fwStacks < 6) then
+    if IsCastableAtEnemyTarget("Festering Strike", 0) and runeCount > 1 then
+      WowCyborg_CURRENTATTACK = "Festering Strike";
+      return SetSpellRequest(festeringStrike);
+    end
+  end
+
+  if IsCastableAtEnemyTarget("Death Coil", 80) then
+    WowCyborg_CURRENTATTACK = "Death Coil";
+    return SetSpellRequest(deathCoil);
+  end
+
+  WowCyborg_CURRENTATTACK = "-";
+  return SetSpellRequest(nil);
 end
 
 function RenderSingleTargetRotation()

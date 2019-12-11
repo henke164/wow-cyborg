@@ -13,29 +13,28 @@ local execute = "3";
 local mortalStrike = "4";
 local overpower = "5";
 
-function RenderMultiTargetRotation(texture)
-  if InMeleeRange() == false then
-    WowCyborg_CURRENTATTACK = "-";
-    return SetSpellRequest(nil);
-  end
-
-  WowCyborg_CURRENTATTACK = "-";
-  return SetSpellRequest(nil);
-end
-
-function RenderSingleTargetRotation(texture)
+function RenderMultiTargetRotation()
   if InMeleeRange() == false then
     WowCyborg_CURRENTATTACK = "-";
     return SetSpellRequest(nil);
   end
 
   local hamstringDebuff, hamstringTimeLeft = FindDebuff("target", "Hamstring");
-  --if hamstringDebuff == nil or hamstringTimeLeft < 3 then
-  --  if IsCastableAtEnemyTarget("Hamstring", 10) then
-  --    WowCyborg_CURRENTATTACK = "Hamstring";
-  --    return SetSpellRequest(hamstring);
-  --  end
-  --end
+  if hamstringDebuff == nil or hamstringTimeLeft < 3 then
+    if IsCastableAtEnemyTarget("Hamstring", 10) then
+      WowCyborg_CURRENTATTACK = "Hamstring";
+      return SetSpellRequest(hamstring);
+    end
+  end
+
+  return RenderSingleTargetRotation()
+end
+
+function RenderSingleTargetRotation()
+  if InMeleeRange() == false then
+    WowCyborg_CURRENTATTACK = "-";
+    return SetSpellRequest(nil);
+  end
 
   local caBuff = FindBuff("player", "Crushing Assault");
   if caBuff ~= nil then
