@@ -19,6 +19,11 @@ namespace WowCyborg.Core.Handlers
                 GameProcess = Process.GetProcessesByName("WoW").FirstOrDefault();
                 if (GameProcess == null)
                 {
+                    GameProcess = Process.GetProcessesByName("WoWClassic").FirstOrDefault();
+                }
+
+                if (GameProcess == null)
+                {
                     return false;
                 }
             }

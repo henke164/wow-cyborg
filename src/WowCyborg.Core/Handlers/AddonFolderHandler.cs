@@ -22,6 +22,11 @@ namespace WowCyborg.Core.Handlers
         public static void LocateAddonFolderPath()
         {
             var process = Process.GetProcessesByName("WoW").FirstOrDefault();
+            if (process == null)
+            {
+                process = Process.GetProcessesByName("WoWClassic").FirstOrDefault();
+            }
+
             if (process != null)
             {
                 var file = new FileInfo(process.MainModule.FileName);

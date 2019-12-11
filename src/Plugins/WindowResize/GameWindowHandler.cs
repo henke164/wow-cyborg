@@ -19,6 +19,11 @@ namespace WindowResize
         {
             GameWindows = new List<GameWindow>();
             var processes = Process.GetProcessesByName("wow");
+            if (processes.Length == 0)
+            {
+                processes = Process.GetProcessesByName("WowClassic");
+            }
+
             var windowWidth = Screen.PrimaryScreen.Bounds.Width / processes.Length;
             SetWindowSizeAndPosition(processes, windowWidth);
         }

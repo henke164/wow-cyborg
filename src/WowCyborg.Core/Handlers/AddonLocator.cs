@@ -83,7 +83,6 @@ namespace WowCyborg.Core.Handlers
 
                 var addonBottomLeft = FindAddonBottomLeft(clone);
                 var frameSize = CalculateFrameSize(addonBottomLeft, clone);
-
                 if (frameSize <= 1)
                 {
                     Console.WriteLine("Could not locate addon on screen.");
@@ -155,6 +154,11 @@ namespace WowCyborg.Core.Handlers
         static IntPtr SetupGameHandle()
         {
             var processes = Process.GetProcessesByName("Wow");
+            if (processes.Length == 0)
+            {
+                processes = Process.GetProcessesByName("WowClassic");
+            }
+
             if (processes.Length == 1)
             {
                 return processes[0].MainWindowHandle;
