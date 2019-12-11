@@ -39,11 +39,6 @@ function RenderSingleTargetRotation()
   end
   
   if WowCyborg_INCOMBAT == false then
-    if IsCastableAtEnemyTarget("Flame Shock", 0) and WowCyborg_INCOMBAT == false then
-      WowCyborg_CURRENTATTACK = "Flame Shock";
-      return SetSpellRequest(flameshock);
-    end
-
     if hp < 80 or mana < 50 then
       if hp < mana then
         WowCyborg_CURRENTATTACK = "Heal";
@@ -53,6 +48,11 @@ function RenderSingleTargetRotation()
       return SetSpellRequest(eat);
     end
       
+    if IsCastableAtEnemyTarget("Flame Shock", 0) then
+      WowCyborg_CURRENTATTACK = "Flame Shock";
+      return SetSpellRequest(flameshock);
+    end
+
     WowCyborg_CURRENTATTACK = "-";
     return SetSpellRequest(nil);
   end

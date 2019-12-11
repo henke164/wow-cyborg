@@ -170,6 +170,31 @@ function RenderSingleTargetRotation()
     return SetSpellRequest(mount);
   end  
   
+  if lastTarget.time + 2 < GetTime() then	
+    local friendlyTargetName, damageAmount = FindFriendlyHealingTarget();	
+
+     if friendlyTargetName ~= nil then	
+      local memberindex = GetMemberIndex(friendlyTargetName);	
+      if memberindex ~= nil then	
+        lastTarget = {	
+          name = friendlyTargetName,	
+          index = memberindex,	
+          damageAmount = damageAmount,	
+          time = GetTime()	
+        };	
+      end	
+    end	
+  end	
+
+   if lastTarget ~= nil and lastTarget.name ~= nil and lastTarget.name ~= GetTargetFullName() then	
+    local playerHp = GetHealthPercentage(lastTarget.name);	
+
+     if playerHp < 100 then	
+      WowCyborg_CURRENTATTACK = "Target partymember " .. lastTarget.name;	
+      return SetSpellRequest("CTRL+" .. lastTarget.index + 3);	
+    end	
+  end	
+
   local hp = GetHealthPercentage("target");
   local currentCastingSpell = CastingInfo("player");  
   local mana = (UnitPower("player") / UnitPowerMax("player")) * 100;

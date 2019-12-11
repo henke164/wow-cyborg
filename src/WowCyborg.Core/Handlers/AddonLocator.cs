@@ -36,8 +36,14 @@ namespace WowCyborg.Core.Handlers
                 return GameHandle;
             }
 
-            var game = Process.GetProcessesByName("Wow")[0];
-            return game.MainWindowHandle;
+            var procs = Process.GetProcessesByName("Wow");
+            if (procs.Length > 0)
+            {
+                return procs[0].MainWindowHandle;
+            }
+
+            procs = Process.GetProcessesByName("WowClassic");
+            return procs[0].MainWindowHandle;
         }
 
         public static Rectangle GetAddonLocation()
