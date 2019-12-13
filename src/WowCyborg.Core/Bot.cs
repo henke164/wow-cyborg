@@ -190,7 +190,6 @@ namespace WowCyborg.Core
             EventManager.StartEventDispatcher(typeof(WrongFacingDispatcher));
             EventManager.StartEventDispatcher(typeof(TooFarAwayDispatcher));
             EventManager.StartEventDispatcher(typeof(DeathDispatcher));
-            EventManager.StartEventDispatcher(typeof(TargetPositionChangedDispatcher));
         }
     }
 }

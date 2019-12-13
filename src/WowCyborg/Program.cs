@@ -38,6 +38,9 @@ namespace WowCyborg
                 case "follower":
                     BotRunner = new BotFollower(hWnd);
                     break;
+                case "pvp":
+                    BotRunner = new PVP(hWnd);
+                    break;
                 default:
                     BotRunner = new AutoCaster(hWnd);
                     break;

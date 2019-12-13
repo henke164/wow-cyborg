@@ -27,3 +27,4 @@ classicferal	MazonAddon/Combat/ClassicFeral.lua
 classicfury	MazonAddon/Combat/WarriorClassicFury.lua
 classicmage	MazonAddon/Combat/MageClassic.lua
 classicrogue	MazonAddon/Combat/RogueClassic.lua
+pvp	MazonAddon/Combat/ClassicPVP.lua
