@@ -43,6 +43,15 @@ namespace WowCyborg.BotProfiles
                     _joinedAt = DateTime.Now;
                     Task.Run(Join);
                 }
+                else if (keyRequest.Key == Keys.D1 && keyRequest.ModifierKey == Keys.LShiftKey)
+                {
+                    if ((DateTime.Now - _joinedAt).Seconds < 10)
+                    {
+                        return;
+                    }
+                    _joinedAt = DateTime.Now;
+                    Task.Run(Leave);
+                }
 
                 if (keyRequest.Key == Keys.D9 && keyRequest.ModifierKey == Keys.None)
                 {
@@ -53,10 +62,6 @@ namespace WowCyborg.BotProfiles
 
                     _bgLogicStarted = true;
                     Task.Run(DoBgLogic);
-                }
-                else
-                {
-                    _bgLogicStarted = false;
                 }
 
                 if (keyRequest.ModifierKey != Keys.None)
@@ -83,6 +88,15 @@ namespace WowCyborg.BotProfiles
             Thread.Sleep(3000);
             MouseHandler.LeftClick(895, 175);
             Thread.Sleep(2000);
+        }
+
+        private void Leave()
+        {
+            Console.WriteLine("Leave....");
+            Thread.Sleep(3000);
+            MouseHandler.LeftClick(980, 700);
+            _bgLogicStarted = false;
+            Thread.Sleep(5000);
         }
 
         private async Task DoBgLogic()

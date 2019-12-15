@@ -5,9 +5,11 @@
 
 local doInBGStuff = "9";
 local targetPVE = "1";
+local leaveBg = "SHIFT+1";
 local speak = "SHIFT+0";
 local joinQueue = "SHIFT+9";
 
+local startedLeaveBgAt = 0;
 local pvpWindowOpen = false;
 
 -- Multi target
@@ -39,6 +41,12 @@ function RenderSingleTargetRotation()
   end
 
   if BGActive() then
+      
+    if startedLeaveBgAt > GetTime() - 0.5 then
+      WowCyborg_CURRENTATTACK = "Leaving BG...";
+      return SetSpellRequest(leaveBg);
+    end
+
     WowCyborg_CURRENTATTACK = "Do some BG shit";
     return SetSpellRequest(doInBGStuff);
   end
@@ -69,10 +77,15 @@ end
 
 function CreateBgFrame()
   local frame = CreateFrame("Frame")
-  frame:RegisterEvent("BATTLEFIELDS_SHOW")
+  frame:RegisterEvent("ITEM_PUSH")
 
-  frame:SetScript("OnEvent", function()
-    print("BATTLEFIELDS_SHOW");
+  frame:SetScript("OnEvent", function(arg1, arg2, ...)
+    print("ITEM_PUSH");
+
+    print(arg1);
+    print(arg2);
+    print(...);
+    startedLeaveBgAt = GetTime();
   end)
 end
 
