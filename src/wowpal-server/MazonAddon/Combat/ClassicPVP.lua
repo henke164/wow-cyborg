@@ -3,6 +3,7 @@
   1         targetPVE
 ]]--
 
+local wait = "SHIFT+3";
 local doInBGStuff = "9";
 local targetPVE = "1";
 local leaveBg = "SHIFT+1";
@@ -22,7 +23,7 @@ function RenderSingleTargetRotation()
   if IsOutside() then
     if IsDeserter() then
       WowCyborg_CURRENTATTACK = "Deserter";
-      return SetSpellRequest(nil);
+      return SetSpellRequest(wait);
     end
 
     local targetName = UnitName("target");
@@ -41,7 +42,6 @@ function RenderSingleTargetRotation()
   end
 
   if BGActive() then
-      
     if startedLeaveBgAt > GetTime() - 0.5 then
       WowCyborg_CURRENTATTACK = "Leaving BG...";
       return SetSpellRequest(leaveBg);
@@ -51,8 +51,8 @@ function RenderSingleTargetRotation()
     return SetSpellRequest(doInBGStuff);
   end
 
-  WowCyborg_CURRENTATTACK = "-";
-  return SetSpellRequest(nil);
+  WowCyborg_CURRENTATTACK = "Wait";
+  return SetSpellRequest(wait);
 end
 
 function IsOutside()
