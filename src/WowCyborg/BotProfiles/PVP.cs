@@ -13,6 +13,7 @@ namespace WowCyborg.BotProfiles
     {
         private DateTime _queuedAt = DateTime.MinValue;
         private DateTime _joinedAt = DateTime.MinValue;
+        private DateTime _bgLogicStartedAt = DateTime.MinValue;
         private bool _bgLogicStarted = false;
 
         public PVP(IntPtr hWnd)
@@ -49,17 +50,21 @@ namespace WowCyborg.BotProfiles
                     {
                         return;
                     }
-                    _joinedAt = DateTime.Now;
                     Task.Run(Leave);
                 }
 
                 if (keyRequest.Key == Keys.D9 && keyRequest.ModifierKey == Keys.None)
                 {
-                    if (_bgLogicStarted)
+                    if ((DateTime.Now - _bgLogicStartedAt).Seconds < 10)
                     {
                         return;
                     }
 
+                    if (_bgLogicStarted)
+                    {
+                        return;
+                    }
+                    _bgLogicStartedAt = DateTime.Now;
                     _bgLogicStarted = true;
                     Task.Run(DoBgLogic);
                 }
@@ -77,6 +82,7 @@ namespace WowCyborg.BotProfiles
 
         private void Queue()
         {
+            _bgLogicStarted = false;
             Thread.Sleep(3000);
             MouseHandler.LeftClick(235, 235);
             Thread.Sleep(2000);
@@ -85,6 +91,7 @@ namespace WowCyborg.BotProfiles
 
         private void Join()
         {
+            _bgLogicStarted = false;
             Thread.Sleep(3000);
             MouseHandler.LeftClick(895, 175);
             Thread.Sleep(2000);
@@ -97,6 +104,8 @@ namespace WowCyborg.BotProfiles
             MouseHandler.LeftClick(980, 700);
             _bgLogicStarted = false;
             Thread.Sleep(5000);
+            _bgLogicStartedAt = DateTime.Now;
+            _joinedAt = DateTime.Now;
         }
 
         private async Task DoBgLogic()
@@ -126,7 +135,7 @@ namespace WowCyborg.BotProfiles
             while (_bgLogicStarted)
             {
                 KeyHandler.PressKey(Keys.Space, 200);
-                Thread.Sleep(10000);
+                Thread.Sleep(new Random().Next(10000, 40000));
             }
             KeyHandler.ReleaseKey(Keys.W);
         }
