@@ -15,6 +15,7 @@ namespace WowCyborg.Core
         public Transform CurrentTransform { get; protected set; }
         public Vector3 TargetLocation { get; protected set; }
         public Transform CorpseTransform { get; protected set; }
+        public bool DestinationReached { get; set; } = true;
 
         protected KeyHandler KeyHandler;
         protected bool Paused = false;
@@ -44,6 +45,7 @@ namespace WowCyborg.Core
 
         public void MoveTo(Vector3 target, Action onDestinationReached = null)
         {
+            DestinationReached = false;
             StopMovement(() => {
                 _onDestinationReached = onDestinationReached;
 
@@ -148,6 +150,7 @@ namespace WowCyborg.Core
                     OnLog("Waiting for runningtask to complete");
                     Thread.Sleep(1000);
                 }
+                DestinationReached = true;
                 _onDestinationReached?.Invoke();
             }
         }

@@ -25,7 +25,7 @@ namespace WowCyborg.PluginUtilities
         }
 
         public bool IsRunning()
-            => _botRunner.TargetLocation != null;
+            => !_botRunner.DestinationReached;
 
         public bool IsAlive()
             => _botRunner.CorpseTransform == null;
