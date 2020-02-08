@@ -12,6 +12,9 @@ namespace WowCyborg.Core.Commanders
     {
         public static bool IsSkinner { get; set; } = true;
 
+        [DllImport("User32.dll")]
+        static extern int SetForegroundWindow(IntPtr point);
+
         [DllImport("user32.dll")]
         private static extern int GetWindowRect(IntPtr hwnd, out Rectangle rect);
 
@@ -31,6 +34,8 @@ namespace WowCyborg.Core.Commanders
             var foundLoot = false;
 
             Rectangle windowRectangle;
+
+            SetForegroundWindow(_hWnd);
 
             GetWindowRect(_hWnd, out windowRectangle);
 

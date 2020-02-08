@@ -10,6 +10,7 @@ local regrowth = "2";
 local rake = "2";
 local claw = "3";
 local rip = "4";
+local tigersFury = "5";
 local attack = "6";
 
 local toggleBear = "SHIFT+1";
@@ -61,7 +62,7 @@ function RenderSingleTargetRotation()
   end
 
   if WowCyborg_INCOMBAT == false then
-    if shape == "CAT" then
+    if shape == "CAT" or shape == "BEAR" then
       WowCyborg_CURRENTATTACK = "Casterform";
       return SetSpellRequest(toggleCat);
     end
@@ -88,7 +89,7 @@ function RenderSingleTargetRotation()
     end
 
     if hp < 80 or mana < 50 then
-      WowCyborg_CURRENTATTACK = "Regrowth";
+      WowCyborg_CURRENTATTACK = "Rest";
       return SetSpellRequest(eat);
     end
     
@@ -100,10 +101,21 @@ function RenderSingleTargetRotation()
       return SetSpellRequest(toggleCat);
     end
 
+    if IsMelee() and IsCastableAtEnemyTarget("Attack", 0) and IsCurrentSpell(6603) == false then
+      WowCyborg_CURRENTATTACK = "Attack";
+      return SetSpellRequest(attack);
+    end
+  
     local points = GetComboPoints("player", "target");
 
-    if points > 2 then
-      if IsCastableAtEnemyTarget("Rip", 30) then
+    local tigerBuff = FindBuff("player", "Tiger's Fury");
+    if tigerBuff == nil then
+      WowCyborg_CURRENTATTACK = "Tiger's Fury";
+      return SetSpellRequest(tigersFury);
+    end
+
+    if points > 1 then
+      if IsCastableAtEnemyTarget("Rip", 0) then
         WowCyborg_CURRENTATTACK = "Rip";
         return SetSpellRequest(rip);
       end
@@ -117,15 +129,13 @@ function RenderSingleTargetRotation()
       end
     end
 
-    if IsCastableAtEnemyTarget("Claw", 0) then
+    if IsMelee() then
       WowCyborg_CURRENTATTACK = "Claw";
       return SetSpellRequest(claw);
     end
-  end
 
-  if IsMelee() and IsCastableAtEnemyTarget("Attack", 0) and IsCurrentSpell(6603) == false then
-    WowCyborg_CURRENTATTACK = "Attack";
-    return SetSpellRequest(attack);
+    WowCyborg_CURRENTATTACK = "-";
+    return SetSpellRequest(nil);
   end
 
   WowCyborg_CURRENTATTACK = "-";

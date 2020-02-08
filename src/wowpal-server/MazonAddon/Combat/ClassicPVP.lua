@@ -4,7 +4,6 @@
 ]]--
 
 local wait = "SHIFT+3";
-local doInBGStuff = "9";
 local targetPVE = "1";
 local leaveBg = "SHIFT+1";
 local speak = "SHIFT+0";
@@ -27,8 +26,8 @@ function RenderSingleTargetRotation()
     end
 
     local targetName = UnitName("target");
-    if targetName ~= "Kartra Bloodsnarl" then
-      WowCyborg_CURRENTATTACK = "Target Karstra";
+    if targetName ~= "Taim Ragetotem" and targetName ~= "Kartra Bloodsnarl" then
+      WowCyborg_CURRENTATTACK = "Target Taim Ragetotem";
       return SetSpellRequest(targetPVE);
     else
       WowCyborg_CURRENTATTACK = "Speak";
@@ -48,7 +47,7 @@ function RenderSingleTargetRotation()
     end
 
     WowCyborg_CURRENTATTACK = "Do some BG shit";
-    return SetSpellRequest(doInBGStuff);
+    return SetSpellRequest(nil);
   end
 
   WowCyborg_CURRENTATTACK = "Wait";

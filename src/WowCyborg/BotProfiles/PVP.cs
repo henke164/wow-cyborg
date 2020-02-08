@@ -82,7 +82,11 @@ namespace WowCyborg.BotProfiles
         private void Join()
         {
             Thread.Sleep(3000);
-            _bgLogicStarted = false;
+            if (_bgLogicStarted)
+            {
+                return;
+            }
+            _bgLogicStarted = true;
             MouseHandler.LeftClick(895, 175);
             Thread.Sleep(2000);
             DoBgLogic();
@@ -121,11 +125,10 @@ namespace WowCyborg.BotProfiles
             Thread.Sleep(5000);
             KeyHandler.PressKey(Keys.A, new Random().Next(0,1000));
 
-            _bgLogicStarted = true;
             while (_bgLogicStarted)
             {
                 KeyHandler.PressKey(Keys.Space, 200);
-                Thread.Sleep(10000);
+                Thread.Sleep(new Random().Next(30000, 120000));
             }
             KeyHandler.ReleaseKey(Keys.W);
         }

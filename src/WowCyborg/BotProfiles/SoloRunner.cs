@@ -84,7 +84,10 @@ namespace WowCyborg.BotProfiles
                 if (_isInCombat)
                 {
                     PauseMovement();
-                    RunTargetSwitchHandler();
+                    Task.Run(() => {
+                        Thread.Sleep(3000);
+                        RunTargetSwitchHandler();
+                    });
                     return;
                 }
 
@@ -126,7 +129,7 @@ namespace WowCyborg.BotProfiles
                             if (!_isInCombat)
                             {
                                 _initialResting = true;
-                                //ResumeMovement();
+                                ResumeMovement();
                             }
                         });
                         _restingTask.Start();

@@ -186,12 +186,12 @@ function RenderSingleTargetRotation()
     end	
   end	
 
-   if lastTarget ~= nil and lastTarget.name ~= nil and lastTarget.name ~= GetTargetFullName() then	
+  if lastTarget ~= nil and lastTarget.name ~= nil and lastTarget.name ~= GetTargetFullName() then	
     local playerHp = GetHealthPercentage(lastTarget.name);	
 
      if playerHp < 100 then	
       WowCyborg_CURRENTATTACK = "Target partymember " .. lastTarget.name;	
-      return SetSpellRequest("CTRL+" .. lastTarget.index + 3);	
+      --return SetSpellRequest("CTRL+" .. lastTarget.index + 3);	
     end	
   end	
 
