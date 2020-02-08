@@ -26,6 +26,12 @@ namespace WowCyborg.BotProfiles
             EventManager.On("KeyPressRequested", (Event ev) =>
             {
                 var keyRequest = (KeyPressRequest)ev.Data;
+                if (keyRequest.Key == Keys.D3 && keyRequest.ModifierKey == Keys.LShiftKey)
+                {
+                    _bgLogicStarted = false;
+                    return;
+                }
+
                 if (keyRequest.Key == Keys.D0 && keyRequest.ModifierKey == Keys.LShiftKey)
                 {
                     if ((DateTime.Now - _queuedAt).Seconds < 10)
@@ -33,7 +39,7 @@ namespace WowCyborg.BotProfiles
                         return;
                     }
                     _queuedAt = DateTime.Now;
-                    Task.Run(Queue);
+                    Task.Run(() => { Queue(); });
                 }
                 else if (keyRequest.Key == Keys.D9 && keyRequest.ModifierKey == Keys.LShiftKey)
                 {
@@ -42,7 +48,7 @@ namespace WowCyborg.BotProfiles
                         return;
                     }
                     _joinedAt = DateTime.Now;
-                    Task.Run(Join);
+                    Task.Run(() => { Join(); });
                 }
                 else if (keyRequest.Key == Keys.D1 && keyRequest.ModifierKey == Keys.LShiftKey)
                 {
@@ -50,7 +56,8 @@ namespace WowCyborg.BotProfiles
                     {
                         return;
                     }
-                    Task.Run(Leave);
+                    _joinedAt = DateTime.Now;
+                    Task.Run(() => { Leave(); });
                 }
 
                 if (keyRequest.Key == Keys.D9 && keyRequest.ModifierKey == Keys.None)
@@ -84,6 +91,7 @@ namespace WowCyborg.BotProfiles
         {
             _bgLogicStarted = false;
             Thread.Sleep(3000);
+            _bgLogicStarted = false;
             MouseHandler.LeftClick(235, 235);
             Thread.Sleep(2000);
             MouseHandler.LeftClick(200, 480);
@@ -93,6 +101,7 @@ namespace WowCyborg.BotProfiles
         {
             _bgLogicStarted = false;
             Thread.Sleep(3000);
+            _bgLogicStarted = false;
             MouseHandler.LeftClick(895, 175);
             Thread.Sleep(2000);
         }
@@ -132,6 +141,7 @@ namespace WowCyborg.BotProfiles
             Thread.Sleep(5000);
             KeyHandler.PressKey(Keys.A, new Random().Next(0,1000));
 
+            _bgLogicStarted = true;
             while (_bgLogicStarted)
             {
                 KeyHandler.PressKey(Keys.Space, 200);
