@@ -82,13 +82,13 @@ function RenderSingleTargetRotation()
       end
     end
   
-    if IsCastableAtEnemyTarget("Faerie Fire", 55) then
+    if IsCastableAtEnemyTarget("Moonfire", 55) then
       WowCyborg_CURRENTATTACK = "Faerie Fire";
       return SetSpellRequest(faerieFire);
     end
 
     if hp < 80 or mana < 50 then
-      WowCyborg_CURRENTATTACK = "Regrowth";
+      WowCyborg_CURRENTATTACK = "Rest";
       return SetSpellRequest(eat);
     end
     
@@ -97,7 +97,19 @@ function RenderSingleTargetRotation()
   else
     if shape == "CASTER" then
       WowCyborg_CURRENTATTACK = "Catform";
-      return SetSpellRequest(toggleCat);
+      --return SetSpellRequest(toggleCat);
+    end
+
+    
+    if hp < 50 then
+      WowCyborg_CURRENTATTACK = "Regrowth";
+      return SetSpellRequest(regrowth);
+    end
+    
+
+    if IsCastableAtEnemyTarget("Attack", 0) and IsCurrentSpell(6603) == false then
+      WowCyborg_CURRENTATTACK = "Attack";
+      return SetSpellRequest(attack);
     end
 
     local points = GetComboPoints("player", "target");
@@ -117,15 +129,10 @@ function RenderSingleTargetRotation()
       end
     end
 
-    if IsCastableAtEnemyTarget("Claw", 0) then
+    --if IsCastableAtEnemyTarget("Claw", 0) then
       WowCyborg_CURRENTATTACK = "Claw";
       return SetSpellRequest(claw);
-    end
-  end
-
-  if IsMelee() and IsCastableAtEnemyTarget("Attack", 0) and IsCurrentSpell(6603) == false then
-    WowCyborg_CURRENTATTACK = "Attack";
-    return SetSpellRequest(attack);
+    --end
   end
 
   WowCyborg_CURRENTATTACK = "-";

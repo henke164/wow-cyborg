@@ -36,14 +36,6 @@ function RenderSingleTargetRotation()
     return SetSpellRequest(nil);
   end
 
-  local caBuff = FindBuff("player", "Crushing Assault");
-  if caBuff ~= nil then
-    if IsCastableAtEnemyTarget("Slam", 20) then
-      WowCyborg_CURRENTATTACK = "Slam";
-      return SetSpellRequest(slam);
-    end
-  end
-  
   local sdBuff = FindBuff("player", "Sudden Death");
   if sdBuff ~= nil then
     if IsCastableAtEnemyTarget("Execute", 20) then
@@ -52,6 +44,14 @@ function RenderSingleTargetRotation()
     end
   end
 
+  local caBuff = FindBuff("player", "Crushing Assault");
+  if caBuff ~= nil then
+    if IsCastableAtEnemyTarget("Slam", 20) then
+      WowCyborg_CURRENTATTACK = "Slam";
+      return SetSpellRequest(slam);
+    end
+  end
+  
   if IsCastableAtEnemyTarget("Mortal Strike", 30) then
     WowCyborg_CURRENTATTACK = "Mortal Strike";
     return SetSpellRequest(mortalStrike);

@@ -1,5 +1,5 @@
 ﻿{
-  "botType": "solorunner",
+  "botType": "",
   "serverAddress": "http://localhost:3000",
   "addonColumnCount": 4,
   "addonRowCount": 6

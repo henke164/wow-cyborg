@@ -1,4 +1,8 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -14,11 +18,19 @@ namespace WowCyborg.BotProfiles
         private DateTime _queuedAt = DateTime.MinValue;
         private DateTime _joinedAt = DateTime.MinValue;
         private DateTime _bgLogicStartedAt = DateTime.MinValue;
+        private BattlegroundRunner _runner = new BattlegroundRunner();
         private bool _bgLogicStarted = false;
 
         public PVP(IntPtr hWnd)
             : base (hWnd)
         {
+            Task.Run(() => {
+                while (true)
+                {
+                    KeyHandler.PressKey(Keys.Space);
+                    Thread.Sleep(60000 * 15);
+                }
+            });
         }
 
         protected override void SetupBehaviour()
@@ -29,6 +41,7 @@ namespace WowCyborg.BotProfiles
                 if (keyRequest.Key == Keys.D3 && keyRequest.ModifierKey == Keys.LShiftKey)
                 {
                     _bgLogicStarted = false;
+                    _runner.Stop();
                     return;
                 }
 
@@ -73,7 +86,7 @@ namespace WowCyborg.BotProfiles
                     }
                     _bgLogicStartedAt = DateTime.Now;
                     _bgLogicStarted = true;
-                    Task.Run(DoBgLogic);
+                    Task.Run(() => DoBgLogic());
                 }
 
                 if (keyRequest.ModifierKey != Keys.None)
@@ -89,6 +102,7 @@ namespace WowCyborg.BotProfiles
 
         private void Queue()
         {
+            _runner.Stop();
             _bgLogicStarted = false;
             Thread.Sleep(3000);
             _bgLogicStarted = false;
@@ -99,6 +113,7 @@ namespace WowCyborg.BotProfiles
 
         private void Join()
         {
+            _runner.Stop();
             _bgLogicStarted = false;
             Thread.Sleep(3000);
             _bgLogicStarted = false;
@@ -108,6 +123,7 @@ namespace WowCyborg.BotProfiles
 
         private void Leave()
         {
+            _runner.Stop();
             Console.WriteLine("Leave....");
             Thread.Sleep(3000);
             MouseHandler.LeftClick(980, 700);
@@ -117,11 +133,14 @@ namespace WowCyborg.BotProfiles
             _joinedAt = DateTime.Now;
         }
 
-        private async Task DoBgLogic()
-        {
+        private void DoBgLogic()
+        {/*
+            Thread.Sleep(12000);
+            _runner.Play(KeyHandler);
+            */
             Console.WriteLine("Bg logic....");
-            Thread.Sleep(30000);
-            KeyHandler.PressKey(Keys.A, 400);
+            Thread.Sleep(new Random().Next(29000, 33000));
+            KeyHandler.PressKey(Keys.A, new Random().Next(390, 420));
             KeyHandler.PressKey(Keys.W, 2500);
             KeyHandler.PressKey(Keys.D, 400);
             KeyHandler.HoldKey(Keys.W);
@@ -137,17 +156,104 @@ namespace WowCyborg.BotProfiles
             Thread.Sleep(1000);
             KeyHandler.PressKey(Keys.F, 100);
             Thread.Sleep(5000);
-            KeyHandler.HoldKey(Keys.W);
+            KeyHandler.PressKey(Keys.D, 500);
             Thread.Sleep(5000);
-            KeyHandler.PressKey(Keys.A, new Random().Next(0,1000));
-
-            _bgLogicStarted = true;
+            KeyHandler.PressKey(Keys.W, 2000);
+            KeyHandler.PressKey(Keys.A, 400);
+            Thread.Sleep(400);
+            KeyHandler.PressKey(Keys.W, 4000);
+            Thread.Sleep(4000);
+            KeyHandler.PressKey(Keys.E, 500);
+            KeyHandler.PressKey(Keys.W, 8000);
+            Thread.Sleep(8000);
+            KeyHandler.PressKey(Keys.D, 50);
+            KeyHandler.PressKey(Keys.W, 5000);
+            Thread.Sleep(5000);
+            KeyHandler.PressKey(Keys.D, 50);
+            KeyHandler.PressKey(Keys.W, 5000);
+            Thread.Sleep(5000);
+            KeyHandler.PressKey(Keys.D, 500);
+            Thread.Sleep(1000);
+            KeyHandler.PressKey(Keys.W, new Random().Next(29000, 33000));
             while (_bgLogicStarted)
             {
                 KeyHandler.PressKey(Keys.Space, 200);
                 Thread.Sleep(new Random().Next(10000, 40000));
             }
-            KeyHandler.ReleaseKey(Keys.W);
+        }
+
+        internal class BattlegroundRunner
+        {
+            private IList<InputEvent> _inputEvents;
+            private bool _running = false;
+
+            public void Stop()
+            {
+                _running = false;
+            }
+
+            public void Play(KeyHandler keyhandler)
+            {
+                LoadEvents();
+                var sw = new Stopwatch();
+                sw.Start();
+                var previousMs = 0d;
+                var currentIndex = 0;
+                _running = true;
+                while (_running)
+                {
+                    if (previousMs != sw.ElapsedMilliseconds)
+                    {
+                        if (_inputEvents.Count <= currentIndex)
+                        {
+                            Console.WriteLine("Done");
+                            break;
+                        }
+
+                        var currentEvent = _inputEvents[currentIndex];
+                        if (sw.ElapsedMilliseconds >= currentEvent.Time)
+                        {
+                            Console.WriteLine(currentEvent.Time + " " + currentEvent.Key + " " + currentEvent.Down);
+                            if (currentEvent.Down)
+                            {
+                                keyhandler.HoldKey(currentEvent.Key);
+                            }
+                            else
+                            {
+                                keyhandler.ReleaseKey(currentEvent.Key);
+                            }
+                            currentIndex++;
+                        }
+                    }
+                    previousMs = sw.ElapsedMilliseconds;
+                }
+            }
+
+            private void LoadEvents()
+            {
+                Console.WriteLine("Loading");
+                try
+                {
+                    using (var sw = new StreamReader("recording.json"))
+                    {
+                        _inputEvents = JsonConvert.DeserializeObject<List<InputEvent>>(sw.ReadToEnd());
+                    }
+                }
+                catch
+                {
+                    _inputEvents = new List<InputEvent>();
+                }
+
+                Console.WriteLine("Loaded: " + _inputEvents.Count + " events");
+            }
+
+            internal class InputEvent
+            {
+                public Keys Key { get; set; }
+                public bool Down { get; set; }
+                public int Time { get; set; }
+            }
         }
     }
+
 }
