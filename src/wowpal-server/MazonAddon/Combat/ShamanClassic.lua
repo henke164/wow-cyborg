@@ -10,7 +10,7 @@
 
 local flameshock = "1";
 local lightningShield = "2";
-local earthshock = "3";
+local stormStrike = "3";
 local healingWave = "4";
 local lightningBolt = "5";
 local attack = "6";
@@ -86,8 +86,8 @@ function RenderSingleTargetRotation()
       return SetSpellRequest(healingWave);
     end
 
-    WowCyborg_CURRENTATTACK = "Earth Shock";
-    return SetSpellRequest(earthshock);
+    WowCyborg_CURRENTATTACK = "Stormstrike";
+    return SetSpellRequest(stormStrike);
   end
 
   local lsBuff = FindBuff("player", "Lightning Shield");

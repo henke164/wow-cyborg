@@ -7,7 +7,7 @@
   5   Apocalypse
   6   Death Coil
   7   Necrotic Strike
-  7   Soul Reaper
+  8   Soul Reaper
 ]]--
 
 local incomingDamage = {}
@@ -22,6 +22,7 @@ local apocalypse = "5";
 local deathCoil = "6";
 local necroticStrike = "7";
 local soulReaper = "8";
+local deathStrike = "9";
 
 function RenderMultiTargetRotation()
   local runeCount = GetRuneCount();
@@ -65,6 +66,12 @@ function RenderMultiTargetRotation()
       WowCyborg_CURRENTATTACK = "Necrotic Strike";
       return SetSpellRequest(necroticStrike);
     end
+  end
+
+  local dsuBuff = FindBuff("player", "Dark Succor");
+  if dsuBuff ~= nil and IsCastableAtEnemyTarget("Death Strike", 0) then
+    WowCyborg_CURRENTATTACK = "Death Strike";
+    return SetSpellRequest(deathStrike);
   end
 
   if IsCastableAtEnemyTarget("Soul Reaper", 0) and runeCount < 4 then
@@ -138,6 +145,12 @@ function RenderSingleTargetRotation()
       WowCyborg_CURRENTATTACK = "Necrotic Strike";
       return SetSpellRequest(necroticStrike);
     end
+  end
+
+  local dsuBuff = FindBuff("player", "Dark Succor");
+  if dsuBuff ~= nil and IsCastableAtEnemyTarget("Death Strike", 0) then
+    WowCyborg_CURRENTATTACK = "Death Strike";
+    return SetSpellRequest(deathStrike);
   end
 
   if IsCastableAtEnemyTarget("Soul Reaper", 0) and runeCount < 4 then

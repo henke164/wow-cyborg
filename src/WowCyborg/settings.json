@@ -1,6 +1,14 @@
+<<<<<<< HEAD
 ﻿{
   "botType": "",
   "serverAddress": "http://localhost:3000",
   "addonColumnCount": 4,
   "addonRowCount": 6
+=======
+﻿{
+  "botType": "",
+  "serverAddress": "http://localhost:3000",
+  "addonColumnCount": 4,
+  "addonRowCount": 6
+>>>>>>> b7b6ecd464949b37c4a941f4bb784c6febfb99d8
 }

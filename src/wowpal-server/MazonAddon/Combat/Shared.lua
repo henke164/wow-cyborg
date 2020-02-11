@@ -2,6 +2,7 @@ WowCyborg_AOE_Rotation = false;
 WowCyborg_CLASSIC = true;
 WowCyborg_CURRENTATTACK = "-";
 WowCyborg_DISABLED = false;
+WowCyborg_PAUSE_UNTIL = 0;
 
 local spellButtonTexture;
 local buttonCombinerTexture;
@@ -24,6 +25,15 @@ end
 function CreateRotationFrame()
   frame, spellButtonTexture = CreateDefaultFrame(frameSize * 2, frameSize, frameSize, frameSize);
   _, buttonCombinerTexture = CreateDefaultFrame(frameSize * 3, frameSize, frameSize, frameSize);
+  
+  frame:EnableKeyboard(true);
+  frame:SetPropagateKeyboardInput(true);
+
+  frame:SetScript("OnKeyDown", function(self, event, ...)
+    if string.sub(event, 1, string.len(1)) == "F" then
+      WowCyborg_PAUSE_UNTIL = GetTime() + 1;
+    end
+  end)
 
   frame:SetScript("OnUpdate", function(self, event, ...)
     if WowCyborg_DISABLED == true then
@@ -43,6 +53,15 @@ function CreateRotationFrame()
 end
 
 function SetSpellRequest(buttonCombination)
+  if IsMouseButtonDown("MiddleButton") then
+    WowCyborg_PAUSE_UNTIL = GetTime() + 1;
+  end
+
+  if GetTime() < WowCyborg_PAUSE_UNTIL then
+    WowCyborg_CURRENTATTACK = "Paused";
+    return;
+  end
+
   if buttonCombination == nil then
     r, g, b = GetColorFromNumber(nil);
     buttonCombinerTexture:SetColorTexture(r, g, b);

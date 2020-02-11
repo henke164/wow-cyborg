@@ -7,6 +7,7 @@ eleshaman	MazonAddon/Combat/ShamanEle.lua
 restoshaman	MazonAddon/Combat/ShamanResto.lua
 bmmonk	MazonAddon/Combat/MonkBrewmaster.lua
 mwmonk	MazonAddon/Combat/MonkMistweaver.lua
+wwmonk	MazonAddon/Combat/MonkWindwalker.lua
 blooddk	MazonAddon/Combat/DKBlood.lua
 unholydk	MazonAddon/Combat/DKUnholy.lua
 pvpdk	MazonAddon/Combat/DKPvp.lua
@@ -15,6 +16,9 @@ mmhunterfollower	MazonAddon/Combat/HunterMMFollower.lua
 mwmonkfollower	MazonAddon/Combat/MonkMistweaverFollower.lua
 eleshamanfollower	MazonAddon/Combat/ShamanEleFollower.lua
 bmhunterfollower	MazonAddon/Combat/HunterBMFollower.lua
+dhdps	MazonAddon/Combat/DHHavoc.lua
+dhtank	MazonAddon/Combat/DHTank.lua
+classicarms	MazonAddon/Combat/WarriorClassicArms.lua
 classicwarrior	MazonAddon/Combat/WarriorClassic.lua
 classictank	MazonAddon/Combat/WarriorClassicTank.lua
 classicshaman	MazonAddon/Combat/ShamanClassic.lua
