@@ -19,6 +19,7 @@ local lifebloom = 2;
 local rejuvenation = 3;
 local swiftmend = 4;
 local wildGrowth = 5;
+local cenarionWard = 6;
 
 function GetTargetFullName()
   local name, realm = UnitName("target");
@@ -86,7 +87,7 @@ function FindFriendlyHealingTarget()
     local hpp = GetHealthPercentage(highestDamageTaken.name);
     if tostring(hpp) ~= "-nan(ind)" and hpp > 0 and hpp < 80 then
       if GetTargetFullName() ~= highestDamageTaken.name then
-        if IsCastableAtFriendlyUnit(highestDamageTaken.name, "Lifebloom", 0) then
+        if IsSpellInRange("Lifebloom", highestDamageTaken.name) then
           return highestDamageTaken.name, highestDamageTaken.amount;
         end
       end
@@ -104,7 +105,7 @@ function FindFriendlyHealingTarget()
     local hp = GetHealthPercentage(members[groupindex].name);
     if tostring(hp) ~= "-nan(ind)" and hp > 0 and hp < 100 then
       if lowestHealth == nil or hp <= lowestHealth.hp then
-        if IsCastableAtFriendlyUnit(members[groupindex].name, "Lifebloom", 0) then
+        if IsSpellInRange("Lifebloom", members[groupindex].name) then
           lowestHealth = { hp = hp, name = members[groupindex].name }
         end
       end
@@ -147,7 +148,7 @@ local lastTarget = {
 function RenderSingleTargetRotation()
   local tankName, index = GetTankName();
   if tankName ~= nil and FindBuff(tankName, "Lifebloom") == nil then
-    if IsCastableAtFriendlyUnit(tankName, "Lifebloom", 2240) then
+    if IsCastableAtFriendlyUnit(tankName, "Lifebloom", 2240) and IsSpellInRange("Lifebloom", tankName) then
       local tankHp = GetHealthPercentage(tankName);
       if tankHp > 0 then
         local targetName = UnitName("target");
@@ -179,7 +180,7 @@ function RenderSingleTargetRotation()
     end
   end
 
-  if lastTarget ~= nil and lastTarget.name ~= nil and lastTarget.name ~= GetTargetFullName() then
+  if lastTarget ~= nil and lastTarget.name ~= nil and lastTarget.name ~= GetTargetFullName() and lastTarget.time + 2 > GetTime() then
     WowCyborg_CURRENTATTACK = "Target partymember " .. lastTarget.name;
     return SetSpellRequest("CTRL+" .. lastTarget.index);
   end

@@ -13,6 +13,7 @@ namespace WowCyborg.BotProfiles
     {
         private DateTime _queuedAt = DateTime.MinValue;
         private DateTime _joinedAt = DateTime.MinValue;
+        private DateTime _bgLogicStartedAt = DateTime.MinValue;
         private bool _bgLogicStarted = false;
 
         public PVP(IntPtr hWnd)
@@ -59,6 +60,22 @@ namespace WowCyborg.BotProfiles
                     Task.Run(() => { Leave(); });
                 }
 
+                if (keyRequest.Key == Keys.D9 && keyRequest.ModifierKey == Keys.None)
+                {
+                    if ((DateTime.Now - _bgLogicStartedAt).Seconds < 10)
+                    {
+                        return;
+                    }
+
+                    if (_bgLogicStarted)
+                    {
+                        return;
+                    }
+                    _bgLogicStartedAt = DateTime.Now;
+                    _bgLogicStarted = true;
+                    Task.Run(DoBgLogic);
+                }
+
                 if (keyRequest.ModifierKey != Keys.None)
                 {
                     KeyHandler.ModifiedKeypress(keyRequest.ModifierKey, keyRequest.Key);
@@ -72,6 +89,7 @@ namespace WowCyborg.BotProfiles
 
         private void Queue()
         {
+            _bgLogicStarted = false;
             Thread.Sleep(3000);
             _bgLogicStarted = false;
             MouseHandler.LeftClick(235, 235);
@@ -81,6 +99,7 @@ namespace WowCyborg.BotProfiles
 
         private void Join()
         {
+            _bgLogicStarted = false;
             Thread.Sleep(3000);
             if (_bgLogicStarted)
             {
@@ -89,7 +108,6 @@ namespace WowCyborg.BotProfiles
             _bgLogicStarted = true;
             MouseHandler.LeftClick(895, 175);
             Thread.Sleep(2000);
-            DoBgLogic();
         }
 
         private void Leave()
@@ -99,6 +117,8 @@ namespace WowCyborg.BotProfiles
             MouseHandler.LeftClick(980, 700);
             _bgLogicStarted = false;
             Thread.Sleep(5000);
+            _bgLogicStartedAt = DateTime.Now;
+            _joinedAt = DateTime.Now;
         }
 
         private async Task DoBgLogic()
