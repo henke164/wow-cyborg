@@ -135,7 +135,7 @@ function GetTankName()
 end
 
 function RenderMultiTargetRotation()
-  return SetSpellRequest(nil);
+  return RenderSingleTargetRotation(true);
 end
 
 local lastTarget = {
@@ -145,44 +145,46 @@ local lastTarget = {
   damageAmount = 0
 };
 
-function RenderSingleTargetRotation()
-  local tankName, index = GetTankName();
-  if tankName ~= nil and FindBuff(tankName, "Lifebloom") == nil then
-    if IsCastableAtFriendlyUnit(tankName, "Lifebloom", 2240) and IsSpellInRange("Lifebloom", tankName) then
-      local tankHp = GetHealthPercentage(tankName);
-      if tankHp > 0 then
-        local targetName = UnitName("target");
-        if targetName == nil or string.match(tankName, targetName) == nil then
-          WowCyborg_CURRENTATTACK = "Target tank: " .. tankName;
-          return SetSpellRequest("CTRL+" .. index);
-        else
-          WowCyborg_CURRENTATTACK = "Lifebloom";
-          return SetSpellRequest(lifebloom);
+function RenderSingleTargetRotation(disableAutoTarget)
+  if disableAutoTarget == nil then
+    local tankName, index = GetTankName();
+    if tankName ~= nil and FindBuff(tankName, "Lifebloom") == nil then
+      if IsCastableAtFriendlyUnit(tankName, "Lifebloom", 2240) and IsSpellInRange("Lifebloom", tankName) then
+        local tankHp = GetHealthPercentage(tankName);
+        if tankHp > 0 then
+          local targetName = UnitName("target");
+          if targetName == nil or string.match(tankName, targetName) == nil then
+            WowCyborg_CURRENTATTACK = "Target tank: " .. tankName;
+            return SetSpellRequest("CTRL+" .. index);
+          else
+            WowCyborg_CURRENTATTACK = "Lifebloom";
+            return SetSpellRequest(lifebloom);
+          end
         end
       end
     end
-  end
 
-  if lastTarget.time + 2 < GetTime() then
-    local friendlyTargetName, damageAmount = FindFriendlyHealingTarget();
-    if friendlyTargetName ~= nil then
-      local memberindex = GetMemberIndex(friendlyTargetName);
-      if memberindex == nil then
-        WowCyborg_CURRENTATTACK = "-";
-        return SetSpellRequest(nil);
+    if lastTarget.time + 2 < GetTime() then
+      local friendlyTargetName, damageAmount = FindFriendlyHealingTarget();
+      if friendlyTargetName ~= nil then
+        local memberindex = GetMemberIndex(friendlyTargetName);
+        if memberindex == nil then
+          WowCyborg_CURRENTATTACK = "-";
+          return SetSpellRequest(nil);
+        end
+        lastTarget = {
+          name = friendlyTargetName,
+          index = memberindex,
+          damageAmount = damageAmount,
+          time = GetTime()
+        };
       end
-      lastTarget = {
-        name = friendlyTargetName,
-        index = memberindex,
-        damageAmount = damageAmount,
-        time = GetTime()
-      };
     end
-  end
 
-  if lastTarget ~= nil and lastTarget.name ~= nil and lastTarget.name ~= GetTargetFullName() and lastTarget.time + 2 > GetTime() then
-    WowCyborg_CURRENTATTACK = "Target partymember " .. lastTarget.name;
-    return SetSpellRequest("CTRL+" .. lastTarget.index);
+    if lastTarget ~= nil and lastTarget.name ~= nil and lastTarget.name ~= GetTargetFullName() and lastTarget.time + 2 > GetTime() then
+      WowCyborg_CURRENTATTACK = "Target partymember " .. lastTarget.name;
+      return SetSpellRequest("CTRL+" .. lastTarget.index);
+    end
   end
 
   if UnitChannelInfo("player") == "Tranquility" then
