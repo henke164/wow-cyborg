@@ -145,7 +145,7 @@ local lastTarget = {
   damageAmount = 0
 };
 
-function RenderSingleTargetRotation()
+function HandleTankPreHots()
   local tankName, index = GetTankName();
   if tankName ~= nil and FindBuff(tankName, "Lifebloom") == nil then
     if IsCastableAtFriendlyUnit(tankName, "Lifebloom", 2240) and IsSpellInRange("Lifebloom", tankName) then
@@ -154,13 +154,42 @@ function RenderSingleTargetRotation()
         local targetName = UnitName("target");
         if targetName == nil or string.match(tankName, targetName) == nil then
           WowCyborg_CURRENTATTACK = "Target tank: " .. tankName;
-          return SetSpellRequest("CTRL+" .. index);
+          SetSpellRequest("CTRL+" .. index);
+          return true;
         else
           WowCyborg_CURRENTATTACK = "Lifebloom";
-          return SetSpellRequest(lifebloom);
+          SetSpellRequest(lifebloom);
+          return true;
         end
       end
     end
+  end
+
+  if tankName ~= nil and FindBuff(tankName, "Cenarion Ward") == nil then
+    if IsCastableAtFriendlyUnit(tankName, "Cenarion Ward", 1840) and IsSpellInRange("Cenarion Ward", tankName) then
+      local tankHp = GetHealthPercentage(tankName);
+      if tankHp > 0 then
+        local targetName = UnitName("target");
+        if targetName == nil or string.match(tankName, targetName) == nil then
+          WowCyborg_CURRENTATTACK = "Target tank: " .. tankName;
+          SetSpellRequest("CTRL+" .. index);
+          return true;
+        else
+          WowCyborg_CURRENTATTACK = "Cenarion Ward";
+          SetSpellRequest(cenarionWard);
+          return true;
+        end
+      end
+    end
+  end
+  
+  return false;
+end
+
+function RenderSingleTargetRotation()
+  local tankPreHot = HandleTankPreHots();
+  if tankPreHot then
+    return;
   end
 
   if lastTarget.time + 2 < GetTime() then

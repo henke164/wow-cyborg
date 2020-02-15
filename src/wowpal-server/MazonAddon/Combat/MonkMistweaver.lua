@@ -134,8 +134,8 @@ function RenderSingleTargetRotation()
   end
 
   if lastTarget ~= nil and lastTarget.name ~= nil and lastTarget.name ~= GetTargetFullName() then
-    WowCyborg_CURRENTATTACK = "Target partymember " .. lastTarget.name;
-    return SetSpellRequest("CTRL+" .. lastTarget.index);
+    --WowCyborg_CURRENTATTACK = "Target partymember " .. lastTarget.name;
+    --return SetSpellRequest("CTRL+" .. lastTarget.index);
   end
 
   if UnitChannelInfo("player") == "Essence Font" then
