@@ -253,6 +253,11 @@ function RenderSingleTargetRotation()
     WowCyborg_CURRENTATTACK = "Regrowth";
     return SetSpellRequest(regrowth);
   end
+  
+  if hp <= 80 and IsCastableAtFriendlyTarget("Regrowth", 2800) then
+    WowCyborg_CURRENTATTACK = "Regrowth";
+    return SetSpellRequest(regrowth);
+  end
 
   WowCyborg_CURRENTATTACK = "-";
   return SetSpellRequest(nil);
