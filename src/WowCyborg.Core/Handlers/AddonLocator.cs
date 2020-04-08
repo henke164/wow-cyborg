@@ -78,7 +78,6 @@ namespace WowCyborg.Core.Handlers
                     {
                         g.CopyFromScreen(Point.Empty, Point.Empty, bounds.Size);
                     }
-                    bitmap.Save("test.png");
                     clone = bitmap.Clone(scanArea, PixelFormat.Format24bppRgb);
                 }
 

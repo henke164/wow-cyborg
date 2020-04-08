@@ -33,15 +33,19 @@ namespace WowCyborg
             switch (settings.BotType.ToLower())
             {
                 case "solorunner":
+                    Console.Write("Solo runner");
                     BotRunner = new SoloRunner(hWnd);
                     break;
                 case "follower":
+                    Console.Write("Follower");
                     BotRunner = new BotFollower(hWnd);
                     break;
                 case "pvp":
+                    Console.Write("Pvp");
                     BotRunner = new PVP(hWnd);
                     break;
                 default:
+                    Console.Write("Autocaster");
                     BotRunner = new AutoCaster(hWnd);
                     break;
             }
