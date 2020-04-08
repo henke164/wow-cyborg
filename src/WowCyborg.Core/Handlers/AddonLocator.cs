@@ -67,9 +67,9 @@ namespace WowCyborg.Core.Handlers
                 Thread.Sleep(500);
                 rect.Width -= rect.X;
                 rect.Height -= rect.Y;
-
                 Bitmap clone;
-                var bounds = Screen.GetBounds(Point.Empty);
+
+                var bounds = ScreenUtilities.GetScreenBounds();
                 var winBottomLeft = new Point(rect.X, rect.Y + rect.Height);
                 var scanArea = new Rectangle(winBottomLeft.X, winBottomLeft.Y - 500, 500, 500);
                 using (var bitmap = new Bitmap(bounds.Width, bounds.Height))
@@ -78,6 +78,7 @@ namespace WowCyborg.Core.Handlers
                     {
                         g.CopyFromScreen(Point.Empty, Point.Empty, bounds.Size);
                     }
+                    bitmap.Save("test.png");
                     clone = bitmap.Clone(scanArea, PixelFormat.Format24bppRgb);
                 }
 

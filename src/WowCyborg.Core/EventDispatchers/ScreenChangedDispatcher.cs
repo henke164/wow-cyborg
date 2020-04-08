@@ -10,10 +10,13 @@ namespace WowCyborg.Core.EventDispatchers
 {
     public class ScreenChangedDispatcher : EventDispatcherBase
     {
+        private Rectangle _screenbounds;
+
         public ScreenChangedDispatcher(Action<Event> onEvent)
             : base(onEvent)
         {
             EventName = "ScreenChanged";
+            _screenbounds = ScreenUtilities.GetScreenBounds();
         }
 
         protected override void Update()
@@ -30,13 +33,11 @@ namespace WowCyborg.Core.EventDispatchers
         public Bitmap CaptureScreenShot()
         {
             Bitmap clone;
-            var bounds = Screen.GetBounds(Point.Empty);
-
-            using (var bitmap = new Bitmap(bounds.Width, bounds.Height))
+            using (var bitmap = new Bitmap(_screenbounds.Width, _screenbounds.Height))
             {
                 using (var g = Graphics.FromImage(bitmap))
                 {
-                    g.CopyFromScreen(Point.Empty, Point.Empty, bounds.Size);
+                    g.CopyFromScreen(Point.Empty, Point.Empty, _screenbounds.Size);
                 }
 
                 var addonLocation = AddonLocator.GetAddonLocation();

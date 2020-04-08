@@ -162,10 +162,6 @@ namespace WowCyborg.BotProfiles
             Thread.Sleep(5000);
             KeyHandler.PressKey(Keys.D, 500);
             Thread.Sleep(5000);
-<<<<<<< HEAD
-            KeyHandler.PressKey(Keys.A, new Random().Next(0,1000));
-
-=======
             KeyHandler.PressKey(Keys.W, 2000);
             KeyHandler.PressKey(Keys.A, 400);
             Thread.Sleep(400);
@@ -183,7 +179,6 @@ namespace WowCyborg.BotProfiles
             KeyHandler.PressKey(Keys.D, 500);
             Thread.Sleep(1000);
             KeyHandler.PressKey(Keys.W, new Random().Next(29000, 33000));
->>>>>>> b7b6ecd464949b37c4a941f4bb784c6febfb99d8
             while (_bgLogicStarted)
             {
                 KeyHandler.PressKey(Keys.Space, 200);

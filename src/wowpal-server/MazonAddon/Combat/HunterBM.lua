@@ -18,6 +18,7 @@ local beastialWrath = "5";
 local aspectOfWild = "6";
 local cobraShot = "7";
 local multiShot = "8";
+local mendPet = "9";
 
 local function GetBsCooldown()
   local bsCharges = GetSpellCharges("Barbed Shot");
@@ -31,6 +32,14 @@ local function GetBsCooldown()
 end
 
 function RenderMultiTargetRotation(texture)
+  local petHp = GetHealthPercentage("pet");
+  if tostring(petHp) ~= "-nan(ind)" and petHp > 1 and petHp < 90 then
+    if IsCastable("Mend pet", 0) then
+      WowCyborg_CURRENTATTACK = "Mend pet";
+      return SetSpellRequest(mendPet);
+    end
+  end
+
   if IsCastableAtEnemyTarget("Barbed Shot", 0) == false then
     local petBuff, petBuffTime = FindBuff("pet", "Frenzy");
     if petBuff == "Frenzy" and petBuffTime <= 3 then
@@ -112,6 +121,14 @@ function RenderMultiTargetRotation(texture)
 end
 
 function RenderSingleTargetRotation(texture)
+  local petHp = GetHealthPercentage("pet");
+  if tostring(petHp) ~= "-nan(ind)" and petHp > 1 and petHp < 90 then
+    if IsCastable("Mend pet", 0) then
+      WowCyborg_CURRENTATTACK = "Mend pet";
+      return SetSpellRequest(mendPet);
+    end
+  end
+
   if IsCastableAtEnemyTarget("Barbed Shot", 0) == false then
     local petBuff, petBuffTime = FindBuff("pet", "Frenzy");
     if petBuff == "Frenzy" and petBuffTime <= 3 then
@@ -172,7 +189,7 @@ function RenderSingleTargetRotation(texture)
     end
   end
 
-  if IsCastableAtEnemyTarget("Cobra Shot", 0) then
+  if IsCastableAtEnemyTarget("Cobra Shot", 60) then
     WowCyborg_CURRENTATTACK = "Cobra Shot";
     return SetSpellRequest(cobraShot);
   end

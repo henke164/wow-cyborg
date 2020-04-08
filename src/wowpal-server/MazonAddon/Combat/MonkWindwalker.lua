@@ -75,7 +75,7 @@ function RenderMultiTargetRotation()
     end
   end
 
-  if IsCastableAtEnemyTarget("Spinning Crane Kick", 0) and chi > 1 then
+  if IsCastableAtEnemyTarget("Spinning Crane Kick", 0) and chi > 3 then
     WowCyborg_CURRENTATTACK = "Spinning Crane Kick";
     return SetSpellRequest(spinningCraneKick);
   end

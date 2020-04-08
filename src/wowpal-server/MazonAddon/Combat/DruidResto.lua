@@ -20,6 +20,7 @@ local rejuvenation = 3;
 local swiftmend = 4;
 local wildGrowth = 5;
 local cenarionWard = 6;
+local sunfire = 7;
 
 function GetTargetFullName()
   local name, realm = UnitName("target");
@@ -72,23 +73,27 @@ function AoeHealingRequired()
     end
   end
   
-  return lowCount > 2;
+  return lowCount > 1;
 end
 
 function FindFriendlyHealingTarget()
   local highestDamageTaken = nil;
   for k,v in pairs(damageInLast5Seconds) do
+    local hpp = GetHealthPercentage(k);
     if highestDamageTaken == nil or highestDamageTaken.amount > v then
-      highestDamageTaken = { name = k, amount = v };
-    end
-  end
-
-  if highestDamageTaken ~= nil then
-    local hpp = GetHealthPercentage(highestDamageTaken.name);
-    if tostring(hpp) ~= "-nan(ind)" and hpp > 0 and hpp < 80 then
-      if GetTargetFullName() ~= highestDamageTaken.name then
-        if IsSpellInRange("Lifebloom", highestDamageTaken.name) then
-          return highestDamageTaken.name, highestDamageTaken.amount;
+      if IsSpellInRange("Lifebloom", k) then
+        if tostring(hpp) ~= "-nan(ind)" and hpp > 0 and hpp < 90 then
+          if GetTargetFullName() ~= k then
+            local speed = GetUnitSpeed("player");
+            if speed > 0 then
+              local rejuBuff = FindBuff(k, "Rejuvenation");
+              if rejuBuff == nil then
+                highestDamageTaken = { name = k, amount = v };
+              end
+            else
+              highestDamageTaken = { name = k, amount = v };
+            end
+          end
         end
       end
     end
@@ -96,6 +101,7 @@ function FindFriendlyHealingTarget()
 
   local lowestHealth = nil
 
+  --find lowest hp
   local members = GetGroupRosterInfo();
   for groupindex = 1,5 do
     if members[groupindex] == nil or members[groupindex].name == nil then
@@ -110,6 +116,17 @@ function FindFriendlyHealingTarget()
         end
       end
     end
+  end
+
+  if highestDamageTaken ~= nil then
+    if lowestHealth ~= nil then
+      local hp1 = GetHealthPercentage(highestDamageTaken.name);
+      local hp2 = lowestHealth.hp;
+      if hp1 > hp2 then
+        return lowestHealth.name, 0;
+      end
+    end
+    return highestDamageTaken.name, highestDamageTaken.amount;
   end
 
   if lowestHealth ~= nil then
@@ -148,7 +165,7 @@ local lastTarget = {
 function HandleTankPreHots()
   local tankName, index = GetTankName();
   if tankName ~= nil and FindBuff(tankName, "Lifebloom") == nil then
-    if IsCastableAtFriendlyUnit(tankName, "Lifebloom", 2240) and IsSpellInRange("Lifebloom", tankName) then
+    if IsCastableAtFriendlyUnit(tankName, "Lifebloom", 2061) and IsSpellInRange("Lifebloom", tankName) then
       local tankHp = GetHealthPercentage(tankName);
       if tankHp > 0 then
         local targetName = UnitName("target");
@@ -187,15 +204,17 @@ function HandleTankPreHots()
 end
 
 function RenderSingleTargetRotation(disableAutoTarget)
-  local tankPreHot = HandleTankPreHots();
-  if tankPreHot then
-    return;
-  end
+  local quaking = FindDebuff("player", "Quake");
 
   if disableAutoTarget == nil then
+    local tankPreHot = HandleTankPreHots();
+    if tankPreHot then
+      return;
+    end
+
     local tankName, index = GetTankName();
     if tankName ~= nil and FindBuff(tankName, "Lifebloom") == nil then
-      if IsCastableAtFriendlyUnit(tankName, "Lifebloom", 2240) and IsSpellInRange("Lifebloom", tankName) then
+      if IsCastableAtFriendlyUnit(tankName, "Lifebloom", 2061) and IsSpellInRange("Lifebloom", tankName) then
         local tankHp = GetHealthPercentage(tankName);
         if tankHp > 0 then
           local targetName = UnitName("target");
@@ -209,7 +228,7 @@ function RenderSingleTargetRotation(disableAutoTarget)
         end
       end
     end
-    
+
     if lastTarget.time + 2 < GetTime() then
       local friendlyTargetName, damageAmount = FindFriendlyHealingTarget();
       if friendlyTargetName ~= nil then
@@ -238,7 +257,7 @@ function RenderSingleTargetRotation(disableAutoTarget)
     return SetSpellRequest(nil);
   end
   
-  if AoeHealingRequired() and IsCastable("Wild Growth", 5600) then
+  if AoeHealingRequired() and IsCastable("Wild Growth", 5600) and quaking == nil then
     WowCyborg_CURRENTATTACK = "Wild Growth";
     return SetSpellRequest(wildGrowth);
   end
@@ -268,14 +287,20 @@ function RenderSingleTargetRotation(disableAutoTarget)
     end
   end
 
-  if hp <= 80 and IsCastableAtFriendlyTarget("Regrowth", 2800) then
+  if hp <= 80 and IsCastableAtFriendlyTarget("Regrowth", 2800) and quaking == nil then
     WowCyborg_CURRENTATTACK = "Regrowth";
     return SetSpellRequest(regrowth);
   end
   
-  if hp <= 80 and IsCastableAtFriendlyTarget("Regrowth", 2800) then
-    WowCyborg_CURRENTATTACK = "Regrowth";
-    return SetSpellRequest(regrowth);
+  if WowCyborg_INCOMBAT then
+    local mana = (UnitPower("player") / UnitPowerMax("player")) * 100;
+    if mana > 20 then
+      local sunfireDebuff = FindDebuff("targettarget", "Sunfire");
+      if sunfireDebuff == nil and UnitCanAttack("player", "targettarget") then
+        WowCyborg_CURRENTATTACK = "Sunfire";
+        return SetSpellRequest(sunfire);
+      end
+    end
   end
 
   WowCyborg_CURRENTATTACK = "-";

@@ -98,6 +98,7 @@
     <Compile Include="Handlers\MouseHandler.cs" />
     <Compile Include="Utilities\CursorUtilities.cs" />
     <Compile Include="Utilities\Rect.cs" />
+    <Compile Include="Utilities\ScreenUtilities.cs" />
     <Compile Include="Utilities\SettingsLoader.cs" />
     <Compile Include="Utilities\Transform.cs" />
     <Compile Include="Utilities\Vector3.cs" />
