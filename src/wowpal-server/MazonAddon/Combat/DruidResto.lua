@@ -21,6 +21,12 @@ local swiftmend = 4;
 local wildGrowth = 5;
 local cenarionWard = 6;
 local sunfire = 7;
+-- CAT form
+local rake = 1;
+local shred = 2;
+local rip = 3;
+local ferociousBite = 4;
+local swipe = 5;
 
 function GetTargetFullName()
   local name, realm = UnitName("target");
@@ -152,6 +158,11 @@ function GetTankName()
 end
 
 function RenderMultiTargetRotation()
+  local cat = FindBuff("player", "Cat Form");
+  if cat ~= nil then
+    return RenderCatRotation(true);
+  end
+
   return RenderSingleTargetRotation(true);
 end
 
@@ -203,7 +214,53 @@ function HandleTankPreHots()
   return false;
 end
 
+function IsMelee()
+  return IsSpellInRange("Shred") == 1;
+end
+
+function RenderCatRotation(aoe)
+  if IsMelee() == false then
+    WowCyborg_CURRENTATTACK = "-";
+    return SetSpellRequest(nil);
+  end
+  
+  local rakeDot = FindDebuff("target", "Rake");
+  if rakeDot == nil then
+    WowCyborg_CURRENTATTACK = "Rake";
+    return SetSpellRequest(rake);
+  end
+
+  local points = GetComboPoints("player", "target");
+  local ripDot, ripCd = FindDebuff("target", "Rip");
+  if points == 5 then
+    if ripDot == nil then
+      WowCyborg_CURRENTATTACK = "Rip";
+      return SetSpellRequest(rip);
+    end
+    
+    WowCyborg_CURRENTATTACK = "Ferocious Bite";
+    return SetSpellRequest(ferociousBite);
+  end
+
+  if aoe then
+    if IsCastableAtEnemyTarget("Swipe", 0) then
+      WowCyborg_CURRENTATTACK = "Swipe";
+      return SetSpellRequest(swipe);
+    end
+  else
+    if IsCastableAtEnemyTarget("Shred", 0) then
+      WowCyborg_CURRENTATTACK = "Shred";
+      return SetSpellRequest(shred);
+    end
+  end
+end
+
 function RenderSingleTargetRotation(disableAutoTarget)
+  local cat = FindBuff("player", "Cat Form");
+  if cat ~= nil then
+    return RenderCatRotation(false);
+  end
+
   local quaking = FindDebuff("player", "Quake");
 
   if disableAutoTarget == nil then
@@ -229,7 +286,7 @@ function RenderSingleTargetRotation(disableAutoTarget)
       end
     end
 
-    if lastTarget.time + 2 < GetTime() then
+    if lastTarget.time + 1.5 < GetTime() then
       local friendlyTargetName, damageAmount = FindFriendlyHealingTarget();
       if friendlyTargetName ~= nil then
         local memberindex = GetMemberIndex(friendlyTargetName);
@@ -257,7 +314,8 @@ function RenderSingleTargetRotation(disableAutoTarget)
     return SetSpellRequest(nil);
   end
   
-  if AoeHealingRequired() and IsCastable("Wild Growth", 5600) and quaking == nil then
+  local speed = GetUnitSpeed("player");
+  if AoeHealingRequired() and IsCastable("Wild Growth", 5600) and quaking == nil and speed == 0 then
     WowCyborg_CURRENTATTACK = "Wild Growth";
     return SetSpellRequest(wildGrowth);
   end
@@ -274,7 +332,7 @@ function RenderSingleTargetRotation(disableAutoTarget)
   end
 
   local rejuvenationHot = FindBuff("target", "Rejuvenation");
-  if hp <= 95 and rejuvenationHot == nil and IsCastableAtFriendlyTarget("Rejuvenation", 2100) then
+  if rejuvenationHot == nil and IsCastableAtFriendlyTarget("Rejuvenation", 2000) then
     WowCyborg_CURRENTATTACK = "Rejuvenation";
     return SetSpellRequest(rejuvenation);
   end
@@ -287,7 +345,7 @@ function RenderSingleTargetRotation(disableAutoTarget)
     end
   end
 
-  if hp <= 80 and IsCastableAtFriendlyTarget("Regrowth", 2800) and quaking == nil then
+  if hp <= 80 and IsCastableAtFriendlyTarget("Regrowth", 2800) and quaking == nil and speed == 0 then
     WowCyborg_CURRENTATTACK = "Regrowth";
     return SetSpellRequest(regrowth);
   end

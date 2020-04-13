@@ -178,7 +178,7 @@ namespace WowCyborg.Core.EventDispatchers
 
             if (c.R > 200 && c.G == 0 && c.B == 0)
             {
-                return Keys.Alt;
+                return Keys.F1;
             }
             
             return Keys.None;

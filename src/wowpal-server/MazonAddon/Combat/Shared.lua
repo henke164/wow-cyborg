@@ -30,8 +30,18 @@ function CreateRotationFrame()
   frame:SetPropagateKeyboardInput(true);
 
   frame:SetScript("OnKeyDown", function(self, event, ...)
-    if string.sub(event, 1, string.len(1)) == "F" then
-      WowCyborg_PAUSE_UNTIL = GetTime() + 1;
+    if GetTime() - 1 < WowCyborg_PAUSE_UNTIL then
+      return
+    end
+
+    if string.len(event) > 1 then
+      local func = string.sub(event, 1, 1);
+      if func == "F" then
+        local num = string.sub(event, 2, 3);
+        SetSpellRequest("F+" .. num);
+        WowCyborg_CURRENTATTACK = "F" .. num;
+        WowCyborg_PAUSE_UNTIL = GetTime() + 1;
+      end
     end
   end)
 

@@ -33,7 +33,7 @@ function GetColorFromNumber(number)
 end
 
 function GetColorFromButton(button)
-  if button == "ALT" then
+  if button == "F" then
     return 1,0,0;
   end
   if button == "SHIFT" then

@@ -44,7 +44,7 @@ function RenderMultiTargetRotation(texture)
     local petBuff, petBuffTime = FindBuff("pet", "Frenzy");
     if petBuff == "Frenzy" and petBuffTime <= 3 then
       local bsCdLeft = GetBsCooldown();
-      if bsCdLeft <= 2 then
+      if bsCdLeft <= 3 then
         WowCyborg_CURRENTATTACK = "-";
         return SetSpellRequest(nil);
       end
@@ -61,7 +61,7 @@ function RenderMultiTargetRotation(texture)
     end
 
     local bbCharges = GetSpellCharges("Barbed Shot");
-    if bbCharges == 2 and petBuff == nil then
+    if bbCharges == 2 then
       WowCyborg_CURRENTATTACK = "Barbed Shot";
       return SetSpellRequest(barbedShot);
     end
@@ -133,7 +133,7 @@ function RenderSingleTargetRotation(texture)
     local petBuff, petBuffTime = FindBuff("pet", "Frenzy");
     if petBuff == "Frenzy" and petBuffTime <= 3 then
       local bsCdLeft = GetBsCooldown();
-      if bsCdLeft <= 2 then
+      if bsCdLeft <= 3 then
         WowCyborg_CURRENTATTACK = "-";
         return SetSpellRequest(nil);
       end
@@ -143,14 +143,14 @@ function RenderSingleTargetRotation(texture)
   if IsCastableAtEnemyTarget("Barbed Shot", 0) then
     local petBuff, petBuffTime = FindBuff("pet", "Frenzy");
     if petBuff == "Frenzy" then
-      if petBuffTime <= 2 then
+      if petBuffTime <= 3 then
         WowCyborg_CURRENTATTACK = "Barbed Shot";
         return SetSpellRequest(barbedShot);
       end
     end
 
     local bbCharges = GetSpellCharges("Barbed Shot");
-    if bbCharges == 2 and petBuff == nil then
+    if bbCharges == 2 then
       WowCyborg_CURRENTATTACK = "Barbed Shot";
       return SetSpellRequest(barbedShot);
     end
