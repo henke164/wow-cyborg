@@ -2,6 +2,7 @@ WowCyborg_AOE_Rotation = false;
 WowCyborg_CLASSIC = true;
 WowCyborg_CURRENTATTACK = "-";
 WowCyborg_DISABLED = false;
+WowCyborg_PAUSE = false;
 WowCyborg_PAUSE_UNTIL = 0;
 
 local spellButtonTexture;
@@ -29,28 +30,29 @@ function CreateRotationFrame()
   frame:EnableKeyboard(true);
   frame:SetPropagateKeyboardInput(true);
 
-  frame:SetScript("OnKeyDown", function(self, event, ...)
-    if GetTime() - 1 < WowCyborg_PAUSE_UNTIL then
-      return
-    end
-
-    if string.len(event) > 1 then
-      local func = string.sub(event, 1, 1);
-      if func == "F" then
-        local num = string.sub(event, 2, 3);
-        SetSpellRequest("F+" .. num);
-        WowCyborg_CURRENTATTACK = "F" .. num;
-        WowCyborg_PAUSE_UNTIL = GetTime() + 1;
-      end
-    end
-  end)
-
   frame:SetScript("OnUpdate", function(self, event, ...)
     if WowCyborg_DISABLED == true then
       WowCyborg_CURRENTATTACK = "-";
       return SetSpellRequest(nil);
     end
 
+    local castingInfo, _a, __a, ___a, endTime = UnitChannelInfo("player")
+    local channelInfo, _b, __b, ___b, channelEndTime = UnitCastingInfo("player")
+  
+    if castingInfo ~= nil then
+      local finish = endTime / 1000 - GetTime()
+      WowCyborg_PAUSE_UNTIL = GetTime() + (finish + 1)
+      print ("casting until" .. finish)
+      return
+    end
+    
+    if channelInfo ~= nil then
+      local finish = channelEndTime / 1000 - GetTime()
+      WowCyborg_PAUSE_UNTIL = GetTime() + (finish + 1)
+      print ("channel until" .. finish)
+      return
+    end
+    
     if WowCyborg_AOE_Rotation == true then
       RenderMultiTargetRotation();
     end
@@ -68,7 +70,6 @@ function SetSpellRequest(buttonCombination)
   end
 
   if GetTime() < WowCyborg_PAUSE_UNTIL then
-    WowCyborg_CURRENTATTACK = "Paused";
     return;
   end
 
@@ -99,7 +100,7 @@ end
 function FindBuff(target, buffName)
   for i=1,40 do
     local name, _, stacks, _, _, etime = UnitBuff(target, i);
-    if name == buffName then
+    if name ~= nil and string.lower(name) == string.lower(buffName) then
       local time = GetTime();
       return name, etime - time, stacks;
     end
@@ -109,7 +110,7 @@ end
 function FindDebuff(target, buffName)
   for i=1,40 do
     local name, _, stack, _, _, etime = UnitDebuff(target, i);
-    if name == buffName then
+    if name ~= nil and string.lower(name) == string.lower(buffName) then
       local time = GetTime();
       return name, etime - time, stack;
     end
@@ -161,7 +162,7 @@ function IsCastableAtFriendlyUnit(unitName, spellName, requiredEnergy)
     return false;
   end
 
-  if TargetIsAlive() == false then
+  if IsAlive(unitName) == false then
     return false;
   end;
   
@@ -198,6 +199,11 @@ function TargetIsAlive()
   hp = UnitHealth("target");
   return hp > 0;
 end
+
+function IsAlive(unit)
+  hp = UnitHealth(unit);
+  return hp > 0;
+end
   
 function RenderFontFrame()
   local fontFrame, fontTexture = CreateDefaultFrame(frameSize * 5, frameSize * 5, 100, 20);
@@ -227,6 +233,26 @@ function RenderFontFrame()
         WowCyborg_AOE_Rotation = not WowCyborg_AOE_Rotation;
       end
     end
+
+    if GetTime() - 1 < WowCyborg_PAUSE_UNTIL or WowCyborg_PAUSE then
+      return
+    end
+
+    local cdUntil = GetSpellCooldown(61304);
+    local globalTl = 1 - (GetTime() - cdUntil);
+    if globalTl > 1.5 then
+      globalTl = 0;
+    end
+
+    if string.len(tostring(key)) > 1 then
+      local func = string.sub(tostring(key), 1, 1);
+      if func == "F" then
+        local num = string.sub(tostring(key), 2, 3);
+        WowCyborg_CURRENTATTACK = "F+" .. num;
+        SetSpellRequest("F+" .. num);
+        WowCyborg_PAUSE_UNTIL = GetTime() + globalTl + 0.1;
+      end
+    end
   end)
   
   fontFrame:SetScript("OnUpdate", function(self, event, ...)
@@ -248,4 +274,81 @@ function RenderFontFrame()
       end
     end
   end)
+end
+
+function TalentEnabled(talentName)
+  return true
+end
+
+function GetCooldownDuration(spellName) 
+  local start, duration = GetSpellCooldown(spellName)
+  return duration
+end
+
+function GetCooldown(spellName)
+  local start, duration = GetSpellCooldown(spellName)
+  return start + duration - GetTime()
+end
+
+function GetFullRechargeTime(spellName)
+  local current, max = GetSpellCharges(spellName)
+  if current == nil then
+    return 999
+  end
+  return max - current
+end
+
+function GetCurrentCost(spellName)
+  local spellCost = GetSpellPowerCost(spellName)[1]
+  if spellCost == nil then
+    return 0
+  end
+  return spellCost.cost
+end
+
+function GetTimeToMax()
+  local max = UnitPowerMax("player")
+  local current = UnitPower("player")
+  local regen = GetPowerRegen()
+  return (max - current) / regen
+end
+
+function GetBuffTimeLeft(who, buffName)
+  local buff, buffTime = FindBuff(who, buffName)
+  if buff == nil then
+    return 0
+  end
+
+  return buffTime
+end
+
+function GetDebuffTimeLeft(who, debuffName)
+  local debuff, debuffTime = FindDebuff(who, debuffName)
+  if debuff == nil then
+    return 0
+  end
+
+  return debuffTime
+end
+
+function GetBuffStacks(buffName)
+  local _, __, stacks = FindBuff("player", buffName);
+  if stacks == nil then
+    return 0
+  end
+  return stacks
+end
+
+function GetActiveEnemies() 
+  local inRange = 0
+  for i = 1, 40 do
+    if UnitExists('nameplate' .. i) and CheckInteractDistance("nameplate"..i, 1) == true and UnitCanAttack("player", 'nameplate' .. i) then
+      inRange = inRange + 1
+    end
+  end
+  return inRange;
+end
+
+function GetCurrentGlobalCooldown()
+  return 1.5 - (1.5 * (UnitSpellHaste("player") / 100))
 end
