@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Runtime.InteropServices;
 using System.Threading;
@@ -10,7 +11,6 @@ namespace WowCyborg.Core.Commanders
 {
     public class LootingCommander
     {
-        public static bool IsSkinner { get; set; } = true;
 
         [DllImport("User32.dll")]
         static extern int SetForegroundWindow(IntPtr point);
@@ -19,14 +19,19 @@ namespace WowCyborg.Core.Commanders
         private static extern int GetWindowRect(IntPtr hwnd, out Rectangle rect);
 
         private IntPtr _hWnd;
-        private Bitmap _lootCursor;
+        private List<Bitmap> _cursorImages;
         private bool _inCombat = false;
+        private bool _isSkinner = false;
 
-        public LootingCommander(IntPtr hWnd, ref bool inCombat)
+        public LootingCommander(IntPtr hWnd, ref bool inCombat, bool isSkinner = false)
         {
-            _lootCursor = (Bitmap)Image.FromFile("Images/loot-cursor.png");
+            _cursorImages = new List<Bitmap> {
+                (Bitmap)Image.FromFile("Images/loot-cursor.png"),
+                (Bitmap)Image.FromFile("Images/battle-cursor.png")
+            };
             _hWnd = hWnd;
             _inCombat = inCombat;
+            _isSkinner = isSkinner;
         }
 
         public void Loot(Action onDone)
@@ -65,7 +70,7 @@ namespace WowCyborg.Core.Commanders
             {
                 MouseHandler.RightClick(lootLocation.X, lootLocation.Y);
 
-                if (IsSkinner)
+                if (_isSkinner)
                 {
                     Thread.Sleep(4000);
                     MouseHandler.RightClick(lootLocation.X, lootLocation.Y);
@@ -88,7 +93,14 @@ namespace WowCyborg.Core.Commanders
         {
             MouseHandler.SetMousePosition(x, y);
             Thread.Sleep(50);
-            return CursorUtilities.IsCursorIcon(_lootCursor);
+            foreach (var cursor in _cursorImages)
+            {
+                if (CursorUtilities.IsCursorIcon(cursor))
+                {
+                    return true;
+                }
+            }
+            return false;
         }
 
         public Rectangle GetScanArea(Rectangle windowRectangle)

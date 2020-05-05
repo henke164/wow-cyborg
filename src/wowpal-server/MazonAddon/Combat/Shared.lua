@@ -42,14 +42,12 @@ function CreateRotationFrame()
     if castingInfo ~= nil then
       local finish = endTime / 1000 - GetTime()
       WowCyborg_PAUSE_UNTIL = GetTime() + (finish + 1)
-      print ("casting until" .. finish)
       return
     end
     
     if channelInfo ~= nil then
       local finish = channelEndTime / 1000 - GetTime()
       WowCyborg_PAUSE_UNTIL = GetTime() + (finish + 1)
-      print ("channel until" .. finish)
       return
     end
     
@@ -70,14 +68,14 @@ function SetSpellRequest(buttonCombination)
   end
 
   if GetTime() < WowCyborg_PAUSE_UNTIL then
-    return;
+    return false
   end
 
   if buttonCombination == nil then
     r, g, b = GetColorFromNumber(nil);
     buttonCombinerTexture:SetColorTexture(r, g, b);
     spellButtonTexture:SetColorTexture(r, g, b);
-    return;
+    return true
   end
 
   local b1, b2 = strsplit("+", buttonCombination);
@@ -85,11 +83,12 @@ function SetSpellRequest(buttonCombination)
   if b2 == nil then
     buttonCombinerTexture:SetColorTexture(GetColorFromButton(nil));
     spellButtonTexture:SetColorTexture(GetColorFromNumber(tonumber(b1)));
-    return
+    return true
   end
 
   buttonCombinerTexture:SetColorTexture(GetColorFromButton(b1));
   spellButtonTexture:SetColorTexture(GetColorFromNumber(tonumber(b2)));
+  return true
 end
 
 function IsMoving()
@@ -282,20 +281,38 @@ end
 
 function GetCooldownDuration(spellName) 
   local start, duration = GetSpellCooldown(spellName)
+  if start == nil then
+    return 999
+  end
+
   return duration
 end
 
 function GetCooldown(spellName)
   local start, duration = GetSpellCooldown(spellName)
+  if start == nil then
+    return 999
+  end
+
   return start + duration - GetTime()
 end
 
 function GetFullRechargeTime(spellName)
-  local current, max = GetSpellCharges(spellName)
+  local current, max, start, cd = GetSpellCharges(spellName)
   if current == nil then
     return 999
   end
-  return max - current
+
+  local rechargeTime = 0
+  if max == current then
+    rechargeTime = 0
+  elseif max - current == 1 then
+    rechargeTime = (start + cd) - GetTime()
+  else
+    rechargeTime = ((max - current - 1) * cd) + (start + cd) - GetTime()
+  end
+
+  return rechargeTime
 end
 
 function GetCurrentCost(spellName)
@@ -303,6 +320,7 @@ function GetCurrentCost(spellName)
   if spellCost == nil then
     return 0
   end
+
   return spellCost.cost
 end
 
@@ -349,6 +367,19 @@ function GetActiveEnemies()
   return inRange;
 end
 
-function GetCurrentGlobalCooldown()
-  return 1.5 - (1.5 * (UnitSpellHaste("player") / 100))
+local delay = 0.5
+function GetCurrentSpellGCD(spellName)
+  local spellHastePercent = UnitSpellHaste("player")
+  local _, gcd = GetSpellBaseCooldown(spellName)
+  if gcd == nil then
+    gcd = 1.5
+  else
+    gcd = gcd / 1000
+  end
+  return (gcd - ((gcd / 2) * (spellHastePercent * 0.01))) - delay;
+end
+
+function GetGCDMax()
+  local spellHastePercent = UnitSpellHaste("player")
+  return (0.75 * (spellHastePercent * 0.01)) - delay;
 end

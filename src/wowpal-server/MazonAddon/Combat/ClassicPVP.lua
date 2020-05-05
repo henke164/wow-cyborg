@@ -26,13 +26,8 @@ function RenderSingleTargetRotation()
     end
 
     local targetName = UnitName("target");
-<<<<<<< HEAD
-    if targetName ~= "Taim Ragetotem" and targetName ~= "Kartra Bloodsnarl" then
-      WowCyborg_CURRENTATTACK = "Target Taim Ragetotem";
-=======
     if targetName ~= "Taim Ragetotem" and targetName ~= "Grizzle Halfmane" and targetName ~= "Kartra Bloodsnarl" then
       WowCyborg_CURRENTATTACK = "Target Karstra";
->>>>>>> b7b6ecd464949b37c4a941f4bb784c6febfb99d8
       return SetSpellRequest(targetPVE);
     else
       WowCyborg_CURRENTATTACK = "Speak";

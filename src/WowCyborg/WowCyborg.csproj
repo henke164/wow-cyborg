@@ -68,6 +68,7 @@
     <Compile Include="BotProfiles\AutoCaster.cs" />
     <Compile Include="BotProfiles\BotFollower.cs" />
     <Compile Include="BotProfiles\PVP.cs" />
+    <Compile Include="BotProfiles\Expedition.cs" />
     <Compile Include="BotProfiles\SoloRunner.cs" />
     <Compile Include="PluginLoader.cs" />
     <Compile Include="Program.cs" />

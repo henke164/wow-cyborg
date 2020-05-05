@@ -44,6 +44,10 @@ namespace WowCyborg
                     Console.Write("Pvp");
                     BotRunner = new PVP(hWnd);
                     break;
+                case "expedition":
+                    Console.Write("Expedition");
+                    BotRunner = new Expedition(hWnd);
+                    break;
                 default:
                     Console.Write("Autocaster");
                     BotRunner = new AutoCaster(hWnd);

@@ -38,3 +38,10 @@ classicrogue	MazonAddon/Combat/RogueClassic.lua
 pvp	MazonAddon/Combat/ClassicPVP.lua
 firemage	MazonAddon/Combat/MageFire.lua
 frostmage	MazonAddon/Combat/MageFrost.lua
+hordruid	MazonAddon/Combat/DruidRestoHorrific.lua
+survhunter	MazonAddon/Combat/HunterSurvival.lua
+survhunter2	MazonAddon/Combat/HunterSurvival2.lua
+resto	MazonAddon/Combat/DruidResto2.lua
+bmhunter2	MazonAddon/Combat/HunterBM2.lua
+bmhunter3	MazonAddon/Combat/HunterBM3.lua
+island	MazonAddon/Combat/IslandGroup.lua

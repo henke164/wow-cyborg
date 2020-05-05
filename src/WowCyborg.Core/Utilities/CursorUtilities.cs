@@ -56,7 +56,7 @@ namespace WowCyborg.Core.Utilities
         {
             var result = new Bitmap(50, 50, PixelFormat.Format24bppRgb);
 
-            using (Graphics g = Graphics.FromImage(result))
+            using (var g = Graphics.FromImage(result))
             {
                 CURSORINFO pci;
                 pci.cbSize = Marshal.SizeOf(typeof(CURSORINFO));

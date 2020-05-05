@@ -30,7 +30,7 @@ function HandleDefensives()
   local hpPercentage = GetHealthPercentage("player");
 
   local dangerHpLossLimit = UnitHealthMax("player") * 0.5;
-  if WowCyborg_INCOMBAT and hpPercentage < 90 then
+  if WowCyborg_INCOMBAT and hpPercentage < 100 then
       local isBuff = FindBuff("player", "Ironskin Brew");
       if isBuff == nil then
         local isCharges = GetSpellCharges("Ironskin Brew");
@@ -55,9 +55,8 @@ function HandleDefensives()
 
   local pbCharges = GetSpellCharges("Purifying Brew");
   local staggerAmount = UnitStagger("player");
-  local stagger = FindDebuff("player", "Moderate Stagger");
   local stagger2 = FindDebuff("player", "Heavy Stagger");
-  if stagger ~= nil or stagger2 ~= nil then
+  if stagger2 ~= nil then
     if pbCharges > 0 then
       WowCyborg_CURRENTATTACK = "Purifying Brew";
       SetSpellRequest(purifyingBrew);
@@ -67,7 +66,7 @@ function HandleDefensives()
 
   
   local spheres = GetSpellCount("Expel Harm");
-  if hpPercentage < 80 and spheres > 0 then
+  if hpPercentage < 90 and spheres > 0 then
     WowCyborg_CURRENTATTACK = "Expel Harm";
     SetSpellRequest(expelHarm);
     return true;
