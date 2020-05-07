@@ -36,7 +36,7 @@ namespace WowCyborg.Core.Utilities
         public static bool IsCursorIcon(Bitmap cursorIcon)
         {
             var currentCursor = GetCurrentCursorIcon();
-
+            //currentCursor.Save(Guid.NewGuid().ToString() + ".png");
             for (var x = 0; x < currentCursor.Width; x += 2)
             {
                 for (var y = 0; y < currentCursor.Height; y += 2)

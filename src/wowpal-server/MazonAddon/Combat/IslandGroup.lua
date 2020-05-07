@@ -10,14 +10,9 @@
   8         Multi shot
 ]]--
 
-local shouldJoin = false
-local shouldLeave = false
-local queueMacro = "SHIFT+7";
-local joinMacro = "SHIFT+8";
-local leaveMacro = "SHIFT+9";
+local targetMacro = "SHIFT+4";
 
 local assist = "1";
-local follow = "2";
 local barbedShot = "1";
 local killCommand = "2";
 local mendPet = "3";
@@ -82,7 +77,7 @@ function RenderMazonRotation()
     end
   end
 
-  if IsCastableAtEnemyTarget("Kill Command", 30) then
+  if CheckInteractDistance("target", 5) and IsCastableAtEnemyTarget("Kill Command", 30) then
     WowCyborg_CURRENTATTACK = "Kill Command";
     return SetSpellRequest(killCommand);
   end
@@ -162,6 +157,13 @@ function RenderSingleTargetRotation()
   end
   
   if name == "Mazoon" then
+    local target = UnitName("target")
+    local targetHp = GetHealthPercentage("target")
+    if target == nil or targetHp < 2 or UnitCanAttack("player", "target") == false then
+      WowCyborg_CURRENTATTACK = "Target"
+      return SetSpellRequest(targetMacro)
+    end
+
     return RenderMazonRotation()
   end
   
@@ -170,28 +172,7 @@ function RenderSingleTargetRotation()
     return SetSpellRequest(assist)
   end
 
-  WowCyborg_CURRENTATTACK = "Follow"
-  return SetSpellRequest(follow)
-end
-
---C_PartyInfo.ConfirmLeaveParty(category)
-function CreateAutoJoinFrame()
-  local frame = CreateFrame("Frame");
-  frame:RegisterEvent("LFG_PROPOSAL_SHOW");
-  frame:RegisterEvent("LFG_COMPLETION_REWARD");
-  
-  frame:SetScript("OnEvent", function(self, event, ...)
-    print(event)
-    if event == "LFG_PROPOSAL_SHOW" then
-      shouldJoin = true
-    end
-    
-    if event == "LFG_COMPLETION_REWARD" then
-      shouldLeave = true
-      print("Loot?")
-    end
-  end)
+  return SetSpellRequest(nil)
 end
 
 print("Island rotation loaded")
-CreateAutoJoinFrame()

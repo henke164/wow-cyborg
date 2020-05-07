@@ -22,6 +22,7 @@ namespace WowCyborg.Core.Commanders
         private List<Bitmap> _cursorImages;
         private bool _inCombat = false;
         private bool _isSkinner = false;
+        private bool _lootOnce = true;
 
         public LootingCommander(IntPtr hWnd, ref bool inCombat, bool isSkinner = false)
         {
@@ -59,15 +60,19 @@ namespace WowCyborg.Core.Commanders
 
                     if (IsLootLocation(scanArea.X + x, scanArea.Y + y))
                     {
-                        var offset = 20;
-                        lootLocation = new Point(scanArea.X + x + offset, scanArea.Y + y + offset);
-                        foundLoot = true;
+                        Thread.Sleep(100);
+                        if (IsLootLocation(scanArea.X + x, scanArea.Y + y))
+                        {
+                            lootLocation = new Point(scanArea.X + x, scanArea.Y + y);
+                            foundLoot = true;
+                        }
                     }
                 }
             }
 
             if (lootLocation != Point.Empty)
             {
+                Thread.Sleep(500);
                 MouseHandler.RightClick(lootLocation.X, lootLocation.Y);
 
                 if (_isSkinner)
@@ -79,7 +84,7 @@ namespace WowCyborg.Core.Commanders
             }
 
             Thread.Sleep(1500);
-            if (foundLoot)
+            if (foundLoot && !_lootOnce)
             {
                 Loot(onDone);
             }
@@ -106,10 +111,10 @@ namespace WowCyborg.Core.Commanders
         public Rectangle GetScanArea(Rectangle windowRectangle)
         {
             var center = new Point(
-                windowRectangle.Width / 2,
-                windowRectangle.Height / 2);
+                windowRectangle.X + 500,
+                windowRectangle.Y + 300);
 
-            var size = new Size(300, 200);
+            var size = new Size(200, 100);
 
             return new Rectangle(
                 center.X - (size.Width / 2),

@@ -15,8 +15,6 @@ namespace WowCyborg.BotProfiles
     {
         private EnemyTargettingCommander _enemyTargettingCommander;
         private bool _isInCombat = false;
-        private int _currentZone = 0;
-        private DateTime _timeSinceLastAttackInCombat;
         private LootingCommander _lootingCommander;
 
         public Expedition(IntPtr hWnd)
@@ -24,23 +22,22 @@ namespace WowCyborg.BotProfiles
         {
             _enemyTargettingCommander = new EnemyTargettingCommander(KeyHandler);
             _lootingCommander = new LootingCommander(hWnd, ref _isInCombat);
+            RunLootHandler();
         }
 
-        // Check if player is in combat without pressing any keys.
-        // Player might be targetting something else than the enemy target.
-        private void RunTargetSwitchHandler()
+        private void RunLootHandler()
         {
-            _timeSinceLastAttackInCombat = DateTime.Now;
-
-            Task.Run(() => {
-                while (_isInCombat)
+            Task.Run(() =>
+            {
+                var loot = new DateTime();
+                while (true)
                 {
-                    if ((DateTime.Now - _timeSinceLastAttackInCombat).Seconds > 1)
+                    if (loot.AddSeconds(60) < DateTime.Now)
                     {
-                        KeyHandler.PressKey(Keys.Tab);
-                        KeyHandler.PressKey(Keys.D, 500);
+                        loot = DateTime.Now;
+                        _lootingCommander.Loot(() => { });
                     }
-                    Thread.Sleep(500);
+                    Thread.Sleep(5000);
                 }
             });
         }
@@ -49,48 +46,21 @@ namespace WowCyborg.BotProfiles
         {
             EventManager.On("PlayerTransformChanged", (Event ev) =>
             {
-                var loc = (Transform)ev.Data;
-                var zone = loc.ZoneId;
-
-                if (_currentZone != zone)
-                {
-                    if (zone == 1165)
-                    {
-                        _lootingCommander.Loot(() => { });
-                    }
-
-                    if (zone != 0)
-                    {
-                        _currentZone = zone;
-                    }
-                }
-
                 if (TargetLocation != null && !_isInCombat && !Paused && CorpseTransform == null)
                 {
                     _enemyTargettingCommander.Update();
                 }
             });
 
-            EventManager.On("CombatChanged", (Event ev) =>
-            {
-                _isInCombat = (bool)ev.Data;
-                Console.WriteLine("Combat: " + _isInCombat);
-                if (_isInCombat)
-                {
-                    PauseMovement();
-                    Task.Run(() => {
-                        Thread.Sleep(3000);
-                        RunTargetSwitchHandler();
-                    });
-                    return;
-                }
-
-                ResumeMovement();
-            });
-
             EventManager.On("KeyPressRequested", (Event ev) =>
             {
                 var keyRequest = (KeyPressRequest)ev.Data;
+
+                if (keyRequest.ModifierKey == Keys.LShiftKey && keyRequest.Key == Keys.D4)
+                {
+                    KeyHandler.PressKey(Keys.Tab);
+                    return;
+                }
 
                 if (keyRequest.ModifierKey != Keys.None)
                 {
@@ -100,17 +70,6 @@ namespace WowCyborg.BotProfiles
                 {
                     KeyHandler.PressKey(keyRequest.Key);
                 }
-
-                if (_isInCombat)
-                {
-                    _timeSinceLastAttackInCombat = DateTime.Now;
-                }
-            });
-
-            EventManager.On("WrongFacing", (Event _) =>
-            {
-                PauseMovement();
-                KeyHandler.PressKey(Keys.D, 500);
             });
 
             EventManager.On("TooFarAway", (Event _) =>
