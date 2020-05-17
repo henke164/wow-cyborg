@@ -15,31 +15,11 @@ namespace WowCyborg.BotProfiles
     {
         private EnemyTargettingCommander _enemyTargettingCommander;
         private bool _isInCombat = false;
-        private LootingCommander _lootingCommander;
 
         public Expedition(IntPtr hWnd)
             : base(hWnd)
         {
             _enemyTargettingCommander = new EnemyTargettingCommander(KeyHandler);
-            _lootingCommander = new LootingCommander(hWnd, ref _isInCombat);
-            RunLootHandler();
-        }
-
-        private void RunLootHandler()
-        {
-            Task.Run(() =>
-            {
-                var loot = new DateTime();
-                while (true)
-                {
-                    if (loot.AddSeconds(60) < DateTime.Now)
-                    {
-                        loot = DateTime.Now;
-                        _lootingCommander.Loot(() => { });
-                    }
-                    Thread.Sleep(5000);
-                }
-            });
         }
 
         protected override void SetupBehaviour()

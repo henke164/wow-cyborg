@@ -48,6 +48,10 @@ namespace WowCyborg
                     Console.Write("Expedition");
                     BotRunner = new Expedition(hWnd);
                     break;
+                case "looter":
+                    Console.Write("Looter");
+                    BotRunner = new Looter(hWnd);
+                    break;
                 default:
                     Console.Write("Autocaster");
                     BotRunner = new AutoCaster(hWnd);

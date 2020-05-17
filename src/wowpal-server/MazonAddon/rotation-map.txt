@@ -20,6 +20,7 @@ mwmonkfollower	MazonAddon/Combat/MonkMistweaverFollower.lua
 eleshamanfollower	MazonAddon/Combat/ShamanEleFollower.lua
 bmhunterfollower	MazonAddon/Combat/HunterBMFollower.lua
 restofollower	MazonAddon/Combat/DruidRestoFollower.lua
+resto2follower	MazonAddon/Combat/DruidResto2Follower.lua
 dhdps	MazonAddon/Combat/DHHavoc.lua
 dhtank	MazonAddon/Combat/DHTank.lua
 classicarms	MazonAddon/Combat/WarriorClassicArms.lua
@@ -45,3 +46,6 @@ resto	MazonAddon/Combat/DruidResto2.lua
 bmhunter2	MazonAddon/Combat/HunterBM2.lua
 bmhunter3	MazonAddon/Combat/HunterBM3.lua
 island	MazonAddon/Combat/IslandGroup.lua
+destro	MazonAddon/Combat/DestroLock.lua
+demo	MazonAddon/Combat/DemoLock.lua
+group	MazonAddon/Combat/Group.lua

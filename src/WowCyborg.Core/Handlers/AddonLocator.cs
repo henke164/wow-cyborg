@@ -72,6 +72,19 @@ namespace WowCyborg.Core.Handlers
                 var bounds = ScreenUtilities.GetScreenBounds();
                 var winBottomLeft = new Point(rect.X, rect.Y + rect.Height);
                 var scanArea = new Rectangle(winBottomLeft.X, winBottomLeft.Y - 500, 500, 500);
+
+                if (scanArea.Y < 0)
+                {
+                    scanArea.Height += scanArea.Y;
+                    scanArea.Y = 0;
+                }
+                if (scanArea.X < 0)
+                {
+                    scanArea.Width += scanArea.X;
+                    scanArea.X = 0;
+                }
+
+                Console.WriteLine($"Scan area x:{scanArea.X}, y:{scanArea.Y}, w:{scanArea.Width}, h:{scanArea.Height}");
                 using (var bitmap = new Bitmap(bounds.Width, bounds.Height))
                 {
                     using (var g = Graphics.FromImage(bitmap))
@@ -110,7 +123,8 @@ namespace WowCyborg.Core.Handlers
             }
             catch (Exception ex)
             {
-                Console.WriteLine("Could not locate addon on screen.");
+                Console.WriteLine(ex.Message);
+                Console.WriteLine("Exception: Could not locate addon on screen.");
                 InGameAddonLocation = new Rectangle(1, 1, 1, 1);
             }
         }

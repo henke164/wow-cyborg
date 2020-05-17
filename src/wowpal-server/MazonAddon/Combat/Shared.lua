@@ -134,7 +134,7 @@ function IsCastable(spellName, requiredEnergy)
   local time = GetTime();
   local timeLeft = ((lastCast + totalCd) - time);
 
-  if timeLeft < 0.5 then
+  if timeLeft < 0.8 then
     if energy >= requiredEnergy then
       return true;
     end

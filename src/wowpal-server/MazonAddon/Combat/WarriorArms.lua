@@ -12,6 +12,8 @@ local slam = "2";
 local execute = "3";
 local mortalStrike = "4";
 local overpower = "5";
+local reapingFlames = "6";
+local rend = "7";
 
 function RenderMultiTargetRotation()
   if InMeleeRange() == false then
@@ -31,9 +33,23 @@ function RenderMultiTargetRotation()
 end
 
 function RenderSingleTargetRotation()
+  local targetHp = GetHealthPercentage("player");
+  if targetHp < 80 and IsCastableAtEnemyTarget("Reaping Flames", 0) then
+    WowCyborg_CURRENTATTACK = "Reaping Flames";
+    return SetSpellRequest(reapingFlames);
+  end
+
   if InMeleeRange() == false then
     WowCyborg_CURRENTATTACK = "-";
     return SetSpellRequest(nil);
+  end
+
+  local rendDot = FindDebuff("target", "Rend");
+  if rendDot == nil then
+    if IsCastableAtEnemyTarget("Rend", 30) then
+      WowCyborg_CURRENTATTACK = "Rend";
+      return SetSpellRequest(rend);
+    end
   end
 
   local sdBuff = FindBuff("player", "Sudden Death");
@@ -68,6 +84,11 @@ function RenderSingleTargetRotation()
       WowCyborg_CURRENTATTACK = "Slam";
       return SetSpellRequest(slam);
     end
+  end
+
+  if IsCastableAtEnemyTarget("Execute", 20) then
+    WowCyborg_CURRENTATTACK = "Execute";
+    return SetSpellRequest(execute);
   end
 
   WowCyborg_CURRENTATTACK = "-";

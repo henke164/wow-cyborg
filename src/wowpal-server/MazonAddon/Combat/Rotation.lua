@@ -1,9 +1,9 @@
-local function RenderMultiTargetRotation(texture)
-  return SetSpellRequest(texture, nil);
+local function RenderMultiTargetRotation()
+  return SetSpellRequest();
 end
 
-local function RenderSingleTargetRotation(texture)
-  return SetSpellRequest(texture, nil);
+local function RenderSingleTargetRotation()
+  return SetSpellRequest();
 end
 
 function CreateRotationFrame()

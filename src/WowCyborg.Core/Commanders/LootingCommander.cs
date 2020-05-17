@@ -11,14 +11,13 @@ namespace WowCyborg.Core.Commanders
 {
     public class LootingCommander
     {
-
         [DllImport("User32.dll")]
         static extern int SetForegroundWindow(IntPtr point);
 
         [DllImport("user32.dll")]
         private static extern int GetWindowRect(IntPtr hwnd, out Rectangle rect);
 
-        private IntPtr _hWnd;
+        public IntPtr HWnd { get; private set; }
         private List<Bitmap> _cursorImages;
         private bool _inCombat = false;
         private bool _isSkinner = false;
@@ -30,7 +29,7 @@ namespace WowCyborg.Core.Commanders
                 (Bitmap)Image.FromFile("Images/loot-cursor.png"),
                 (Bitmap)Image.FromFile("Images/battle-cursor.png")
             };
-            _hWnd = hWnd;
+            HWnd = hWnd;
             _inCombat = inCombat;
             _isSkinner = isSkinner;
         }
@@ -38,14 +37,20 @@ namespace WowCyborg.Core.Commanders
         public void Loot(Action onDone)
         {
             var foundLoot = false;
+            Rectangle scanArea;
+            if (HWnd != IntPtr.Zero)
+            {
+                SetForegroundWindow(HWnd);
 
-            Rectangle windowRectangle;
+                GetWindowRect(HWnd, out Rectangle windowRectangle);
 
-            SetForegroundWindow(_hWnd);
-
-            GetWindowRect(_hWnd, out windowRectangle);
-
-            var scanArea = GetScanArea(windowRectangle);
+                scanArea = GetScanArea(windowRectangle);
+            }
+            else
+            {
+                Console.WriteLine("No handler found. Scanning whole screen.");
+                scanArea = Screen.PrimaryScreen.Bounds;
+            }
 
             var lootLocation = Point.Empty;
 
@@ -73,12 +78,12 @@ namespace WowCyborg.Core.Commanders
             if (lootLocation != Point.Empty)
             {
                 Thread.Sleep(500);
-                MouseHandler.RightClick(lootLocation.X, lootLocation.Y);
+                MouseHandler.LeftClick(lootLocation.X, lootLocation.Y);
 
                 if (_isSkinner)
                 {
                     Thread.Sleep(4000);
-                    MouseHandler.RightClick(lootLocation.X, lootLocation.Y);
+                    MouseHandler.LeftClick(lootLocation.X, lootLocation.Y);
                     Thread.Sleep(2500);
                 }
             }
@@ -110,9 +115,12 @@ namespace WowCyborg.Core.Commanders
 
         public Rectangle GetScanArea(Rectangle windowRectangle)
         {
+            var width = windowRectangle.Width - windowRectangle.X;
+            var height = windowRectangle.Height - windowRectangle.Y;
+
             var center = new Point(
-                windowRectangle.X + 500,
-                windowRectangle.Y + 300);
+                windowRectangle.X + width / 2,
+                windowRectangle.Y + height / 2);
 
             var size = new Size(200, 100);
 
@@ -122,8 +130,5 @@ namespace WowCyborg.Core.Commanders
                 size.Width,
                 size.Height);
         }
-
-        private Point MovePoint(Point p, int x, int y)
-            => new Point(p.X + x, p.Y + y);
     }
 }

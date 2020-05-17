@@ -33,17 +33,12 @@ namespace WowCyborg.BotProfiles
                 if (keyRequest.ModifierKey != Keys.None)
                 {
                     KeyHandler.ModifiedKeypress(keyRequest.ModifierKey, keyRequest.Key);
-                    if (keyRequest.ModifierKey == Keys.LShiftKey && keyRequest.Key == Keys.D1)
+                    if (keyRequest.ModifierKey == Keys.LShiftKey && keyRequest.Key == Keys.D8)
                     {
                         _isFollowing = true;
                     }
 
                     if (keyRequest.ModifierKey == Keys.LShiftKey && keyRequest.Key == Keys.D9)
-                    {
-                        KeyHandler.PressKey(Keys.S, 1500);
-                    }
-
-                    if (keyRequest.ModifierKey == Keys.LShiftKey && keyRequest.Key == Keys.D2)
                     {
                         if (!_isFollowing)
                         {
