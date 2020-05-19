@@ -111,6 +111,25 @@ end
 
 -- Klong
 function RenderKlongRotation()
+  local target = UnitName("target")
+  local targetHp = GetHealthPercentage("target")
+  if target == nil or UnitCanAttack("player", "target") == false or targetHp < 2 then
+    WowCyborg_CURRENTATTACK = "Target"
+    return SetSpellRequest(targetMacro)
+  end
+
+  if target ~= nil and targetHp < 80 then
+    switchCounter = switchCounter + 1;
+    if switchCounter > 100 and switchCounter < 130 then
+      WowCyborg_CURRENTATTACK = "Target"
+      return SetSpellRequest(targetMacro)
+    end
+
+    if switchCounter > 500 then
+      switchCounter = 0;
+    end
+  end
+
   if (UnitCanAttack("player", "target")) then
     local dcBuff = FindBuff("player", "Demonic Calling");
     local shards = UnitPower("player", 7)
@@ -140,6 +159,25 @@ end
 
 -- MAZOON
 function RenderMazonRotation()
+  local target = UnitName("target")
+  local targetHp = GetHealthPercentage("target")
+  if target == nil or UnitCanAttack("player", "target") == false or targetHp < 2 then
+    WowCyborg_CURRENTATTACK = "Target"
+    return SetSpellRequest(targetMacro)
+  end
+
+  if target ~= nil and targetHp < 80 then
+    switchCounter = switchCounter + 1;
+    if switchCounter > 100 and switchCounter < 130 then
+      WowCyborg_CURRENTATTACK = "Target"
+      return SetSpellRequest(targetMacro)
+    end
+
+    if switchCounter > 500 then
+      switchCounter = 0;
+    end
+  end
+
   local hp = GetHealthPercentage("player")
   if hp < 60 and IsCastable("Exhilaration", 0) then
     WowCyborg_CURRENTATTACK = "Heal"
@@ -257,6 +295,50 @@ function RenderTheRingRotation()
   return SetSpellRequest(nil)
 end
 
+-- Bommbom
+function RenderBommbomRotation()  
+  local target = UnitName("target")
+  local targetHp = GetHealthPercentage("target")
+  if target == nil or UnitCanAttack("player", "target") == false or targetHp < 2 then
+    WowCyborg_CURRENTATTACK = "Target"
+    return SetSpellRequest(targetMacro)
+  end
+
+  if target ~= nil and targetHp < 80 then
+    switchCounter = switchCounter + 1;
+    if switchCounter > 100 and switchCounter < 130 then
+      WowCyborg_CURRENTATTACK = "Target"
+      return SetSpellRequest(targetMacro)
+    end
+
+    if switchCounter > 500 then
+      switchCounter = 0;
+    end
+  end
+
+  local eclipse = UnitPower("player", 8);
+
+  if eclipse >= 40 then
+    WowCyborg_CURRENTATTACK = "Starsurge"
+    return SetSpellRequest("5")
+  end
+
+  local sfDebuff = FindDebuff("target", "Sunfire");
+  if sfDebuff == nil then
+    WowCyborg_CURRENTATTACK = "Sunfire"
+    return SetSpellRequest("2")
+  end
+
+  local sfDebuff = FindDebuff("target", "Moonfire");
+  if sfDebuff == nil then
+    WowCyborg_CURRENTATTACK = "Moonfire"
+    return SetSpellRequest("1")
+  end
+
+  WowCyborg_CURRENTATTACK = "Solar wrath " .. solarEmpowerment
+  return SetSpellRequest("4")
+end
+
 function RenderMultiTargetRotation()
   return RenderSingleTargetRotation()
 end
@@ -283,48 +365,10 @@ function RenderSingleTargetRotation()
   end
   
   if name == "Mazoon" then
-    local target = UnitName("target")
-    local targetHp = GetHealthPercentage("target")
-    if target == nil or UnitCanAttack("player", "target") == false or targetHp < 2 then
-      WowCyborg_CURRENTATTACK = "Target"
-      return SetSpellRequest(targetMacro)
-    end
-
-    if target ~= nil and targetHp < 80 then
-      switchCounter = switchCounter + 1;
-      if switchCounter > 100 and switchCounter < 130 then
-        WowCyborg_CURRENTATTACK = "Target"
-        return SetSpellRequest(targetMacro)
-      end
-
-      if switchCounter > 500 then
-        switchCounter = 0;
-      end
-    end
-
     return RenderMazonRotation()
   end
   
-  if name == "Klong" then 
-    local target = UnitName("target")
-    local targetHp = GetHealthPercentage("target")
-    if target == nil or UnitCanAttack("player", "target") == false or targetHp < 2 then
-      WowCyborg_CURRENTATTACK = "Target"
-      return SetSpellRequest(targetMacro)
-    end
-
-    if target ~= nil and targetHp < 80 then
-      switchCounter = switchCounter + 1;
-      if switchCounter > 100 and switchCounter < 130 then
-        WowCyborg_CURRENTATTACK = "Target"
-        return SetSpellRequest(targetMacro)
-      end
-
-      if switchCounter > 500 then
-        switchCounter = 0;
-      end
-    end
-
+  if name == "Klong" then
     return RenderKlongRotation()
   end
   
@@ -332,11 +376,8 @@ function RenderSingleTargetRotation()
     return RenderOggyRotation()
   end
   
-  if name == "Bommbom" then
-    if UnitCanAttack("player", "party1target") then
-      WowCyborg_CURRENTATTACK = "Shoot"
-      return SetSpellRequest("1")
-    end
+  if name == "Bommbom" or name == "Kattigast" then
+    return RenderBommbomRotation()
   end
 
   WowCyborg_CURRENTATTACK = "-"
@@ -481,6 +522,10 @@ function CreateMailListenerFrame()
     if string.find(command, "ok", 1, true) then
       WowCyborg_DISABLED = false;
       sendingMail = false;
+    end
+
+    if string.find(command, "reload", 1, true) then
+      ReloadUI();
     end
   end)
 end

@@ -49,3 +49,4 @@ island	MazonAddon/Combat/IslandGroup.lua
 destro	MazonAddon/Combat/DestroLock.lua
 demo	MazonAddon/Combat/DemoLock.lua
 group	MazonAddon/Combat/Group.lua
+tailor	MazonAddon/Combat/Tailor.lua
