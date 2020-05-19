@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Windows.Forms;
 using WowCyborg.Core.Models;
 using WowCyborg.Core.Models.Abstractions;
@@ -9,15 +10,14 @@ namespace WowCyborg.Core.EventDispatchers
     {
         private DateTime _lastCast;
 
-        public CombatCastingDispatcher(Action<Event> onEvent)
-            : base(onEvent)
+        public CombatCastingDispatcher()
         {
             EventName = "KeyPressRequested";
         }
 
-        protected override void Update()
+        protected override void GameHandleUpdate(IntPtr hWnd)
         {
-            if (AddonScreenshot == null)
+            if (!AddonScreenshots.ContainsKey(hWnd))
             {
                 return;
             }
@@ -29,7 +29,7 @@ namespace WowCyborg.Core.EventDispatchers
                 return;
             }
 
-            var requestedKey = GetCharacterAt(3, 2);
+            var requestedKey = GetCharacterAt(hWnd, 3, 2);
 
             if (requestedKey == "")
             {
@@ -39,16 +39,20 @@ namespace WowCyborg.Core.EventDispatchers
             var key = GetKeyFromCharacter(requestedKey);
             if (key != Keys.None)
             {
-                var modifier = GetModifierKeyAt(4, 2);
+                var modifier = GetModifierKeyAt(hWnd, 4, 2);
                 _lastCast = now;
-                TriggerEvent(new KeyPressRequest
+                TriggerEvent(hWnd, new KeyPressRequest
                 {
                     ModifierKey = modifier,
                     Key = key
                 });
             }
         }
-        
+
+        protected override void Update()
+        {
+        }
+
         private Keys GetKeyFromCharacter(string character)
         {
             switch (character)

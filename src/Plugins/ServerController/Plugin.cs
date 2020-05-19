@@ -11,7 +11,7 @@ namespace ServerController
         public Plugin(ApplicationSettings settings)
             : base(settings)
         {
-            _serverManager = new ServerManager(Settings.Bot);
+            _serverManager = new ServerManager(Settings.Bots);
         }
 
         public override bool HandleInput(string command, string[] args)

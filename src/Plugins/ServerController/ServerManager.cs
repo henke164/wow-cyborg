@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json;
 using System;
+using System.Collections.Generic;
 using System.Net;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -17,9 +18,9 @@ namespace ServerController
 
         private HttpListener _listener;
 
-        public ServerManager(Bot bot)
+        public ServerManager(IList<Bot> bots)
         {
-            _botApi = new BotApi(bot);
+            _botApi = new BotApi(bots[0]);
         }
 
         public void StartServer(string port)

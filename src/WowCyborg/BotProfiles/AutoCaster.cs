@@ -10,14 +10,14 @@ namespace WowCyborg.BotProfiles
 {
     public class AutoCaster : Bot
     {
-        public AutoCaster(IntPtr hWnd) 
-            : base(hWnd)
+        public AutoCaster(IntPtr hWnds) 
+            : base(hWnds)
         {
         }
 
         protected override void SetupBehaviour()
         {
-            EventManager.On("KeyPressRequested", (Event ev) =>
+            EventManager.On(HWnd, "KeyPressRequested", (Event ev) =>
             {
                 var keyRequest = (KeyPressRequest)ev.Data;
                 if (keyRequest.ModifierKey != Keys.None)

@@ -60,15 +60,18 @@ namespace WowAddonInstaller
         private void RelocateAddon()
         {
             Console.WriteLine("Relocating addon...");
-            AddonLocator.ReCalculateAddonPosition();
-            var addonLocation = AddonLocator.GetAddonLocation();
-            if (addonLocation.Width == 1 || addonLocation.Height == 1)
+            AddonLocator.ReCalculateAddonPositions();
+            var addonLocations = AddonLocator.GetAddonLocations();
+            foreach (var hWnd in addonLocations.Keys)
             {
-                Logger.Log("Addon could not be located. Make sure it's loaded and visible.", ConsoleColor.Red);
-            }
-            else
-            {
-                Logger.Log($"Addon successfully located: {addonLocation.ToString()}", ConsoleColor.Green);
+                if (addonLocations[hWnd].Width == 1 || addonLocations[hWnd].Height == 1)
+                {
+                    Logger.Log("Addon could not be located. Make sure it's loaded and visible.", ConsoleColor.Red);
+                }
+                else
+                {
+                    Logger.Log($"Addon successfully located: {addonLocations[hWnd]}", ConsoleColor.Green);
+                }
             }
 
             AddonFolderHandler.LocateAddonFolderPath();

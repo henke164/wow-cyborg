@@ -9,18 +9,18 @@ namespace WowCyborg.Core.EventDispatchers
     {
         private Transform _transform = new Transform(0, 0, 0, 0);
 
-        public PlayerTransformChangedDispatcher(Action<Event> onEvent)
-            : base(onEvent)
+        public PlayerTransformChangedDispatcher()
         {
             EventName = "PlayerTransformChanged";
         }
 
-        protected override void Update()
+
+        protected override void GameHandleUpdate(IntPtr hWnd)
         {
-            var zoneId = GetZoneId();
-            var xPos = GetXPosition();
-            var zPos = GetZPosition();
-            var rotation = GetRotation();
+            var zoneId = GetZoneId(hWnd);
+            var xPos = GetXPosition(hWnd);
+            var zPos = GetZPosition(hWnd);
+            var rotation = GetRotation(hWnd);
 
             var newTransform = new Transform(xPos, 0, zPos, rotation)
             {
@@ -32,17 +32,21 @@ namespace WowCyborg.Core.EventDispatchers
                 _transform.Rotation != newTransform.Rotation)
             {
                 _transform = newTransform;
-                TriggerEvent(_transform);
+                TriggerEvent(hWnd, _transform);
             }
         }
 
-        private int GetZoneId()
+        protected override void Update()
+        {
+        }
+
+        private int GetZoneId(IntPtr hWnd)
         {
             var numbers = new List<string> {
-                GetCharacterAt(1, 6),
-                GetCharacterAt(2, 6),
-                GetCharacterAt(3, 6),
-                GetCharacterAt(4, 6)
+                GetCharacterAt(hWnd, 1, 6),
+                GetCharacterAt(hWnd, 2, 6),
+                GetCharacterAt(hWnd, 3, 6),
+                GetCharacterAt(hWnd, 4, 6)
             };
 
             if (int.TryParse(string.Join("", numbers), out int zoneId))
@@ -53,14 +57,14 @@ namespace WowCyborg.Core.EventDispatchers
             return 0;
         }
 
-        private float GetXPosition()
+        private float GetXPosition(IntPtr hWnd)
         {
             var numbers = new List<string> {
                 "0,",
-                GetCharacterAt(1, 5),
-                GetCharacterAt(2, 5),
-                GetCharacterAt(3, 5),
-                GetCharacterAt(4, 5)
+                GetCharacterAt(hWnd, 1, 5),
+                GetCharacterAt(hWnd, 2, 5),
+                GetCharacterAt(hWnd, 3, 5),
+                GetCharacterAt(hWnd, 4, 5)
             };
 
             if (float.TryParse(string.Join("", numbers), out float xPosition))
@@ -71,14 +75,14 @@ namespace WowCyborg.Core.EventDispatchers
             return 0;
         }
 
-        private float GetZPosition()
+        private float GetZPosition(IntPtr hWnd)
         {
             var numbers = new List<string> {
                 "0,",
-                GetCharacterAt(1, 4),
-                GetCharacterAt(2, 4),
-                GetCharacterAt(3, 4),
-                GetCharacterAt(4, 4)
+                GetCharacterAt(hWnd, 1, 4),
+                GetCharacterAt(hWnd, 2, 4),
+                GetCharacterAt(hWnd, 3, 4),
+                GetCharacterAt(hWnd, 4, 4)
             };
 
             if (float.TryParse(string.Join("", numbers), out float yPosition))
@@ -89,13 +93,13 @@ namespace WowCyborg.Core.EventDispatchers
             return 0;
         }
 
-        private float GetRotation()
+        private float GetRotation(IntPtr hWnd)
         {
             var numbers = new List<string> {
-                GetCharacterAt(1, 3),
-                GetCharacterAt(2, 3),
-                GetCharacterAt(3, 3),
-                GetCharacterAt(4, 3)
+                GetCharacterAt(hWnd, 1, 3),
+                GetCharacterAt(hWnd, 2, 3),
+                GetCharacterAt(hWnd, 3, 3),
+                GetCharacterAt(hWnd, 4, 3)
             };
 
             if (float.TryParse(string.Join("", numbers), out float rotation))

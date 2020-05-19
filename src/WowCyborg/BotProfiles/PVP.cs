@@ -35,7 +35,7 @@ namespace WowCyborg.BotProfiles
 
         protected override void SetupBehaviour()
         {
-            EventManager.On("KeyPressRequested", (Event ev) =>
+            EventManager.On(HWnd, "KeyPressRequested", (Event ev) =>
             {
                 var keyRequest = (KeyPressRequest)ev.Data;
                 if (keyRequest.Key == Keys.D3 && keyRequest.ModifierKey == Keys.LShiftKey)

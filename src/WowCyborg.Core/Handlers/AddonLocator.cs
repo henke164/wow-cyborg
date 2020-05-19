@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Imaging;
+using System.Linq;
 using System.Runtime.InteropServices;
 using System.Threading;
 using System.Windows.Forms;
@@ -18,115 +20,126 @@ namespace WowCyborg.Core.Handlers
         [DllImport("user32.dll")]
         private static extern int GetWindowRect(IntPtr hwnd, out Rectangle rect);
 
-        private static Rectangle InGameAddonLocation;
+        private static Dictionary<IntPtr, Rectangle> InGameAddonLocations = new Dictionary<IntPtr, Rectangle>();
 
-        private static IntPtr GameHandle;
+        private static IList<IntPtr> GameHandles;
 
-        public static IntPtr InitializeGameHandle()
+        public static IList<IntPtr> InitializeGameHandles()
         {
-            var gameHandle = SetupGameHandle();
-            GameHandle = gameHandle;
-            return GameHandle;
+            var gameHandles = SetupGameHandles();
+            GameHandles = gameHandles;
+            return GameHandles;
         }
 
-        private static IntPtr GetGameHandle()
+        private static IList<IntPtr> GetGameHandles()
         {
-            if (!GameHandle.Equals(IntPtr.Zero))
+            if (!GameHandles.Equals(IntPtr.Zero))
             {
-                return GameHandle;
+                return GameHandles;
             }
 
             var procs = Process.GetProcessesByName("Wow");
             if (procs.Length > 0)
             {
-                return procs[0].MainWindowHandle;
+                return procs.Select(p => p.MainWindowHandle).ToList();
             }
 
             procs = Process.GetProcessesByName("WowClassic");
-            return procs[0].MainWindowHandle;
+            return procs.Select(p => p.MainWindowHandle).ToList();
         }
 
-        public static Rectangle GetAddonLocation()
+        public static Dictionary<IntPtr, Rectangle> GetAddonLocations()
         {
-            if (InGameAddonLocation == Rectangle.Empty)
+            if (InGameAddonLocations.Count() == 0)
             {
-                ReCalculateAddonPosition();
+                ReCalculateAddonPositions();
             }
 
-            return InGameAddonLocation;
+            return InGameAddonLocations;
         }
 
-        public static void ReCalculateAddonPosition()
+        public static void ReCalculateAddonPositions()
         {
-            try
+            Rectangle rect;
+            var handles = GetGameHandles();
+            var locations = new Dictionary<IntPtr, Rectangle>();
+
+            for (var i = 0; i < handles.Count; i++)
             {
-                Rectangle rect;
-                var handle = GetGameHandle();
-                GetWindowRect(handle, out rect);
-                SetForegroundWindow(handle);
-                Thread.Sleep(500);
-                rect.Width -= rect.X;
-                rect.Height -= rect.Y;
-                Bitmap clone;
+                var handle = handles[i];
 
-                var bounds = ScreenUtilities.GetScreenBounds();
-                var winBottomLeft = new Point(rect.X, rect.Y + rect.Height);
-                var scanArea = new Rectangle(winBottomLeft.X, winBottomLeft.Y - 500, 500, 500);
+                try
+                {
+                    GetWindowRect(handle, out rect);
+                    SetForegroundWindow(handle);
+                    Thread.Sleep(500);
+                    rect.Width -= rect.X;
+                    rect.Height -= rect.Y;
+                    Bitmap clone;
 
-                if (scanArea.Y < 0)
-                {
-                    scanArea.Height += scanArea.Y;
-                    scanArea.Y = 0;
-                }
-                if (scanArea.X < 0)
-                {
-                    scanArea.Width += scanArea.X;
-                    scanArea.X = 0;
-                }
+                    var bounds = ScreenUtilities.GetScreenBounds();
+                    var winBottomLeft = new Point(rect.X, rect.Y + rect.Height);
+                    var scanArea = new Rectangle(winBottomLeft.X, winBottomLeft.Y - 500, 500, 500);
 
-                Console.WriteLine($"Scan area x:{scanArea.X}, y:{scanArea.Y}, w:{scanArea.Width}, h:{scanArea.Height}");
-                using (var bitmap = new Bitmap(bounds.Width, bounds.Height))
-                {
-                    using (var g = Graphics.FromImage(bitmap))
+                    if (scanArea.Y < 0)
                     {
-                        g.CopyFromScreen(Point.Empty, Point.Empty, bounds.Size);
+                        scanArea.Height += scanArea.Y;
+                        scanArea.Y = 0;
                     }
-                    clone = bitmap.Clone(scanArea, PixelFormat.Format24bppRgb);
+                    if (scanArea.X < 0)
+                    {
+                        scanArea.Width += scanArea.X;
+                        scanArea.X = 0;
+                    }
+
+                    Console.WriteLine($"Scan area x:{scanArea.X}, y:{scanArea.Y}, w:{scanArea.Width}, h:{scanArea.Height}");
+                    using (var bitmap = new Bitmap(bounds.Width, bounds.Height))
+                    {
+                        using (var g = Graphics.FromImage(bitmap))
+                        {
+                            g.CopyFromScreen(Point.Empty, Point.Empty, bounds.Size);
+                        }
+                        clone = bitmap.Clone(scanArea, PixelFormat.Format24bppRgb);
+                    }
+
+                    var addonBottomLeft = FindAddonBottomLeft(clone);
+                    var frameSize = CalculateFrameSize(addonBottomLeft, clone);
+                    if (frameSize <= 1)
+                    {
+                        Console.WriteLine("Could not locate addon on screen.");
+                        locations.Add(handles[i], new Rectangle(1, 1, 1, 1));
+                        continue;
+                    }
+
+                    var settings = SettingsLoader.LoadSettings<AppSettings>("settings.json");
+
+                    var location = new Rectangle(
+                        scanArea.X + addonBottomLeft.X,
+                        scanArea.Y + addonBottomLeft.Y - (frameSize * settings.AddonRowCount) + 1,
+                        frameSize * settings.AddonColumnCount,
+                        frameSize * settings.AddonRowCount);
+
+                    if (location.Height == 0 || location.Width == 0)
+                    {
+                        Console.WriteLine("Could not locate addon on screen.");
+                        location = new Rectangle(1, 1, 1, 1);
+                    }
+                    else
+                    {
+                        Console.WriteLine("Ingame addon successfully located on screen: " + location);
+                    }
+                    locations.Add(handles[i], location);
+                    Thread.Sleep(200);
                 }
-
-                var addonBottomLeft = FindAddonBottomLeft(clone);
-                var frameSize = CalculateFrameSize(addonBottomLeft, clone);
-                if (frameSize <= 1)
+                catch (Exception ex)
                 {
-                    Console.WriteLine("Could not locate addon on screen.");
-                    InGameAddonLocation = new Rectangle(1, 1, 1, 1);
-                    return;
-                }
-
-                var settings = SettingsLoader.LoadSettings<AppSettings>("settings.json");
-
-                InGameAddonLocation = new Rectangle(
-                    scanArea.X + addonBottomLeft.X,
-                    scanArea.Y + addonBottomLeft.Y - (frameSize * settings.AddonRowCount) + 1,
-                    frameSize * settings.AddonColumnCount,
-                    frameSize * settings.AddonRowCount);
-
-                if (InGameAddonLocation.Height == 0 || InGameAddonLocation.Width == 0)
-                {
-                    Console.WriteLine("Could not locate addon on screen.");
-                    InGameAddonLocation = new Rectangle(1, 1, 1, 1);
-                }
-                else
-                {
-                    Console.WriteLine("Ingame addon successfully located on screen: " + InGameAddonLocation);
+                    Console.WriteLine(ex.Message);
+                    Console.WriteLine("Exception: Could not locate addon on screen.");
+                    locations.Add(handles[i], new Rectangle(1, 1, 1, 1));
                 }
             }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-                Console.WriteLine("Exception: Could not locate addon on screen.");
-                InGameAddonLocation = new Rectangle(1, 1, 1, 1);
-            }
+
+            InGameAddonLocations = locations;
         }
 
         private static bool IsMarkerColor(Color c)
@@ -165,7 +178,7 @@ namespace WowCyborg.Core.Handlers
         }
 
 
-        static IntPtr SetupGameHandle()
+        static IList<IntPtr> SetupGameHandles()
         {
             var processes = Process.GetProcessesByName("Wow");
             if (processes.Length == 0)
@@ -175,7 +188,7 @@ namespace WowCyborg.Core.Handlers
 
             if (processes.Length == 1)
             {
-                return processes[0].MainWindowHandle;
+                return new List<IntPtr> { processes[0].MainWindowHandle };
             }
 
             if (processes.Length > 1)
@@ -185,11 +198,18 @@ namespace WowCyborg.Core.Handlers
                 {
                     Console.WriteLine($"{x}. {processes[x].MainWindowTitle} ({processes[x].Id})");
                 }
+                Console.WriteLine("Type \"all\" to run on all processes");
+
+                var input = Console.ReadLine();
+                if (input == "all")
+                {
+                    return processes.Select(p => p.MainWindowHandle).ToList();
+                }
                 var index = int.Parse(Console.ReadLine());
-                return processes[index].MainWindowHandle;
+                return new List<IntPtr> { processes[index].MainWindowHandle };
             }
 
-            return IntPtr.Zero;
+            return new List<IntPtr>();
         }
     }
 }

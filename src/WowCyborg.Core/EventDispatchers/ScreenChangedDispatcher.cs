@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.Windows.Forms;
@@ -10,10 +12,11 @@ namespace WowCyborg.Core.EventDispatchers
 {
     public class ScreenChangedDispatcher : EventDispatcherBase
     {
+        private Dictionary<IntPtr, Bitmap> _screenshots;
         private Rectangle _screenbounds;
 
-        public ScreenChangedDispatcher(Action<Event> onEvent)
-            : base(onEvent)
+        public ScreenChangedDispatcher()
+            : base()
         {
             EventName = "ScreenChanged";
             _screenbounds = ScreenUtilities.GetScreenBounds();
@@ -21,18 +24,19 @@ namespace WowCyborg.Core.EventDispatchers
 
         protected override void Update()
         {
-            var screenshot = CaptureScreenShot();
-            if (screenshot.Size == new Size(1, 1))
-            {
-                return;
-            }
-
-            TriggerEvent(screenshot);
+            _screenshots = CaptureScreenShots();
         }
-        
-        public Bitmap CaptureScreenShot()
+
+        protected override void GameHandleUpdate(IntPtr hWnd)
         {
-            Bitmap clone;
+            TriggerEvent(hWnd, _screenshots[hWnd]);
+        }
+
+        public Dictionary<IntPtr, Bitmap> CaptureScreenShots()
+        {
+            var screenshots = new Dictionary<IntPtr, Bitmap>();
+            var addonLocations = AddonLocator.GetAddonLocations();
+
             using (var bitmap = new Bitmap(_screenbounds.Width, _screenbounds.Height))
             {
                 using (var g = Graphics.FromImage(bitmap))
@@ -40,15 +44,24 @@ namespace WowCyborg.Core.EventDispatchers
                     g.CopyFromScreen(Point.Empty, Point.Empty, _screenbounds.Size);
                 }
 
-                var addonLocation = AddonLocator.GetAddonLocation();
-                if (addonLocation == Rectangle.Empty)
+                foreach (var hWnd in addonLocations.Keys)
                 {
-                    addonLocation = new Rectangle(1, 1, 1, 1);
-                }
+                    Bitmap clone;
 
-                clone = bitmap.Clone(addonLocation, PixelFormat.Format24bppRgb);
+                    if (addonLocations[hWnd] == Rectangle.Empty)
+                    {
+                        clone = bitmap.Clone(new Rectangle(1, 1, 1, 1), PixelFormat.Format24bppRgb);
+                    }
+                    else
+                    {
+                        clone = bitmap.Clone(addonLocations[hWnd], PixelFormat.Format24bppRgb);
+                    }
+
+                    screenshots.Add(hWnd, clone);
+                }
             }
-            return clone;
+
+            return screenshots;
         }
     }
 }
