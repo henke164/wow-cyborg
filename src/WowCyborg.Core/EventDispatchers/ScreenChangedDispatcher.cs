@@ -14,7 +14,7 @@ namespace WowCyborg.Core.EventDispatchers
     {
         private Dictionary<IntPtr, Bitmap> _screenshots;
         private Rectangle _screenbounds;
-
+        
         public ScreenChangedDispatcher()
             : base()
         {
@@ -29,7 +29,10 @@ namespace WowCyborg.Core.EventDispatchers
 
         protected override void GameHandleUpdate(IntPtr hWnd)
         {
-            TriggerEvent(hWnd, _screenshots[hWnd]);
+            using (var screenshot = (Bitmap)_screenshots[hWnd].Clone())
+            {
+                TriggerEvent(hWnd, screenshot);
+            }
         }
 
         public Dictionary<IntPtr, Bitmap> CaptureScreenShots()

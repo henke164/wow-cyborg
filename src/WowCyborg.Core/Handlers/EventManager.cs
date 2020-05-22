@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using WowCyborg.Core.EventDispatchers;
 using WowCyborg.Core.Models.Abstractions;
 
 namespace WowCyborg.Core.Handlers
@@ -14,6 +15,7 @@ namespace WowCyborg.Core.Handlers
         public static EventDispatcherBase StartEventDispatcher<T>(IntPtr hWnd)
         {
             var dispatcher = Dispatchers.FirstOrDefault(d => typeof(T) == d.GetType());
+
             if (dispatcher == null)
             {
                 dispatcher = (EventDispatcherBase)Activator.CreateInstance(typeof(T));
@@ -21,7 +23,7 @@ namespace WowCyborg.Core.Handlers
                 Dispatchers.Add(dispatcher);
             }
 
-            dispatcher.AddGameHandle(hWnd, new Action<Event>((Event ev) => { BroadcastEvent(hWnd, ev); }));
+            dispatcher.AddGameHandle(hWnd, new Action<IntPtr, Event>((IntPtr h, Event ev) => { BroadcastEvent(h, ev); }));
 
             return dispatcher;
         }

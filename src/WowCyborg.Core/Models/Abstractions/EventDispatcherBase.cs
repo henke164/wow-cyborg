@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -13,11 +14,11 @@ namespace WowCyborg.Core.Models.Abstractions
 
         private bool _isRunning = false;
 
-        private Dictionary<IntPtr, Action<Event>> _onEventTriggeredCallbacks = new Dictionary<IntPtr, Action<Event>>();
+        private Dictionary<IntPtr, Action<IntPtr, Event>> _onEventTriggeredCallbacks = new Dictionary<IntPtr, Action<IntPtr, Event>>();
 
         private IList<IntPtr> _hWnds = new List<IntPtr>();
 
-        public void AddGameHandle(IntPtr hWnd, Action<Event> onEventTriggeredCallback)
+        public void AddGameHandle(IntPtr hWnd, Action<IntPtr, Event> onEventTriggeredCallback)
         {
             _onEventTriggeredCallbacks.Add(hWnd, onEventTriggeredCallback);
             _hWnds.Add(hWnd);
@@ -35,10 +36,11 @@ namespace WowCyborg.Core.Models.Abstractions
                     {
                         Update();
 
-                        foreach (var hWnd in _hWnds)
+                        var clone = _hWnds.ToList();
+                        Parallel.ForEach(clone, hWnd =>
                         {
                             GameHandleUpdate(hWnd);
-                        }
+                        });
 
                         Thread.Sleep(1000 / 30);
                     }
@@ -60,7 +62,7 @@ namespace WowCyborg.Core.Models.Abstractions
         protected abstract void GameHandleUpdate(IntPtr hWnd);
 
         protected void TriggerEvent(IntPtr hWnd, object eventData)
-            => _onEventTriggeredCallbacks[hWnd](new Event {
+            => _onEventTriggeredCallbacks[hWnd](hWnd, new Event {
                 Name = EventName,
                 Data = eventData
             });

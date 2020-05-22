@@ -8,7 +8,7 @@ namespace WowCyborg.Core.EventDispatchers
 {
     public class CombatCastingDispatcher : AddonBehaviourEventDispatcher
     {
-        private DateTime _lastCast;
+        private Dictionary<IntPtr, DateTime> _lastCasts = new Dictionary<IntPtr, DateTime>();
 
         public CombatCastingDispatcher()
         {
@@ -22,9 +22,14 @@ namespace WowCyborg.Core.EventDispatchers
                 return;
             }
 
+            if (!_lastCasts.ContainsKey(hWnd))
+            {
+                _lastCasts.Add(hWnd, DateTime.Now);
+            }
+
             var now = DateTime.Now;
 
-            if ((now - _lastCast).TotalMilliseconds < 200)
+            if ((now - _lastCasts[hWnd]).TotalMilliseconds < 200)
             {
                 return;
             }
@@ -40,7 +45,7 @@ namespace WowCyborg.Core.EventDispatchers
             if (key != Keys.None)
             {
                 var modifier = GetModifierKeyAt(hWnd, 4, 2);
-                _lastCast = now;
+                _lastCasts[hWnd] = now;
                 TriggerEvent(hWnd, new KeyPressRequest
                 {
                     ModifierKey = modifier,

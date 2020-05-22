@@ -205,7 +205,7 @@ namespace WowCyborg.Core.Handlers
                 {
                     return processes.Select(p => p.MainWindowHandle).ToList();
                 }
-                var index = int.Parse(Console.ReadLine());
+                var index = int.Parse(input);
                 return new List<IntPtr> { processes[index].MainWindowHandle };
             }
 
