@@ -40,7 +40,7 @@ function HandleVendoring()
     return false
   end
   
-  if lastRepair + 600 < GetTime() then
+  if lastRepair + 100 < GetTime() then
     local name = GetUnitName("target")
     if name ~= repairVendorName then
       WowCyborg_CURRENTATTACK = "Target repair";
@@ -74,7 +74,7 @@ local function GetBsCooldown()
 end
 
 -- Oggy
-function RenderOggyRotation()
+function RenderWarriorRotation()
   local bs = FindBuff("player", "Battle Shout");
   if bs == nil then
     WowCyborg_CURRENTATTACK = "Battle shout";
@@ -110,7 +110,7 @@ function RenderOggyRotation()
 end
 
 -- Klong
-function RenderKlongRotation()
+function RenderWarlockRotation()
   local target = UnitName("target")
   local targetHp = GetHealthPercentage("target")
   if target == nil or UnitCanAttack("player", "target") == false or targetHp < 2 then
@@ -158,7 +158,7 @@ function RenderKlongRotation()
 end
 
 -- MAZOON
-function RenderMazonRotation()
+function RenderHunterRotation()
   local target = UnitName("target")
   local targetHp = GetHealthPercentage("target")
   if target == nil or UnitCanAttack("player", "target") == false or targetHp < 2 then
@@ -274,7 +274,7 @@ function RenderMazonRotation()
 end
 
 -- TheRing
-function RenderTheRingRotation()
+function RenderDKRotation()
   if IsMounted() == false then
     mountCounter = mountCounter + 1;
     if mountCounter > 100 and mountCounter < 110 then
@@ -296,7 +296,7 @@ function RenderTheRingRotation()
 end
 
 -- Bommbom
-function RenderBommbomRotation()  
+function RenderBoomkinRotation()  
   local target = UnitName("target")
   local targetHp = GetHealthPercentage("target")
   if target == nil or UnitCanAttack("player", "target") == false or targetHp < 2 then
@@ -353,10 +353,10 @@ function RenderSingleTargetRotation()
     return SetSpellRequest(nil)
   end
 
-  name = GetUnitName("player")
+  className = UnitClass("player")
 
-  if name == "Thering" then
-    return RenderTheRingRotation()
+  if className == "Death Knight" then
+    return RenderDKRotation()
   end
 
   local vendorResult = HandleVendoring()
@@ -364,20 +364,20 @@ function RenderSingleTargetRotation()
     return;
   end
   
-  if name == "Mazoon" then
-    return RenderMazonRotation()
+  if className == "Hunter" then
+    return RenderHunterRotation()
   end
   
-  if name == "Klong" then
-    return RenderKlongRotation()
+  if className == "Warlock" then
+    return RenderWarlockRotation()
   end
   
-  if name == "Oggy" then
-    return RenderOggyRotation()
+  if className == "Warrior" then
+    return RenderWarriorRotation()
   end
   
-  if name == "Bommbom" or name == "Kattigast" then
-    return RenderBommbomRotation()
+  if className == "Druid" then
+    return RenderBoomkinRotation()
   end
 
   WowCyborg_CURRENTATTACK = "-"
@@ -390,7 +390,7 @@ function SellJunk()
     for s=1,GetContainerNumSlots(b) do 
       i={GetContainerItemInfo(b,s)}
       n=i[7]
-      if n and string.find(n,"Deep Sea Satin") == nil and (string.find(n,"9d9d9d") or string.find(n,"1eff00")) then 
+      if n and string.find(n,"Deep Sea Satin") == nil and (string.find(n,"Map") or string.find(n,"9d9d9d") or string.find(n,"1eff00")) then 
         v={GetItemInfo(n)}
         q=i[2]
         c=c+v[11]*q;
@@ -516,12 +516,15 @@ function CreateMailListenerFrame()
 
     if string.find(command, "pay", 1, true) then
       WowCyborg_DISABLED = true;
-      SendLootToBank()       
+      SendLootToBank()
     end
 
     if string.find(command, "ok", 1, true) then
       WowCyborg_DISABLED = false;
       sendingMail = false;
+      lastCheckSum = 0;
+      lastCheckTime = 0;
+      MailFrame:Hide()
     end
 
     if string.find(command, "reload", 1, true) then

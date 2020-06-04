@@ -93,6 +93,11 @@ function RenderSingleTargetRotation(texture)
     return SetSpellRequest(recklessness);
   end
 
+  if IsCastableAtEnemyTarget("Siegebreaker", 0) then
+    WowCyborg_CURRENTATTACK = "Siegebreaker";
+    return SetSpellRequest(siegeBreaker);
+  end
+  
   local enemyHP = GetHealthPercentage("target");
   local sdBuff = FindBuff("player", "Sudden Death");
 

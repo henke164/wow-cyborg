@@ -17,6 +17,8 @@ namespace WowCyborg.Core.EventDispatchers
 
         protected override void GameHandleUpdate(IntPtr hWnd)
         {
+            var now = DateTime.Now;
+
             if (!AddonScreenshots.ContainsKey(hWnd))
             {
                 return;
@@ -24,12 +26,10 @@ namespace WowCyborg.Core.EventDispatchers
 
             if (!_lastCasts.ContainsKey(hWnd))
             {
-                _lastCasts.Add(hWnd, DateTime.Now);
+                _lastCasts.Add(hWnd, now);
             }
 
-            var now = DateTime.Now;
-
-            if ((now - _lastCasts[hWnd]).TotalMilliseconds < 200)
+            if ((now - _lastCasts[hWnd]).TotalMilliseconds < 150)
             {
                 return;
             }

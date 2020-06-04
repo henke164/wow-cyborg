@@ -6,6 +6,12 @@
   4         Rushing Jade Wind
   5         Tiger Palm
 ]]--
+WowCyborg_PAUSE_KEYS = {
+  "F1",
+  "F4",
+  "F5",
+  "F6",
+}
 
 local moonfire = "1";
 local thrash = "2";
@@ -23,7 +29,41 @@ function IsMelee()
 end
 
 function RenderMultiTargetRotation()
-  return RenderSingleTargetRotation();
+  local hp = GetHealthPercentage("player");
+  local targetHp = GetHealthPercentage("target");
+
+  if hp < 70 then
+    local regenBuff = FindBuff("player", "Frenzied Regeneration");
+    if regenBuff == nil and IsCastableAtEnemyTarget("Frenzied Regeneration", 10) then
+      WowCyborg_CURRENTATTACK = "Frenzied Regeneration";
+      return SetSpellRequest(frenziedRegeneration);
+    end
+  end
+
+  if IsMelee() == 0 then
+    WowCyborg_CURRENTATTACK = "-";
+    return SetSpellRequest(nil);
+  end
+  
+  local _, __, bleedDots = FindDebuff("target", "Thrash");
+  
+  if (bleedDots == nil or bleedDots < 3) and IsCastableAtEnemyTarget("Thrash", 0) then
+    WowCyborg_CURRENTATTACK = "Thrash";
+    return SetSpellRequest(thrash);
+  end
+
+  if IsCastable("Ironfur", 40) then
+    WowCyborg_CURRENTATTACK = "Ironfur";
+    return SetSpellRequest(ironfur);
+  end
+
+  if IsCastableAtEnemyTarget("Swipe", 0) then
+    WowCyborg_CURRENTATTACK = "Swipe";
+    return SetSpellRequest(swipe);
+  end
+ 
+  WowCyborg_CURRENTATTACK = "-";
+  return SetSpellRequest(nil);
 end
 
 function RenderSingleTargetRotation()
@@ -45,6 +85,11 @@ function RenderSingleTargetRotation()
   end
 
   if IsMelee() == 0 then
+    if IsCastableAtEnemyTarget("Moonfire", 0) then
+      WowCyborg_CURRENTATTACK = "Moonfire";
+      return SetSpellRequest(moonfire);
+    end
+
     WowCyborg_CURRENTATTACK = "-";
     return SetSpellRequest(nil);
   end
@@ -74,6 +119,11 @@ function RenderSingleTargetRotation()
   if IsCastableAtEnemyTarget("Swipe", 0) then
     WowCyborg_CURRENTATTACK = "Swipe";
     return SetSpellRequest(swipe);
+  end
+
+  if IsCastableAtEnemyTarget("Moonfire", 0) then
+    WowCyborg_CURRENTATTACK = "Moonfire";
+    return SetSpellRequest(moonfire);
   end
 
   WowCyborg_CURRENTATTACK = "-";

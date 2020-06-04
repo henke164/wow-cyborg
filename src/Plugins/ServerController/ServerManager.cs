@@ -20,6 +20,10 @@ namespace ServerController
 
         public ServerManager(IList<Bot> bots)
         {
+            if (bots.Count == 0)
+            {
+                return;
+            }
             _botApi = new BotApi(bots[0]);
         }
 

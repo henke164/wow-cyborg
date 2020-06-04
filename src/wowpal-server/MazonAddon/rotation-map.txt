@@ -4,6 +4,8 @@ armswarrior	MazonAddon/Combat/WarriorArms.lua
 bmhunter	MazonAddon/Combat/HunterBM.lua
 mmhunter	MazonAddon/Combat/HunterMM.lua
 eleshaman	MazonAddon/Combat/ShamanEle.lua
+enhshaman	MazonAddon/Combat/ShamanEnhancement.lua
+enhshaman2	MazonAddon/Combat/ShamanEnhancement2.lua
 restoshaman	MazonAddon/Combat/ShamanResto.lua
 bmmonk	MazonAddon/Combat/MonkBrewmaster.lua
 mwmonk	MazonAddon/Combat/MonkMistweaver.lua
@@ -50,3 +52,4 @@ destro	MazonAddon/Combat/DestroLock.lua
 demo	MazonAddon/Combat/DemoLock.lua
 group	MazonAddon/Combat/Group.lua
 tailor	MazonAddon/Combat/Tailor.lua
+demoLvl	MazonAddon/Combat/DemoLeveling.lua

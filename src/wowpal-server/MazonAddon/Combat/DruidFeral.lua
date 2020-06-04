@@ -15,6 +15,17 @@ local regrowth = "0";
 local maim = "SHIFT+2";
 local reapingFlames = "SHIFT+3";
 
+WowCyborg_PAUSE_KEYS = {
+  "F1",
+  "F4",
+  "F5",
+  "F6",
+  "F",
+  "X",
+  "LSHIFT",
+  "ESCAPE"
+}
+
 function IsMelee()
   return IsSpellInRange("Shred") == 1;
 end
@@ -44,7 +55,7 @@ function RenderSingleTargetRotation(useComboPoints)
     return SetSpellRequest(nil);
   end
   
-  if targetHp < 80 and IsCastableAtEnemyTarget("Reaping Flames", 0) then
+  if (targetHp > 80 or targetHp < 20) and IsCastableAtEnemyTarget("Reaping Flames", 0) then
     WowCyborg_CURRENTATTACK = "Reaping Flames";
     return SetSpellRequest(reapingFlames);
   end

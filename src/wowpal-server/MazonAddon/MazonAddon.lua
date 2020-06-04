@@ -1,5 +1,5 @@
 WowCyborg_ISDEAD = false;
-frameSize = 15;
+frameSize = 5;
 WowCyborg_INCOMBAT = false;
 
 function CreateWrapperFrame()

@@ -31,12 +31,13 @@ namespace WowCyborg.BotProfiles
         // Player might be targetting something else than the enemy target.
         private void RunTargetSwitchHandler()
         {
-            _timeSinceLastAttackInCombat = DateTime.Now;
+            var now = DateTime.Now;
+            _timeSinceLastAttackInCombat = now;
 
             Task.Run(() => {
                 while (_isInCombat)
                 {
-                    if ((DateTime.Now - _timeSinceLastAttackInCombat).Seconds > 1)
+                    if ((now - _timeSinceLastAttackInCombat).Seconds > 1)
                     {
                         KeyHandler.PressKey(Keys.Tab);
                     }

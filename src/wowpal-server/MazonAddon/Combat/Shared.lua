@@ -5,6 +5,10 @@ WowCyborg_DISABLED = false;
 WowCyborg_PAUSE = false;
 WowCyborg_PAUSE_UNTIL = 0;
 
+if WowCyborg_PAUSE_KEYS == nil then
+  WowCyborg_PAUSE_KEYS = {}
+end
+
 local spellButtonTexture;
 local buttonCombinerTexture;
 
@@ -36,21 +40,13 @@ function CreateRotationFrame()
       return SetSpellRequest(nil);
     end
 
-    local castingInfo, _a, __a, ___a, endTime = UnitChannelInfo("player")
-    local channelInfo, _b, __b, ___b, channelEndTime = UnitCastingInfo("player")
-  
-    if castingInfo ~= nil then
-      local finish = endTime / 1000 - GetTime()
-      WowCyborg_PAUSE_UNTIL = GetTime() + (finish + 1)
-      return
+    PreventAzeriteBeamAbortion();
+
+    if WowCyborg_PAUSE_UNTIL > GetTime() then
+      WowCyborg_CURRENTATTACK = "Paused";
+      return SetSpellRequest(nil);
     end
-    
-    if channelInfo ~= nil then
-      local finish = channelEndTime / 1000 - GetTime()
-      WowCyborg_PAUSE_UNTIL = GetTime() + (finish + 1)
-      return
-    end
-    
+
     if WowCyborg_AOE_Rotation == true then
       RenderMultiTargetRotation();
     end
@@ -63,14 +59,6 @@ function CreateRotationFrame()
 end
 
 function SetSpellRequest(buttonCombination)
-  if IsMouseButtonDown("MiddleButton") then
-    WowCyborg_PAUSE_UNTIL = GetTime() + 1;
-  end
-
-  if GetTime() < WowCyborg_PAUSE_UNTIL then
-    return false
-  end
-
   if buttonCombination == nil then
     r, g, b = GetColorFromNumber(nil);
     buttonCombinerTexture:SetColorTexture(r, g, b);
@@ -101,7 +89,7 @@ function FindBuff(target, buffName)
     local name, _, stacks, _, _, etime = UnitBuff(target, i);
     if name ~= nil and string.lower(name) == string.lower(buffName) then
       local time = GetTime();
-      return name, etime - time, stacks;
+      return name, etime - time, stacks, i;
     end
   end
 end
@@ -123,29 +111,21 @@ function IsCastable(spellName, requiredEnergy)
   end
 
   local energy = UnitPower("player");
-  local lastCast, totalCd = GetSpellCooldown(spellName, "spell");
 
-  if lastCast == 0 then
-    if energy >= requiredEnergy then
-      return true;
-    end
+  if energy < requiredEnergy then
+    return false;
   end
 
-  local time = GetTime();
-  local timeLeft = ((lastCast + totalCd) - time);
+  local totalCd = GetCooldown(spellName);
 
-  if timeLeft < 0.8 then
-    if energy >= requiredEnergy then
-      return true;
-    end
+  if totalCd < GetCurrentSpellGCD(spellName) then
+    return true;
   end
   
   local charges = GetSpellCharges(spellName);
   if (charges == nil) == false then
     if charges > 0 then
-      if energy >= requiredEnergy then
-        return true;
-      end
+      return true;
     end
   end
   
@@ -203,7 +183,17 @@ function IsAlive(unit)
   hp = UnitHealth(unit);
   return hp > 0;
 end
-  
+
+function Pause(secondsAfterGcd)
+  local cdUntil = GetSpellCooldown(61304);
+  local globalTl = 1 - (GetTime() - cdUntil);
+  if globalTl > 1.5 or globalTl < 0 then
+    globalTl = 0;
+  end
+
+  WowCyborg_PAUSE_UNTIL = GetTime() + globalTl + secondsAfterGcd;
+end
+
 function RenderFontFrame()
   local fontFrame, fontTexture = CreateDefaultFrame(frameSize * 5, frameSize * 5, 100, 20);
   fontFrame:SetMovable(true)
@@ -233,23 +223,14 @@ function RenderFontFrame()
       end
     end
 
-    if GetTime() - 1 < WowCyborg_PAUSE_UNTIL or WowCyborg_PAUSE then
-      return
+    if IsMouseButtonDown("MiddleButton") then
+      Pause(0.8);
+      return;
     end
 
-    local cdUntil = GetSpellCooldown(61304);
-    local globalTl = 1 - (GetTime() - cdUntil);
-    if globalTl > 1.5 then
-      globalTl = 0;
-    end
-
-    if string.len(tostring(key)) > 1 then
-      local func = string.sub(tostring(key), 1, 1);
-      if func == "F" then
-        local num = string.sub(tostring(key), 2, 3);
-        WowCyborg_CURRENTATTACK = "F+" .. num;
-        SetSpellRequest("F+" .. num);
-        WowCyborg_PAUSE_UNTIL = GetTime() + globalTl + 0.1;
+    for index, value in ipairs(WowCyborg_PAUSE_KEYS) do
+      if value == key then
+        Pause(0.8);
       end
     end
   end)
@@ -382,4 +363,18 @@ end
 function GetGCDMax()
   local spellHastePercent = UnitSpellHaste("player")
   return (0.75 * (spellHastePercent * 0.01)) - delay;
+end
+
+function PreventAzeriteBeamAbortion()
+  local castingInfo, _, __, ___, castingEndTime = UnitCastingInfo("player");
+  if castingInfo == "Focused Azerite Beam" then
+    local finish = castingEndTime / 1000 - GetTime();
+    WowCyborg_PAUSE_UNTIL = GetTime() + (finish + 1);
+  end
+
+  local channelInfo, c_, c__, c___, channelEndTime = UnitChannelInfo("player");
+  if channelInfo == "Focused Azerite Beam" then
+    local finish = channelEndTime / 1000 - GetTime();
+    WowCyborg_PAUSE_UNTIL = GetTime() + (finish + 0.5);
+  end
 end
