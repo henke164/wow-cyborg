@@ -1,13 +1,10 @@
 ﻿using System;
-using System.Threading;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using WowCyborg.Core;
 using WowCyborg.Core.Commanders;
 using WowCyborg.Core.Handlers;
 using WowCyborg.Core.Models;
 using WowCyborg.Core.Models.Abstractions;
-using WowCyborg.Core.Utilities;
 
 namespace WowCyborg.BotProfiles
 {
@@ -24,7 +21,7 @@ namespace WowCyborg.BotProfiles
 
         protected override void SetupBehaviour()
         {
-            EventManager.On("PlayerTransformChanged", (Event ev) =>
+            EventManager.On(HWnd, "PlayerTransformChanged", (Event ev) =>
             {
                 if (TargetLocation != null && !_isInCombat && !Paused && CorpseTransform == null)
                 {
@@ -32,7 +29,7 @@ namespace WowCyborg.BotProfiles
                 }
             });
 
-            EventManager.On("KeyPressRequested", (Event ev) =>
+            EventManager.On(HWnd, "KeyPressRequested", (Event ev) =>
             {
                 var keyRequest = (KeyPressRequest)ev.Data;
 
@@ -52,7 +49,7 @@ namespace WowCyborg.BotProfiles
                 }
             });
 
-            EventManager.On("TooFarAway", (Event _) =>
+            EventManager.On(HWnd, "TooFarAway", (Event _) =>
             {
                 KeyHandler.PressKey(Keys.Tab);
             });

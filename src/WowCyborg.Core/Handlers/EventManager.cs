@@ -1,48 +1,64 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using WowCyborg.Core.EventDispatchers;
 using WowCyborg.Core.Models.Abstractions;
 
 namespace WowCyborg.Core.Handlers
 {
     public static class EventManager
     {
-        private static IDictionary<string, IList<Action<Event>>> EventSubscribers = new Dictionary<string, IList<Action<Event>>>();
+        private static Dictionary<IntPtr, Dictionary<string, List<Action<Event>>>> EventSubscribers = new Dictionary<IntPtr, Dictionary<string, List<Action<Event>>>>();
 
-        private static IList<EventDispatcherBase> Dispatchers = new List<EventDispatcherBase>();
+        private static List<EventDispatcherBase> Dispatchers = new List<EventDispatcherBase>();
         
-        public static EventDispatcherBase StartEventDispatcher(Type dispatcherType)
+        public static EventDispatcherBase StartEventDispatcher<T>(IntPtr hWnd)
         {
-            var dispatcher = (EventDispatcherBase)Activator.CreateInstance(dispatcherType, 
-                new Action<Event>((Event ev) => { BroadcastEvent(ev); }));
+            var dispatcher = Dispatchers.FirstOrDefault(d => typeof(T) == d.GetType());
 
-            dispatcher.Start();
+            if (dispatcher == null)
+            {
+                dispatcher = (EventDispatcherBase)Activator.CreateInstance(typeof(T));
+                dispatcher.Start();
+                Dispatchers.Add(dispatcher);
+            }
 
-            Dispatchers.Add(dispatcher);
+            dispatcher.AddGameHandle(hWnd, new Action<IntPtr, Event>((IntPtr h, Event ev) => { BroadcastEvent(h, ev); }));
 
             return dispatcher;
         }
         
-        public static void On(string eventName, Action<Event> onEvent)
+        public static void On(IntPtr hWnd, string eventName, Action<Event> onEvent)
         {
-            if (!EventSubscribers.ContainsKey(eventName))
+            if (!EventSubscribers.ContainsKey(hWnd))
             {
-                EventSubscribers.Add(eventName, new List<Action<Event>>());
+                EventSubscribers.Add(hWnd, new Dictionary<string, List<Action<Event>>>());
             }
 
-            EventSubscribers[eventName].Add(onEvent);
+            if (!EventSubscribers[hWnd].ContainsKey(eventName))
+            {
+                EventSubscribers[hWnd].Add(eventName, new List<Action<Event>>());
+            }
+
+            EventSubscribers[hWnd][eventName].Add(onEvent);
         }
 
-        private static void BroadcastEvent(Event ev)
+        private static void BroadcastEvent(IntPtr hWnd, Event ev)
         {
-            if (!EventSubscribers.ContainsKey(ev.Name))
+            if (!EventSubscribers.ContainsKey(hWnd))
             {
                 return;
             }
 
-            var subscriberCount = EventSubscribers[ev.Name].Count;
+            if (!EventSubscribers[hWnd].ContainsKey(ev.Name))
+            {
+                return;
+            }
+
+            var subscriberCount = EventSubscribers[hWnd][ev.Name].Count;
             for (var x = 0; x < subscriberCount; x++)
             {
-                EventSubscribers[ev.Name][x](ev);
+                EventSubscribers[hWnd][ev.Name][x](ev);
             }
         }
     }

@@ -9,12 +9,25 @@ local handOfGulDan = "4";
 local demonbolt = "5";
 local shadowbolt = "6";
 local soulStrike = "7";
+local healthFunnel = "8";
+local switchCounter = 0;
 
 function RenderMultiTargetRotation()
   return RenderSingleTargetRotation();
 end
 
 function RenderSingleTargetRotation()
+  local petHp = GetHealthPercentage("pet")
+  if petHp ~= nil and petHp > 2 and petHp < 50 then
+    if UnitChannelInfo("player") == "Health Funnel" then
+      WowCyborg_CURRENTATTACK = "-";
+      return SetSpellRequest(nil);
+    end
+
+    WowCyborg_CURRENTATTACK = "Heal"
+    return SetSpellRequest(healthFunnel)
+  end
+
   local shards = UnitPower("player", 7);
   if IsCastableAtEnemyTarget("Implosion", 0) then
     WowCyborg_CURRENTATTACK = "Implosion";

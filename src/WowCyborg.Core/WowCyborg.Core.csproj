@@ -73,6 +73,7 @@
   <ItemGroup>
     <Compile Include="EventDispatchers\DeathDispatcher.cs" />
     <Compile Include="EventDispatchers\TooFarAwayDispatcher.cs" />
+    <Compile Include="EventDispatchers\AddonNotVisibleDispatcher.cs" />
     <Compile Include="Handlers\AddonFolderHandler.cs" />
     <Compile Include="Handlers\AddonLocator.cs" />
     <Compile Include="Handlers\GameWindowUtilities.cs" />
@@ -132,6 +133,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Images\loot-cursor.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\skin-cursor.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>

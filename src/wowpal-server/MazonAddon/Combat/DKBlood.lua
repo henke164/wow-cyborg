@@ -19,6 +19,13 @@ local deathstrike = "4";
 local heartstrike = "5";
 local bonestorm = "6";
 
+WowCyborg_PAUSE_KEYS = {
+  "F3",
+  "F4",
+  "0",
+  "F10"
+}
+
 function RenderMultiTargetRotation()
   --if IsCastableAtEnemyTarget("Bonestorm", 0) then
     --WowCyborg_CURRENTATTACK = "Bonestorm";

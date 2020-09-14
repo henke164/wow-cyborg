@@ -35,8 +35,9 @@ namespace WowCyborg.BotProfiles
 
         protected override void SetupBehaviour()
         {
-            EventManager.On("KeyPressRequested", (Event ev) =>
+            EventManager.On(HWnd, "KeyPressRequested", (Event ev) =>
             {
+                var now = DateTime.Now;
                 var keyRequest = (KeyPressRequest)ev.Data;
                 if (keyRequest.Key == Keys.D3 && keyRequest.ModifierKey == Keys.LShiftKey)
                 {
@@ -47,35 +48,35 @@ namespace WowCyborg.BotProfiles
 
                 if (keyRequest.Key == Keys.D0 && keyRequest.ModifierKey == Keys.LShiftKey)
                 {
-                    if ((DateTime.Now - _queuedAt).Seconds < 10)
+                    if ((now - _queuedAt).Seconds < 10)
                     {
                         return;
                     }
-                    _queuedAt = DateTime.Now;
+                    _queuedAt = now;
                     Task.Run(() => { Queue(); });
                 }
                 else if (keyRequest.Key == Keys.D9 && keyRequest.ModifierKey == Keys.LShiftKey)
                 {
-                    if ((DateTime.Now - _joinedAt).Seconds < 10)
+                    if ((now - _joinedAt).Seconds < 10)
                     {
                         return;
                     }
-                    _joinedAt = DateTime.Now;
+                    _joinedAt = now;
                     Task.Run(() => { Join(); });
                 }
                 else if (keyRequest.Key == Keys.D1 && keyRequest.ModifierKey == Keys.LShiftKey)
                 {
-                    if ((DateTime.Now - _joinedAt).Seconds < 10)
+                    if ((now - _joinedAt).Seconds < 10)
                     {
                         return;
                     }
-                    _joinedAt = DateTime.Now;
+                    _joinedAt = now;
                     Task.Run(() => { Leave(); });
                 }
 
                 if (keyRequest.Key == Keys.D9 && keyRequest.ModifierKey == Keys.None)
                 {
-                    if ((DateTime.Now - _bgLogicStartedAt).Seconds < 10)
+                    if ((now - _bgLogicStartedAt).Seconds < 10)
                     {
                         return;
                     }
@@ -84,7 +85,7 @@ namespace WowCyborg.BotProfiles
                     {
                         return;
                     }
-                    _bgLogicStartedAt = DateTime.Now;
+                    _bgLogicStartedAt = now;
                     _bgLogicStarted = true;
                     Task.Run(() => DoBgLogic());
                 }
@@ -127,14 +128,15 @@ namespace WowCyborg.BotProfiles
 
         private void Leave()
         {
+            var now = DateTime.Now;
             _runner.Stop();
             Console.WriteLine("Leave....");
             Thread.Sleep(3000);
             MouseHandler.LeftClick(980, 700);
             _bgLogicStarted = false;
             Thread.Sleep(5000);
-            _bgLogicStartedAt = DateTime.Now;
-            _joinedAt = DateTime.Now;
+            _bgLogicStartedAt = now;
+            _joinedAt = now;
         }
 
         private void DoBgLogic()

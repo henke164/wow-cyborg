@@ -22,12 +22,12 @@ namespace WowCyborg.BotProfiles
 
         protected override void SetupBehaviour()
         {
-            EventManager.On("CombatChanged", (Event ev) =>
+            EventManager.On(HWnd, "CombatChanged", (Event ev) =>
             {
                 _isInCombat = (bool)ev.Data;
             });
             
-            EventManager.On("KeyPressRequested", (Event ev) =>
+            EventManager.On(HWnd, "KeyPressRequested", (Event ev) =>
             {
                 var keyRequest = (KeyPressRequest)ev.Data;
                 if (keyRequest.ModifierKey != Keys.None)
@@ -55,7 +55,7 @@ namespace WowCyborg.BotProfiles
                 }
             });
 
-            EventManager.On("WrongFacing", (Event _) =>
+            EventManager.On(HWnd, "WrongFacing", (Event _) =>
             {
                 KeyHandler.PressKey(Keys.D, 75);
             });

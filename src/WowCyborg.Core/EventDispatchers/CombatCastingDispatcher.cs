@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Windows.Forms;
 using WowCyborg.Core.Models;
 using WowCyborg.Core.Models.Abstractions;
@@ -7,29 +8,33 @@ namespace WowCyborg.Core.EventDispatchers
 {
     public class CombatCastingDispatcher : AddonBehaviourEventDispatcher
     {
-        private DateTime _lastCast;
+        private Dictionary<IntPtr, DateTime> _lastCasts = new Dictionary<IntPtr, DateTime>();
 
-        public CombatCastingDispatcher(Action<Event> onEvent)
-            : base(onEvent)
+        public CombatCastingDispatcher()
         {
             EventName = "KeyPressRequested";
         }
 
-        protected override void Update()
+        protected override void GameHandleUpdate(IntPtr hWnd)
         {
-            if (AddonScreenshot == null)
-            {
-                return;
-            }
-
             var now = DateTime.Now;
 
-            if ((now - _lastCast).TotalMilliseconds < 200)
+            if (!AddonScreenshots.ContainsKey(hWnd))
             {
                 return;
             }
 
-            var requestedKey = GetCharacterAt(3, 2);
+            if (!_lastCasts.ContainsKey(hWnd))
+            {
+                _lastCasts.Add(hWnd, now);
+            }
+
+            if ((now - _lastCasts[hWnd]).TotalMilliseconds < 150)
+            {
+                return;
+            }
+
+            var requestedKey = GetCharacterAt(hWnd, 3, 2);
 
             if (requestedKey == "")
             {
@@ -39,16 +44,20 @@ namespace WowCyborg.Core.EventDispatchers
             var key = GetKeyFromCharacter(requestedKey);
             if (key != Keys.None)
             {
-                var modifier = GetModifierKeyAt(4, 2);
-                _lastCast = now;
-                TriggerEvent(new KeyPressRequest
+                var modifier = GetModifierKeyAt(hWnd, 4, 2);
+                _lastCasts[hWnd] = now;
+                TriggerEvent(hWnd, new KeyPressRequest
                 {
                     ModifierKey = modifier,
                     Key = key
                 });
             }
         }
-        
+
+        protected override void Update()
+        {
+        }
+
         private Keys GetKeyFromCharacter(string character)
         {
             switch (character)

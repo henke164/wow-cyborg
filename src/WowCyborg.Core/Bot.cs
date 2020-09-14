@@ -11,6 +11,8 @@ namespace WowCyborg.Core
 {
     public abstract class Bot
     {
+        protected IntPtr HWnd;
+
         public Action<string> OnLog { get; set; } = (string s) => { };
         public Transform CurrentTransform { get; protected set; }
         public Vector3 TargetLocation { get; protected set; }
@@ -27,6 +29,8 @@ namespace WowCyborg.Core
 
         public Bot(IntPtr hWnd)
         {
+            HWnd = hWnd;
+
             KeyHandler = new KeyHandler(hWnd);
 
             _rotationCommander = new RotationCommander(KeyHandler);
@@ -105,12 +109,12 @@ namespace WowCyborg.Core
 
         private void SetupEventBehaviours()
         {
-            EventManager.On("PlayerTransformChanged", (Event ev) =>
+            EventManager.On(HWnd, "PlayerTransformChanged", (Event ev) =>
             {
                 HandleOnPlayerTransformChanged((Transform)ev.Data);
             });
 
-            EventManager.On("DeathChanged", (Event ev) =>
+            EventManager.On(HWnd, "DeathChanged", (Event ev) =>
             {
                 if ((bool)ev.Data)
                 {
@@ -186,13 +190,14 @@ namespace WowCyborg.Core
 
         private void StartEventDispatchers()
         {
-            EventManager.StartEventDispatcher(typeof(ScreenChangedDispatcher));
-            EventManager.StartEventDispatcher(typeof(PlayerTransformChangedDispatcher));
-            EventManager.StartEventDispatcher(typeof(CombatChangedDispatcher));
-            EventManager.StartEventDispatcher(typeof(CombatCastingDispatcher));
-            EventManager.StartEventDispatcher(typeof(WrongFacingDispatcher));
-            EventManager.StartEventDispatcher(typeof(TooFarAwayDispatcher));
-            EventManager.StartEventDispatcher(typeof(DeathDispatcher));
+            EventManager.StartEventDispatcher<ScreenChangedDispatcher>(HWnd);
+            EventManager.StartEventDispatcher<PlayerTransformChangedDispatcher>(HWnd);
+            EventManager.StartEventDispatcher<CombatChangedDispatcher>(HWnd);
+            EventManager.StartEventDispatcher<CombatCastingDispatcher>(HWnd);
+            EventManager.StartEventDispatcher<WrongFacingDispatcher>(HWnd);
+            EventManager.StartEventDispatcher<TooFarAwayDispatcher>(HWnd);
+            EventManager.StartEventDispatcher<DeathDispatcher>(HWnd);
+            EventManager.StartEventDispatcher<AddonNotVisibleDispatcher>(HWnd);
         }
     }
 }

@@ -22,7 +22,7 @@ local createRepairAt = 0;
 local targetRepair = "SHIFT+5";
 local targetMailer = "SHIFT+7";
 local interact = "CTRL+0";
-local targetMacro = "SHIFT+4";
+local targetMacro = "9";
 
 local barbedShot = "1";
 local killCommand = "2";
@@ -40,7 +40,7 @@ function HandleVendoring()
     return false
   end
   
-  if lastRepair + 600 < GetTime() then
+  if lastRepair + 100 < GetTime() then
     local name = GetUnitName("target")
     if name ~= repairVendorName then
       WowCyborg_CURRENTATTACK = "Target repair";
@@ -73,8 +73,8 @@ local function GetBsCooldown()
   return bsCdLeft;
 end
 
--- Oggy
-function RenderOggyRotation()
+-------------------------------------- WARRIOR --------------------------------------------
+function RenderWarriorRotation()
   local bs = FindBuff("player", "Battle Shout");
   if bs == nil then
     WowCyborg_CURRENTATTACK = "Battle shout";
@@ -109,8 +109,8 @@ function RenderOggyRotation()
   return SetSpellRequest(nil)
 end
 
--- Klong
-function RenderKlongRotation()
+-------------------------------------- WARLOCK --------------------------------------------
+function RenderWarlockRotation()
   local target = UnitName("target")
   local targetHp = GetHealthPercentage("target")
   if target == nil or UnitCanAttack("player", "target") == false or targetHp < 2 then
@@ -144,7 +144,7 @@ function RenderKlongRotation()
       return SetSpellRequest("5");
     end
 
-    if dcBuff ~= nil and IsCastable("Call Dreadstalkers", 0) then
+    if dcBuff ~= nil and shards >= 1 and IsCastable("Call Dreadstalkers", 0) then
       WowCyborg_CURRENTATTACK = "Demonic Calling";
       return SetSpellRequest("3");
     end
@@ -157,8 +157,88 @@ function RenderKlongRotation()
   return SetSpellRequest(nil)
 end
 
--- MAZOON
-function RenderMazonRotation()
+-------------------------------------- MAGE --------------------------------------------
+function RenderMageRotation()
+  local target = UnitName("target")
+  local targetHp = GetHealthPercentage("target")
+  if target == nil or UnitCanAttack("player", "target") == false or targetHp < 2 then
+    WowCyborg_CURRENTATTACK = "Target"
+    return SetSpellRequest(targetMacro)
+  end
+
+  if target ~= nil and targetHp < 80 then
+    switchCounter = switchCounter + 1;
+    if switchCounter > 100 and switchCounter < 130 then
+      WowCyborg_CURRENTATTACK = "Target"
+      return SetSpellRequest(targetMacro)
+    end
+
+    if switchCounter > 500 then
+      switchCounter = 0;
+    end
+  end
+
+  local castingSpell = UnitCastingInfo("player");
+  local combustionCd = GetSpellCooldown("Combustion", "spell");
+  local combustionBuff, combustionBuffTTL = FindBuff("player", "Combustion");
+
+  if combustionCd == 0 and IsCastable("Rune of Power", 0) and FindBuff("player", "Rune of Power") == nil then
+    WowCyborg_CURRENTATTACK = "Rune of Power";
+    return SetSpellRequest("1");
+  end
+
+  if (FindBuff("player", "Arcane Intellect") == nil) then
+    WowCyborg_CURRENTATTACK = "Arcane Intellect";
+    return SetSpellRequest("2");
+  end
+
+  if IsCastable("Combustion", 0) then
+    WowCyborg_CURRENTATTACK = "Combustion";
+    return SetSpellRequest("3");
+  end
+
+  local ropCharges = GetSpellCharges("Rune of Power");
+  if IsMoving() == false and ropCharges == 2 and FindBuff("player", "Rune of Power") == nil then
+    WowCyborg_CURRENTATTACK = "Rune of Power";
+    return SetSpellRequest("1");
+  end
+
+  if FindBuff("player", "Hot Streak!") ~= nil then
+    if IsCastableAtEnemyTarget("Pyroblast", 0) then
+      WowCyborg_CURRENTATTACK = "Pyroblast";
+      return SetSpellRequest("4");
+    end
+  end
+
+  if combustionBuff and combustionBuffTTL < 1 and IsCastable("Dragon's Breath", 0) and CheckInteractDistance("target", 5) then
+    WowCyborg_CURRENTATTACK = "Dragon's Breath";
+    return SetSpellRequest("5");
+  end
+  
+  if FindBuff("player", "Heating Up") ~= nil and IsCastableAtEnemyTarget("Fire Blast", 0) then
+    WowCyborg_CURRENTATTACK = "Fire Blast";
+    return SetSpellRequest("6");
+  end
+
+  local enemyHP = GetHealthPercentage("target");
+  if enemyHP < 30 then
+    if IsCastableAtEnemyTarget("Scorch", 0) then
+      WowCyborg_CURRENTATTACK = "Scorch";
+      return SetSpellRequest("7");
+    end
+  end 
+  
+  if IsCastableAtEnemyTarget("Fireball", 0) then
+    WowCyborg_CURRENTATTACK = "Fireball";
+    return SetSpellRequest("8");
+  end
+
+  WowCyborg_CURRENTATTACK = "-";
+  return SetSpellRequest(nil);
+end
+
+-------------------------------------- HUNTER --------------------------------------------
+function RenderHunterRotation()
   local target = UnitName("target")
   local targetHp = GetHealthPercentage("target")
   if target == nil or UnitCanAttack("player", "target") == false or targetHp < 2 then
@@ -273,30 +353,51 @@ function RenderMazonRotation()
   return SetSpellRequest(nil);
 end
 
--- TheRing
-function RenderTheRingRotation()
-  if IsMounted() == false then
-    mountCounter = mountCounter + 1;
-    if mountCounter > 100 and mountCounter < 110 then
-      WowCyborg_CURRENTATTACK = "Mount"
-      return SetSpellRequest(createRepair)      
-    end
-    if mountCounter > 200 then
-      mountCounter = 0;
-    end
-  end
-  
+-------------------------------------- DK VENDOR --------------------------------------------
+function RenderDKRotation()
   local vendorResult = HandleVendoring()
   if vendorResult == true then
     return;
+  end
+
+  if IsCastableAtEnemyTarget("Death Strike", 45) then
+    WowCyborg_CURRENTATTACK = "Death Strike"
+    return SetSpellRequest("7")
+  end
+
+  local target = UnitName("target")
+  if target == nil or IsSpellInRange("Death Grip", "target") == 0 then
+    WowCyborg_CURRENTATTACK = "Target"
+    return SetSpellRequest(targetMacro)
+  end
+
+  if CheckInteractDistance("target", 3) and IsCastableAtEnemyTarget("Blood Boil", 0) then
+    WowCyborg_CURRENTATTACK = "Blood Boil"
+    return SetSpellRequest("2")
+  end
+
+  local bpDot = FindDebuff("target", "Blood plague");
+  if bpDot == nil and IsCastableAtEnemyTarget("Death's Caress", 0) then
+    WowCyborg_CURRENTATTACK = "Death's Caress"
+    return SetSpellRequest("4")
+  end
+
+  if IsCastableAtEnemyTarget("Death Grip", 0) then
+    WowCyborg_CURRENTATTACK = "Death Grip"
+    return SetSpellRequest("3")
+  end
+
+  if IsCastableAtEnemyTarget("Heart Strike", 0) == false then
+    WowCyborg_CURRENTATTACK = "Target"
+    return SetSpellRequest(targetMacro)
   end
 
   WowCyborg_CURRENTATTACK = "-"
   return SetSpellRequest(nil)
 end
 
--- Bommbom
-function RenderBommbomRotation()  
+-------------------------------------- Boomkin --------------------------------------------
+function RenderBoomkinRotation()
   local target = UnitName("target")
   local targetHp = GetHealthPercentage("target")
   if target == nil or UnitCanAttack("player", "target") == false or targetHp < 2 then
@@ -353,10 +454,10 @@ function RenderSingleTargetRotation()
     return SetSpellRequest(nil)
   end
 
-  name = GetUnitName("player")
+  className = UnitClass("player")
 
-  if name == "Thering" then
-    return RenderTheRingRotation()
+  if className == "Death Knight" then
+    return RenderDKRotation()
   end
 
   local vendorResult = HandleVendoring()
@@ -364,20 +465,24 @@ function RenderSingleTargetRotation()
     return;
   end
   
-  if name == "Mazoon" then
-    return RenderMazonRotation()
+  if className == "Hunter" then
+    return RenderHunterRotation()
   end
   
-  if name == "Klong" then
-    return RenderKlongRotation()
+  if className == "Warlock" then
+    return RenderWarlockRotation()
   end
   
-  if name == "Oggy" then
-    return RenderOggyRotation()
+  if className == "Warrior" then
+    return RenderWarriorRotation()
   end
   
-  if name == "Bommbom" or name == "Kattigast" then
-    return RenderBommbomRotation()
+  if className == "Druid" then
+    return RenderBoomkinRotation()
+  end
+
+  if className == "Mage" then
+    return RenderDKRotation()--RenderMageRotation()
   end
 
   WowCyborg_CURRENTATTACK = "-"
@@ -390,7 +495,7 @@ function SellJunk()
     for s=1,GetContainerNumSlots(b) do 
       i={GetContainerItemInfo(b,s)}
       n=i[7]
-      if n and string.find(n,"Deep Sea Satin") == nil and (string.find(n,"9d9d9d") or string.find(n,"1eff00")) then 
+      if n and string.find(n,"Deep Sea Satin") == nil and (string.find(n,"Map") or string.find(n,"9d9d9d") or string.find(n,"1eff00")) then 
         v={GetItemInfo(n)}
         q=i[2]
         c=c+v[11]*q;
@@ -491,12 +596,20 @@ function SendLootToBank()
     for s=1,GetContainerNumSlots(b) do 
       i={GetContainerItemInfo(b,s)}
       n=i[7]
-      if n and (string.find(n,"Tidespray Linen") ~= nil or string.find(n,"Deep Sea Satin") ~= nil) then 
+      if n then
         v={GetItemInfo(n)}
-        q=i[2]
-        c=c+v[11]*q;
-        UseContainerItem(b,s)
-        print(n,q)
+        quality = v[3];
+        ilvl = v[4];
+        if ilvl ~= nil and quality ~= nil then
+          if (string.find(n,"Tidespray Linen") ~= nil or (quality == 4 and ilvl < 400)) then
+            if (C_Item.IsBound(ItemLocation:CreateFromBagAndSlot(b, s)) == false) then
+              q=i[2]
+              c=c+v[11]*q;
+              UseContainerItem(b,s)
+              print(n,q)
+            end
+          end;
+        end;
       end;
     end;
   end;
@@ -516,12 +629,15 @@ function CreateMailListenerFrame()
 
     if string.find(command, "pay", 1, true) then
       WowCyborg_DISABLED = true;
-      SendLootToBank()       
+      SendLootToBank()
     end
 
     if string.find(command, "ok", 1, true) then
       WowCyborg_DISABLED = false;
       sendingMail = false;
+      lastCheckSum = 0;
+      lastCheckTime = 0;
+      MailFrame:Hide()
     end
 
     if string.find(command, "reload", 1, true) then

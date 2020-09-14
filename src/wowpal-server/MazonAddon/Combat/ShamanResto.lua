@@ -71,7 +71,7 @@ function AoeHealingRequired()
     end
   end
   
-  return lowCount > 2;
+  return lowCount > 1;
 end
 
 function FindFriendlyHealingTarget()

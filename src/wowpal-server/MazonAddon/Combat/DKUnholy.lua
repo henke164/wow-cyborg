@@ -10,11 +10,6 @@
   7   Soul Reaper
 ]]--
 
-local incomingDamage = {}
-local meleeDamageInLast5Seconds = 0
-local rangedDamageInLast5Seconds = 0
-
-local chainsOfIce = "1";
 local outbreak = "2";
 local festeringStrike = "3";
 local unholyFrenzy = "4";
@@ -22,13 +17,54 @@ local apocalypse = "5";
 local deathCoil = "6";
 local necroticStrike = "7";
 local soulReaper = "8";
+local epidemic = "9";
+local reapingFlames = "SHIFT+3";
+local deathStrike = "SHIFT+4";
 
+WowCyborg_PAUSE_KEYS = {
+  "F1",
+  "F2",
+  "F5",
+  "F6",
+  "F7",
+}
 function RenderMultiTargetRotation()
+  local runeCount = GetRuneCount();
+  local coiDebuff = FindDebuff("target", "Virulent Plague");
+  if coiDebuff == nil then
+    if IsCastableAtEnemyTarget("Outbreak", 0) and runeCount > 0 then
+      WowCyborg_CURRENTATTACK = "Outbreak";
+      return SetSpellRequest(outbreak);
+    end
+  end
+
+  if IsCastableAtEnemyTarget("Epidemic", 30) then
+    WowCyborg_CURRENTATTACK = "Epidemic";
+    return SetSpellRequest(epidemic);
+  end
   return RenderSingleTargetRotation();
 end
 
 function RenderSingleTargetRotation()
   local runeCount = GetRuneCount();
+  local hp = GetHealthPercentage("player");
+  local targetHp = GetHealthPercentage("target");
+  
+  if false then
+    WowCyborg_CURRENTATTACK = "Death Strike";
+    return SetSpellRequest(deathStrike);
+  end
+  
+  if (targetHp > 80 or targetHp < 20) and IsCastableAtEnemyTarget("Reaping Flames", 0) then
+    WowCyborg_CURRENTATTACK = "Reaping Flames";
+    return SetSpellRequest(reapingFlames);
+  end
+
+  local dsuBuff = FindBuff("player", "Dark Succor");
+  if hp < 95 and dsuBuff ~= nil and IsCastableAtEnemyTarget("Death Strike", 0) then
+    WowCyborg_CURRENTATTACK = "Death Strike";
+    return SetSpellRequest(deathStrike);
+  end
 
   local fwDebuff, fwTimeLeft, fwStacks = FindDebuff("target", "Festering Wound");
     
@@ -103,52 +139,4 @@ function GetRuneCount()
   return runeAmount;
 end
 
-
-function CreateDamageTakenFrame()
-  local frame = CreateFrame("Frame")
-  frame:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED")
-
-  frame:SetScript("OnEvent", function()
-    local timestamp, type, hideCaster, sourceGUID, sourceName, sourceFlags, sourceRaidFlags, destGUID, destName, destFlags, destRaidFlags, amountDetails = CombatLogGetCurrentEventInfo()
-    if destGUID ~= UnitGUID("player") then
-      return;
-    end
-    
-    local DamageDetails
-    if type == "SPELL_DAMAGE" or type == "SPELL_PERIODIC_DAMAGE" or type == "RANGE_DAMAGE" then
-      _, _, _, damage = amountDetails
-      DamageDetails = { damage = damage, melee = false };
-    elseif type == "SWING_DAMAGE" then
-      damage = amountDetails;
-      DamageDetails = { damage = damage, melee = true };
-    elseif type == "ENVIRONMENTAL_DAMAGE" then
-      _, damage = amountDetails
-      DamageDetails = { damage = damage, melee = false };
-    end
-
-    if DamageDetails and DamageDetails.damage then
-      DamageDetails.timestamp = timestamp;
-
-      tinsert(incomingDamage, 1, DamageDetails);
-
-      local cutoff = timestamp - 5
-      meleeDamageInLast5Seconds = 0
-      rangedDamageInLast5Seconds = 0;
-      for i = #incomingDamage, 1, -1 do
-          local damage = incomingDamage[i]
-          if damage.timestamp < cutoff then
-            incomingDamage[i] = nil
-          else
-            if damage.melee then
-              meleeDamageInLast5Seconds = meleeDamageInLast5Seconds + incomingDamage[i].damage;
-            else
-              rangedDamageInLast5Seconds = rangedDamageInLast5Seconds + incomingDamage[i].damage;
-            end
-          end
-      end
-    end
-
-  end)
-end
 print("DK Unholy PVP rotation loaded");
-CreateDamageTakenFrame();

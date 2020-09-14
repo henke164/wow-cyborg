@@ -7,19 +7,18 @@ namespace WowCyborg.Core.EventDispatchers
     {
         private int _framesSinceLastCheck = 0;
 
-        public TooFarAwayDispatcher(Action<Event> onEvent)
-            : base(onEvent)
+        public TooFarAwayDispatcher()
         {
             EventName = "TooFarAway";
         }
 
-        protected override void Update()
+        protected override void GameHandleUpdate(IntPtr hWnd)
         {
-            if (AddonIsBlueAt(2, 2))
+            if (AddonIsBlueAt(hWnd, 2, 2))
             {
                 if (_framesSinceLastCheck == 0)
                 {
-                    TriggerEvent(true);
+                    TriggerEvent(hWnd, true);
                 }
 
                 _framesSinceLastCheck++;
@@ -33,6 +32,10 @@ namespace WowCyborg.Core.EventDispatchers
             {
                 _framesSinceLastCheck = 0;
             }
+        }
+
+        protected override void Update()
+        {
         }
     }
 }

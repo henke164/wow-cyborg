@@ -14,6 +14,13 @@ local immolationAura = "4";
 local animaOfDeath = "5";
 local demonSpikes = "6";
 
+WowCyborg_PAUSE_KEYS = {
+  "F3",
+  "F4",
+  "0",
+  "F10"
+}
+
 function RenderMultiTargetRotation()
   return RenderSingleTargetRotation()
 end

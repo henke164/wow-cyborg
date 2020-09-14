@@ -7,15 +7,15 @@ namespace WowCyborg.Core.EventDispatchers
     {
         private bool _inCombat = false;
 
-        public CombatChangedDispatcher(Action<Event> onEvent)
-            : base(onEvent)
+        public CombatChangedDispatcher()
+            : base()
         {
             EventName = "CombatChanged";
         }
 
-        protected override void Update()
+        protected override void GameHandleUpdate(IntPtr hWnd)
         {
-            if (AddonIsRedAt(1, 2))
+            if (AddonIsRedAt(hWnd, 1, 2))
             {
                 if (!_inCombat)
                 {
@@ -23,9 +23,9 @@ namespace WowCyborg.Core.EventDispatchers
                 }
 
                 _inCombat = false;
-                TriggerEvent(false);
+                TriggerEvent(hWnd, false);
             }
-            else if (AddonIsGreenAt(1, 2))
+            else if (AddonIsGreenAt(hWnd, 1, 2))
             {
                 if (_inCombat)
                 {
@@ -33,8 +33,12 @@ namespace WowCyborg.Core.EventDispatchers
                 }
 
                 _inCombat = true;
-                TriggerEvent(true);
+                TriggerEvent(hWnd, true);
             }
+        }
+
+        protected override void Update()
+        {
         }
     }
 }
