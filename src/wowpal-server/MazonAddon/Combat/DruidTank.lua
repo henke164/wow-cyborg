@@ -11,6 +11,8 @@ WowCyborg_PAUSE_KEYS = {
   "F4",
   "F5",
   "F6",
+  "F7",
+  "9",
 }
 
 local moonfire = "1";
@@ -40,16 +42,28 @@ function RenderMultiTargetRotation()
     end
   end
 
+
+  local ggBuff = FindBuff("player", "Galactic Guardian");
+  local moonfireDot = FindDebuff("target", "Moonfire");
+
   if IsMelee() == 0 then
+    if (moonfireDot == nil and IsCastableAtEnemyTarget("Moonfire", 0)) and ggBuff ~= nil then
+      WowCyborg_CURRENTATTACK = "Moonfire";
+      return SetSpellRequest(moonfire);
+    end
+  
     WowCyborg_CURRENTATTACK = "-";
     return SetSpellRequest(nil);
   end
   
-  local _, __, bleedDots = FindDebuff("target", "Thrash");
-  
-  if (bleedDots == nil or bleedDots < 3) and IsCastableAtEnemyTarget("Thrash", 0) then
+  if IsCastableAtEnemyTarget("Thrash", 0) then
     WowCyborg_CURRENTATTACK = "Thrash";
     return SetSpellRequest(thrash);
+  end
+
+  if (moonfireDot == nil and IsCastableAtEnemyTarget("Moonfire", 0)) and ggBuff ~= nil then
+    WowCyborg_CURRENTATTACK = "Moonfire";
+    return SetSpellRequest(moonfire);
   end
 
   if IsCastable("Ironfur", 40) then
@@ -77,9 +91,10 @@ function RenderSingleTargetRotation()
     end
   end
 
+  local ggBuff = FindBuff("player", "Galactic Guardian");
   local moonfireDot = FindDebuff("target", "Moonfire");
 
-  if moonfireDot == nil and IsCastableAtEnemyTarget("Moonfire", 0) then
+  if (moonfireDot == nil and IsCastableAtEnemyTarget("Moonfire", 0)) or ggBuff ~= nil then
     WowCyborg_CURRENTATTACK = "Moonfire";
     return SetSpellRequest(moonfire);
   end
@@ -94,9 +109,9 @@ function RenderSingleTargetRotation()
     return SetSpellRequest(nil);
   end
   
-  local _, __, bleedDots = FindDebuff("target", "Thrash");
+  local _, bleedDotTl, bleedDots = FindDebuff("target", "Thrash");
   
-  if (bleedDots == nil or bleedDots < 3) and IsCastableAtEnemyTarget("Thrash", 0) then
+  if (bleedDots == nil or bleedDots < 3 or bleedDotTl < 2) and IsCastableAtEnemyTarget("Thrash", 0) then
     WowCyborg_CURRENTATTACK = "Thrash";
     return SetSpellRequest(thrash);
   end

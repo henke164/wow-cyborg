@@ -67,7 +67,7 @@ function RenderSingleTargetRotation(useComboPoints)
   end
 
   local rakeDot = FindDebuff("target", "Rake");
-  if rakeDot == nil then
+  if rakeDot == nil and IsCastableAtEnemyTarget("Rake", 35) then
     WowCyborg_CURRENTATTACK = "Rake";
     return SetSpellRequest(rake);
   end
@@ -85,33 +85,33 @@ function RenderSingleTargetRotation(useComboPoints)
   local points = GetComboPoints("player", "target");
 
   local ripDot, ripCd = FindDebuff("target", "Rip");
-  if points > 0 and ripDot == nil then
+  if points > 0 and ripDot == nil and IsCastableAtEnemyTarget("Rip", 20) then
     WowCyborg_CURRENTATTACK = "Rip";
     return SetSpellRequest(rip);
   end
 
   if points == 5 then
-    if useComboPoints then
+    if useComboPoints and IsCastableAtEnemyTarget("Ferocious Bite", 25) then
       WowCyborg_CURRENTATTACK = "Ferocious Bite";
       return SetSpellRequest(ferociousBite);
-    else
+    elseif IsCastableAtEnemyTarget("Maim", 30) then
       WowCyborg_CURRENTATTACK = "Maim";
       return SetSpellRequest(maim);
     end
   end
 
-  if points > 0 and useComboPoints and ripCd < 5 then
+  if points > 0 and useComboPoints and ripCd < 5 and IsCastableAtEnemyTarget("Ferocious Bite", 25) then
     WowCyborg_CURRENTATTACK = "Ferocious Bite";
     return SetSpellRequest(ferociousBite);
   end
 
-  if points < 5 and IsCastableAtEnemyTarget("Feral Frenzy", 0) then
+  if points < 5 and IsCastableAtEnemyTarget("Feral Frenzy", 25) then
     WowCyborg_CURRENTATTACK = "Feral Frenzy";
     return SetSpellRequest(feralFrenzy);
   end
 
   local thrashDot, thrashDotCd = FindDebuff("target", "Thrash");
-  if thrashDot == nil or thrashDotCd < 5 then
+  if thrashDot == nil or thrashDotCd < 5 and IsCastableAtEnemyTarget("Thrash", 40) then
     WowCyborg_CURRENTATTACK = "Thrash";
     return SetSpellRequest(thrash);
   end

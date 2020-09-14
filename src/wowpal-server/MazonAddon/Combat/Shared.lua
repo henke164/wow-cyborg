@@ -215,7 +215,7 @@ function RenderFontFrame()
   fontFrame:SetScript("OnKeyDown", function(self, key)
     if key == "CAPSLOCK" then
       if IsShiftKeyDown() then
-        WowCyborg_DISABLED = true;
+        WowCyborg_DISABLED = WowCyborg_DISABLED == false;
       elseif WowCyborg_DISABLED == true then
         WowCyborg_DISABLED = false;
       else

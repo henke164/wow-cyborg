@@ -7,6 +7,7 @@ eleshaman	MazonAddon/Combat/ShamanEle.lua
 enhshaman	MazonAddon/Combat/ShamanEnhancement.lua
 enhshaman2	MazonAddon/Combat/ShamanEnhancement2.lua
 restoshaman	MazonAddon/Combat/ShamanResto.lua
+restoshaman2	MazonAddon/Combat/ShamanResto2.lua
 bmmonk	MazonAddon/Combat/MonkBrewmaster.lua
 mwmonk	MazonAddon/Combat/MonkMistweaver.lua
 wwmonk	MazonAddon/Combat/MonkWindwalker.lua
@@ -53,3 +54,9 @@ demo	MazonAddon/Combat/DemoLock.lua
 group	MazonAddon/Combat/Group.lua
 tailor	MazonAddon/Combat/Tailor.lua
 demoLvl	MazonAddon/Combat/DemoLeveling.lua
+holypala	MazonAddon/Combat/PalaHoly.lua
+protpala	MazonAddon/Combat/PalaTank.lua
+retripala	MazonAddon/Combat/PalaRetri.lua
+skinner	MazonAddon/Combat/Skinner.lua
+trial	MazonAddon/Combat/TrialSeller.lua
+frostdk	MazonAddon/Combat/DKFrost.lua

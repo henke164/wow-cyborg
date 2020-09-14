@@ -10,14 +10,22 @@
   8         Multi shot
 ]]--
 
-local barbedShot = "1";
-local killCommand = "2";
+local barbed_shot = "2"
+local kill_command = "3"
+local bestial_wrath = "8"
+local cobra_shot = "1"
+local aspect_of_the_wild = "SHIFT+2"
+local multishot = "7"
+local blood_fury = "SHIFT+3"
+
+local barbedShot = "2";
+local killCommand = "3";
 local chimaeraShot = "3";
 local murderOfCrows = "4";
-local beastialWrath = "5";
-local aspectOfWild = "6";
-local cobraShot = "7";
-local multiShot = "8";
+local beastialWrath = "8";
+local aspectOfWild = "SHIFT+2";
+local cobraShot = "1";
+local multiShot = "7";
 local mendPet = "9";
 
 local function GetBsCooldown()
@@ -35,8 +43,8 @@ function RenderMultiTargetRotation(texture)
   local petHp = GetHealthPercentage("pet");
   if tostring(petHp) ~= "-nan(ind)" and petHp > 1 and petHp < 90 then
     if IsCastable("Mend pet", 0) then
-      WowCyborg_CURRENTATTACK = "Mend pet";
-      return SetSpellRequest(mendPet);
+      --WowCyborg_CURRENTATTACK = "Mend pet";
+      --return SetSpellRequest(mendPet);
     end
   end
 
@@ -124,8 +132,8 @@ function RenderSingleTargetRotation(texture)
   local petHp = GetHealthPercentage("pet");
   if tostring(petHp) ~= "-nan(ind)" and petHp > 1 and petHp < 90 then
     if IsCastable("Mend pet", 0) then
-      WowCyborg_CURRENTATTACK = "Mend pet";
-      return SetSpellRequest(mendPet);
+      --WowCyborg_CURRENTATTACK = "Mend pet";
+      --return SetSpellRequest(mendPet);
     end
   end
 

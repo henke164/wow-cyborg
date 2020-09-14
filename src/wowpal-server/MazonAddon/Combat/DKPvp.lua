@@ -22,13 +22,23 @@ local apocalypse = "5";
 local deathCoil = "6";
 local necroticStrike = "7";
 local soulReaper = "8";
-local deathStrike = "9";
+local reapingFlames = "9";
+local epidemic = "9";
+local deathStrike = "SHIFT+4";
+
+WowCyborg_PAUSE_KEYS = {
+  "F1",
+  "F2",
+  "F5",
+  "F6",
+  "F7",
+}
 
 function RenderMultiTargetRotation()
   local runeCount = GetRuneCount();
 
   local fwDebuff, fwTimeLeft, fwStacks = FindDebuff("target", "Festering Wound");
-
+  
   local vpDebuff = FindDebuff("target", "Virulent Plague");
   if vpDebuff == nil then
     if IsCastableAtEnemyTarget("Outbreak", 0) and runeCount > 0 then
@@ -37,6 +47,11 @@ function RenderMultiTargetRotation()
     end
   end
   
+  if IsCastableAtEnemyTarget("Epidemic", 30) then
+    WowCyborg_CURRENTATTACK = "Epidemic";
+    return SetSpellRequest(epidemic);
+  end
+
   if fwDebuff ~= nil and fwStacks == 1 then
     if IsCastableAtEnemyTarget("Festering Strike", 0) and runeCount > 1 then
       WowCyborg_CURRENTATTACK = "Festering Strike";
@@ -97,8 +112,17 @@ end
 
 function RenderSingleTargetRotation()
   local runeCount = GetRuneCount();
+  local bof = FindBuff("target", "Blessing of Freedom");
+  local targetHp = GetHealthPercentage("target");
 
   local fwDebuff, fwTimeLeft, fwStacks = FindDebuff("target", "Festering Wound");
+
+  local hp = GetHealthPercentage("player");
+  if hp < 50 and IsCastableAtEnemyTarget("Death Strike", 35) then
+    WowCyborg_CURRENTATTACK = "Death Strike";
+    return SetSpellRequest(deathStrike);
+  end
+  
 
   local vpDebuff = FindDebuff("target", "Virulent Plague");
   if vpDebuff == nil then
@@ -108,8 +132,13 @@ function RenderSingleTargetRotation()
     end
   end
 
+  if (targetHp > 80 or targetHp < 20) and IsCastableAtEnemyTarget("Reaping Flames", 0) then
+    WowCyborg_CURRENTATTACK = "Reaping Flames";
+    return SetSpellRequest(reapingFlames);
+  end
+
   local coiDebuff = FindDebuff("target", "Chains of Ice");
-  if coiDebuff == nil then
+  if coiDebuff == nil and bof == nil then
     if IsCastableAtEnemyTarget("Chains of Ice", 0) and runeCount > 0 then
       WowCyborg_CURRENTATTACK = "Chains of Ice";
       return SetSpellRequest(chainsOfIce);

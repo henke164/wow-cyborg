@@ -38,11 +38,6 @@ function RenderSingleTargetRotation(aoe)
     aoe = false
   end
   
-  if IsCurrentSpell(6603) == false then
-    WowCyborg_CURRENTATTACK = "-";
-    return SetSpellRequest(nil);
-  end
-
   if WowCyborg_INCOMBAT == false then
     WowCyborg_CURRENTATTACK = "-";
     return SetSpellRequest(nil);

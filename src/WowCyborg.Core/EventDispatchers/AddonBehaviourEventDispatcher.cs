@@ -35,7 +35,6 @@ namespace WowCyborg.Core.EventDispatchers
             EventManager.On(hWnd, "ScreenChanged", (Event ev) =>
             {
                 var screenshot = (Bitmap)((Bitmap)ev.Data).Clone();
-
                 try
                 {
                     AddonScreenshots[hWnd] = screenshot;
@@ -108,12 +107,12 @@ namespace WowCyborg.Core.EventDispatchers
         {
             if (!AddonScreenshotSizes.ContainsKey(hWnd))
             {
-                return Color.Magenta;
+                return Color.White;
             }
 
             if (AddonScreenshotSizes[hWnd].Width <= 1 || AddonScreenshotSizes[hWnd].Height <= 1)
             {
-                return Color.Magenta;
+                return Color.White;
             }
 
             var frameWidth = AddonScreenshotSizes[hWnd].Width / _appSettings.AddonColumnCount;
@@ -128,12 +127,12 @@ namespace WowCyborg.Core.EventDispatchers
         {
             if (!AddonScreenshotSizes.ContainsKey(hWnd))
             {
-                return Color.Magenta;
+                return Color.White;
             }
 
             if (AddonScreenshotSizes[hWnd].Width <= 1 || AddonScreenshotSizes[hWnd].Height <= 1)
             {
-                return Color.Magenta;
+                return Color.White;
             }
 
             try
@@ -142,7 +141,7 @@ namespace WowCyborg.Core.EventDispatchers
             }
             catch(Exception ex)
             {
-                return Color.Magenta;
+                return Color.White;
             }
         }
 

@@ -197,6 +197,7 @@ namespace WowCyborg.Core
             EventManager.StartEventDispatcher<WrongFacingDispatcher>(HWnd);
             EventManager.StartEventDispatcher<TooFarAwayDispatcher>(HWnd);
             EventManager.StartEventDispatcher<DeathDispatcher>(HWnd);
+            EventManager.StartEventDispatcher<AddonNotVisibleDispatcher>(HWnd);
         }
     }
 }
