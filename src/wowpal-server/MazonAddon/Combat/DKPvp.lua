@@ -21,9 +21,8 @@ local unholyFrenzy = "4";
 local apocalypse = "5";
 local deathCoil = "6";
 local necroticStrike = "7";
-local soulReaper = "8";
-local reapingFlames = "9";
-local epidemic = "9";
+local breathOfTheDying = "8";
+local unholyBlight = "9";
 local deathStrike = "SHIFT+4";
 
 WowCyborg_PAUSE_KEYS = {
@@ -34,26 +33,25 @@ WowCyborg_PAUSE_KEYS = {
   "F7",
 }
 
+function IsMelee()
+  return CheckInteractDistance("target", 5);
+end
+
 function RenderMultiTargetRotation()
   local runeCount = GetRuneCount();
 
   local fwDebuff, fwTimeLeft, fwStacks = FindDebuff("target", "Festering Wound");
   
-  local vpDebuff = FindDebuff("target", "Virulent Plague");
-  if vpDebuff == nil then
-    if IsCastableAtEnemyTarget("Outbreak", 0) and runeCount > 0 then
-      WowCyborg_CURRENTATTACK = "Outbreak";
-      return SetSpellRequest(outbreak);
+  local targetHp = GetHealthPercentage("target");
+  if targetHp < 20 or targetHp > 80 then
+    if IsCastableAtEnemyTarget("Reaping Flames", 0) then
+      WowCyborg_CURRENTATTACK = "Reaping Flames";
+      return SetSpellRequest(breathOfTheDying);
     end
-  end
-  
-  if IsCastableAtEnemyTarget("Epidemic", 30) then
-    WowCyborg_CURRENTATTACK = "Epidemic";
-    return SetSpellRequest(epidemic);
   end
 
   if fwDebuff ~= nil and fwStacks == 1 then
-    if IsCastableAtEnemyTarget("Festering Strike", 0) and runeCount > 1 then
+    if IsMelee() and IsCastableAtEnemyTarget("Festering Strike", 0) and runeCount > 1 then
       WowCyborg_CURRENTATTACK = "Festering Strike";
       return SetSpellRequest(festeringStrike);
     end
@@ -63,8 +61,8 @@ function RenderMultiTargetRotation()
     if fwStacks > 3 and IsCastableAtEnemyTarget("Apocalypse", 0) then
       WowCyborg_CURRENTATTACK = "Apocalypse";
       return SetSpellRequest(apocalypse);
-    elseif IsCastableAtEnemyTarget("Unholy Frenzy", 0) and fwStacks > 1 then
-      WowCyborg_CURRENTATTACK = "Unholy Frenzy";
+    elseif IsCastableAtEnemyTarget("Unholy Assault", 0) and fwStacks > 1 then
+      WowCyborg_CURRENTATTACK = "Unholy Assault";
       return SetSpellRequest(unholyFrenzy);
     end
   end
@@ -77,8 +75,8 @@ function RenderMultiTargetRotation()
   end
 
   if fwDebuff ~= nil then
-    if IsCastableAtEnemyTarget("Necrotic Strike", 0) and runeCount > 0 and fwStacks > 0 then
-      WowCyborg_CURRENTATTACK = "Necrotic Strike";
+    if IsMelee() and IsCastableAtEnemyTarget("Scourge Strike", 0) and runeCount > 0 and fwStacks > 0 then
+      WowCyborg_CURRENTATTACK = "Scourge Strike";
       return SetSpellRequest(necroticStrike);
     end
   end
@@ -95,7 +93,7 @@ function RenderMultiTargetRotation()
   end
 
   if fwDebuff == nil or (fwTimeLeft < 5 or fwStacks < 6) then
-    if IsCastableAtEnemyTarget("Festering Strike", 0) and runeCount > 1 then
+    if IsMelee() and IsCastableAtEnemyTarget("Festering Strike", 0) and runeCount > 1 then
       WowCyborg_CURRENTATTACK = "Festering Strike";
       return SetSpellRequest(festeringStrike);
     end
@@ -116,6 +114,14 @@ function RenderSingleTargetRotation()
   local targetHp = GetHealthPercentage("target");
 
   local fwDebuff, fwTimeLeft, fwStacks = FindDebuff("target", "Festering Wound");
+  
+  local targetHp = GetHealthPercentage("target");
+  if targetHp < 20 or targetHp > 80 then
+    if IsCastableAtEnemyTarget("Reaping Flames", 0) then
+      WowCyborg_CURRENTATTACK = "Reaping Flames";
+      return SetSpellRequest(breathOfTheDying);
+    end
+  end
 
   local hp = GetHealthPercentage("player");
   if hp < 50 and IsCastableAtEnemyTarget("Death Strike", 35) then
@@ -132,11 +138,6 @@ function RenderSingleTargetRotation()
     end
   end
 
-  if (targetHp > 80 or targetHp < 20) and IsCastableAtEnemyTarget("Reaping Flames", 0) then
-    WowCyborg_CURRENTATTACK = "Reaping Flames";
-    return SetSpellRequest(reapingFlames);
-  end
-
   local coiDebuff = FindDebuff("target", "Chains of Ice");
   if coiDebuff == nil and bof == nil then
     if IsCastableAtEnemyTarget("Chains of Ice", 0) and runeCount > 0 then
@@ -145,8 +146,13 @@ function RenderSingleTargetRotation()
     end
   end
   
+  if IsMelee() and IsSpellInRange("Festering Strike") and IsCastableAtEnemyTarget("Unholy Blight", 0) then
+    WowCyborg_CURRENTATTACK = "Unholy Blight";
+    return SetSpellRequest(unholyBlight);
+  end
+
   if fwDebuff ~= nil and fwStacks == 1 then
-    if IsCastableAtEnemyTarget("Festering Strike", 0) and runeCount > 1 then
+    if IsMelee() and IsCastableAtEnemyTarget("Festering Strike", 0) and runeCount > 1 then
       WowCyborg_CURRENTATTACK = "Festering Strike";
       return SetSpellRequest(festeringStrike);
     end
@@ -156,8 +162,8 @@ function RenderSingleTargetRotation()
     if fwStacks > 3 and IsCastableAtEnemyTarget("Apocalypse", 0) then
       WowCyborg_CURRENTATTACK = "Apocalypse";
       return SetSpellRequest(apocalypse);
-    elseif IsCastableAtEnemyTarget("Unholy Frenzy", 0) and fwStacks > 1 then
-      WowCyborg_CURRENTATTACK = "Unholy Frenzy";
+    elseif IsCastableAtEnemyTarget("Unholy Assault", 0) and fwStacks > 1 then
+      WowCyborg_CURRENTATTACK = "Unholy Assault";
       return SetSpellRequest(unholyFrenzy);
     end
   end
@@ -170,8 +176,8 @@ function RenderSingleTargetRotation()
   end
 
   if fwDebuff ~= nil then
-    if IsCastableAtEnemyTarget("Necrotic Strike", 0) and runeCount > 0 and fwStacks > 0 then
-      WowCyborg_CURRENTATTACK = "Necrotic Strike";
+    if IsMelee() and IsCastableAtEnemyTarget("Scourge Strike", 0) and runeCount > 0 and fwStacks > 0 then
+      WowCyborg_CURRENTATTACK = "Scourge Strike";
       return SetSpellRequest(necroticStrike);
     end
   end
@@ -188,7 +194,7 @@ function RenderSingleTargetRotation()
   end
 
   if fwDebuff == nil or (fwTimeLeft < 5 or fwStacks < 6) then
-    if IsCastableAtEnemyTarget("Festering Strike", 0) and runeCount > 1 then
+    if IsMelee() and IsCastableAtEnemyTarget("Festering Strike", 0) and runeCount > 1 then
       WowCyborg_CURRENTATTACK = "Festering Strike";
       return SetSpellRequest(festeringStrike);
     end
