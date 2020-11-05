@@ -371,21 +371,32 @@ function RenderDKRotation()
     return SetSpellRequest(targetMacro)
   end
 
-  if CheckInteractDistance("target", 3) and IsCastableAtEnemyTarget("Blood Boil", 0) then
-    WowCyborg_CURRENTATTACK = "Blood Boil"
+  if CheckInteractDistance("target", 3) and IsCastable("Dark Transformation", 0) then
+    WowCyborg_CURRENTATTACK = "Dark Transformation"
     return SetSpellRequest("2")
   end
-
-  local bpDot = FindDebuff("target", "Blood plague");
-  if bpDot == nil and IsCastableAtEnemyTarget("Death's Caress", 0) then
-    WowCyborg_CURRENTATTACK = "Death's Caress"
-    return SetSpellRequest("4")
+  
+  if CheckInteractDistance("target", 3) and IsCastable("Army of the Dead", 0) then
+    WowCyborg_CURRENTATTACK = "Army of the Dead"
+    return SetSpellRequest("3")
   end
 
   if IsCastableAtEnemyTarget("Death Grip", 0) then
     WowCyborg_CURRENTATTACK = "Death Grip"
-    return SetSpellRequest("3")
+    return SetSpellRequest("6")
   end
+
+  local debuff = FindDebuff("target", "Virulent Plague");
+  if IsCastableAtEnemyTarget("Outbreak", 0) and debuff == nil then
+    WowCyborg_CURRENTATTACK = "Outbreak"
+    return SetSpellRequest("4")
+  end
+  
+  if IsCastableAtEnemyTarget("Clawing Shadows", 0) then
+    WowCyborg_CURRENTATTACK = "Clawing Shadows"
+    return SetSpellRequest("5")
+  end
+
 
   if IsCastableAtEnemyTarget("Heart Strike", 0) == false then
     WowCyborg_CURRENTATTACK = "Target"
