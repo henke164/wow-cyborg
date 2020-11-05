@@ -15,46 +15,56 @@ namespace WowCyborg
     {
         public static IList<PluginBase> Plugins = new List<PluginBase>();
 
-        public static Bot BotRunner;
+        public static IList<Bot> BotRunners;
 
         static void Main()
         {
-            var gameHandle = AddonLocator.InitializeGameHandle();
+            var gameHandles = AddonLocator.InitializeGameHandles();
 
             var settings = SettingsLoader.LoadSettings<AppSettings>("settings.json");
-            InitializeBotRunner(gameHandle, settings);
+            InitializeBotRunner(gameHandles, settings);
             Plugins = PluginLoader.GetPlugins(GetApplicationSettings(settings));
             RenderStartMessage();
             HandleInput();
         }
 
-        static void InitializeBotRunner(IntPtr hWnd, AppSettings settings)
+        static void InitializeBotRunnerByType<T>(IList<IntPtr> hWnds)
+            where T : Bot
+        {
+            BotRunners = new List<Bot>();
+            foreach (var hWnd in hWnds)
+            {
+                BotRunners.Add((T)Activator.CreateInstance(typeof(T), hWnd));
+            }
+        }
+
+        static void InitializeBotRunner(IList<IntPtr> hWnds, AppSettings settings)
         {
             switch (settings.BotType.ToLower())
             {
                 case "solorunner":
                     Console.Write("Solo runner");
-                    BotRunner = new SoloRunner(hWnd);
+                    InitializeBotRunnerByType<SoloRunner>(hWnds);
                     break;
                 case "follower":
                     Console.Write("Follower");
-                    BotRunner = new BotFollower(hWnd);
+                    InitializeBotRunnerByType<BotFollower>(hWnds);
                     break;
                 case "pvp":
                     Console.Write("Pvp");
-                    BotRunner = new PVP(hWnd);
+                    InitializeBotRunnerByType<PVP>(hWnds);
                     break;
                 case "expedition":
                     Console.Write("Expedition");
-                    BotRunner = new Expedition(hWnd);
+                    InitializeBotRunnerByType<Expedition>(hWnds);
                     break;
                 case "looter":
                     Console.Write("Looter");
-                    BotRunner = new Looter(hWnd);
+                    InitializeBotRunnerByType<Looter>(hWnds);
                     break;
                 default:
                     Console.Write("Autocaster");
-                    BotRunner = new AutoCaster(hWnd);
+                    InitializeBotRunnerByType<AutoCaster>(hWnds);
                     break;
             }
         }
@@ -65,7 +75,7 @@ namespace WowCyborg
             {
                 ServerUrl = settings.ServerAddress,
                 WowAddonPath = $"{AddonFolderHandler.GetAddonFolderPath()}",
-                Bot = BotRunner
+                Bots = BotRunners
             };
         }
 

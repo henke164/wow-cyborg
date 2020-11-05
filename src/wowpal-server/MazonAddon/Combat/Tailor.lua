@@ -8,7 +8,7 @@ end
 
 function SellPants()
   
-  for x = 0,4 do
+  for x = 0,10 do
     local c,i,n,v=0;
     for b=0,4 do 
       for s=1,GetContainerNumSlots(b) do 

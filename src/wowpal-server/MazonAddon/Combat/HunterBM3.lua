@@ -1,10 +1,10 @@
-local barbed_shot = "1"
-local kill_command = "2"
-local bestial_wrath = "3"
-local cobra_shot = "4"
-local aspect_of_the_wild = "5"
-local multishot = "6"
-local blood_fury = "8"
+local barbed_shot = "2"
+local kill_command = "3"
+local bestial_wrath = "8"
+local cobra_shot = "1"
+local aspect_of_the_wild = "SHIFT+2"
+local multishot = "7"
+local blood_fury = "SHIFT+3"
 
 local function cds()
   if (not (true)) then

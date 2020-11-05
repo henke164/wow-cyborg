@@ -7,15 +7,14 @@ namespace WowCyborg.Core.EventDispatchers
     {
         private bool _isDead = false;
 
-        public DeathDispatcher(Action<Event> onEvent)
-            : base(onEvent)
+        public DeathDispatcher()
         {
             EventName = "DeathChanged";
         }
 
-        protected override void Update()
+        protected override void GameHandleUpdate(IntPtr hWnd)
         {
-            if (AddonIsBlueAt(1, 2))
+            if (AddonIsBlueAt(hWnd, 1, 2))
             {
                 if (_isDead)
                 {
@@ -23,9 +22,9 @@ namespace WowCyborg.Core.EventDispatchers
                 }
 
                 _isDead = true;
-                TriggerEvent(true);
+                TriggerEvent(hWnd, true);
             }
-            else if (AddonIsRedAt(1, 2) || AddonIsGreenAt(1, 2))
+            else if (AddonIsRedAt(hWnd, 1, 2) || AddonIsGreenAt(hWnd, 1, 2))
             {
                 if (!_isDead)
                 {
@@ -33,8 +32,12 @@ namespace WowCyborg.Core.EventDispatchers
                 }
 
                 _isDead = false;
-                TriggerEvent(false);
+                TriggerEvent(hWnd, false);
             }
+        }
+
+        protected override void Update()
+        {
         }
     }
 }

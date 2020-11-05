@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -8,13 +10,22 @@ namespace WowCyborg.Core.Models.Abstractions
     {
         public string EventName { get; set; }
 
+        protected Action<IntPtr> OnGameHandleAdded;
+
         private bool _isRunning = false;
 
-        private Action<Event> _onEventTriggered;
+        private Dictionary<IntPtr, Action<IntPtr, Event>> _onEventTriggeredCallbacks = new Dictionary<IntPtr, Action<IntPtr, Event>>();
 
-        public EventDispatcherBase(Action<Event> onEventTriggered)
-            => _onEventTriggered = onEventTriggered;
-        
+        private IList<IntPtr> _hWnds = new List<IntPtr>();
+
+        public void AddGameHandle(IntPtr hWnd, Action<IntPtr, Event> onEventTriggeredCallback)
+        {
+            _onEventTriggeredCallbacks.Add(hWnd, onEventTriggeredCallback);
+            _hWnds.Add(hWnd);
+
+            OnGameHandleAdded?.Invoke(hWnd);
+        }
+
         public void Start()
         {
             Task.Run(() => {
@@ -24,6 +35,13 @@ namespace WowCyborg.Core.Models.Abstractions
                     try
                     {
                         Update();
+
+                        var clone = _hWnds.ToList();
+                        Parallel.ForEach(clone, hWnd =>
+                        {
+                            GameHandleUpdate(hWnd);
+                        });
+
                         Thread.Sleep(1000 / 30);
                     }
                     catch (Exception ex)
@@ -41,8 +59,10 @@ namespace WowCyborg.Core.Models.Abstractions
 
         protected abstract void Update();
 
-        protected void TriggerEvent(object eventData)
-            => _onEventTriggered(new Event {
+        protected abstract void GameHandleUpdate(IntPtr hWnd);
+
+        protected void TriggerEvent(IntPtr hWnd, object eventData)
+            => _onEventTriggeredCallbacks[hWnd](hWnd, new Event {
                 Name = EventName,
                 Data = eventData
             });

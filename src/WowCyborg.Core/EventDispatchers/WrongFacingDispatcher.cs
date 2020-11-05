@@ -7,24 +7,27 @@ namespace WowCyborg.Core.EventDispatchers
     {
         private bool _triggeredOnce = false;
 
-        public WrongFacingDispatcher(Action<Event> onEvent)
-            : base(onEvent)
+        public WrongFacingDispatcher()
         {
             EventName = "WrongFacing";
         }
 
-        protected override void Update()
+        protected override void GameHandleUpdate(IntPtr hWnd)
         {
-            if (AddonIsRedAt(2, 2))
+            if (AddonIsRedAt(hWnd, 2, 2))
             {
                 if (!_triggeredOnce)
                 {
-                    TriggerEvent(true);
+                    TriggerEvent(hWnd, true);
                     _triggeredOnce = true;
                 }
             }
 
             _triggeredOnce = false;
+        }
+
+        protected override void Update()
+        {
         }
     }
 }

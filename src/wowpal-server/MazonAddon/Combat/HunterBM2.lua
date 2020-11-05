@@ -17,7 +17,11 @@ local cobra_shot = "4";
 local aspect_of_the_wild = "5";
 local multishot = "6";
 local focused_azerite_beam = "7";
+local concentrated_flame = "8";
 
+function GetCurrentGlobalCooldown()
+  return 1.5 - (1.5 * (UnitSpellHaste("player") / 100))
+end 
 
 function RenderMultiTargetRotation()  
       

@@ -12,8 +12,18 @@ local slam = "2";
 local execute = "3";
 local mortalStrike = "4";
 local overpower = "5";
-local reapingFlames = "6";
+local sharpenBlade = "6";
 local rend = "7";
+
+WowCyborg_PAUSE_KEYS = {
+  "F",
+  "LSHIFT",
+  "F1",
+  "F2",
+  "F5",
+  "F6",
+  "F7",
+}
 
 function RenderMultiTargetRotation()
   if InMeleeRange() == false then
@@ -33,12 +43,6 @@ function RenderMultiTargetRotation()
 end
 
 function RenderSingleTargetRotation()
-  local targetHp = GetHealthPercentage("player");
-  if targetHp < 80 and IsCastableAtEnemyTarget("Reaping Flames", 0) then
-    WowCyborg_CURRENTATTACK = "Reaping Flames";
-    return SetSpellRequest(reapingFlames);
-  end
-
   if InMeleeRange() == false then
     WowCyborg_CURRENTATTACK = "-";
     return SetSpellRequest(nil);
@@ -68,6 +72,12 @@ function RenderSingleTargetRotation()
     end
   end
   
+  local targetHp = GetHealthPercentage("target");
+  if targetHp < 50 and IsCastableAtEnemyTarget("Sharpen Blade", 0) then
+    WowCyborg_CURRENTATTACK = "Sharpen Blade";
+    return SetSpellRequest(sharpenBlade);
+  end
+
   if IsCastableAtEnemyTarget("Mortal Strike", 30) then
     WowCyborg_CURRENTATTACK = "Mortal Strike";
     return SetSpellRequest(mortalStrike);

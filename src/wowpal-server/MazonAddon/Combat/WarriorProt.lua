@@ -30,6 +30,12 @@ local devastate = "4";
 local shieldBlock = "5";
 local ignorePain = "6";
 local victoryRush = "7";
+local battleShout = "8";
+local heroicThrow = "0";
+
+WowCyborg_PAUSE_KEYS = {
+  "F7",
+}
 
 function RenderMultiTargetRotation()
   if InMeleeRange() == false then
@@ -134,10 +140,22 @@ function RenderMultiTargetRotation()
 end
 
 function RenderSingleTargetRotation()
+  local targetHp = GetHealthPercentage("target");
+  local bsBuff = FindBuff("player", "Battle Shout")
+  if bsBuff == nil and IsCastable("Battle Shout", 0) then
+    WowCyborg_CURRENTATTACK = "Battle Shout";
+    return SetSpellRequest(battleShout);
+  end
+
   if InMeleeRange() == false then
     if IsCastableAtEnemyTarget("Thunder Clap", 0) and CheckInteractDistance("target", 3) then
       WowCyborg_CURRENTATTACK = "Thunder Clap";
       return SetSpellRequest(thunderClap);
+    end
+
+    if InCombatLockdown() and IsCastableAtEnemyTarget("Heroic Throw", 0) then
+      WowCyborg_CURRENTATTACK = "Heroic Throw";
+      return SetSpellRequest(heroicThrow);
     end
 
     WowCyborg_CURRENTATTACK = "-";
@@ -206,12 +224,12 @@ function RenderSingleTargetRotation()
     end
   end
 
-  if IsCastableAtEnemyTarget("Avatar", 0) then
+  if IsCastableAtEnemyTarget("Avatar", 0) and targetHp > 10 then
     WowCyborg_CURRENTATTACK = "Avatar";
     return SetSpellRequest(avatar);
   end
   
-  if IsCastableAtEnemyTarget("Demoralizing Shout", 0) then
+  if targetHp < 95 and IsCastableAtEnemyTarget("Demoralizing Shout", 0) then
     WowCyborg_CURRENTATTACK = "Demoralizing Shout";
     return SetSpellRequest(demoralizingShout);
   end

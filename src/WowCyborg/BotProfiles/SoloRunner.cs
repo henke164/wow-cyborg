@@ -31,12 +31,13 @@ namespace WowCyborg.BotProfiles
         // Player might be targetting something else than the enemy target.
         private void RunTargetSwitchHandler()
         {
-            _timeSinceLastAttackInCombat = DateTime.Now;
+            var now = DateTime.Now;
+            _timeSinceLastAttackInCombat = now;
 
             Task.Run(() => {
                 while (_isInCombat)
                 {
-                    if ((DateTime.Now - _timeSinceLastAttackInCombat).Seconds > 1)
+                    if ((now - _timeSinceLastAttackInCombat).Seconds > 1)
                     {
                         KeyHandler.PressKey(Keys.Tab);
                     }
@@ -47,7 +48,7 @@ namespace WowCyborg.BotProfiles
 
         protected override void SetupBehaviour()
         {
-            EventManager.On("PlayerTransformChanged", (Event _) =>
+            EventManager.On(HWnd, "PlayerTransformChanged", (Event _) =>
             {
                 if (TargetLocation != null && !_isInCombat && !Paused && CorpseTransform == null)
                 {
@@ -55,7 +56,7 @@ namespace WowCyborg.BotProfiles
                 }
             });
 
-            EventManager.On("DeathChanged", (Event ev) =>
+            EventManager.On(HWnd, "DeathChanged", (Event ev) =>
             {
                 if ((bool)ev.Data)
                 {
@@ -77,7 +78,7 @@ namespace WowCyborg.BotProfiles
                 }
             });
             
-            EventManager.On("CombatChanged", (Event ev) =>
+            EventManager.On(HWnd, "CombatChanged", (Event ev) =>
             {
                 _isInCombat = (bool)ev.Data;
                 Console.WriteLine("Combat: " + _isInCombat);
@@ -99,7 +100,7 @@ namespace WowCyborg.BotProfiles
                 });
             });
 
-            EventManager.On("KeyPressRequested", (Event ev) =>
+            EventManager.On(HWnd, "KeyPressRequested", (Event ev) =>
             {
                 var keyRequest = (KeyPressRequest)ev.Data;
 
@@ -146,13 +147,13 @@ namespace WowCyborg.BotProfiles
                 }
             });
 
-            EventManager.On("WrongFacing", (Event _) =>
+            EventManager.On(HWnd, "WrongFacing", (Event _) =>
             {
                 PauseMovement();
                 KeyHandler.PressKey(Keys.S, 1500);
             });
 
-            EventManager.On("TooFarAway", (Event _) =>
+            EventManager.On(HWnd, "TooFarAway", (Event _) =>
             {
                 KeyHandler.PressKey(Keys.Tab);
             });

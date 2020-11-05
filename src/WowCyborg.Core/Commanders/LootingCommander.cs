@@ -20,23 +20,20 @@ namespace WowCyborg.Core.Commanders
         public IntPtr HWnd { get; private set; }
         private List<Bitmap> _cursorImages;
         private bool _inCombat = false;
-        private bool _isSkinner = false;
-        private bool _lootOnce = true;
 
-        public LootingCommander(IntPtr hWnd, ref bool inCombat, bool isSkinner = false)
+        public LootingCommander(IntPtr hWnd, ref bool inCombat)
         {
             _cursorImages = new List<Bitmap> {
                 (Bitmap)Image.FromFile("Images/loot-cursor.png"),
-                (Bitmap)Image.FromFile("Images/battle-cursor.png")
+                (Bitmap)Image.FromFile("Images/battle-cursor.png"),
+                (Bitmap)Image.FromFile("Images/skin-cursor.png")
             };
             HWnd = hWnd;
             _inCombat = inCombat;
-            _isSkinner = isSkinner;
         }
 
         public void Loot(Action onDone)
         {
-            var foundLoot = false;
             Rectangle scanArea;
             if (HWnd != IntPtr.Zero)
             {
@@ -53,6 +50,7 @@ namespace WowCyborg.Core.Commanders
             }
 
             var lootLocation = Point.Empty;
+            var lootCursorKind = LootCursorKind.None;
 
             for (var y = 0; y < scanArea.Height && lootLocation == Point.Empty; y += 20)
             {
@@ -63,13 +61,13 @@ namespace WowCyborg.Core.Commanders
                         return;
                     }
 
-                    if (IsLootLocation(scanArea.X + x, scanArea.Y + y))
+                    if (GetLootCursorAtLocation(scanArea.X + x, scanArea.Y + y) != LootCursorKind.None)
                     {
                         Thread.Sleep(100);
-                        if (IsLootLocation(scanArea.X + x, scanArea.Y + y))
+                        lootCursorKind = GetLootCursorAtLocation(scanArea.X + x, scanArea.Y + y);
+                        if (lootCursorKind != LootCursorKind.None)
                         {
                             lootLocation = new Point(scanArea.X + x, scanArea.Y + y);
-                            foundLoot = true;
                         }
                     }
                 }
@@ -78,39 +76,37 @@ namespace WowCyborg.Core.Commanders
             if (lootLocation != Point.Empty)
             {
                 Thread.Sleep(500);
-                MouseHandler.LeftClick(lootLocation.X, lootLocation.Y);
+                MouseHandler.RightClick(lootLocation.X, lootLocation.Y);
+            }
 
-                if (_isSkinner)
-                {
-                    Thread.Sleep(4000);
-                    MouseHandler.LeftClick(lootLocation.X, lootLocation.Y);
-                    Thread.Sleep(2500);
-                }
+            if (lootCursorKind == LootCursorKind.Skin)
+            {
+                Thread.Sleep(1000);
             }
 
             Thread.Sleep(1500);
-            if (foundLoot && !_lootOnce)
-            {
-                Loot(onDone);
-            }
-            else
-            {
-                onDone();
-            }
+            onDone();
         }
 
-        private bool IsLootLocation(int x, int y)
+        private LootCursorKind GetLootCursorAtLocation(int x, int y)
         {
             MouseHandler.SetMousePosition(x, y);
             Thread.Sleep(50);
-            foreach (var cursor in _cursorImages)
+            foreach (var cursorImage in _cursorImages)
             {
-                if (CursorUtilities.IsCursorIcon(cursor))
+                if (CursorUtilities.IsCursorIcon(cursorImage))
                 {
-                    return true;
+                    switch (_cursorImages.IndexOf(cursorImage))
+                    {
+                        case 0: return LootCursorKind.Loot;
+                        case 1: return LootCursorKind.Battle;
+                        case 2: return LootCursorKind.Skin;
+                        default: return LootCursorKind.Loot;
+                    }
                 }
             }
-            return false;
+
+            return LootCursorKind.None;
         }
 
         public Rectangle GetScanArea(Rectangle windowRectangle)
@@ -129,6 +125,14 @@ namespace WowCyborg.Core.Commanders
                 center.Y - (size.Height / 8),
                 size.Width,
                 size.Height);
+        }
+
+        public enum LootCursorKind
+        {
+            Loot,
+            Battle,
+            Skin,
+            None
         }
     }
 }
