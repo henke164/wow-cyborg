@@ -227,7 +227,7 @@ function RenderMazonRotation()
     end
   end
 
-  if CheckInteractDistance("target", 5) and IsCastableAtEnemyTarget("Kill Command", 30) then
+  if IsCastableAtEnemyTarget("Kill Command", 30) then
     WowCyborg_CURRENTATTACK = "Kill Command";
     return SetSpellRequest(killCommand);
   end
@@ -364,7 +364,7 @@ function RenderSingleTargetRotation()
     return;
   end
   
-  if name == "Mazoon" then
+  if name == "Worrax" then
     return RenderMazonRotation()
   end
   
