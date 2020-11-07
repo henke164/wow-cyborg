@@ -181,6 +181,12 @@ namespace WowCyborg.Core.Handlers
         static IList<IntPtr> SetupGameHandles()
         {
             var processes = Process.GetProcessesByName("Wow");
+
+            if (processes.Length == 0)
+            {
+                processes = Process.GetProcessesByName("WowT");
+            }
+
             if (processes.Length == 0)
             {
                 processes = Process.GetProcessesByName("WowClassic");

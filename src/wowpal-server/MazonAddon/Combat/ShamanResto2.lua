@@ -43,6 +43,7 @@ local lavaBurst = "SHIFT+3";
 local cancelCast = "SHIFT+4";
 local lightningBolt = "SHIFT+5";
 local chainLightning = "SHIFT+6";
+local earthShield = "SHIFT+7";
 
 local healingTarget = {
   index = nil,
@@ -210,6 +211,14 @@ function RenderSingleTargetRotation()
     return SetSpellRequest(healingStreamTotem);
   end
 
+  local focusHp = GetHealthPercentage("focus");
+  if tostring(focusHp) ~= "-nan(ind)" and focusHp > 1 then
+    if FindBuff("focus", "Earth Shield") == nil then
+      WowCyborg_CURRENTATTACK = "Earthshield";
+      return SetSpellRequest(earthShield);
+    end
+  end
+  
   if healingTarget.name == nil then
     return HandleDps();
   end
@@ -229,7 +238,7 @@ function RenderSingleTargetRotation()
     WowCyborg_CURRENTATTACK = "Riptide " .. healingTarget.index;
     return SetSpellRequest(riptide[healingTarget.index]);
   end
-
+  
   if hp <= 90 and healingTarget ~= nil then
     local tidal = FindBuff("player", "Tidal Waves");
     if tidal == nil and IsCastableAtFriendlyUnit(healingTarget.name, "Riptide", 1600) then

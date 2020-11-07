@@ -15,6 +15,7 @@ pvpmonk	MazonAddon/Combat/MonkPVPHealer.lua
 blooddk	MazonAddon/Combat/DKBlood.lua
 unholydk	MazonAddon/Combat/DKUnholy.lua
 pvpdk	MazonAddon/Combat/DKPvp.lua
+pvpdk2	MazonAddon/Combat/DKPvp2.lua
 restodruid	MazonAddon/Combat/DruidResto.lua
 tankdruid	MazonAddon/Combat/DruidTank.lua
 feraldruid	MazonAddon/Combat/DruidFeral.lua
@@ -60,3 +61,4 @@ retripala	MazonAddon/Combat/PalaRetri.lua
 skinner	MazonAddon/Combat/Skinner.lua
 trial	MazonAddon/Combat/TrialSeller.lua
 frostdk	MazonAddon/Combat/DKFrost.lua
+disc	MazonAddon/Combat/PriestDisc.lua

@@ -91,7 +91,7 @@ function FindShockHealingTarget()
     
     local cyclone = FindDebuff(members[groupindex].name, "Cyclone");
     local hp = GetHealthPercentage(members[groupindex].name);
-    if tostring(hp) ~= "-nan(ind)" and hp > 0 and hp < 100 and cyclone == nil then
+    if tostring(hp) ~= "-nan(ind)" and hp > 0 and hp < 99 and cyclone == nil then
       if lowestHealth == nil or hp <= lowestHealth.hp then
         if IsSpellInRange("Holy Shock", members[groupindex].name) == 1 then
           lowestHealth = { hp = hp, name = members[groupindex].name }
@@ -167,6 +167,13 @@ function RenderSingleTargetRotation(disableAutoTarget)
   local speed = GetUnitSpeed("player");
   
   local friendlyTargetName = FindShockHealingTarget();
+  local holyPower = UnitPower("player", 9);
+  if friendlyTargetName ~= nil and IsCastable("Word of Glory", 0) and holyPower > 2 then
+    local memberindex = GetMemberIndex(friendlyTargetName);
+    WowCyborg_CURRENTATTACK = "Word of Glory " .. friendlyTargetName;
+    return SetSpellRequest("CTRL+" .. (memberindex + 5));
+  end
+
   if friendlyTargetName ~= nil and IsCastable("Holy Shock", 0) then
     local memberindex = GetMemberIndex(friendlyTargetName);
     WowCyborg_CURRENTATTACK = "Shock " .. friendlyTargetName;
@@ -213,17 +220,12 @@ function RenderSingleTargetRotation(disableAutoTarget)
     return SetSpellRequest(holyShock);
   end
   
-  if speed > 0 and hp < 50 and IsCastable("Light of the Martyr", 1400) then
-    WowCyborg_CURRENTATTACK = "Light of the Martyr";
-    return SetSpellRequest(lightOfTheMartyr);
-  end
-
-  if hp < 90 and IsCastable("Flash of Light", 4400) then
+  if hp < 80 and IsCastable("Flash of Light", 4400) then
     WowCyborg_CURRENTATTACK = "Flash of Light";
     return SetSpellRequest(flashOfLight);
   end
 
-  if hp < 100 and IsCastable("Holy Light", 2600) then
+  if hp < 99 and IsCastable("Holy Light", 2600) then
     WowCyborg_CURRENTATTACK = "Holy Light";
     return SetSpellRequest(holyLight);
   end

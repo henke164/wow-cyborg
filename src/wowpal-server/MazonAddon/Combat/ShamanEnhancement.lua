@@ -1,21 +1,18 @@
 --[[
-  furyOfAir = "1"
   flametongue = "2"
   frostbrand = "4"
   stormstrike = "5"
-  rockbiter = "6"
   lavaLash = "7"
   crashLightning = "8"
   lightningShield = "9"
 ]]--
 
-local furyOfAir = "5";
 local flametongue = "8";
 local frostbrand = "7";
 local stormstrike = "2";
-local rockbiter = "1";
 local lavaLash = "3";
 local crashLightning = "4";
+local lightningBolt = "5";
 local lightningShield = "9";
 
 WowCyborg_PAUSE_KEYS = {
@@ -43,14 +40,20 @@ function RenderSingleTargetRotation(aoe)
     return SetSpellRequest(nil);
   end
 
-  local maelstrom = UnitPower("player");
   local lsBuff = FindBuff("player", "Lightning Shield");
   if lsBuff == nil then
     WowCyborg_CURRENTATTACK = "Lightning Shield";
     return SetSpellRequest(lightningShield);
   end
-
   
+  local maelstromWeapon, mswTl, mswStacks = FindBuff("player", "Maelstrom Weapon");
+  if mswStacks ~= nil and mswStacks > 5 then
+    if IsCastableAtEnemyTarget("Lightning Bolt", 0) then
+      WowCyborg_CURRENTATTACK = "Lightning Bolt";
+      return SetSpellRequest(lightningBolt);
+    end
+  end
+
   -- frostbrand
   local frBuff, frTimeLeft = FindBuff("player", "Natural Harmony: Frost");
   if (frBuff ~= nil and frTimeLeft <= 3) then
@@ -69,15 +72,6 @@ function RenderSingleTargetRotation(aoe)
     end
   end
   
-  -- rockbiter
-  local nBuff, nTimeLeft = FindBuff("player", "Natural Harmony: Nature");
-  if ((nBuff ~= nil and nTimeLeft <= 3) and maelstrom < 70) then
-    if IsCastableAtEnemyTarget("rockbiter", 0) then
-      WowCyborg_CURRENTATTACK = "rockbiter";
-      return SetSpellRequest(rockbiter);
-    end
-  end
-
   if aoe and IsMelee() and IsCastableAtEnemyTarget("Crash Lightning", 0) then
     WowCyborg_CURRENTATTACK = "Crash Lightning";
     return SetSpellRequest(crashLightning);
@@ -117,13 +111,6 @@ function RenderSingleTargetRotation(aoe)
     return SetSpellRequest(crashLightning);
   end
 
-  if maelstrom < 70 then
-    if IsCastableAtEnemyTarget("Rockbiter", 0) and GetFullRechargeTime("Rockbiter") < 4 then
-      WowCyborg_CURRENTATTACK = "Rockbiter";
-      return SetSpellRequest(rockbiter);
-    end
-  end
-
   if ftBuffTl ~= nil and ftBuffTl < GetGCDMax() * 2 then
     if IsCastableAtEnemyTarget("Flametongue", 0) then
       WowCyborg_CURRENTATTACK = "Flametongue";
@@ -143,14 +130,9 @@ function RenderSingleTargetRotation(aoe)
     return SetSpellRequest(crashLightning);
   end
 
-  if IsCastableAtEnemyTarget("Lava Lash", 80) then
+  if IsCastableAtEnemyTarget("Lava Lash", 0) then
     WowCyborg_CURRENTATTACK = "Lava Lash";
     return SetSpellRequest(lavaLash);
-  end
-
-  if IsCastableAtEnemyTarget("Rockbiter", 0) then
-    WowCyborg_CURRENTATTACK = "Rockbiter";
-    return SetSpellRequest(rockbiter);
   end
 
   if IsCastableAtEnemyTarget("Flametongue", 0) then

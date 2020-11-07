@@ -1,20 +1,21 @@
 --[[
   Button    Spell
-  1         Blackout Strike
+  1         Blackout Kick
   2         Keg Smash
   3         Breath of Fire
   4         Rushing Jade Wind
   5         Tiger Palm
 ]]--
 
-local blackoutStrike = "1";
+local blackoutKick = "1";
 local kegSmash = "2";
 local breathOfFire = "3";
 local rushingJadeWind = "4";
+local spinningCraneKick = "4";
 local tigerPalm = "5";
 local expelHarm = "9";
 
-local ironskinBrew = "SHIFT+1";
+local celestialBrew = "SHIFT+1";
 local purifyingBrew = "SHIFT+2";
 local fortifyingBrew = "SHIFT+3";
 
@@ -22,8 +23,12 @@ local incomingDamage = {}
 local meleeDamageInLast5Seconds = 0
 local rangedDamageInLast5Seconds = 0
 
+WowCyborg_PAUSE_KEYS = {
+  "F2"
+}
+
 function IsMelee()
-  return IsSpellInRange("Blackout Strike");
+  return IsSpellInRange("Blackout Kick");
 end
 
 function HandleDefensives()
@@ -31,14 +36,10 @@ function HandleDefensives()
 
   local dangerHpLossLimit = UnitHealthMax("player") * 0.5;
   if WowCyborg_INCOMBAT and hpPercentage < 100 then
-      local isBuff = FindBuff("player", "Ironskin Brew");
-      if isBuff == nil then
-        local isCharges = GetSpellCharges("Ironskin Brew");
-        if isCharges > 0 then
-          WowCyborg_CURRENTATTACK = "Ironskin Brew";
-          SetSpellRequest(ironskinBrew);
-          return true;
-        end
+    if IsCastable("Celestial Brew", 0) then
+      WowCyborg_CURRENTATTACK = "Celestial Brew";
+      SetSpellRequest(celestialBrew);
+      return true;
     end
   end
 
@@ -55,7 +56,7 @@ function HandleDefensives()
 
   local pbCharges = GetSpellCharges("Purifying Brew");
   local staggerAmount = UnitStagger("player");
-  local stagger2 = FindDebuff("player", "Heavy Stagger");
+  local stagger2 = FindDebuff("player", "Moderate Stagger");
   if stagger2 ~= nil then
     if pbCharges > 0 then
       WowCyborg_CURRENTATTACK = "Purifying Brew";
@@ -64,22 +65,26 @@ function HandleDefensives()
     end
   end
 
-  
-  local spheres = GetSpellCount("Expel Harm");
-  if hpPercentage < 90 and spheres > 0 then
-    WowCyborg_CURRENTATTACK = "Expel Harm";
-    SetSpellRequest(expelHarm);
-    return true;
+  if hpPercentage < 50 then
+    if IsCastableAtEnemyTarget("Expel Harm", 0) then
+      WowCyborg_CURRENTATTACK = "Expel Harm";
+      SetSpellRequest(expelHarm);
+      return true;
+    end
   end
 
   return false;
 end
 
 function RenderMultiTargetRotation()
-  return RenderSingleTargetRotation();
+  return RenderSingleTargetRotation(true);
 end
 
-function RenderSingleTargetRotation()
+function RenderSingleTargetRotation(aoe)
+  if aoe == nil then
+    aoe = false
+  end
+
   local defensives = HandleDefensives();
   if defensives == true then
     return;
@@ -90,14 +95,14 @@ function RenderSingleTargetRotation()
     return SetSpellRequest(nil);
   end
   
-  if IsCastableAtEnemyTarget("Blackout Strike", 0) then
-    WowCyborg_CURRENTATTACK = "Blackout Strike";
-    return SetSpellRequest(blackoutStrike);
-  end
-
-  if IsCastableAtEnemyTarget("Keg Smash", 40) then
+  if IsCastableAtEnemyTarget("Keg Smash", 25) then
     WowCyborg_CURRENTATTACK = "Keg Smash";
     return SetSpellRequest(kegSmash);
+  end
+
+  if IsCastableAtEnemyTarget("Blackout Kick", 0) then
+    WowCyborg_CURRENTATTACK = "Blackout Kick";
+    return SetSpellRequest(blackoutKick);
   end
 
   if IsCastableAtEnemyTarget("Breath of Fire", 0) and IsCastableAtEnemyTarget("Tiger Palm", 0) then
@@ -110,9 +115,16 @@ function RenderSingleTargetRotation()
     return SetSpellRequest(rushingJadeWind);
   end
   
-  if IsCastableAtEnemyTarget("Tiger Palm", 25) then
-    WowCyborg_CURRENTATTACK = "Tiger Palm";
-    return SetSpellRequest(tigerPalm);
+  if aoe then
+    if IsCastableAtEnemyTarget("Spinning Crane Kick", 40) then
+      WowCyborg_CURRENTATTACK = "Spinning Crane Kick";
+      return SetSpellRequest(spinningCraneKick);
+    end
+  else
+    if IsCastableAtEnemyTarget("Tiger Palm", 40) then
+      WowCyborg_CURRENTATTACK = "Tiger Palm";
+      return SetSpellRequest(tigerPalm);
+    end
   end
 
   WowCyborg_CURRENTATTACK = "-";
