@@ -35,13 +35,18 @@ local wildGrowth = "SHIFT+2";
 local cenarionWard = "SHIFT+3";
 local cancelCast = "SHIFT+4";
 
-local sunfire = 7;
--- CAT form
-local rake = 1;
-local shred = 2;
-local rip = 3;
-local ferociousBite = 4;
-local swipe = 5;
+WowCyborg_PAUSE_KEYS = {
+  "F",
+  "F10",
+  "F2",
+  "R"
+}
+
+-- Boomer form
+local moonfire = 1;
+local starfire = 2;
+local wrath = 3;
+local starsurge = 4;
 
 local healingTarget = {
   index = nil,
@@ -180,9 +185,9 @@ function GetTankName()
 end
 
 function RenderMultiTargetRotation()
-  local cat = FindBuff("player", "Cat Form");
-  if cat ~= nil then
-    return RenderCatRotation(true);
+  local boomkin = FindBuff("player", "Moonkin Form");
+  if boomkin ~= nil then
+    return RenderMoonkinRotation(false);
   end
 
   return RenderSingleTargetRotation();
@@ -215,43 +220,43 @@ function HandleTankPreHots()
   return false;
 end
 
-function IsMelee()
-  return IsSpellInRange("Shred") == 1;
-end
+function RenderMoonkinRotation(wrathRot)
+  local dot = FindDebuff("target", "Moonfire");
+  if dot == nil then
+    WowCyborg_CURRENTATTACK = "Moonfire";
+    return SetSpellRequest(moonfire);
+  end
 
-function RenderCatRotation(aoe)
-  if IsMelee() == false then
-    WowCyborg_CURRENTATTACK = "-";
-    return SetSpellRequest(nil);
+  if IsCastableAtEnemyTarget("Starsurge", 0) then
+    WowCyborg_CURRENTATTACK = "Starsurge";
+    return SetSpellRequest(starsurge);
+  end
+
+  local solar = FindBuff("player", "Eclipse (Solar)");
+  if solar ~= nil then
+    if IsCastableAtEnemyTarget("Wrath", 0) then
+      WowCyborg_CURRENTATTACK = "Wrath";
+      return SetSpellRequest(wrath);
+    end
   end
   
-  local rakeDot = FindDebuff("target", "Rake");
-  if rakeDot == nil then
-    WowCyborg_CURRENTATTACK = "Rake";
-    return SetSpellRequest(rake);
-  end
-
-  local points = GetComboPoints("player", "target");
-  local ripDot, ripCd = FindDebuff("target", "Rip");
-  if points == 5 then
-    if ripDot == nil then
-      WowCyborg_CURRENTATTACK = "Rip";
-      return SetSpellRequest(rip);
+  local lunar = FindBuff("player", "Eclipse (Lunar)");
+  if lunar ~= nil then
+    if IsCastableAtEnemyTarget("Starfire", 0) then
+      WowCyborg_CURRENTATTACK = "Starfire";
+      return SetSpellRequest(starfire);
     end
-    
-    WowCyborg_CURRENTATTACK = "Ferocious Bite";
-    return SetSpellRequest(ferociousBite);
   end
 
-  if aoe then
-    if IsCastableAtEnemyTarget("Swipe", 0) then
-      WowCyborg_CURRENTATTACK = "Swipe";
-      return SetSpellRequest(swipe);
+  if wrathRot then
+    if IsCastableAtEnemyTarget("Wrath", 0) then
+      WowCyborg_CURRENTATTACK = "Wrath";
+      return SetSpellRequest(wrath);
     end
   else
-    if IsCastableAtEnemyTarget("Shred", 0) then
-      WowCyborg_CURRENTATTACK = "Shred";
-      return SetSpellRequest(shred);
+    if IsCastableAtEnemyTarget("Starfire", 0) then
+      WowCyborg_CURRENTATTACK = "Starfire";
+      return SetSpellRequest(starfire);
     end
   end
 end
@@ -271,9 +276,9 @@ function RenderSingleTargetRotation()
     end
   end
 
-  local cat = FindBuff("player", "Cat Form");
-  if cat ~= nil then
-    return RenderCatRotation(false);
+  local boomkin = FindBuff("player", "Moonkin Form");
+  if boomkin ~= nil then
+    return RenderMoonkinRotation(true);
   end
 
   local quaking = FindDebuff("player", "Quake");

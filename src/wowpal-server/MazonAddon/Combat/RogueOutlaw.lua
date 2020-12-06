@@ -1,28 +1,27 @@
---[[
+--[[p
   Button    Spell
-  1         Hamstring
-  2         Slam
-  3         Execute
-  4         Mortal Strike
-  5         Overpower
+  local rollTheBones = "1";
+  local adrenalineRush = "2";
+  local betweenTheEyes = "3";
+  local sinisterStrike = "4";
+  local dispatch = "5";
+  local pistolShot = "6";
 ]]--
 
 local rollTheBones = "1";
-local adrenalineRush = "2";
+local sliceNDice = "2";
 local betweenTheEyes = "3";
 local sinisterStrike = "4";
 local dispatch = "5";
 local pistolShot = "6";
+local bladeFlurry = "7";
+local adrenalineRush = "8";
 
 function RenderMultiTargetRotation()
-  if InMeleeRange() == false then
-    WowCyborg_CURRENTATTACK = "-";
-    return SetSpellRequest(nil);
-  end
-  return RenderSingleTargetRotation()
+  return RenderSingleTargetRotation(true)
 end
 
-function RenderSingleTargetRotation()
+function RenderSingleTargetRotation(aoe)
   local stealth = FindBuff("player", "Stealth");
 
   if InMeleeRange() == false or stealth ~= nil then
@@ -30,44 +29,71 @@ function RenderSingleTargetRotation()
     return SetSpellRequest(nil);
   end
   
-  local points = GetComboPoints("player", "target");
-  if points >= 4 then
-    WowCyborg_CURRENTATTACK = "Roll the Bones";
-    return SetSpellRequest(rollTheBones);
-  end
-
   if IsCastable("Adrenaline Rush", 0) then
     WowCyborg_CURRENTATTACK = "Adrenaline Rush";
     return SetSpellRequest(adrenalineRush);
   end
 
-  local b1 = FindBuff("player", "Ruthless Precision");
-  local b2 = FindBuff("player", "Ace Up Your Sleeve");
-  local b3 = FindBuff("player", "Deadshot");
-  if b1 ~= nil or b2 ~= nil or b3 ~= nil then
-    if points >= 4 and IsCastableAtEnemyTarget("Between the Eyes", 0) then
+  if IsCastable("Roll the Bones", 25) then
+    WowCyborg_CURRENTATTACK = "Roll the Bones";
+    return SetSpellRequest(rollTheBones);
+  end
+
+  if aoe then
+    if IsCastable("Blade Flurry", 15) then
+      WowCyborg_CURRENTATTACK = "Blade Flurry";
+      return SetSpellRequest(bladeFlurry);
+    end
+  end
+
+  local points = GetComboPoints("player", "target");
+
+  local sliceBuff, sliceDuration = FindBuff("Player", "Slice and Dice");
+
+  if (points > 4) then
+    local sliceBuff, sliceDuration = FindBuff("Player", "Slice and Dice");
+    if sliceBuff == nil or sliceDuration < 9 then
+      if IsCastable("Slice and Dice", 0) then
+        WowCyborg_CURRENTATTACK = "Slice and Dice";
+        return SetSpellRequest(sliceNDice);
+      end
+    end
+    
+    if IsCastableAtEnemyTarget("Between the Eyes", 0) then
       WowCyborg_CURRENTATTACK = "Between the Eyes";
       return SetSpellRequest(betweenTheEyes);
     end
-  end
-  
-  if points >= 4 and IsCastableAtEnemyTarget("Dispatch", 0) then
-    WowCyborg_CURRENTATTACK = "Dispatch";
-    return SetSpellRequest(dispatch);
+    
+    if IsCastableAtEnemyTarget("Dispatch", 0) then
+      WowCyborg_CURRENTATTACK = "Dispatch";
+      return SetSpellRequest(dispatch);
+    end
   end
 
-  local opBuff = FindBuff("player", "Opportunity");
-  if opBuff and points <= 3 and IsCastableAtEnemyTarget("Pistol Shot", 0) then
+  if sliceBuff == nil and points > 0 then
+    if IsCastable("Slice and Dice", 0) then
+      WowCyborg_CURRENTATTACK = "Slice and Dice";
+      return SetSpellRequest(sliceNDice);
+    end
+  end
+
+  local oppBuff = FindBuff("Player", "Opportunity");
+  if oppBuff ~= nil and IsCastableAtEnemyTarget("Pistol Shot", 0) then
     WowCyborg_CURRENTATTACK = "Pistol Shot";
     return SetSpellRequest(pistolShot);
   end
 
-  WowCyborg_CURRENTATTACK = "Sinister Strike";
-  return SetSpellRequest(sinisterStrike);
+  if IsCastableAtEnemyTarget("Sinister Strike", 45) then
+    WowCyborg_CURRENTATTACK = "Sinister Strike";
+    return SetSpellRequest(sinisterStrike);
+  end
+
+  WowCyborg_CURRENTATTACK = "-";
+  return SetSpellRequest(nil);
 end
 
 function InMeleeRange()
-  return IsSpellInRange("Execute", "target") == 1;
+  return IsCastableAtEnemyTarget("Dispatch", 0);
 end
 
-print("Arms warrior rotation loaded");
+print("Rogue Outlaw rotation loaded");

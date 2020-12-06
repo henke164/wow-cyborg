@@ -31,6 +31,11 @@ function IsMelee()
 end
 
 function RenderMultiTargetRotation()
+  if UnitChannelInfo("player") == "Convoke the Spirits" then
+    WowCyborg_CURRENTATTACK = "-";
+    return SetSpellRequest(nil);
+  end
+
   local hp = GetHealthPercentage("player");
   local targetHp = GetHealthPercentage("target");
 
@@ -81,6 +86,11 @@ function RenderMultiTargetRotation()
 end
 
 function RenderSingleTargetRotation()
+  if UnitChannelInfo("player") == "Convoke the Spirits" then
+    WowCyborg_CURRENTATTACK = "-";
+    return SetSpellRequest(nil);
+  end
+
   local hp = GetHealthPercentage("player");
 
   if hp < 70 then

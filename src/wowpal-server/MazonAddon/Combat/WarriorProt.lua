@@ -30,17 +30,24 @@ local devastate = "4";
 local shieldBlock = "5";
 local ignorePain = "6";
 local victoryRush = "7";
-local whirlwind = "8";
 local execute = "9";
 local battleShout = "CTRL+3";
 local heroicThrow = "0";
 
 WowCyborg_PAUSE_KEYS = {
-  "F1",
+  "F2",
+  "F3",
   "F7",
 }
 
 function RenderMultiTargetRotation()
+  local bs = FindBuff("player", "Bladestorm");
+
+  if bs ~= nil then
+    WowCyborg_CURRENTATTACK = "-";
+    return SetSpellRequest(nil);
+  end
+
   if InMeleeRange() == false then
     if IsCastableAtEnemyTarget("Thunder Clap", 0) and CheckInteractDistance("target", 3) then
       WowCyborg_CURRENTATTACK = "Thunder Clap";
@@ -50,8 +57,16 @@ function RenderMultiTargetRotation()
     return SetSpellRequest(nil);
   end
 
+  local vrBuff = FindBuff("player", "Victorious")
   local hpPercentage = GetHealthPercentage("player");
-  
+
+  if hpPercentage < 80 and 
+    IsCastableAtEnemyTarget("Victory Rush", 0) and 
+    vrBuff == "Victorious" then
+    WowCyborg_CURRENTATTACK = "Victory Rush";
+    return SetSpellRequest(victoryRush);
+  end
+
   local dangerHpLossLimit = UnitHealthMax("player") * 0.5;
 
   if meleeDamageInLast5Seconds > dangerHpLossLimit or 
@@ -74,9 +89,8 @@ function RenderMultiTargetRotation()
     end
   end
 
-  if hpPercentage < 95 then
-    local hpLossLimit = UnitHealthMax("player") * 0.1;
-    if meleeDamageInLast5Seconds > hpLossLimit then
+  if hpPercentage < 99 then
+    if meleeDamageInLast5Seconds > 0 then
       local sbBuff = FindBuff("player", "Shield Block")
       if sbBuff == nil and IsCastableAtEnemyTarget("Shield Block", 30) then
         WowCyborg_CURRENTATTACK = "Shield Block";
@@ -84,18 +98,21 @@ function RenderMultiTargetRotation()
       end
     end
 
-    if rangedDamageInLast5Seconds > hpLossLimit then
-      local ipBuff = FindBuff("player", "Ignore Pain")
-      if ipBuff == nil and IsCastableAtEnemyTarget("Ignore Pain", 40) then
-        WowCyborg_CURRENTATTACK = "Ignore Pain";
-        return SetSpellRequest(ignorePain);
-      end
+    local ipBuff, ipTl = FindBuff("player", "Ignore Pain");
+    if (ipBuff == nil or ipTl < 3) and IsCastableAtEnemyTarget("Ignore Pain", 40) then
+      WowCyborg_CURRENTATTACK = "Ignore Pain";
+      return SetSpellRequest(ignorePain);
     end
   end
 
   if IsCastableAtEnemyTarget("Thunder Clap", 0) then
     WowCyborg_CURRENTATTACK = "Thunder Clap";
     return SetSpellRequest(thunderClap);
+  end
+  
+  if IsCastableAtEnemyTarget("Demoralizing Shout", 0) then
+    WowCyborg_CURRENTATTACK = "Demoralizing Shout";
+    return SetSpellRequest(demoralizingShout);
   end
 
   local revBuff = FindBuff("player", "Revenge!");
@@ -116,28 +133,11 @@ function RenderMultiTargetRotation()
     return SetSpellRequest(avatar);
   end
   
-  local vrBuff = FindBuff("player", "Victorious")
-  if hpPercentage < 80 and 
-    IsCastableAtEnemyTarget("Victory Rush", 0) and 
-    vrBuff == "Victorious" then
-    WowCyborg_CURRENTATTACK = "Victory Rush";
-    return SetSpellRequest(victoryRush);
-  end
-
-  if IsCastableAtEnemyTarget("Demoralizing Shout", 0) then
-    WowCyborg_CURRENTATTACK = "Demoralizing Shout";
-    return SetSpellRequest(demoralizingShout);
-  end
-
   if IsCastableAtEnemyTarget("Shield Slam", 0) then
     WowCyborg_CURRENTATTACK = "Shield Slam";
     return SetSpellRequest(shieldSlam);
   end
   
-  if IsCastableAtEnemyTarget("Devastate", 0) then
-    WowCyborg_CURRENTATTACK = "Devastate";
-    --return SetSpellRequest(devastate);
-  end
   WowCyborg_CURRENTATTACK = "-";
   return SetSpellRequest(nil);
 end
@@ -209,16 +209,19 @@ function RenderSingleTargetRotation()
       end
     end
 
-    if rangedDamageInLast5Seconds > hpLossLimit then
-      local ipBuff = FindBuff("player", "Ignore Pain")
-      if ipBuff == nil and IsCastableAtEnemyTarget("Ignore Pain", 40) then
-        WowCyborg_CURRENTATTACK = "Ignore Pain";
-        return SetSpellRequest(ignorePain);
-      end
+    local ipBuff, ipTl = FindBuff("player", "Ignore Pain");
+    if (ipBuff == nil or ipTl < 3) and IsCastableAtEnemyTarget("Ignore Pain", 40) then
+      WowCyborg_CURRENTATTACK = "Ignore Pain";
+      return SetSpellRequest(ignorePain);
     end
   end
 
   local avatarBuff = FindBuff("player", "Avatar")
+
+  if targetHp <= 20 and IsCastableAtEnemyTarget("Execute", 60) then
+    WowCyborg_CURRENTATTACK = "Execute";
+    return SetSpellRequest(execute);
+  end
 
   if avatarBuff == "Avatar" then
     if IsCastableAtEnemyTarget("Thunder Clap", 0) and IsItemInRange(63427, "player") then
@@ -235,14 +238,6 @@ function RenderSingleTargetRotation()
   if targetHp < 95 and IsCastableAtEnemyTarget("Demoralizing Shout", 0) then
     WowCyborg_CURRENTATTACK = "Demoralizing Shout";
     return SetSpellRequest(demoralizingShout);
-  end
-
-  local sbBuff = FindBuff("player", "Shield Block");
-  if sbBuff == nil then
-    if IsCastableAtEnemyTarget("Shield Block", 30) then
-      WowCyborg_CURRENTATTACK = "Shield Block";
-      return SetSpellRequest(shieldBlock);
-    end
   end
 
   if IsCastableAtEnemyTarget("Shield Slam", 0) then
@@ -265,8 +260,8 @@ function RenderSingleTargetRotation()
 
   if rage > 70 then
     if GetHealthPercentage("player") < 90 then
-      local ipBuff = FindBuff("player", "Ignore Pain")
-      if ipBuff == nil and IsCastableAtEnemyTarget("Ignore Pain", 40) then
+      local ipBuff, ipTl = FindBuff("player", "Ignore Pain");
+      if (ipBuff == nil or ipTl < 3) and IsCastableAtEnemyTarget("Ignore Pain", 40) then
         WowCyborg_CURRENTATTACK = "Ignore Pain";
         return SetSpellRequest(ignorePain);
       end
@@ -277,15 +272,15 @@ function RenderSingleTargetRotation()
       return SetSpellRequest(execute);
     end
 
-    if IsCastableAtEnemyTarget("Whirlwind", 30) then
-      WowCyborg_CURRENTATTACK = "Whirlwind";
-      return SetSpellRequest(whirlwind);
+    if IsCastableAtEnemyTarget("Revenge", 30) then
+      WowCyborg_CURRENTATTACK = "Revenge";
+      return SetSpellRequest(revenge);
     end
   end
 
   if IsCastableAtEnemyTarget("Devastate", 0) then
     WowCyborg_CURRENTATTACK = "Devastate";
-    --return SetSpellRequest(devastate);
+    return SetSpellRequest(devastate);
   end
 
   WowCyborg_CURRENTATTACK = "-";

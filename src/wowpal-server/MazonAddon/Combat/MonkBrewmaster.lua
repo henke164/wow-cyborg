@@ -11,7 +11,7 @@ local blackoutKick = "1";
 local kegSmash = "2";
 local breathOfFire = "3";
 local rushingJadeWind = "4";
-local spinningCraneKick = "4";
+local spinningCraneKick = "6";
 local tigerPalm = "5";
 local expelHarm = "9";
 
@@ -24,7 +24,8 @@ local meleeDamageInLast5Seconds = 0
 local rangedDamageInLast5Seconds = 0
 
 WowCyborg_PAUSE_KEYS = {
-  "F2"
+  "F2",
+  "F4"
 }
 
 function IsMelee()
@@ -34,16 +35,7 @@ end
 function HandleDefensives()
   local hpPercentage = GetHealthPercentage("player");
 
-  local dangerHpLossLimit = UnitHealthMax("player") * 0.5;
-  if WowCyborg_INCOMBAT and hpPercentage < 100 then
-    if IsCastable("Celestial Brew", 0) then
-      WowCyborg_CURRENTATTACK = "Celestial Brew";
-      SetSpellRequest(celestialBrew);
-      return true;
-    end
-  end
-
-  dangerHpLossLimit = UnitHealthMax("player") * 0.2;
+  local dangerHpLossLimit = UnitHealthMax("player") * 0.2;
   if meleeDamageInLast5Seconds > dangerHpLossLimit or 
   rangedDamageInLast5Seconds > dangerHpLossLimit or
   hpPercentage < 50 then
@@ -57,7 +49,7 @@ function HandleDefensives()
   local pbCharges = GetSpellCharges("Purifying Brew");
   local staggerAmount = UnitStagger("player");
   local stagger2 = FindDebuff("player", "Moderate Stagger");
-  if stagger2 ~= nil then
+  if (staggerAmount ~= nil and staggerAmount > dangerHpLossLimit) or stagger2 ~= nil then
     if pbCharges > 0 then
       WowCyborg_CURRENTATTACK = "Purifying Brew";
       SetSpellRequest(purifyingBrew);
@@ -65,7 +57,15 @@ function HandleDefensives()
     end
   end
 
-  if hpPercentage < 50 then
+  if WowCyborg_INCOMBAT and hpPercentage < 95 then
+    if IsCastable("Celestial Brew", 0) then
+      WowCyborg_CURRENTATTACK = "Celestial Brew";
+      SetSpellRequest(celestialBrew);
+      return true;
+    end
+  end
+
+  if hpPercentage < 80 then
     if IsCastableAtEnemyTarget("Expel Harm", 0) then
       WowCyborg_CURRENTATTACK = "Expel Harm";
       SetSpellRequest(expelHarm);
@@ -95,6 +95,12 @@ function RenderSingleTargetRotation(aoe)
     return SetSpellRequest(nil);
   end
   
+  local kegCd = GetCooldown("Keg Smash");
+  local saveEnergy = 0;
+  if kegCd < 2 then
+    saveEnergy = 25;
+  end
+
   if IsCastableAtEnemyTarget("Keg Smash", 25) then
     WowCyborg_CURRENTATTACK = "Keg Smash";
     return SetSpellRequest(kegSmash);
@@ -110,18 +116,19 @@ function RenderSingleTargetRotation(aoe)
     return SetSpellRequest(breathOfFire);
   end
 
-  if IsCastableAtEnemyTarget("Rushing Jade Wind", 0) then
+  local rjwBuff = FindBuff("player", "Rushing Jade Wind");
+  if rjwBuff == nil and IsCastableAtEnemyTarget("Rushing Jade Wind", 0) then
     WowCyborg_CURRENTATTACK = "Rushing Jade Wind";
     return SetSpellRequest(rushingJadeWind);
   end
   
   if aoe then
-    if IsCastableAtEnemyTarget("Spinning Crane Kick", 40) then
+    if IsCastableAtEnemyTarget("Spinning Crane Kick", 40 + saveEnergy) then
       WowCyborg_CURRENTATTACK = "Spinning Crane Kick";
       return SetSpellRequest(spinningCraneKick);
     end
   else
-    if IsCastableAtEnemyTarget("Tiger Palm", 40) then
+    if IsCastableAtEnemyTarget("Tiger Palm", 40 + saveEnergy) then
       WowCyborg_CURRENTATTACK = "Tiger Palm";
       return SetSpellRequest(tigerPalm);
     end

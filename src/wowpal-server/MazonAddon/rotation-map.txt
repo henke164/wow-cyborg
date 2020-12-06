@@ -1,6 +1,7 @@
 furywarrior	MazonAddon/Combat/WarriorFury.lua
 protwarrior	MazonAddon/Combat/WarriorProt.lua
 armswarrior	MazonAddon/Combat/WarriorArms.lua
+pvpwarr	MazonAddon/Combat/WarriorPvp.lua
 bmhunter	MazonAddon/Combat/HunterBM.lua
 mmhunter	MazonAddon/Combat/HunterMM.lua
 eleshaman	MazonAddon/Combat/ShamanEle.lua
@@ -40,6 +41,7 @@ classicferal	MazonAddon/Combat/ClassicFeral.lua
 classicfury	MazonAddon/Combat/WarriorClassicFury.lua
 classicmage	MazonAddon/Combat/MageClassic.lua
 classicrogue	MazonAddon/Combat/RogueClassic.lua
+outlaw	MazonAddon/Combat/RogueOutlaw.lua
 pvp	MazonAddon/Combat/ClassicPVP.lua
 firemage	MazonAddon/Combat/MageFire.lua
 frostmage	MazonAddon/Combat/MageFrost.lua

@@ -23,7 +23,7 @@ local deathCoil = "6";
 local necroticStrike = "7";
 local breathOfTheDying = "8";
 local unholyBlight = "9";
-local deathStrike = "SHIFT+4";
+local deathStrike = "SHIFT+3";
 
 WowCyborg_PAUSE_KEYS = {
   "F1",

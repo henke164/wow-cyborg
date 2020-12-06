@@ -224,13 +224,13 @@ function RenderFontFrame()
     end
 
     if IsMouseButtonDown("MiddleButton") then
-      Pause(0.8);
+      Pause(0.3);
       return;
     end
 
     for index, value in ipairs(WowCyborg_PAUSE_KEYS) do
       if value == key then
-        Pause(0.8);
+        Pause(0.3);
       end
     end
   end)
