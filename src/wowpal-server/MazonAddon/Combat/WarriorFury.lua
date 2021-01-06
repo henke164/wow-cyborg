@@ -19,7 +19,7 @@ local ragingBlow = "5";
 local whirlwind = "6";
 local siegeBreaker = "7";
 local bladestorm = "8";
-local victoryRush = "9";
+local victoryRush = "SHIFT+2";
 
 WowCyborg_PAUSE_KEYS = {
   "F2",
@@ -55,6 +55,16 @@ function RenderSingleTargetRotation(aoe)
     end
   end
 
+  local enemyHP = GetHealthPercentage("target");
+  local sdBuff = FindBuff("player", "Sudden Death");
+
+  if enemyHP < 35 or enemyHP > 80 or sdBuff == "Sudden Death" then
+    if IsCastableAtEnemyTarget("Execute", 0) then
+      WowCyborg_CURRENTATTACK = "Execute";
+      return SetSpellRequest(execute);
+    end
+  end
+
   local vrBuff = FindBuff("player", "Victorious")
   if hpPercentage < 80 and 
     IsCastableAtEnemyTarget("Victory Rush", 0) and 
@@ -87,16 +97,6 @@ function RenderSingleTargetRotation(aoe)
   if IsCastableAtEnemyTarget("Siegebreaker", 0) then
     WowCyborg_CURRENTATTACK = "Siegebreaker";
     return SetSpellRequest(siegeBreaker);
-  end
-
-  local enemyHP = GetHealthPercentage("target");
-  local sdBuff = FindBuff("player", "Sudden Death");
-
-  if enemyHP < 20 or sdBuff == "Sudden Death" then
-    if IsCastableAtEnemyTarget("Execute", 0) then
-      WowCyborg_CURRENTATTACK = "Execute";
-      return SetSpellRequest(execute);
-    end
   end
 
   if enrageBuff == nil and IsCastableAtEnemyTarget("Bloodthirst", 0) then

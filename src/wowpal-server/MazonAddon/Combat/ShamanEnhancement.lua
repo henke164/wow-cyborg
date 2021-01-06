@@ -16,8 +16,6 @@ local lightningBolt = "5";
 local lightningShield = "9";
 
 WowCyborg_PAUSE_KEYS = {
-  "5",
-  "X",
 }
 
 function IsMelee()

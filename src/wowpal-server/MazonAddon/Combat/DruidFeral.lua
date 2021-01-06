@@ -13,7 +13,6 @@ local thrash = "8";
 local feralFrenzy = "9";
 local regrowth = "0";
 local maim = "SHIFT+2";
-local reapingFlames = "SHIFT+3";
 
 WowCyborg_PAUSE_KEYS = {
   "F1",
@@ -38,6 +37,11 @@ function RenderSingleTargetRotation(useComboPoints)
   if useComboPoints == nil then
     useComboPoints = true;
   end
+  
+  if UnitChannelInfo("player") == "Convoke the Spirits" then
+    WowCyborg_CURRENTATTACK = "BURSTING";
+    return SetSpellRequest(nil);
+  end
 
   local cat = FindBuff("player", "Cat Form");
 
@@ -55,11 +59,6 @@ function RenderSingleTargetRotation(useComboPoints)
     return SetSpellRequest(nil);
   end
   
-  if (targetHp > 80 or targetHp < 20) and IsCastableAtEnemyTarget("Reaping Flames", 0) then
-    WowCyborg_CURRENTATTACK = "Reaping Flames";
-    return SetSpellRequest(reapingFlames);
-  end
-
   local predaSwiftBuff = FindBuff("player", "Predatory Swiftness");
   if hp < 80 and predaSwiftBuff ~= nil then
     WowCyborg_CURRENTATTACK = "Regrowth";
@@ -100,9 +99,11 @@ function RenderSingleTargetRotation(useComboPoints)
     end
   end
 
-  if points > 0 and useComboPoints and ripCd < 5 and IsCastableAtEnemyTarget("Ferocious Bite", 25) then
-    WowCyborg_CURRENTATTACK = "Ferocious Bite";
-    return SetSpellRequest(ferociousBite);
+  if useComboPoints then
+    if points > 0 and ripCd ~= nil and ripCd < 5 and IsCastableAtEnemyTarget("Ferocious Bite", 25) then
+      WowCyborg_CURRENTATTACK = "Ferocious Bite";
+      return SetSpellRequest(ferociousBite);
+    end
   end
 
   if points < 5 and IsCastableAtEnemyTarget("Feral Frenzy", 25) then

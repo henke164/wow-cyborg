@@ -18,6 +18,19 @@ local concentratedFlame = "6";
 local glavies = "8";
 local felblade = "9";
 
+WowCyborg_PAUSE_KEYS = {
+  "F2",
+  "F3",
+  "F4",
+  "F7",
+  "0",
+  "R",
+  "F10",
+  "NUMPAD1",
+  "NUMPAD5",
+  "NUMPAD8"
+}
+
 function RenderMultiTargetRotation()
   return RenderSingleTargetRotation()
 end

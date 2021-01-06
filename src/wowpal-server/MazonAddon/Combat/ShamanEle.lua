@@ -11,7 +11,6 @@
   9         Frost Shock
 ]]--
 
-local totemMastery = "1";
 local flameShock = "2";
 local earthQuake = "3";
 local stormKeeper = "4";
@@ -61,7 +60,9 @@ function RenderMultiTargetRotation()
     return SetSpellRequest(nil);
   end
 
-  if IsMoving() == true then
+  local spiritWalkerBuff = FindBuff("player", "Spiritwalker's Grace");
+
+  if IsMoving() == true and spiritWalkerBuff == nil then
     return RenderTargetRotationInMovement();
   end
 
@@ -133,18 +134,13 @@ function RenderSingleTargetRotation()
     end
   end
 
-  if IsMoving() == true then
+  if IsMoving() == true and spiritWalkerBuff == nil then
     return RenderTargetRotationInMovement();
   end
 
   local fsDot, fsDotTimeLeft = FindDebuff("target", "Flame Shock");
 
-  if IsCastableAtEnemyTarget("Lightning Bolt", 0) then
-    local totemBuff = FindBuff("player", "Storm Totem");	
-    if totemBuff == nil then 	
-      return SetSpellRequest(totemMastery);	
-    end
-    
+  if IsCastableAtEnemyTarget("Lightning Bolt", 0) then    
     if IsCastableAtEnemyTarget("Flame Shock", 0) then
       if fsDot == nil then
         if IsCastableAtEnemyTarget("Lava Burst", 0) and recentlyCastedLavaBurst == false then

@@ -52,6 +52,20 @@ local healingTarget = {
   damageAmount = 0
 };
 
+WowCyborg_PAUSE_KEYS = {
+  "F",
+  "F1",
+  "F2",
+  "F3",
+  "F5",
+  "F6",
+  "F7",
+  "F11",
+  "NUMPAD2",
+  "NUMPAD3",
+  "NUMPAD5",
+}
+
 function GetTargetFullName()
   local name, realm = UnitName("target");
   if realm == nil then
@@ -206,7 +220,7 @@ function RenderSingleTargetRotation()
   end
 
   local cb = FindBuff("player", "Cloudburst Totem");
-  if AoeHealingRequired(95) and IsCastable("Healing Stream Totem", 2200) and cb == nil then
+  if AoeHealingRequired(95) and IsCastable("Healing Stream Totem", 0) and cb == nil then
     WowCyborg_CURRENTATTACK = "Healing Stream Totem";
     return SetSpellRequest(healingStreamTotem);
   end
@@ -234,26 +248,22 @@ function RenderSingleTargetRotation()
   end
   
   local riptideHot = FindBuff(healingTarget.name, "Riptide");
-  if riptideHot == nil and IsCastableAtFriendlyUnit(healingTarget.name, "Riptide", 1600) then
+  if riptideHot == nil and IsCastableAtFriendlyUnit(healingTarget.name, "Riptide", 0) then
     WowCyborg_CURRENTATTACK = "Riptide " .. healingTarget.index;
     return SetSpellRequest(riptide[healingTarget.index]);
   end
   
-  if hp <= 90 and healingTarget ~= nil then
-    local tidal = FindBuff("player", "Tidal Waves");
-    if tidal == nil and IsCastableAtFriendlyUnit(healingTarget.name, "Riptide", 1600) then
-      WowCyborg_CURRENTATTACK = "Riptide " .. healingTarget.index;
-      return SetSpellRequest(riptide[healingTarget.index]);
-    end
-
-    if tidal ~= nil and IsCastableAtFriendlyUnit(healingTarget.name, "Healing Wave", 1800) and CanCast() then
-      WowCyborg_CURRENTATTACK = "Healing Wave";
-      return SetSpellRequest(healingWave[healingTarget.index]);
-    end
-    
-    if tidal == nil and IsCastableAtFriendlyUnit(healingTarget.name, "Healing Surge", 3600) and CanCast() then
+  if hp <= 70 then
+    if IsCastableAtFriendlyUnit(healingTarget.name, "Healing Surge", 0) and CanCast() then
       WowCyborg_CURRENTATTACK = "Healing Surge";
       return SetSpellRequest(healingSurge[healingTarget.index]);
+    end
+  end
+
+  if hp <= 90 then
+    if IsCastableAtFriendlyUnit(healingTarget.name, "Healing Wave", 0) and CanCast() then
+      WowCyborg_CURRENTATTACK = "Healing Wave";
+      return SetSpellRequest(healingWave[healingTarget.index]);
     end
   end
 
@@ -263,12 +273,12 @@ end
 function HandleDps()
   local fsDebuff = FindDebuff("target", "Flame Shock");
 
-  if IsCastableAtEnemyTarget("Flame Shock", 3000) and fsDebuff == nil then
+  if IsCastableAtEnemyTarget("Flame Shock", 0) and fsDebuff == nil then
     WowCyborg_CURRENTATTACK = "Flame Shock";
     return SetSpellRequest(flameShock);
   end
   
-  if IsCastableAtEnemyTarget("Lava Burst", 1200) and fsDebuff ~= nil then
+  if IsCastableAtEnemyTarget("Lava Burst", 0) and fsDebuff ~= nil then
     WowCyborg_CURRENTATTACK = "Lava Burst";
     return SetSpellRequest(lavaBurst);
   end

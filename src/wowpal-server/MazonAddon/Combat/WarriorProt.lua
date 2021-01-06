@@ -38,6 +38,10 @@ WowCyborg_PAUSE_KEYS = {
   "F2",
   "F3",
   "F7",
+  "F9",
+  "R",
+  "NUMPAD5",
+  "NUMPAD7",
 }
 
 function RenderMultiTargetRotation()
@@ -199,26 +203,28 @@ function RenderSingleTargetRotation()
     end
   end
 
-  if hpPercentage < 95 then
-    local hpLossLimit = UnitHealthMax("player") * 0.1;
-    if meleeDamageInLast5Seconds > hpLossLimit then
-      local sbBuff = FindBuff("player", "Shield Block")
-      if sbBuff == nil and IsCastableAtEnemyTarget("Shield Block", 30) then
-        WowCyborg_CURRENTATTACK = "Shield Block";
-        return SetSpellRequest(shieldBlock);
-      end
-    end
-
+  if InCombatLockdown() then
     local ipBuff, ipTl = FindBuff("player", "Ignore Pain");
     if (ipBuff == nil or ipTl < 3) and IsCastableAtEnemyTarget("Ignore Pain", 40) then
       WowCyborg_CURRENTATTACK = "Ignore Pain";
       return SetSpellRequest(ignorePain);
     end
+
+    if hpPercentage < 95 then
+      local hpLossLimit = UnitHealthMax("player") * 0.1;
+      if meleeDamageInLast5Seconds > hpLossLimit then
+        local sbBuff = FindBuff("player", "Shield Block")
+        if sbBuff == nil and IsCastableAtEnemyTarget("Shield Block", 30) then
+          WowCyborg_CURRENTATTACK = "Shield Block";
+          return SetSpellRequest(shieldBlock);
+        end
+      end
+    end
   end
 
   local avatarBuff = FindBuff("player", "Avatar")
 
-  if targetHp <= 20 and IsCastableAtEnemyTarget("Execute", 60) then
+  if (targetHp < 20 or targetHp > 80) and IsCastableAtEnemyTarget("Execute", 60) then
     WowCyborg_CURRENTATTACK = "Execute";
     return SetSpellRequest(execute);
   end
@@ -267,7 +273,7 @@ function RenderSingleTargetRotation()
       end
     end
 
-    if targetHp <= 20 and IsCastableAtEnemyTarget("Execute", 40) then
+    if (targetHp < 20 or targetHp > 80) and IsCastableAtEnemyTarget("Execute", 60) then
       WowCyborg_CURRENTATTACK = "Execute";
       return SetSpellRequest(execute);
     end

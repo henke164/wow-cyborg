@@ -11,14 +11,22 @@ local spiritBomb = "1";
 local fracture = "2";
 local soulCleave = "3";
 local immolationAura = "4";
-local animaOfDeath = "5";
 local demonSpikes = "6";
+local glaive = "7";
+local fieryBrand = "8";
 
 WowCyborg_PAUSE_KEYS = {
+  "F2",
   "F3",
   "F4",
+  "F7",
   "0",
-  "F10"
+  "R",
+  "F10",
+  "LSHIFT",
+  "NUMPAD1",
+  "NUMPAD5",
+  "NUMPAD8"
 }
 
 function RenderMultiTargetRotation()
@@ -30,6 +38,23 @@ function RenderSingleTargetRotation()
     WowCyborg_CURRENTATTACK = "-";
     return SetSpellRequest(nil);
   end
+  
+  if CheckInteractDistance("target", 5) == false and WowCyborg_INCOMBAT == true then
+    if IsCastableAtEnemyTarget("Throw Glaive", 0) then 
+      WowCyborg_CURRENTATTACK = "Throw Glaive";
+      return SetSpellRequest(glaive);
+    end
+  end
+  
+  if UnitChannelInfo("player") == "Fel Devastation" then
+    WowCyborg_CURRENTATTACK = "-";
+    return SetSpellRequest(nil);
+  end
+
+  if IsCastableAtEnemyTarget("Fiery Brand", 0) then 
+    WowCyborg_CURRENTATTACK = "Fiery Brand";
+    return SetSpellRequest(fieryBrand);
+  end
 
   local demonSpikesBuff = FindBuff("player", "Demon Spikes");
   if WowCyborg_INCOMBAT == true and demonSpikesBuff == nil and IsCastable("Demon Spikes", 0) then
@@ -39,11 +64,10 @@ function RenderSingleTargetRotation()
 
   local pain = UnitPower("player");
   local _, _, sbCharges = FindBuff("player", "Soul Fragments");
-  if sbCharges ~= nil and sbCharges >= 4 then
+  if sbCharges ~= nil and sbCharges >= 4 and IsCastableAtEnemyTarget("Spirit Bomb", 30) then
     WowCyborg_CURRENTATTACK = "Spirit Bomb";
     return SetSpellRequest(spiritBomb);
   end
-
   if IsCastableAtEnemyTarget("Immolation Aura", 0) then 
     WowCyborg_CURRENTATTACK = "Immolation Aura";
     return SetSpellRequest(immolationAura);
@@ -58,18 +82,13 @@ function RenderSingleTargetRotation()
     WowCyborg_CURRENTATTACK = "Fracture";
     return SetSpellRequest(fracture);
   end
-  
-  if IsCastableAtEnemyTarget("Anima of Death", 0) then
-    WowCyborg_CURRENTATTACK = "Anima of Death";
-    return SetSpellRequest(animaOfDeath);
-  end
 
   WowCyborg_CURRENTATTACK = "-";
   return SetSpellRequest(nil);
 end
 
 function InMeleeRange()
-  return CheckInteractDistance("target", 5);
+  return IsSpellInRange("Disrupt", "target") == 1;
 end
 
 print("Demon hunter tank rotation loaded");

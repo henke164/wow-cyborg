@@ -37,16 +37,18 @@ local cancelCast = "SHIFT+4";
 
 WowCyborg_PAUSE_KEYS = {
   "F",
+  "F5",
   "F10",
   "F2",
   "R"
 }
 
 -- Boomer form
-local moonfire = 1;
-local starfire = 2;
-local wrath = 3;
-local starsurge = 4;
+local moonfire = "SHIFT+5";
+local sunfire = "SHIFT+6";
+local wrath = "SHIFT+7";
+local starfire = "SHIFT+8";
+local starsurge = "SHIFT+9";
 
 local healingTarget = {
   index = nil,
@@ -185,12 +187,7 @@ function GetTankName()
 end
 
 function RenderMultiTargetRotation()
-  local boomkin = FindBuff("player", "Moonkin Form");
-  if boomkin ~= nil then
-    return RenderMoonkinRotation(false);
-  end
-
-  return RenderSingleTargetRotation();
+  return RenderSingleTargetRotation(true);
 end
 
 function HandleTankPreHots()
@@ -222,9 +219,15 @@ end
 
 function RenderMoonkinRotation(wrathRot)
   local dot = FindDebuff("target", "Moonfire");
-  if dot == nil then
+  if dot == nil and IsCastableAtEnemyTarget("Moonfire", 0) then
     WowCyborg_CURRENTATTACK = "Moonfire";
     return SetSpellRequest(moonfire);
+  end
+  
+  local dot2 = FindDebuff("target", "Sunfire");
+  if dot2 == nil and IsCastableAtEnemyTarget("Sunfire", 0) then
+    WowCyborg_CURRENTATTACK = "Sunfire";
+    return SetSpellRequest(sunfire);
   end
 
   if IsCastableAtEnemyTarget("Starsurge", 0) then
@@ -259,26 +262,34 @@ function RenderMoonkinRotation(wrathRot)
       return SetSpellRequest(starfire);
     end
   end
+  
+  if IsCastableAtEnemyTarget("Wrath", 0) then
+    WowCyborg_CURRENTATTACK = "Wrath";
+    return SetSpellRequest(wrath);
+  end
+  
+  WowCyborg_CURRENTATTACK = "-";
+  return SetSpellRequest(nil);
 end
 
-function RenderSingleTargetRotation()
+function RenderSingleTargetRotation(wrathRot)
   if UnitChannelInfo("player") == "Tranquility" then
     WowCyborg_CURRENTATTACK = "-";
     return SetSpellRequest(nil);
   end
-  
+    
+  if UnitChannelInfo("player") == "Convoke the Spirits" then
+    WowCyborg_CURRENTATTACK = "BURSTING";
+    return SetSpellRequest(nil);
+  end
+
   local spell, _, _, _, endTime = UnitCastingInfo("player")
   if spell == "Regrowth" and healingTarget.name ~= nil then
     local hp = GetHealthPercentage(healingTarget.name)
-    if hp > 80 then
+    if hp > 90 then
       WowCyborg_CURRENTATTACK = "Cancel cast";
       return SetSpellRequest(cancelCast);
     end
-  end
-
-  local boomkin = FindBuff("player", "Moonkin Form");
-  if boomkin ~= nil then
-    return RenderMoonkinRotation(true);
   end
 
   local quaking = FindDebuff("player", "Quake");
@@ -314,14 +325,17 @@ function RenderSingleTargetRotation()
   end
 
   if healingTarget.name == nil then
-    WowCyborg_CURRENTATTACK = "no ht";
-    return SetSpellRequest(nil);
+    return RenderMoonkinRotation();
   end
 
   local hp = GetHealthPercentage(healingTarget.name);
   if hp == 100 then
-    WowCyborg_CURRENTATTACK = "Full hp: " .. healingTarget.name;
-    return SetSpellRequest(nil);
+    return RenderMoonkinRotation();
+  end
+
+  if hp <= 60 and IsCastableAtFriendlyUnit(healingTarget.name, "Regrowth", 2800) and quaking == nil and speed == 0 then
+    WowCyborg_CURRENTATTACK = "Regrowth";
+    return SetSpellRequest(regrowth[healingTarget.index]);
   end
 
   local rejuvenationHot = FindBuff(healingTarget.name, "Rejuvenation");
@@ -354,8 +368,7 @@ function RenderSingleTargetRotation()
   --  end
   --end
 
-  WowCyborg_CURRENTATTACK = "Nothing: " .. healingTarget.name;
-  return SetSpellRequest(nil);
+  return RenderMoonkinRotation();
 end
 
 function CreateDamageTakenFrame()

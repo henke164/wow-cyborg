@@ -47,7 +47,7 @@ function RenderPreBuff()
 
   local hpPercentage = GetHealthPercentage("player");
   local vrBuff = FindBuff("player", "Victorious")
-  if hpPercentage < 70 and 
+  if hpPercentage < 80 and 
     IsCastableAtEnemyTarget("Victory Rush", 0) and 
     vrBuff == "Victorious" then
     WowCyborg_CURRENTATTACK = "Victory Rush";
