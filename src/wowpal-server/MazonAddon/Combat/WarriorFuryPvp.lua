@@ -20,6 +20,7 @@ local whirlwind = "6";
 local siegeBreaker = "7";
 local bladestorm = "8";
 local hamstring = "9";
+local ignorePain = "0";
 local victoryRush = "SHIFT+2";
 
 WowCyborg_PAUSE_KEYS = {
@@ -52,7 +53,7 @@ function RenderSingleTargetRotation(slow)
   if slow then
     local hamstringDebuff, hamstringTl = FindDebuff("target", "Hamstring");
     if hamstringDebuff == nil or hamstringTl < 3 then
-      if IsCastableAtEnemyTarget("Hamstring", 0) then
+      if IsCastableAtEnemyTarget("Hamstring", 10) then
         WowCyborg_CURRENTATTACK = "Hamstring";
         return SetSpellRequest(hamstring);
       end
@@ -99,6 +100,15 @@ function RenderSingleTargetRotation(slow)
   if enrageBuff == nil and IsCastableAtEnemyTarget("Bloodthirst", 0) then
     WowCyborg_CURRENTATTACK = "Bloodthirst";
     return SetSpellRequest(bloodthirst);
+  end
+
+  local ignorePainBuff = FindBuff("player", "Ignore Pain");
+  local hp = GetHealthPercentage("player");
+  if hp < 80 and ignorePainBuff == nil then
+    if IsCastable("Ignore Pain", 40) then
+      WowCyborg_CURRENTATTACK = "Ignore Pain";
+      return SetSpellRequest(ignorePain);
+    end
   end
 
   local rbCharges = GetSpellCharges("Raging Blow")

@@ -18,11 +18,11 @@ local incomingDamage = {}
 local meleeDamageInLast5Seconds = 0
 local rangedDamageInLast5Seconds = 0
 
-local avatar = "SHIFT+1";
-local demoralizingShout = "SHIFT+2";
-local shieldWall = "SHIFT+3";
-local lastStand = "SHIFT+4";
-local rallyingCry = "CTRL+1";
+local avatar = "F+5";
+local demoralizingShout = "F+6";
+local shieldWall = "F+7";
+local lastStand = "F+8";
+local rallyingCry = "F+9";
 local shieldSlam = "1";
 local thunderClap = "2";
 local revenge = "3";
@@ -30,6 +30,7 @@ local devastate = "4";
 local shieldBlock = "5";
 local ignorePain = "6";
 local victoryRush = "7";
+local attack = "8";
 local execute = "9";
 local battleShout = "CTRL+3";
 local heroicThrow = "0";
@@ -37,8 +38,6 @@ local heroicThrow = "0";
 WowCyborg_PAUSE_KEYS = {
   "F2",
   "F3",
-  "F7",
-  "F9",
   "R",
   "NUMPAD5",
   "NUMPAD7",
@@ -96,7 +95,7 @@ function RenderMultiTargetRotation()
   if hpPercentage < 99 then
     if meleeDamageInLast5Seconds > 0 then
       local sbBuff = FindBuff("player", "Shield Block")
-      if sbBuff == nil and IsCastableAtEnemyTarget("Shield Block", 30) then
+      if sbBuff == nil and IsCastable("Shield Block", 30) then
         WowCyborg_CURRENTATTACK = "Shield Block";
         return SetSpellRequest(shieldBlock);
       end
@@ -114,11 +113,6 @@ function RenderMultiTargetRotation()
     return SetSpellRequest(thunderClap);
   end
   
-  if IsCastableAtEnemyTarget("Demoralizing Shout", 0) then
-    WowCyborg_CURRENTATTACK = "Demoralizing Shout";
-    return SetSpellRequest(demoralizingShout);
-  end
-
   local revBuff = FindBuff("player", "Revenge!");
   if (revBuff == "Revenge!") then
     if IsCastableAtEnemyTarget("Revenge", 0) then
@@ -127,9 +121,9 @@ function RenderMultiTargetRotation()
     end
   end
 
-  if IsCastableAtEnemyTarget("Revenge", 30) then
-    WowCyborg_CURRENTATTACK = "Revenge";
-    return SetSpellRequest(revenge);
+  if IsCastableAtEnemyTarget("Demoralizing Shout", 0) then
+    WowCyborg_CURRENTATTACK = "Demoralizing Shout";
+    return SetSpellRequest(demoralizingShout);
   end
 
   if IsCastableAtEnemyTarget("Avatar", 0) then
@@ -214,7 +208,7 @@ function RenderSingleTargetRotation()
       local hpLossLimit = UnitHealthMax("player") * 0.1;
       if meleeDamageInLast5Seconds > hpLossLimit then
         local sbBuff = FindBuff("player", "Shield Block")
-        if sbBuff == nil and IsCastableAtEnemyTarget("Shield Block", 30) then
+        if sbBuff == nil and IsCastable("Shield Block", 30) then
           WowCyborg_CURRENTATTACK = "Shield Block";
           return SetSpellRequest(shieldBlock);
         end
@@ -284,9 +278,14 @@ function RenderSingleTargetRotation()
     end
   end
 
+  if IsCurrentSpell(6603) == false then
+    WowCyborg_CURRENTATTACK = "Attack";
+    return SetSpellRequest(attack);
+  end
+
   if IsCastableAtEnemyTarget("Devastate", 0) then
-    WowCyborg_CURRENTATTACK = "Devastate";
-    return SetSpellRequest(devastate);
+    --WowCyborg_CURRENTATTACK = "Devastate";
+    --return SetSpellRequest(devastate);
   end
 
   WowCyborg_CURRENTATTACK = "-";

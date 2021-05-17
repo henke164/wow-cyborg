@@ -11,6 +11,7 @@ local spiritBomb = "1";
 local fracture = "2";
 local soulCleave = "3";
 local immolationAura = "4";
+local sigilOfFlame = "5";
 local demonSpikes = "6";
 local glaive = "7";
 local fieryBrand = "8";
@@ -30,10 +31,10 @@ WowCyborg_PAUSE_KEYS = {
 }
 
 function RenderMultiTargetRotation()
-  return RenderSingleTargetRotation()
+  return RenderSingleTargetRotation(true)
 end
 
-function RenderSingleTargetRotation()
+function RenderSingleTargetRotation(fireSigil)
   if InMeleeRange() == false then
     WowCyborg_CURRENTATTACK = "-";
     return SetSpellRequest(nil);
@@ -54,6 +55,11 @@ function RenderSingleTargetRotation()
   if IsCastableAtEnemyTarget("Fiery Brand", 0) then 
     WowCyborg_CURRENTATTACK = "Fiery Brand";
     return SetSpellRequest(fieryBrand);
+  end
+
+  if IsCastable("Sigil of Flame", 0) and fireSigil then
+    WowCyborg_CURRENTATTACK = "Sigil of Flame";
+    return SetSpellRequest(sigilOfFlame);
   end
 
   local demonSpikesBuff = FindBuff("player", "Demon Spikes");

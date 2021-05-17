@@ -86,10 +86,10 @@ end
 
 function FindBuff(target, buffName)
   for i=1,40 do
-    local name, _, stacks, _, _, etime = UnitBuff(target, i);
+    local name, icon, stacks, _, __, etime = UnitBuff(target, i);
     if name ~= nil and buffName ~= nil and string.lower(name) == string.lower(buffName) then
       local time = GetTime();
-      return name, etime - time, stacks, i;
+      return name, etime - time, stacks, i, icon;
     end
   end
 end

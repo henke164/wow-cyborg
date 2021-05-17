@@ -9,6 +9,8 @@ local hammerOfWrath = 4;
 local crusaderStrike = 5;
 local templarsVeridict = 6;
 local divineStorm = 7;
+local divineToll = 8;
+local seraphim = 9;
 
 
 WowCyborg_PAUSE_KEYS = {
@@ -22,7 +24,8 @@ WowCyborg_PAUSE_KEYS = {
   "F",
   "R",
   "LSHIFT",
-  "ESCAPE"
+  "ESCAPE",
+  "NUMPAD5"
 }
 
 function IsMelee()
@@ -34,16 +37,45 @@ function RenderMultiTargetRotation()
 end
 
 function RenderSingleTargetRotation(aoe)
+  local saveForSeraphim = false;
   local holyPower = UnitPower("player", 9);
   local epowerBuff = FindBuff("player", "Empyrean Power");
+  local wrathBuff = FindBuff("player", "Avenging Wrath");
+  local awCd = GetSpellCooldown("Avenging Wrath", "spell");
+
+  if wrathBuff ~= nil or awCd > 45 then
+
+    if IsCastable("Seraphim", 0) then
+      saveForSeraphim = true
+      if holyPower > 2 then
+        WowCyborg_CURRENTATTACK = "Seraphim";
+        return SetSpellRequest(seraphim);
+      end
+    end
+
+    local seraphimBuff = FindBuff("player", "Seraphim");
+    if seraphimBuff ~= nil and IsCastableAtEnemyTarget("Divine Toll", 0) then
+      WowCyborg_CURRENTATTACK = "Divine Toll";
+      return SetSpellRequest(divineToll);
+    end
+  end
+
   if epowerBuff ~= nil then
     if IsCastableAtEnemyTarget("Divine Storm", 0) then
       WowCyborg_CURRENTATTACK = "Divine Storm";
       return SetSpellRequest(divineStorm);
     end
   end
+  
+  local hp = GetHealthPercentage("player");
+  if hp < 75 then
+    if (holyPower > 2) then
+      WowCyborg_CURRENTATTACK = "Word of Glory";
+      return SetSpellRequest("CTRL+1");
+    end
+  end
 
-  if holyPower >= 3 then
+  if holyPower >= 3 and saveForSeraphim == false then
     if aoe == nil then
       if IsCastableAtEnemyTarget("Templar's Verdict", 0) then
         WowCyborg_CURRENTATTACK = "Templar's Verdict";

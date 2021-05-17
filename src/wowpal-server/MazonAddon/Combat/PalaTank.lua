@@ -6,7 +6,7 @@ local judgment = 1;
 local avengersShield = 2;
 local blessedHammer = 3;
 local shieldOfTheRighteous = 4;
-local lightOfTheProtector = 5;
+local hammerOfWrath = 5;
 local consecration = 6;
 
 WowCyborg_PAUSE_KEYS = {
@@ -18,11 +18,32 @@ WowCyborg_PAUSE_KEYS = {
   "0",
   "F",
   "R",
-  "ESCAPE"
+  "NUMPAD1",
+  "NUMPAD5",
+  "NUMPAD9",
+  "ESCAPE",
 }
 
 function IsMelee()
-  return CheckInteractDistance("target", 5);
+  return CheckInteractDistance("target", 3);
+end
+
+function GetMemberIndex(name)
+  local group = GetGroupRosterInfo();
+  for groupindex = 1,25 do
+    if group[groupindex] == nil then
+      return nil;
+    end
+
+    if group[groupindex].name == nil then
+      return nil;
+    end
+
+    if group[groupindex].name == name then
+      return groupindex;
+    end
+  end
+  return nil;
 end
 
 function GetGroupRosterInfo()
@@ -50,14 +71,14 @@ function FindHealingTarget()
     local hp = GetHealthPercentage(members[groupindex].name);
     if tostring(hp) ~= "-nan(ind)" and hp > 0 and hp < 100 then
       if lowestHealth == nil or hp <= lowestHealth.hp then
-        if IsSpellInRange("Hand of the Protector", members[groupindex].name) == 1 then
+        if IsSpellInRange("Word of Glory", members[groupindex].name) == 1 then
           lowestHealth = { hp = hp, name = members[groupindex].name }
         end
       end
     end
   end
 
-  if lowestHealth ~= nil and lowestHealth.hp < 90 then
+  if lowestHealth ~= nil and lowestHealth.hp < 95 then
     return lowestHealth.name, 0;
   end
 
@@ -70,10 +91,14 @@ end
 
 function RenderSingleTargetRotation(disableAutoTarget)
   local hp = GetHealthPercentage("player");
-  if hp < 90 then
-    if IsCastable("Light of the Protector", 0) then
-      WowCyborg_CURRENTATTACK = "Light of the Protector";
-      return SetSpellRequest(lightOfTheProtector);
+  local targetHp = GetHealthPercentage("target");
+  local holyPower = UnitPower("player", 9);
+  local wrathBuff = FindBuff("player", "Avenging Wrath");
+
+  if wrathBuff or targetHp < 20 then
+    if IsCastableAtEnemyTarget("Hammer of Wrath", 0) then
+      WowCyborg_CURRENTATTACK = "Hammer of Wrath";
+      return SetSpellRequest(hammerOfWrath);
     end
   end
 
@@ -83,11 +108,35 @@ function RenderSingleTargetRotation(disableAutoTarget)
     return SetSpellRequest(consecration);
   end
 
+  local shiningBuff, tl, shiningStacks, icon = FindBuff("player", "Shining Light");
+
+  if hp < 90 then
+    if shiningBuff ~= nil and shiningStacks == 1 and icon == 1360763 then
+      WowCyborg_CURRENTATTACK = "Word of Glory";
+      return SetSpellRequest("CTRL+1");
+    end
+  end
+
+  if hp < 75 then
+    if (holyPower > 2) then
+      WowCyborg_CURRENTATTACK = "Word of Glory";
+      return SetSpellRequest("CTRL+1");
+    end
+  end
+
   local friendlyTargetName = FindHealingTarget();
-  if friendlyTargetName ~= nil and IsCastable("Hand of the Protector", 0) then
-    local memberindex = GetMemberIndex(friendlyTargetName);
-    WowCyborg_CURRENTATTACK = "Protector " .. friendlyTargetName;
-    return SetSpellRequest("CTRL+" .. memberindex);
+  if friendlyTargetName ~= nil and IsCastable("Word of Glory", 0) then
+    if (holyPower > 2 and GetHealthPercentage(friendlyTargetName) < 60) then
+      local memberindex = GetMemberIndex(friendlyTargetName);
+      WowCyborg_CURRENTATTACK = "Word of Glory " .. friendlyTargetName;
+      return SetSpellRequest("CTRL+" .. (memberindex + 5));
+    end
+
+    if shiningBuff ~= nil and shiningStacks == 1 and type == 9 then
+      local memberindex = GetMemberIndex(friendlyTargetName);
+      WowCyborg_CURRENTATTACK = "Word of Glory " .. friendlyTargetName;
+      return SetSpellRequest("CTRL+" .. (memberindex + 5));
+    end
   end
 
   local judgmentDebuff = FindDebuff("target", "Judgment of Light")
@@ -96,9 +145,7 @@ function RenderSingleTargetRotation(disableAutoTarget)
     return SetSpellRequest(judgment);
   end
   
-  local sotrCharges = GetSpellCharges("Shield of the Righteous")
-
-  if IsMelee() and IsCastableAtEnemyTarget("Shield of the Righteous", 0) then
+  if IsMelee() and IsCastableAtEnemyTarget("Shield of the Righteous", 0) and holyPower > 3 then
     WowCyborg_CURRENTATTACK = "Shield of the Righteous";
     return SetSpellRequest(shieldOfTheRighteous);
   end
@@ -132,4 +179,4 @@ function RenderSingleTargetRotation(disableAutoTarget)
   return SetSpellRequest(nil);
 end
 
-print("Holy pala rotation loaded");
+print("Prot pala rotation loaded");

@@ -8,6 +8,7 @@ local holyShock = 3;
 local judgment = 4;
 local crusaderStrike = 5;
 local lightOfDawn = 6;
+local hammerOfWrath = 7;
 
 local beaconOfLight = "SHIFT+3";
 local lightOfTheMartyr = 9;
@@ -20,6 +21,10 @@ WowCyborg_PAUSE_KEYS = {
   "F4",
   "F5",
   "F7",
+  "NUMPAD1",
+  "NUMPAD2",
+  "NUMPAD5",
+  "NUMPAD9",
   "0",
   "F",
   "R",
@@ -126,7 +131,8 @@ function AoeHealingRequired()
 end
 
 function RenderMultiTargetRotation()
-  if AoeHealingRequired() and IsCastable("Light of Dawn", 0) then
+  local holyPower = UnitPower("player", 9);
+  if AoeHealingRequired() and IsCastable("Light of Dawn", 0) and holyPower > 2 then
     WowCyborg_CURRENTATTACK = "Light of Dawn";
     SetSpellRequest(lightOfDawn);
     return true;
@@ -171,7 +177,11 @@ function RenderSingleTargetRotation(disableAutoTarget)
   if friendlyTargetName ~= nil and IsCastable("Word of Glory", 0) and holyPower > 2 then
     local memberindex = GetMemberIndex(friendlyTargetName);
     WowCyborg_CURRENTATTACK = "Word of Glory " .. friendlyTargetName;
-    return SetSpellRequest("CTRL+" .. (memberindex + 5));
+    if memberindex + 5 == 10 then
+      return SetSpellRequest("CTRL+0");
+    else
+      return SetSpellRequest("CTRL+" .. (memberindex + 5));
+    end
   end
 
   if friendlyTargetName ~= nil and IsCastable("Holy Shock", 0) then
@@ -199,6 +209,15 @@ function RenderSingleTargetRotation(disableAutoTarget)
           return SetSpellRequest(crusaderStrike);
         end
       end 
+
+      local wrathBuff = FindBuff("player", "Avenging Wrath");
+      local targetHp = GetHealthPercentage("target");
+      if wrathBuff or targetHp < 20 then
+        if IsCastableAtEnemyTarget("Hammer of Wrath", 0) then
+          WowCyborg_CURRENTATTACK = "Hammer of Wrath";
+          return SetSpellRequest(hammerOfWrath);
+        end
+      end
     end 
 
     WowCyborg_CURRENTATTACK = "-";

@@ -1,4 +1,5 @@
 furywarrior	MazonAddon/Combat/WarriorFury.lua
+dhtankpvp	MazonAddon/Combat/DHTankPvp.lua
 boomkin	MazonAddon/Combat/DruidBoomkin.lua
 furypvp	MazonAddon/Combat/WarriorFuryPvp.lua
 protwarrior	MazonAddon/Combat/WarriorProt.lua
@@ -7,6 +8,7 @@ pvpwarr	MazonAddon/Combat/WarriorPvp.lua
 bmhunter	MazonAddon/Combat/HunterBM.lua
 mmhunter	MazonAddon/Combat/HunterMM.lua
 eleshaman	MazonAddon/Combat/ShamanEle.lua
+elepvp	MazonAddon/Combat/ShamanElePvp.lua
 enhshaman	MazonAddon/Combat/ShamanEnhancement.lua
 enhshaman2	MazonAddon/Combat/ShamanEnhancement2.lua
 restoshaman	MazonAddon/Combat/ShamanResto.lua
@@ -44,9 +46,12 @@ classicfury	MazonAddon/Combat/WarriorClassicFury.lua
 classicmage	MazonAddon/Combat/MageClassic.lua
 classicrogue	MazonAddon/Combat/RogueClassic.lua
 outlaw	MazonAddon/Combat/RogueOutlaw.lua
+outlawpvp	MazonAddon/Combat/RogueOutlawPvp.lua
+assa	MazonAddon/Combat/RogueAssasination.lua
 pvp	MazonAddon/Combat/ClassicPVP.lua
 firemage	MazonAddon/Combat/MageFire.lua
 frostmage	MazonAddon/Combat/MageFrost.lua
+mage	MazonAddon/Combat/MageLevel.lua
 hordruid	MazonAddon/Combat/DruidRestoHorrific.lua
 survhunter	MazonAddon/Combat/HunterSurvival.lua
 survhunter2	MazonAddon/Combat/HunterSurvival2.lua
@@ -56,6 +61,7 @@ bmhunter3	MazonAddon/Combat/HunterBM3.lua
 island	MazonAddon/Combat/IslandGroup.lua
 destro	MazonAddon/Combat/DestroLock.lua
 demo	MazonAddon/Combat/DemoLock.lua
+affli	MazonAddon/Combat/AffliLock.lua
 group	MazonAddon/Combat/Group.lua
 tailor	MazonAddon/Combat/Tailor.lua
 demoLvl	MazonAddon/Combat/DemoLeveling.lua
@@ -66,3 +72,6 @@ skinner	MazonAddon/Combat/Skinner.lua
 trial	MazonAddon/Combat/TrialSeller.lua
 frostdk	MazonAddon/Combat/DKFrost.lua
 disc	MazonAddon/Combat/PriestDisc.lua
+protpvp	MazonAddon/Combat/WarriorProtPvp.lua
+condemn	MazonAddon/Combat/WarriorCondemn.lua
+subtlety	MazonAddon/Combat/RogueSubtlety.lua
