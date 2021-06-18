@@ -40,7 +40,7 @@ classicdruid	MazonAddon/Combat/DruidClassic.lua
 classicdruidfollower	MazonAddon/Combat/ClassicDruidFollower.lua
 classicshamanfollower	MazonAddon/Combat/ClassicShamanFollower.lua
 classichunterfollower	MazonAddon/Combat/ClassicHunterFollower.lua
-classichunter	MazonAddon/Combat/ClassicHunterRunner.lua
+classichunter	MazonAddon/Combat/ClassicHunter.lua
 classicferal	MazonAddon/Combat/ClassicFeral.lua
 classicfury	MazonAddon/Combat/WarriorClassicFury.lua
 classicmage	MazonAddon/Combat/MageClassic.lua
@@ -66,6 +66,7 @@ group	MazonAddon/Combat/Group.lua
 tailor	MazonAddon/Combat/Tailor.lua
 demoLvl	MazonAddon/Combat/DemoLeveling.lua
 holypala	MazonAddon/Combat/PalaHoly.lua
+holypvp	MazonAddon/Combat/PalaHolyPvp.lua
 protpala	MazonAddon/Combat/PalaTank.lua
 retripala	MazonAddon/Combat/PalaRetri.lua
 skinner	MazonAddon/Combat/Skinner.lua
@@ -75,3 +76,5 @@ disc	MazonAddon/Combat/PriestDisc.lua
 protpvp	MazonAddon/Combat/WarriorProtPvp.lua
 condemn	MazonAddon/Combat/WarriorCondemn.lua
 subtlety	MazonAddon/Combat/RogueSubtlety.lua
+tbcresto	MazonAddon/Combat/TBCRestoDruid.lua
+tbcdps	MazonAddon/Combat/TBCDps.lua

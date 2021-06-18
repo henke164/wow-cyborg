@@ -24,7 +24,12 @@ namespace WindowResize
                 processes = Process.GetProcessesByName("WowClassic");
             }
 
-            var windowWidth = Screen.PrimaryScreen.Bounds.Width / processes.Length;
+            if (processes.Length == 0)
+            {
+                return;
+            }
+
+            var windowWidth = (int)((Screen.PrimaryScreen.Bounds.Width / (processes.Length)) * 1.4);
             SetWindowSizeAndPosition(processes, windowWidth);
         }
 
@@ -32,31 +37,36 @@ namespace WindowResize
         {
             var height = (int)(width * 0.75);
             var left = 0;
-            for (var i = 0; i < processes.Length; i++)
+            var index = 0;
+            for (var x = 0; x < processes.Length / 2; x++)
             {
-                var rectangle = new Rectangle(left * width, 0, width, height);
-
-                MoveWindow(
-                    processes[i].MainWindowHandle,
-                    rectangle.X,
-                    rectangle.Y,
-                    rectangle.Width,
-                    rectangle.Height,
-                    true);
-
-                GameWindows.Add(new GameWindow
+                for (var i = 0; i < processes.Length / 2; i++)
                 {
-                    GameProcess = processes[i],
-                    WindowRectangle = rectangle
-                });
+                    var process = processes[index++];
+                    var rectangle = new Rectangle(left * width, x * height, width, height);
 
-                if (left == 1)
-                {
-                    left = 0;
-                }
-                else
-                {
-                    left++;
+                    MoveWindow(
+                        process.MainWindowHandle,
+                        rectangle.X,
+                        rectangle.Y,
+                        rectangle.Width,
+                        rectangle.Height,
+                        true);
+
+                    GameWindows.Add(new GameWindow
+                    {
+                        GameProcess = process,
+                        WindowRectangle = rectangle
+                    });
+
+                    if (left == 1)
+                    {
+                        left = 0;
+                    }
+                    else
+                    {
+                        left++;
+                    }
                 }
             }
         }

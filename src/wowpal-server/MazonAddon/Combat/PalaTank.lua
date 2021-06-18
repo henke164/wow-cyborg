@@ -129,13 +129,13 @@ function RenderSingleTargetRotation(disableAutoTarget)
     if (holyPower > 2 and GetHealthPercentage(friendlyTargetName) < 60) then
       local memberindex = GetMemberIndex(friendlyTargetName);
       WowCyborg_CURRENTATTACK = "Word of Glory " .. friendlyTargetName;
-      return SetSpellRequest("CTRL+" .. (memberindex + 5));
+      return SetSpellRequest("CTRL+" .. (memberindex));
     end
 
     if shiningBuff ~= nil and shiningStacks == 1 and type == 9 then
       local memberindex = GetMemberIndex(friendlyTargetName);
       WowCyborg_CURRENTATTACK = "Word of Glory " .. friendlyTargetName;
-      return SetSpellRequest("CTRL+" .. (memberindex + 5));
+      return SetSpellRequest("CTRL+" .. (memberindex));
     end
   end
 

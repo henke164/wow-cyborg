@@ -171,6 +171,11 @@ end
 function GetHealthPercentage(unit)
   local maxHp = UnitHealthMax(unit);
   local hp = UnitHealth(unit);
+
+  if maxHp == 0 or hp == 0 then
+    return 0;
+  end
+
   return (hp / maxHp) * 100;
 end
 
@@ -350,6 +355,10 @@ end
 
 local delay = 0.5
 function GetCurrentSpellGCD(spellName)
+  if UnitSpellHaste == nil then
+    return 1.5;
+  end
+
   local spellHastePercent = UnitSpellHaste("player")
   local _, gcd = GetSpellBaseCooldown(spellName)
   if gcd == nil then
@@ -361,6 +370,10 @@ function GetCurrentSpellGCD(spellName)
 end
 
 function GetGCDMax()
+  if UnitSpellHaste == nil then
+    return 1.5;
+  end
+
   local spellHastePercent = UnitSpellHaste("player")
   return (0.75 * (spellHastePercent * 0.01)) - delay;
 end

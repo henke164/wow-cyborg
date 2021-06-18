@@ -8,16 +8,25 @@
   6         Attack
 ]]--
 
-local revenge = "1";
-local bloodthirst = "2";
-local heroicStrike = "3";
+local thunderclap = "1";
+local shieldSlam = "2";
+local revenge = "3";
 local cleave = "4";
-local sunderArmor = "5";
-local shieldBlock = "6";
-local attack = "7";
+local heroicStrike = "5";
 local demoShout = "8";
-local battleshout = "0";
-local bloodRage = "SHIFT+2";
+local shieldBlock = "7";
+local bloodRage = "9";
+local attack = "0";
+
+WowCyborg_PAUSE_KEYS = {
+  "LSHIFT",
+  "F1",
+  "F2",
+  "F3",
+  "F5",
+  "NUMPAD5",
+  "NUMPAD6",
+}
 
 function IsMelee()
   return IsSpellInRange("Rend", "target") == 1;
@@ -25,112 +34,78 @@ end
 
 -- Multi target
 function RenderMultiTargetRotation()
-  if IsMelee() and  IsCurrentSpell(6603) == false then
-    WowCyborg_CURRENTATTACK = "Attack";
-    return SetSpellRequest(attack);
-  end
-
-  local bsBuff = FindBuff("player", "Battle Shout");
-  if bsBuff == nil and IsCastable("Battle Shout", 10) then
-    WowCyborg_CURRENTATTACK = "Battle Shout";
-    return SetSpellRequest(battleshout);
-  end
-
-  if IsMelee() then
-    local demoDebuff = FindDebuff("target", "Demoralizing Shout");
-    if demoDebuff == nil then
-      if IsCastable("Demoralizing Shout", 0) then
-        WowCyborg_CURRENTATTACK = "Demoralizing Shout";
-        return SetSpellRequest(demoShout);
-      end
-    end  
-  end
-
-  if IsCastableAtEnemyTarget("Bloodthirst", 30) then
-    WowCyborg_CURRENTATTACK = "Bloodthirst";
-    return SetSpellRequest(bloodthirst);
-  end
-
-  if IsCastableAtEnemyTarget("Revenge", 5) then
-    WowCyborg_CURRENTATTACK = "Revenge";
-    return SetSpellRequest(revenge);
-  end
-
-  if IsCastableAtEnemyTarget("Shield Block", 40) then
-    WowCyborg_CURRENTATTACK = "Shield Block";
-    return SetSpellRequest(shieldBlock);
-  end
-  
-  if IsCastableAtEnemyTarget("Cleave", 20) then
-    WowCyborg_CURRENTATTACK = "Cleave";
-    return SetSpellRequest(cleave);
-  end
-  
-  if IsMelee() and IsCastable("Bloodrage", 0) then
-    WowCyborg_CURRENTATTACK = "Bloodrage";
-    return SetSpellRequest(bloodRage);
-  end
-
-  WowCyborg_CURRENTATTACK = "-";
-  return SetSpellRequest(nil);
+  return RenderSingleTargetRotation(true);
 end
 
 -- Single target
-function RenderSingleTargetRotation()
-  if IsMelee() and  IsCurrentSpell(6603) == false then
+function RenderSingleTargetRotation(aoe)
+  local rage = UnitPower("player");
+  local hp = GetHealthPercentage("player");
+
+  if IsMelee() and IsCurrentSpell(6603) == false then
     WowCyborg_CURRENTATTACK = "Attack";
     return SetSpellRequest(attack);
   end
 
-  local bsBuff = FindBuff("player", "Battle Shout");
-  if bsBuff == nil and IsCastable("Battle Shout", 10) then
-    WowCyborg_CURRENTATTACK = "Battle Shout";
-    return SetSpellRequest(battleshout);
+  if IsMelee() and IsCastable("Bloodrage", 0) and rage < 20 then
+    WowCyborg_CURRENTATTACK = "Bloodrage";
+    return SetSpellRequest(bloodRage);
   end
 
-  if IsMelee() then
-    local demoDebuff = FindDebuff("target", "Demoralizing Shout");
-    if demoDebuff == nil then
-      if IsCastable("Demoralizing Shout", 0) then
-        WowCyborg_CURRENTATTACK = "Demoralizing Shout";
-        return SetSpellRequest(demoShout);
-      end
-    end  
+  if IsMelee() and aoe == true and IsCastableAtEnemyTarget("Thunder Clap", 16) then
+    WowCyborg_CURRENTATTACK = "Thunder Clap";
+    return SetSpellRequest(thunderclap);
   end
 
-  if IsCastableAtEnemyTarget("Bloodthirst", 30) then
-    WowCyborg_CURRENTATTACK = "Bloodthirst";
-    return SetSpellRequest(bloodthirst);
-  end
-  
   if IsCastableAtEnemyTarget("Revenge", 5) then
     WowCyborg_CURRENTATTACK = "Revenge";
     return SetSpellRequest(revenge);
   end
 
-  if IsCastableAtEnemyTarget("Shield Block", 40) then
+  if IsCastableAtEnemyTarget("Shield Slam", 20) then
+    WowCyborg_CURRENTATTACK = "Shield Slam";
+    return SetSpellRequest(shieldSlam);
+  end
+
+  if hp < 70 and IsCastableAtEnemyTarget("Shield Block", 10) then
     WowCyborg_CURRENTATTACK = "Shield Block";
     return SetSpellRequest(shieldBlock);
   end
   
-  local sunderDebuff, __, sunders = FindDebuff("target", "Sunder Armor");
-  if (sunderDebuff == nil or sunders < 5) and IsCastableAtEnemyTarget("Sunder Armor", 15) then
-    WowCyborg_CURRENTATTACK = "Sunder Armor";
-    return SetSpellRequest(sunderArmor);
-  end
-  
-  if IsCastableAtEnemyTarget("Heroic Strike", 15) then
-    WowCyborg_CURRENTATTACK = "Heroic Strike";
-    return SetSpellRequest(heroicStrike);
-  end
-  
-  if IsMelee() and IsCastable("Bloodrage", 0) then
-    WowCyborg_CURRENTATTACK = "Bloodrage";
-    return SetSpellRequest(bloodRage);
+  if aoe == true then
+    if IsCastableAtEnemyTarget("Cleave", 20) then
+      WowCyborg_CURRENTATTACK = "Cleave";
+      return SetSpellRequest(cleave);
+    end
+    
+    local demoDebuff = FindDebuff("target", "Demoralizing Shout");
+    if demoDebuff == nil and IsMelee() and IsCastableAtEnemyTarget("Demoralizing Shout", 10) then
+      WowCyborg_CURRENTATTACK = "Demoralizing Shout";
+      return SetSpellRequest(demoShout);
+    end
+  else
+    if IsCastableAtEnemyTarget("Heroic Strike", 15) then
+      WowCyborg_CURRENTATTACK = "Heroic Strike";
+      return SetSpellRequest(heroicStrike);
+    end
   end
 
   WowCyborg_CURRENTATTACK = "-";
   return SetSpellRequest(nil);
 end
+
+function CreateEmoteListenerFrame()
+  local frame = CreateFrame("Frame");
+  frame:RegisterEvent("PLAYER_TARGET_CHANGED");
+  frame:SetScript("OnEvent", function(self, event, ...)
+    if WowCyborg_INCOMBAT then
+      if IsCastableAtEnemyTarget("Heroic Strike", 0) then
+        SendChatMessage("wait", "PARTY");
+      end
+    end
+  end)
+end
+
+CreateEmoteListenerFrame();
 
 print("Classic tank rotation loaded!");

@@ -114,4 +114,14 @@ function RenderSingleTargetRotation()
   end
 end
 
+function CreateEmoteListenerFrame()
+  local frame = CreateFrame("Frame");
+  frame:RegisterEvent("PLAYER_TARGET_CHANGED");
+  frame:SetScript("OnEvent", function(self, event, ...)
+    print("Target changed");
+  end)
+end
+
 print("Classic warrior rotation loaded!");
+
+CreateEmoteListenerFrame();

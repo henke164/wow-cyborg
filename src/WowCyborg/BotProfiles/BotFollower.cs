@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -11,8 +12,6 @@ namespace WowCyborg.BotProfiles
 {
     public class BotFollower : Bot
     {
-        private bool _isInCombat = false;
-
         public BotFollower(IntPtr hWnd)
             : base(hWnd)
         {
@@ -22,31 +21,34 @@ namespace WowCyborg.BotProfiles
 
         protected override void SetupBehaviour()
         {
-            EventManager.On(HWnd, "CombatChanged", (Event ev) =>
-            {
-                _isInCombat = (bool)ev.Data;
-            });
-            
             EventManager.On(HWnd, "KeyPressRequested", (Event ev) =>
             {
                 var keyRequest = (KeyPressRequest)ev.Data;
                 if (keyRequest.ModifierKey != Keys.None)
                 {
-                    KeyHandler.ModifiedKeypress(keyRequest.ModifierKey, keyRequest.Key);
-                    if (keyRequest.ModifierKey == Keys.LShiftKey && keyRequest.Key == Keys.D8)
+                    if (keyRequest.ModifierKey == Keys.F1)
                     {
-                        _isFollowing = true;
-                    }
+                        var converter = TypeDescriptor.GetConverter(typeof(Keys));
+                        var key = (Keys)converter.ConvertFromString("F" + keyRequest.Key.ToString().Replace("D", ""));
 
-                    if (keyRequest.ModifierKey == Keys.LShiftKey && keyRequest.Key == Keys.D9)
-                    {
-                        if (!_isFollowing)
+                        if (key == Keys.F8)
                         {
-                            return;
+                            _isFollowing = true;
                         }
-                        _isFollowing = false;
+                        else if (key == Keys.F9)
+                        {
+                            if (_isFollowing)
+                            {
+                                _isFollowing = false;
 
-                        KeyHandler.PressKey(Keys.S, 10);
+                                KeyHandler.PressKey(Keys.S, 10);
+                            }
+                        }
+                        KeyHandler.PressKey(key);
+                    }
+                    else
+                    {
+                        KeyHandler.ModifiedKeypress(keyRequest.ModifierKey, keyRequest.Key);
                     }
                 }
                 else

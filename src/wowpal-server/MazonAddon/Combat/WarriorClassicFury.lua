@@ -11,6 +11,8 @@
   bloodRage = "SHIFT+2";
 ]]--
 
+print("Classic fury warrior rotation loading...!");
+
 local bloodthirst = "1";
 local overpower = "2";
 local whirlwind = "2";

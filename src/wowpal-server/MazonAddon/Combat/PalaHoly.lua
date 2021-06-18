@@ -184,7 +184,7 @@ function RenderSingleTargetRotation(disableAutoTarget)
     end
   end
 
-  if friendlyTargetName ~= nil and IsCastable("Holy Shock", 0) then
+  if friendlyTargetName ~= nil and IsCastable("Holy Shock", 1600) then
     local memberindex = GetMemberIndex(friendlyTargetName);
     WowCyborg_CURRENTATTACK = "Shock " .. friendlyTargetName;
     return SetSpellRequest("CTRL+" .. memberindex);
@@ -192,7 +192,7 @@ function RenderSingleTargetRotation(disableAutoTarget)
 
   if UnitCanAttack("player", "target") == true then
     if WowCyborg_INCOMBAT then
-      if IsCastableAtEnemyTarget("Holy Shock", 0) then
+      if IsCastableAtEnemyTarget("Holy Shock", 1600) then
         WowCyborg_CURRENTATTACK = "Holy Shock";
         return SetSpellRequest(holyShock);
       end

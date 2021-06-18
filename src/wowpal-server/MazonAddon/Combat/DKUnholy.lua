@@ -3,7 +3,7 @@
   1   Chains of Ice
   2   Outbreak
   3   Festering Strike
-  4   Unholy Frenzy
+  4   Unholy Assault
   5   Apocalypse
   6   Death Coil
   7   Necrotic Strike
@@ -12,11 +12,11 @@
 
 local outbreak = "2";
 local festeringStrike = "3";
-local unholyFrenzy = "4";
+local unholyAssault = "4";
 local apocalypse = "5";
 local deathCoil = "6";
 local necroticStrike = "7";
-local soulReaper = "8";
+local unholyBlight = "8";
 local epidemic = "9";
 local reapingFlames = "SHIFT+3";
 local deathStrike = "SHIFT+4";
@@ -36,6 +36,11 @@ function RenderMultiTargetRotation()
       WowCyborg_CURRENTATTACK = "Outbreak";
       return SetSpellRequest(outbreak);
     end
+  end
+
+  if IsCastableAtEnemyTarget("Unholy Blight", 0) and runeCount > 0 then
+    WowCyborg_CURRENTATTACK = "Unholy Blight";
+    return SetSpellRequest(unholyBlight);
   end
 
   if IsCastableAtEnemyTarget("Epidemic", 30) then
@@ -87,9 +92,9 @@ function RenderSingleTargetRotation()
     if fwStacks > 3 and IsCastableAtEnemyTarget("Apocalypse", 0) then
       WowCyborg_CURRENTATTACK = "Apocalypse";
       return SetSpellRequest(apocalypse);
-    elseif IsCastableAtEnemyTarget("Unholy Frenzy", 0) and fwStacks > 1 then
-      WowCyborg_CURRENTATTACK = "Unholy Frenzy";
-      return SetSpellRequest(unholyFrenzy);
+    elseif IsCastableAtEnemyTarget("Unholy Assault", 0) and fwStacks > 1 then
+      WowCyborg_CURRENTATTACK = "Unholy Assault";
+      return SetSpellRequest(unholyAssault);
     end
   end
   
@@ -110,11 +115,6 @@ function RenderSingleTargetRotation()
       WowCyborg_CURRENTATTACK = "Scourge Strike";
       return SetSpellRequest(necroticStrike);
     end
-  end
-
-  if IsCastableAtEnemyTarget("Soul Reaper", 0) and runeCount < 4 then
-    WowCyborg_CURRENTATTACK = "Soul Reaper";
-    return SetSpellRequest(soulReaper);
   end
 
   if fwDebuff == nil or (fwTimeLeft < 5 or fwStacks < 6) then
