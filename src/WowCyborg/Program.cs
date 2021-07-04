@@ -82,7 +82,7 @@ namespace WowCyborg
         static void HandleInput()
         {
             Logger.Log(">> ", ConsoleColor.White, true);
-            var input = Console.ReadLine().Split(' ');
+            var input = Console.ReadLine().ToLower().Split(' ');
 
             foreach (var plugin in Plugins)
             {

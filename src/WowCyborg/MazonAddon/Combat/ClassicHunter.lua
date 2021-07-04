@@ -2,11 +2,6 @@
   Button    Spell
 ]]--
 
-local startedFollowingAt = 0;
-local startedAssistAt = 0;
-local startedBurstAt = 0;
-local startedDrinkAt = 0;
-
 local lastSwing = 0;
 local serpentSting = "1";
 local steadyShot = "2";
@@ -19,10 +14,6 @@ local mendPet = "8";
 local killCommand = "9";
 local explosiveTrap = "F+6";
 local huntersMark = "F+7";
-
-local follow = "F+8";
-local assist = "F+9";
-local drink = "SHIFT+9";
 
 WowCyborg_PAUSE_KEYS = {
   "F",
@@ -50,26 +41,6 @@ function RenderMultiTargetRotation()
 end
 
 function RenderSingleTargetRotation(aoe)
-  if startedDrinkAt > GetTime() - 0.5 then
-    WowCyborg_CURRENTATTACK = "Drinking...";
-    return SetSpellRequest(drink);
-  end
-
-  if startedFollowingAt > GetTime() - 0.5 then
-    WowCyborg_CURRENTATTACK = "Following...";
-    return SetSpellRequest(follow);
-  end
-
-  if startedAssistAt > GetTime() - 0.5 then
-    WowCyborg_CURRENTATTACK = "Assisting...";
-    return SetSpellRequest(assist);
-  end
-  
-  if startedBurstAt > GetTime() - 2 then
-    WowCyborg_CURRENTATTACK = "Bursting...";
-    return SetSpellRequest("F+1");
-  end
-  
   local hp = GetHealthPercentage("player");
   local targetHp = GetHealthPercentage("target");
   local petHp = GetHealthPercentage("pet");
@@ -78,25 +49,9 @@ function RenderSingleTargetRotation(aoe)
     WowCyborg_CURRENTATTACK = "Volley";
     return SetSpellRequest(nil);
   end
-  
-  if UnitChannelInfo("player") == "Blizzard" then
-    WowCyborg_CURRENTATTACK = "Blizzard";
-    return SetSpellRequest(nil);
-  end
-
-  if IsCastableAtEnemyTarget("Frostbolt", 214) then
-    WowCyborg_CURRENTATTACK = "Frostbolt";
-    return SetSpellRequest("2");
-  end
 
   if aoe == true then
     if IsCastableAtEnemyTarget("Multi-Shot", 200) then
-        
-      if IsCastable("Misdirection", 0) then
-        WowCyborg_CURRENTATTACK = "Misdirection";
-        return SetSpellRequest("0");
-      end
-
       WowCyborg_CURRENTATTACK = "Multi-Shot";
       return SetSpellRequest(multiShot);
     end
@@ -125,13 +80,11 @@ function RenderSingleTargetRotation(aoe)
   end
 
   if IsMelee() ~= true then
-    if UnitName("player") == "Shibbah" then
-      local hmDebuff = FindDebuff("target", "Hunter's Mark");
-      if hmDebuff == nil and aoe ~= true then
-        if IsCastableAtEnemyTarget("Hunter's Mark", 15) then
-          WowCyborg_CURRENTATTACK = "Hunter's Mark";
-          return SetSpellRequest(huntersMark);
-        end
+    local hmDebuff = FindDebuff("target", "Hunter's Mark");
+    if hmDebuff == nil and aoe ~= true then
+      if IsCastableAtEnemyTarget("Hunter's Mark", 15) then
+        WowCyborg_CURRENTATTACK = "Hunter's Mark";
+        return SetSpellRequest(huntersMark);
       end
     end
 
@@ -142,9 +95,6 @@ function RenderSingleTargetRotation(aoe)
         if IsCastableAtEnemyTarget("Steady Shot", 15) then
           WowCyborg_CURRENTATTACK = "Steady Shot";
           return SetSpellRequest(steadyShot);
-        elseif IsCastableAtEnemyTarget("Arcane Shot", 15) then
-          WowCyborg_CURRENTATTACK = "Arcane Shot";
-          return SetSpellRequest(arcaneShot);
         end
       end
     elseif targetHp < 80 then
@@ -199,30 +149,3 @@ end
 
 CreateSwingTimer();
 print("Classic hunter runner rotation loaded");
-
-function CreateEmoteListenerFrame()
-  local frame = CreateFrame("Frame");
-  frame:RegisterEvent("CHAT_MSG_PARTY_LEADER");
-  frame:SetScript("OnEvent", function(self, event, ...)
-    command = ...;
-    if string.find(command, "follow", 1, true) then
-      print("Following");
-      startedFollowingAt = GetTime();
-    end
-    if string.find(command, "wait", 1, true) then
-      print("Waiting");
-      startedAssistAt = GetTime();
-    end
-    if string.find(command, "charge", 1, true) then
-      print("Burst");
-      startedBurstAt = GetTime();
-    end
-    if string.find(command, "drink", 1, true) then
-      print("drinking");
-      startedDrinkAt = GetTime();
-    end
-  end)
-end
-
-print("TBC Hunter follower rotation loaded");
-CreateEmoteListenerFrame();

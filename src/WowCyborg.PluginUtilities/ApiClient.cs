@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Net;
 using WowCyborg.PluginUtilities.Models;
 
@@ -46,10 +47,32 @@ namespace WowCyborg.PluginUtilities
 
         protected string DownloadString(string path)
         {
+            var addonFilePath = "";
+            if (path == "/map")
+            {
+                addonFilePath = "./MazonAddon/addon-map.txt";
+            }
+            else if (path == "/rotations")
+            {
+                addonFilePath = "./MazonAddon/rotation-map.txt";
+            }
+            else
+            {
+                addonFilePath = path.Replace("/file/?file=", "./");
+            }
+
+            using (var sr = new StreamReader(addonFilePath))
+            {
+                return sr.ReadToEnd();
+            }
+            
+            /*
+             * For network solution
             using (var client = new WebClient())
             {
                 return client.DownloadString($"{_baseUrl}{path}");
             }
+            */
         }
     }
 }

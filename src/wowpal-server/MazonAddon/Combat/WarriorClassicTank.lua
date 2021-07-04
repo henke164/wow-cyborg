@@ -8,11 +8,14 @@
   6         Attack
 ]]--
 
+local startTargetChange = 0;
+
 local thunderclap = "1";
 local shieldSlam = "2";
 local revenge = "3";
 local cleave = "4";
-local heroicStrike = "5";
+local devastate = "5";
+local battleshout = "6";
 local demoShout = "8";
 local shieldBlock = "7";
 local bloodRage = "9";
@@ -39,6 +42,11 @@ end
 
 -- Single target
 function RenderSingleTargetRotation(aoe)
+  if startTargetChange > GetTime() - 0.5 then
+    WowCyborg_CURRENTATTACK = "Target Swap";
+    return SetSpellRequest("F+9");
+  end
+
   local rage = UnitPower("player");
   local hp = GetHealthPercentage("player");
 
@@ -62,18 +70,27 @@ function RenderSingleTargetRotation(aoe)
     return SetSpellRequest(revenge);
   end
 
-  if IsCastableAtEnemyTarget("Shield Slam", 20) then
+  if aoe ~= true and IsCastableAtEnemyTarget("Shield Slam", 15) then
     WowCyborg_CURRENTATTACK = "Shield Slam";
     return SetSpellRequest(shieldSlam);
   end
 
-  if hp < 70 and IsCastableAtEnemyTarget("Shield Block", 10) then
+  if hp < 90 and IsCastable("Shield Block", 10) and IsMelee() then
     WowCyborg_CURRENTATTACK = "Shield Block";
     return SetSpellRequest(shieldBlock);
   end
   
+  local bs = FindBuff("player", "Battle Shout");
+
+  if bs == nil then
+    if IsCastable("Battle Shout", 10) then
+      WowCyborg_CURRENTATTACK = "Battle Shout";
+      return SetSpellRequest(battleshout);
+    end
+  end
+
   if aoe == true then
-    if IsCastableAtEnemyTarget("Cleave", 20) then
+    if IsCastableAtEnemyTarget("Cleave", 40) then
       WowCyborg_CURRENTATTACK = "Cleave";
       return SetSpellRequest(cleave);
     end
@@ -84,9 +101,9 @@ function RenderSingleTargetRotation(aoe)
       return SetSpellRequest(demoShout);
     end
   else
-    if IsCastableAtEnemyTarget("Heroic Strike", 15) then
-      WowCyborg_CURRENTATTACK = "Heroic Strike";
-      return SetSpellRequest(heroicStrike);
+    if IsCastableAtEnemyTarget("Devastate", 12) then
+      WowCyborg_CURRENTATTACK = "Devastate";
+      return SetSpellRequest(devastate);
     end
   end
 
@@ -97,10 +114,11 @@ end
 function CreateEmoteListenerFrame()
   local frame = CreateFrame("Frame");
   frame:RegisterEvent("PLAYER_TARGET_CHANGED");
+
   frame:SetScript("OnEvent", function(self, event, ...)
     if WowCyborg_INCOMBAT then
-      if IsCastableAtEnemyTarget("Heroic Strike", 0) then
-        SendChatMessage("wait", "PARTY");
+      if IsSpellInRange("Heroic Strike", "target") then
+        startTargetChange = GetTime();
       end
     end
   end)
