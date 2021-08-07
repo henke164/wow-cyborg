@@ -19,6 +19,7 @@ local lavaBurst = "6";
 local chainLightning = "7";
 local lightningBolt = "8";
 local frostShock = "9";
+local echoShot = "0";
 local recentlyCastedLavaBurst = false;
 
 -- Movement
@@ -41,6 +42,12 @@ local function RenderTargetRotationInMovement()
   end
 
   if IsCastableAtEnemyTarget("Earth Shock", 60) then
+      
+    if IsCastableAtEnemyTarget("Echoing Shock", 0) then
+      WowCyborg_CURRENTATTACK = "Echoing Shock";
+      return SetSpellRequest(echoShot);
+    end
+    
     WowCyborg_CURRENTATTACK = "Earth Shock";
     return SetSpellRequest(earthShock);
   end
@@ -163,11 +170,23 @@ function RenderSingleTargetRotation()
   local moeBuff = FindBuff("player", "Master of the Elements");
 
   if IsCastableAtEnemyTarget("Earth Shock", 90) then 
+    
+    if IsCastableAtEnemyTarget("Echoing Shock", 0) then
+      WowCyborg_CURRENTATTACK = "Echoing Shock";
+      return SetSpellRequest(echoShot);
+    end
+
     WowCyborg_CURRENTATTACK = "Earth Shock";
     return SetSpellRequest(earthShock);
   end
   
   if IsCastableAtEnemyTarget("Earth Shock", 60) and moeBuff ~= nil then 
+    
+    if IsCastableAtEnemyTarget("Echoing Shock", 0) then
+      WowCyborg_CURRENTATTACK = "Echoing Shock";
+      return SetSpellRequest(echoShot);
+    end
+
     WowCyborg_CURRENTATTACK = "Earth Shock";
     return SetSpellRequest(earthShock);
   end
@@ -183,6 +202,12 @@ function RenderSingleTargetRotation()
   end
 
   if IsCastableAtEnemyTarget("Earth Shock", 60) then
+    
+    if IsCastableAtEnemyTarget("Echoing Shock", 0) then
+      WowCyborg_CURRENTATTACK = "Echoing Shock";
+      return SetSpellRequest(echoShot);
+    end
+    
     WowCyborg_CURRENTATTACK = "Earth Shock";
     return SetSpellRequest(earthShock);
   end

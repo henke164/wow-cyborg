@@ -30,16 +30,16 @@ swiftmend[3] = "CTRL+3";
 swiftmend[4] = "CTRL+4";
 swiftmend[5] = "CTRL+5";
 
-local lifebloom = "SHIFT+1";
-local wildGrowth = "SHIFT+2";
-local cenarionWard = "SHIFT+3";
-local cancelCast = "SHIFT+4";
+local lifebloom = "F+5";
+local wildGrowth = "F+6";
+local cenarionWard = "F+7";
+local adaptiveSwarm = "F+8";
+local cancelCast = "F+9";
 
 WowCyborg_PAUSE_KEYS = {
+  "LSHIFT",
   "F",
-  "F5",
   "F10",
-  "F2",
   "R"
 }
 
@@ -214,6 +214,16 @@ function HandleTankPreHots()
     end
   end
   
+  
+  if tankName ~= nil and IsCastableAtFriendlyUnit(tankName, "Adaptive Swarm", 500) then
+    local tankHp = GetHealthPercentage(tankName);
+    if tankHp > 0 and tankHp < 90 then
+      WowCyborg_CURRENTATTACK = "Adaptive Swarm";
+      SetSpellRequest(adaptiveSwarm);
+      return true;
+    end
+  end
+
   return false;
 end
 
@@ -278,9 +288,14 @@ function RenderSingleTargetRotation(wrathRot)
     return SetSpellRequest(nil);
   end
     
-  if UnitChannelInfo("player") == "Convoke the Spirits" then
-    WowCyborg_CURRENTATTACK = "BURSTING";
+  if UnitChannelInfo("player") == "Fleshcraft" then
+    WowCyborg_CURRENTATTACK = "Fleshcraft";
     return SetSpellRequest(nil);
+  end
+
+  local moonkinFormBuff = FindBuff("player", "Moonkin form");
+  if moonkinFormBuff ~= nil then
+    return RenderMoonkinRotation();
   end
 
   local spell, _, _, _, endTime = UnitCastingInfo("player")

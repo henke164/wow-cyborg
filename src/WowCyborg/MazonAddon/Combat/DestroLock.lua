@@ -8,6 +8,7 @@ local exhaust = "3";
 local conflagrate = "4";
 local incinerate = "5";
 local soulRot = "6";
+local havoc = "7";
 
 local interruptArena1 = "CTRL+1";
 local interruptArena2 = "CTRL+2";
@@ -92,10 +93,19 @@ function RenderSingleTargetRotation()
     end
   end
 
-  if speed == 0 then
-    if IsCastableAtEnemyTarget("Soul Rot", 250) then
-      WowCyborg_CURRENTATTACK = "Soul Rot";
-      return SetSpellRequest(soulRot);
+  local darkSoulBuff = FindBuff("player", "Dark Soul: Instability");
+  local darkSoulCd = GetSpellCooldown("Dark Soul: Instability", "spell");
+  if darkSoulBuff ~= nil or darkSoulCd > 60 then
+    if IsCastableAtEnemyFocus("Havoc", 1000) then
+      WowCyborg_CURRENTATTACK = "Havoc";
+      return SetSpellRequest(havoc);
+    end
+
+    if speed == 0 then
+      if IsCastableAtEnemyTarget("Soul Rot", 250) then
+        WowCyborg_CURRENTATTACK = "Soul Rot";
+        return SetSpellRequest(soulRot);
+      end
     end
   end
 

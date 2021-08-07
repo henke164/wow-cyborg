@@ -1,18 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Net;
+using WowCyborg.Core.Models;
+using WowCyborg.Core.Utilities;
 using WowCyborg.PluginUtilities.Models;
 
 namespace WowCyborg.PluginUtilities
 {
     public class ApiClient
     {
-        private static string _baseUrl;
+        private AppSettings _appSettings;
 
-        public ApiClient(string baseUrl)
+        public ApiClient()
         {
-            _baseUrl = baseUrl;
+            _appSettings = SettingsLoader.LoadSettings<AppSettings>("settings.json");
         }
 
         public ServerTextFile GetFile(string fileName)
@@ -50,29 +51,21 @@ namespace WowCyborg.PluginUtilities
             var addonFilePath = "";
             if (path == "/map")
             {
-                addonFilePath = "./MazonAddon/addon-map.txt";
+                addonFilePath = $"{_appSettings.AddonPath}/addon-map.txt";
             }
             else if (path == "/rotations")
             {
-                addonFilePath = "./MazonAddon/rotation-map.txt";
+                addonFilePath = $"{_appSettings.AddonPath}/rotation-map.txt";
             }
             else
             {
-                addonFilePath = path.Replace("/file/?file=", "./");
+                addonFilePath = path.Replace("/file/?file=MazonAddon", _appSettings.AddonPath);
             }
 
             using (var sr = new StreamReader(addonFilePath))
             {
                 return sr.ReadToEnd();
             }
-            
-            /*
-             * For network solution
-            using (var client = new WebClient())
-            {
-                return client.DownloadString($"{_baseUrl}{path}");
-            }
-            */
         }
     }
 }

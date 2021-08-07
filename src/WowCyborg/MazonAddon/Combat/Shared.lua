@@ -168,6 +168,22 @@ function IsCastableAtEnemyTarget(spellName, requiredEnergy)
   return IsCastable(spellName, requiredEnergy);
 end
 
+function IsCastableAtEnemyFocus(spellName, requiredEnergy)
+  if IsSpellInRange(spellName, "focus") == 0 then
+    return false;
+  end
+  
+  if UnitCanAttack("player", "focus") == false then
+    return false;
+  end
+
+  if IsAlive("focus") == false then
+    return false;
+  end;
+
+  return IsCastable(spellName, requiredEnergy);
+end
+
 function GetHealthPercentage(unit)
   local maxHp = UnitHealthMax(unit);
   local hp = UnitHealth(unit);
@@ -390,4 +406,25 @@ function PreventAzeriteBeamAbortion()
     local finish = channelEndTime / 1000 - GetTime();
     WowCyborg_PAUSE_UNTIL = GetTime() + (finish + 0.5);
   end
+end
+
+function GetNearbyEnemyCount(interactDistance)
+  if interactDistance == nil then
+    interactDistance = 3;
+  end
+
+  local count = 0;
+
+  for i = 1, 40 do 
+    local guid = UnitGUID("nameplate"..i) 
+    if guid then 
+      if CheckInteractDistance("nameplate"..i, interactDistance) then
+        if UnitCanAttack("player", "nameplate"..i) == true then
+          count = count + 1;
+        end
+      end
+    end
+  end
+
+  return count;
 end

@@ -11,7 +11,7 @@ namespace CombatRotationInstaller
         public Plugin(ApplicationSettings settings)
             : base(settings)
         {
-            _addonInstaller = new WowAddonInstaller(Settings.ServerUrl, Settings.WowAddonPath);
+            _addonInstaller = new WowAddonInstaller(Settings.WowAddonPath);
         }
         
         public override bool HandleInput(string command, string[] args)

@@ -14,10 +14,10 @@ namespace CombatRotationInstaller
 
         private ApiClient _apiClient;
 
-        public WowAddonInstaller(string serverUrl, string addonFolderPath)
+        public WowAddonInstaller(string addonFolderPath)
         {
             _addonFolderPath = addonFolderPath;
-            _apiClient = new ApiClient(serverUrl);
+            _apiClient = new ApiClient();
         }
 
         public void FetchRotations()

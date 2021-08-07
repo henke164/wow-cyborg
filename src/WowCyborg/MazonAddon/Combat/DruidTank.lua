@@ -1,18 +1,21 @@
 --[[
   Button    Spell
-  1         Blackout Strike
-  2         Keg Smash
-  3         Breath of Fire
-  4         Rushing Jade Wind
-  5         Tiger Palm
 ]]--
 WowCyborg_PAUSE_KEYS = {
   "F1",
+  "F2",
+  "F3",
   "F4",
   "F5",
   "F6",
   "F7",
   "9",
+  "NUMPAD3",
+  "NUMPAD4",
+  "NUMPAD5",
+  "NUMPAD7",
+  "NUMPAD8",
+  "NUMPAD9"
 }
 
 local moonfire = "1";
@@ -32,6 +35,12 @@ end
 
 function RenderMultiTargetRotation()
   if UnitChannelInfo("player") == "Convoke the Spirits" then
+    WowCyborg_CURRENTATTACK = "-";
+    return SetSpellRequest(nil);
+  end
+
+  local bear = FindBuff("player", "Bear Form");
+  if bear == nil then
     WowCyborg_CURRENTATTACK = "-";
     return SetSpellRequest(nil);
   end
@@ -87,6 +96,13 @@ end
 
 function RenderSingleTargetRotation()
   if UnitChannelInfo("player") == "Convoke the Spirits" then
+    WowCyborg_CURRENTATTACK = "-";
+    return SetSpellRequest(nil);
+  end
+
+
+  local bear = FindBuff("player", "Bear Form");
+  if bear == nil then
     WowCyborg_CURRENTATTACK = "-";
     return SetSpellRequest(nil);
   end
@@ -203,5 +219,5 @@ function CreateDamageTakenFrame()
   end)
 end
 
-print("Druid tank rotation loaded");
+print("Druid tank rotation loaded!");
 CreateDamageTakenFrame();

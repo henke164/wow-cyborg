@@ -43,10 +43,11 @@ WowCyborg_PAUSE_KEYS = {
 }
 
 function RenderMultiTargetRotation()
-  return RenderSingleTargetRotation(true);
+  return RenderSingleTargetRotation();
 end
 
-function RenderSingleTargetRotation(aoe)
+function RenderSingleTargetRotation()
+  local nearbyEnemies = GetNearbyEnemyCount();
   local targetHp = GetHealthPercentage("target");
   local bsBuff = FindBuff("player", "Battle Shout")
   if bsBuff == nil and IsCastable("Battle Shout", 0) then
@@ -112,7 +113,7 @@ function RenderSingleTargetRotation(aoe)
       end
     end
 
-    if hpPercentage < 95 then
+    if hpPercentage < 95 or nearbyEnemies > 2 then
       local ipBuff, ipTl = FindBuff("player", "Ignore Pain");
       if (ipBuff == nil or ipTl < 3) and IsCastableAtEnemyTarget("Ignore Pain", 40) then
         WowCyborg_CURRENTATTACK = "Ignore Pain";
@@ -128,7 +129,25 @@ function RenderSingleTargetRotation(aoe)
     return SetSpellRequest(avatar);
   end
   
-  if aoe ~= true then
+  if nearbyEnemies > 3 then
+    if IsCastableAtEnemyTarget("Thunder Clap", 0) then
+      WowCyborg_CURRENTATTACK = "Thunder Clap";
+      return SetSpellRequest(thunderClap);
+    end
+    
+    local revBuff = FindBuff("player", "Revenge!");
+    if (revBuff == "Revenge!" or IsCastableAtEnemyTarget("Revenge", 60)) then
+      if IsCastableAtEnemyTarget("Revenge", 0) then
+        WowCyborg_CURRENTATTACK = "Revenge";
+        return SetSpellRequest(revenge);
+      end
+    end
+
+    if IsCastableAtEnemyTarget("Shield Slam", 0) then
+      WowCyborg_CURRENTATTACK = "Shield Slam";
+      return SetSpellRequest(shieldSlam);
+    end    
+  else
     if IsCastableAtEnemyTarget("Shield Slam", 0) then
       WowCyborg_CURRENTATTACK = "Shield Slam";
       return SetSpellRequest(shieldSlam);
@@ -141,19 +160,6 @@ function RenderSingleTargetRotation(aoe)
     
     local revBuff = FindBuff("player", "Revenge!");
     if (revBuff == "Revenge!") then
-      if IsCastableAtEnemyTarget("Revenge", 0) then
-        WowCyborg_CURRENTATTACK = "Revenge";
-        return SetSpellRequest(revenge);
-      end
-    end
-  else
-    if IsCastableAtEnemyTarget("Thunder Clap", 0) then
-      WowCyborg_CURRENTATTACK = "Thunder Clap";
-      return SetSpellRequest(thunderClap);
-    end
-    
-    local revBuff = FindBuff("player", "Revenge!");
-    if (revBuff == "Revenge!" or IsCastableAtEnemyTarget("Revenge", 60)) then
       if IsCastableAtEnemyTarget("Revenge", 0) then
         WowCyborg_CURRENTATTACK = "Revenge";
         return SetSpellRequest(revenge);
@@ -242,5 +248,6 @@ function CreateDamageTakenFrame()
 
   end)
 end
+
 print("Protection warrior rotation loaded");
 CreateDamageTakenFrame();

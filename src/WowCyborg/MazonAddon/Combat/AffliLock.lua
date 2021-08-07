@@ -18,7 +18,6 @@ local interruptArena3 = "CTRL+3";
 
 WowCyborg_PAUSE_KEYS = {
   "F",
-  "F1",
   "F2",
   "F3",
   "NUMPAD2",
@@ -68,19 +67,21 @@ function RenderSingleTargetRotation(skipslow)
     return SetSpellRequest(nil);
   end
 
-  local sds = FindDebuff("target", "Sacrolash's Dark Strike");
+  local coe = FindDebuff("target", "Curse of Exhaustion");
   local bof = FindBuff("target", "Blessing of Freedom");
   local bstorm = FindBuff("target", "Bladestorm");
   local corruptionDebuff = FindDebuff("target", "Corruption");
 
   if skipslow == nil then
-    if (sds == nil and bof == nil and bstorm == nil) or corruptionDebuff == nil then
-      if IsCastableAtEnemyTarget("Corruption", 500) then
-        WowCyborg_CURRENTATTACK = "Corruption";
-        return SetSpellRequest(corruption);
+    if (coe == nil and bof == nil and bstorm == nil) then
+      if IsCastableAtEnemyTarget("Curse of Exhaustion", 500) then
+        WowCyborg_CURRENTATTACK = "Curse of Exhaustion";
+        return SetSpellRequest("0");
       end
     end
-  elseif corruptionDebuff == nil then
+  end
+  
+  if corruptionDebuff == nil then
     if IsCastableAtEnemyTarget("Corruption", 500) then
       WowCyborg_CURRENTATTACK = "Corruption";
       return SetSpellRequest(corruption);

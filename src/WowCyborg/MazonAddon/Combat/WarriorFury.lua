@@ -75,7 +75,7 @@ function RenderSingleTargetRotation(aoe)
 
   local rage = UnitPower("player");
   local enrageBuff, enrageTime = FindBuff("player", "Enrage");
-  if enrageBuff == nil or rage > 90 then
+  if enrageBuff == nil or rage > 80 then
     if IsCastableAtEnemyTarget("Rampage", 80) then
       WowCyborg_CURRENTATTACK = "Rampage";
       return SetSpellRequest(rampage);

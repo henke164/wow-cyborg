@@ -45,7 +45,7 @@ function RenderRangedRotation()
     return SetSpellRequest(execute);
   end
   
-  if IsCastableAtEnemyTarget("Heroic Throw", 0) then
+  if IsCastableAtEnemyTarget("Heroic Throw", 0) and WowCyborg_INCOMBAT == true then
     WowCyborg_CURRENTATTACK = "Heroic Throw";
     return SetSpellRequest(rend);
   end
@@ -95,7 +95,7 @@ function RenderSingleTargetRotation()
     end
   end
 
-  if IsCastableAtEnemyTarget("Execute", 70) then
+  if IsCastableAtEnemyTarget("Execute", 40) then
     WowCyborg_CURRENTATTACK = "Execute";
     return SetSpellRequest(execute);
   end

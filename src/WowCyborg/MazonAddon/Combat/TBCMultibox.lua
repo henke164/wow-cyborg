@@ -19,11 +19,13 @@ local mendPet = "8";
 local killCommand = "9";
 local explosiveTrap = "F+6";
 local huntersMark = "F+7";
+local feedPet = "SHIFT+5";
 
 local follow = "F+8";
 local assist = "F+9";
 local drink = "SHIFT+9";
 local holdFire = false;
+local isConjuring = false;
 
 local regrowthCost =  485;
 local swiftmendCost =  195;
@@ -196,6 +198,23 @@ function RenderMultiTargetRotation()
 end
 
 function RenderSingleTargetRotation(aoe)
+  if WowCyborg_INCOMBAT == false then
+    local happiness = GetPetHappiness();
+    if happiness ~= nil and happiness < 3 then
+      local feedbuff = FindBuff("pet", "Feed Pet Effect");
+      if feedbuff == nil then
+        WowCyborg_CURRENTATTACK = "Feed Pet";
+        return SetSpellRequest(feedPet);
+      end
+    end
+
+    if UnitName("player") == "Boucher" then
+      if isConjuring == true then
+        WowCyborg_CURRENTATTACK = "Conjuring";
+        return SetSpellRequest("F+4");
+      end
+    end
+  end
 
   if holdFire then
     if UnitName("player") == "Boucher" then
@@ -261,6 +280,11 @@ function RenderSingleTargetRotation(aoe)
     if IsCastable("Dragon's Breath", 600) then
       WowCyborg_CURRENTATTACK = "Dragon's Breath";
       return SetSpellRequest("4");
+    end
+    
+    if IsCastable("Cone of Cold", 600) then
+      WowCyborg_CURRENTATTACK = "Cone of Cold";
+      return SetSpellRequest("6");
     end
   end
 
@@ -450,7 +474,7 @@ function RenderRestoRotation()
 
   local focusHealth = GetHealthPercentage("focus");
 
-  if focusHealth > 1 and focusHealth <= 90 and UnitGUID("focus") == UnitGUID(healingTarget.name) then
+  if WowCyborg_INCOMBAT and focusHealth > 1 and focusHealth <= 90 and UnitGUID("focus") == UnitGUID(healingTarget.name) then
     local lifebloomHot, lifebloomX, lifebloomStacks = FindBuff("focus", "Lifebloom");
     if (lifebloomHot == nil or lifebloomStacks < 3) and IsCastableAtFriendlyUnit("focus", "Lifebloom", 220) then
       WowCyborg_CURRENTATTACK = "Lifebloom";
@@ -550,6 +574,7 @@ print("Classic hunter runner rotation loaded");
 function CreateEmoteListenerFrame()
   local frame = CreateFrame("Frame");
   frame:RegisterEvent("CHAT_MSG_CHANNEL");
+  frame:RegisterEvent("CHAT_MSG_PARTY_LEADER");
   frame:RegisterEvent("PLAYER_REGEN_ENABLED");
 
   frame:SetScript("OnEvent", function(self, event, ...)
@@ -562,39 +587,49 @@ function CreateEmoteListenerFrame()
       end
     end
 
-    if event == "CHAT_MSG_CHANNEL" then
+    if event == "CHAT_MSG_CHANNEL" or event == "CHAT_MSG_PARTY_LEADER" then
       command = ...;
 
-      if string.find(command, "follow", 1, true) then
+      if string.find(command, "maz-1", 1, true) then
         print("Following");
         startedFollowingAt = GetTime();
         isDrinking = false;
-        holdFire = false;  
+        holdFire = false;
+        isConjuring = false;
       end
-      if string.find(command, "wait", 1, true) then
+      if string.find(command, "maz-2", 1, true) then
         print("Waiting");
         startedAssistAt = GetTime();
         isDrinking = false;
-        holdFire = false;  
+        holdFire = false;
+        isConjuring = false;
       end
-      if string.find(command, "charge", 1, true) then
+      if string.find(command, "maz-3", 1, true) then
         print("Burst");
         startedBurstAt = GetTime();
         isDrinking = false;
-        holdFire = false;  
+        holdFire = false;
+        isConjuring = false;
       end
-      if string.find(command, "drink", 1, true) then
+      if string.find(command, "maz-4", 1, true) then
         print("drinking");
         startedDrinkAt = GetTime();
         isDrinking = true;
+        isConjuring = false;
       end
-      if string.find(command, "hold", 1, true) then
+      if string.find(command, "maz-5", 1, true) then
         holdFire = true;
+        isConjuring = false;
       end
-      if string.find(command, "aspect", 1, true) then
+      if string.find(command, "maz-6", 1, true) then
         print("aspect");
         startedAspect = GetTime();
         isDrinking = false;
+        isConjuring = false;
+      end
+      if string.find(command, "maz-7", 1, true) then
+        print("conjuring");
+        isConjuring = true;
       end
     end
   end)

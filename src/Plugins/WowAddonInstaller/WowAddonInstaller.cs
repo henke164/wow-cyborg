@@ -8,9 +8,9 @@ namespace WowAddonInstaller
         private ApiClient _apiClient;
         private string _addonFolderPath;
 
-        public WowAddonInstaller(string serverUrl, string addonPath)
+        public WowAddonInstaller(string addonPath)
         {
-            _apiClient = new ApiClient(serverUrl);
+            _apiClient = new ApiClient();
             _addonFolderPath = addonPath;
         }
 

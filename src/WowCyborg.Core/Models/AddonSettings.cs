@@ -6,5 +6,6 @@
         public int AddonRowCount { get; set; }
         public string ServerAddress { get; set; }
         public string BotType { get; set; }
+        public string AddonPath { get; set; }
     }
 }

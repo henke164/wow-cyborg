@@ -14,10 +14,15 @@ local mortalStrike = "4";
 local overpower = "5";
 local slam = "6";
 local rend = "7";
+local sweepingStrikes = "8";
 local ignorePain = "9";
+
+local warbreaker = "F+9";
+local victoryRush = "SHIFT+3";
 
 WowCyborg_PAUSE_KEYS = {
   "F",
+  "G",
   "R",
   "LSHIFT",
   "F1",
@@ -45,7 +50,7 @@ function RenderRangedRotation()
     return SetSpellRequest(execute);
   end
   
-  if IsCastableAtEnemyTarget("Heroic Throw", 0) then
+  if IsCastableAtEnemyTarget("Heroic Throw", 0) and WowCyborg_INCOMBAT then
     WowCyborg_CURRENTATTACK = "Heroic Throw";
     return SetSpellRequest(rend);
   end
@@ -55,21 +60,17 @@ function RenderRangedRotation()
 end
 
 function RenderMultiTargetRotation()
-  local freedomBuff = FindBuff("target", "Blessing of Freedom");
-  local hamstringDebuff, hamstringTimeLeft = FindDebuff("target", "Hamstring");
-  if freedomBuff == nil then
-    if hamstringDebuff == nil or hamstringTimeLeft < 3 then
-      if IsCastableAtEnemyTarget("Hamstring", 10) then
-        WowCyborg_CURRENTATTACK = "Hamstring";
-        return SetSpellRequest(hamstring);
-      end
-    end
-  end
-
-  return RenderSingleTargetRotation()
+  return RenderSingleTargetRotation(true)
 end
 
-function RenderSingleTargetRotation()
+function RenderSingleTargetRotation(defensive)
+  local casting = UnitChannelInfo("player");
+
+  if casting == "Shackles of Malediction" then
+    WowCyborg_CURRENTATTACK = "Shackles of Malediction";
+    return SetSpellRequest(nil);
+  end
+
   local thornsBuff = FindBuff("target", "Thorns");
 
   if thornsBuff ~= nil then
@@ -82,12 +83,46 @@ function RenderSingleTargetRotation()
     return RenderRangedRotation();
   end
 
-  if IsCastableAtEnemyTarget("Mortal Strike", 0) then
-    WowCyborg_CURRENTATTACK = "Mortal Strike";
-    return SetSpellRequest(mortalStrike);
-  end
-  
+  local nearbyEnemies = GetNearbyEnemyCount();
+  local hpPercentage = GetHealthPercentage("player");
   local sdBuff = FindBuff("player", "Sudden Death");
+  local speared = FindDebuff("target", "Spear of Bastion");
+  local avatarBuff = FindBuff("player", "Avatar");
+  local freedomBuff = FindBuff("target", "Blessing of Freedom");
+  local phowlDebuff = FindDebuff("target", "Piercing howl");
+
+  local vrBuff = FindBuff("player", "Victorious")
+  if hpPercentage < 80 and 
+    IsCastableAtEnemyTarget("Victory Rush", 0) and 
+    vrBuff == "Victorious" then
+    WowCyborg_CURRENTATTACK = "Victory Rush";
+    return SetSpellRequest(victoryRush);
+  end
+
+  if avatarBuff ~= nil or speared ~= nil then
+    if IsCastableAtEnemyTarget("Warbreaker", 0) then
+      WowCyborg_CURRENTATTACK = "Warbreaker";
+      return SetSpellRequest(warbreaker);
+    end
+  end
+
+  local hamstringDebuff, hamstringTimeLeft = FindDebuff("target", "Hamstring");
+  if freedomBuff == nil and phowlDebuff == nil then
+    if hamstringDebuff == nil or hamstringTimeLeft < 3 then
+      if IsCastableAtEnemyTarget("Hamstring", 10) then
+        WowCyborg_CURRENTATTACK = "Hamstring";
+        return SetSpellRequest(hamstring);
+      end
+    end
+  end
+
+  local ssStart, ssDuration = GetSpellCooldown("Sweeping Strikes");
+  local ssCdLeft = ssStart + ssDuration - GetTime();
+  if nearbyEnemies > 1 and ssCdLeft < 1 then
+    WowCyborg_CURRENTATTACK = "Sweeping strikes";
+    return SetSpellRequest(sweepingStrikes);
+  end
+
   if sdBuff ~= nil then
     if IsCastableAtEnemyTarget("Execute", 0) then
       WowCyborg_CURRENTATTACK = "Execute";
@@ -95,11 +130,27 @@ function RenderSingleTargetRotation()
     end
   end
 
-  if IsCastableAtEnemyTarget("Execute", 70) then
+  if IsCastableAtEnemyTarget("Execute", 20) then
     WowCyborg_CURRENTATTACK = "Execute";
     return SetSpellRequest(execute);
   end
 
+  -- If mortal strike is ready
+  if IsCastableAtEnemyTarget("Mortal Strike", 0) then
+    if IsCastableAtEnemyTarget("Mortal Strike", 30) then
+      WowCyborg_CURRENTATTACK = "Mortal Strike";
+      return SetSpellRequest(mortalStrike);
+    end
+
+    if IsCastableAtEnemyTarget("Overpower", 0) then
+      WowCyborg_CURRENTATTACK = "Overpower";
+      return SetSpellRequest(overpower);
+    end
+
+    WowCyborg_CURRENTATTACK = "Mortal Strike";
+    return SetSpellRequest(mortalStrike);
+  end
+  
   local hpp = GetHealthPercentage("target");
 
   if tostring(hpp) ~= "-nan(ind)" and hpp > 0 and hpp < 50 then
@@ -137,14 +188,6 @@ function RenderSingleTargetRotation()
     return SetSpellRequest(bladestorm);
   end
   
-  local caBuff = FindBuff("player", "Crushing Assault");
-  if caBuff ~= nil then
-    if IsCastableAtEnemyTarget("Slam", 20) then
-      WowCyborg_CURRENTATTACK = "Slam";
-      return SetSpellRequest(slam);
-    end
-  end
-  
   if IsCastableAtEnemyTarget("Mortal Strike", 30) then
     WowCyborg_CURRENTATTACK = "Mortal Strike";
     return SetSpellRequest(mortalStrike);
@@ -155,12 +198,16 @@ function RenderSingleTargetRotation()
     return SetSpellRequest(overpower);
   end
 
-  local rage = UnitPower("player");
-  if rage > 80 then
-    if IsCastableAtEnemyTarget("Slam", 20) then
-      WowCyborg_CURRENTATTACK = "Slam";
-      return SetSpellRequest(slam);
+  if defensive == true and ignorePainBuff == nil then
+    if IsCastable("Ignore Pain", 40) then
+      WowCyborg_CURRENTATTACK = "Ignore Pain";
+      return SetSpellRequest(ignorePain);
     end
+  end
+
+  if IsCastableAtEnemyTarget("Slam", 60) then
+    WowCyborg_CURRENTATTACK = "Slam";
+    return SetSpellRequest(slam);
   end
 
   WowCyborg_CURRENTATTACK = "-";
@@ -171,4 +218,4 @@ function InMeleeRange()
   return IsSpellInRange("Overpower", "target") == 1;
 end
 
-print("Arms warrior rotation loaded");
+print("Arms pvp warrior rotation loaded");
