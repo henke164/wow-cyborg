@@ -2,13 +2,12 @@
   Button    Spell
 ]]--
 
-local adaptiveSwarm = "9";
+local convoke = "9";
 local rake = "F+6";
 local rip = "F+9";
 local shred = "F+7";
 local maim = "2";
 local ferociousBite = "3";
-local moonfire = "6";
 local tigersFury = "7";
 local thrash = "8";
 local brutalSlash = "F+5";
@@ -33,11 +32,6 @@ WowCyborg_PAUSE_KEYS = {
   "F10",
   "LSHIFT"
 }
-
-function ShouldMoonfire()
-  local t_, t__, t___, shouldUseMoonfire = GetTalentInfo(1,3,1);
-  return shouldUseMoonfire;
-end
 
 function GetMemberIndex(name)
   local group = GetGroupRosterInfo();
@@ -78,7 +72,7 @@ function FindFriendlyHealingTarget()
     end
     
     local hp = GetHealthPercentage(members[groupindex].name);
-    if tostring(hp) ~= "-nan(ind)" and hp > 0 and hp < 85 then
+    if tostring(hp) ~= "-nan(ind)" and hp > 0 and hp < 90 then
       if lowestHealth == nil or hp <= lowestHealth.hp then
         if IsSpellInRange("Regrowth", members[groupindex].name) then
           lowestHealth = { hp = hp, name = members[groupindex].name }
@@ -163,7 +157,6 @@ function RenderSingleTargetRotation(stun)
   local hp = GetHealthPercentage("player");
   local targetHp = GetHealthPercentage("player");
   local prowl = FindBuff("player", "Prowl");
-  local moonfireDebuff, moonfireTl = FindDebuff("target", "Moonfire");
 
   local members = GetGroupRosterInfo();
   local predaSwiftBuff = FindBuff("player", "Predatory Swiftness");
@@ -182,14 +175,25 @@ function RenderSingleTargetRotation(stun)
   end
 
   if IsMelee() == false then
-    if WowCyborg_INCOMBAT and prowl == nil and (moonfireDebuff == nil or moonfireTl < 4) and IsCastableAtEnemyTarget("Moonfire", 30) then
-      if ShouldMoonfire() then
-        WowCyborg_CURRENTATTACK = "Moonfire";
-        return SetSpellRequest(moonfire);
-      end
-    end
     WowCyborg_CURRENTATTACK = "-";
     return SetSpellRequest(nil);
+  end
+
+  local convokeCd = GetSpellCooldown("Convoke the Spirits");
+  local tfuryBuff = FindBuff("player", "Tiger's Fury");
+  local ripDot, ripTl = FindDebuff("target", "Rip");
+  local bloodTalonsBuff = FindBuff("player", "Bloodtalons");
+
+  if bloodTalonsBuff ~= nil and ripDot ~= nil then
+    if tfuryBuff == nil and IsCastable("Tiger's Fury", 0) then
+      WowCyborg_CURRENTATTACK = "Tiger's Fury";
+      return SetSpellRequest(tigersFury);
+    end
+
+    if IsCastableAtEnemyTarget("Convoke the Spirits", 0) then
+      WowCyborg_CURRENTATTACK = "Convoke!";
+      return SetSpellRequest(convoke);
+    end
   end
 
   local rakeDot, rakeTl = FindDebuff("target", "Rake");
@@ -198,8 +202,7 @@ function RenderSingleTargetRotation(stun)
     return SetSpellRequest(rake);
   end
 
-  local tfuryBuff = FindBuff("player", "Tiger's Fury");
-  if energy <= 80 and tfuryBuff == nil and IsCastable("Tiger's Fury", 0) then
+  if convokeCd > 30 and energy <= 80 and tfuryBuff == nil and IsCastable("Tiger's Fury", 0) then
     WowCyborg_CURRENTATTACK = "Tiger's Fury";
     return SetSpellRequest(tigersFury);
   end
@@ -209,24 +212,11 @@ function RenderSingleTargetRotation(stun)
     return SetSpellRequest(feralFrenzy);
   end
   
-  if IsCastableAtEnemyTarget("Adaptive Swarm", 0) then
-    WowCyborg_CURRENTATTACK = "Adaptive Swarm";
-    return SetSpellRequest(adaptiveSwarm);
-  end
-
   local points = GetComboPoints("player", "target");
 
-  local ripDot, ripTl = FindDebuff("target", "Rip");
   if (points > 0 and ripDot == nil) or (ripDot ~= nil and ripTl < 4) and IsCastableAtEnemyTarget("Rip", 20) then
     WowCyborg_CURRENTATTACK = "Rip";
     return SetSpellRequest(rip);
-  end
-
-  if (moonfireDebuff == nil or moonfireTl < 4) and IsCastableAtEnemyTarget("Moonfire", 30) then
-    if ShouldMoonfire() then
-      WowCyborg_CURRENTATTACK = "Moonfire";
-      return SetSpellRequest(moonfire);
-    end
   end
 
   local clearcastingBuff = FindBuff("player", "Clearcasting");

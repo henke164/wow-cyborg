@@ -136,7 +136,7 @@ function RenderSingleTargetRotation()
     end
     
     local revBuff = FindBuff("player", "Revenge!");
-    if (revBuff == "Revenge!" or IsCastableAtEnemyTarget("Revenge", 60)) then
+    if (revBuff == "Revenge!" or IsCastableAtEnemyTarget("Revenge", 80)) then
       if IsCastableAtEnemyTarget("Revenge", 0) then
         WowCyborg_CURRENTATTACK = "Revenge";
         return SetSpellRequest(revenge);

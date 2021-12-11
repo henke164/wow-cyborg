@@ -225,7 +225,7 @@ function RenderSingleTargetRotation(disableAutoTarget)
   end
 
   local hp = GetHealthPercentage("target");
-  if UnitCanAttack("player", "target") == true then
+  if UnitCanAttack("player", "target") == true or GetTargetFullName() == nil then
     hp = GetHealthPercentage("player");
   end
 

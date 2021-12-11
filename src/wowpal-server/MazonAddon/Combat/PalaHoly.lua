@@ -174,6 +174,7 @@ function RenderSingleTargetRotation(disableAutoTarget)
   
   local friendlyTargetName = FindShockHealingTarget();
   local holyPower = UnitPower("player", 9);
+  
   if friendlyTargetName ~= nil and IsCastable("Word of Glory", 0) and holyPower > 2 then
     local memberindex = GetMemberIndex(friendlyTargetName);
     WowCyborg_CURRENTATTACK = "Word of Glory " .. friendlyTargetName;

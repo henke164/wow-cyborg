@@ -288,6 +288,13 @@ function RenderSingleTargetRotation(aoe)
     end
   end
 
+  if targetHp < 30 then
+    if IsCastableAtEnemyTarget("Fireblast", 386) then
+      WowCyborg_CURRENTATTACK = "Fireblast";
+      return SetSpellRequest("7");
+    end
+  end
+
   local scorch, scorchTl, scorchStacks = FindDebuff("target", "Fire Vulnerability");
   if (scorch == nil or scorchStacks < 5) and IsCastableAtEnemyTarget("Scorch", 141) then
     WowCyborg_CURRENTATTACK = "Scorch";
@@ -319,7 +326,7 @@ function RenderSingleTargetRotation(aoe)
       return SetSpellRequest(multiShot);
     end
     
-    if IsMelee() == true then
+    if CheckInteractDistance("target", 5) and IsCastableAtEnemyTarget("Kill Command", 0) then
       if IsCastable("Explosive Trap", 650) then
         WowCyborg_CURRENTATTACK = "Explosive Trap";
         return SetSpellRequest(explosiveTrap);
@@ -418,7 +425,7 @@ function RenderRestoRotation()
   end
 
   local spell, _, _, _, endTime = UnitCastingInfo("player")
-  if spell == "Regrowth" and healingTarget.name ~= nil then
+  if (spell == "Regrowth" or spell == "Healing Touch") and healingTarget.name ~= nil then
     local hp = GetHealthPercentage(healingTarget.name)
     if hp > 80 then
       WowCyborg_CURRENTATTACK = "Cancel cast";
@@ -477,8 +484,8 @@ function RenderRestoRotation()
   if WowCyborg_INCOMBAT and focusHealth > 1 and focusHealth <= 90 and UnitGUID("focus") == UnitGUID(healingTarget.name) then
     local lifebloomHot, lifebloomX, lifebloomStacks = FindBuff("focus", "Lifebloom");
     if (lifebloomHot == nil or lifebloomStacks < 3) and IsCastableAtFriendlyUnit("focus", "Lifebloom", 220) then
-      WowCyborg_CURRENTATTACK = "Lifebloom";
-      return SetSpellRequest(lifebloom);
+      --WowCyborg_CURRENTATTACK = "Lifebloom";
+      --return SetSpellRequest(lifebloom);
     end
   end
 
@@ -569,7 +576,6 @@ function CreateSwingTimer()
 end
 
 CreateSwingTimer();
-print("Classic hunter runner rotation loaded");
 
 function CreateEmoteListenerFrame()
   local frame = CreateFrame("Frame");
@@ -635,6 +641,6 @@ function CreateEmoteListenerFrame()
   end)
 end
 
-print("TBC Hunter follower rotation loaded");
+print("TBC Multi follower rotation loaded");
 CreateEmoteListenerFrame();
 CreateDamageTakenFrame();

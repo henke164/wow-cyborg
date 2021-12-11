@@ -24,11 +24,19 @@ local ignorePain = "0";
 local victoryRush = "SHIFT+2";
 
 WowCyborg_PAUSE_KEYS = {
+  "F",
+  "G",
+  "R",
+  "LSHIFT",
+  "F1",
   "F2",
   "F3",
-  "R",
-  "F",
-  "LSHIFT"
+  "F5",
+  "F6",
+  "F7",
+  "F11",
+  "NUMPAD5",
+  "NUMPAD9",
 }
 
 function RenderMultiTargetRotation()

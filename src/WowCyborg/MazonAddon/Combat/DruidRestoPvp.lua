@@ -36,6 +36,7 @@ local maim = 4;
 
 WowCyborg_PAUSE_KEYS = {
   "F2",
+  "R",
   "F3",
   "NUMPAD3",
   "NUMPAD4",
@@ -252,11 +253,14 @@ function RenderSingleTargetRotation(attack)
     end
   end
 
-  local rejuvenationHot2, rejuvenationHotTL2 = FindBuff(target, "Rejuvenation (Germination)");
-  if (rejuvenationHot == nil or rejuvenationHotTL < 1) and IsCastableAtFriendlyUnit(target, "Rejuvenation", 1100) then
-    WowCyborg_CURRENTATTACK = "Rejuvenation 2";
-    return SetSpellRequest(rejuvenation);
-  end
+  local t_, t__, t___, germinationTalented = GetTalentInfo(7,2,1);
+    local rejuvenationHot2, rejuvenationHotTL2 = FindBuff(target, "Rejuvenation (Germination)");
+    if (rejuvenationHot == nil or rejuvenationHotTL < 1) and IsCastableAtFriendlyUnit(target, "Rejuvenation", 1100) then
+      if germinationTalented then
+        WowCyborg_CURRENTATTACK = "Rejuvenation 2";
+        return SetSpellRequest(rejuvenation);
+      end
+    end
 
   if (rejuvenationHot2 == nil or rejuvenationHotTL2 < 1) and IsCastableAtFriendlyUnit(target, "Rejuvenation", 1100) then
     WowCyborg_CURRENTATTACK = "Rejuvenation 1";

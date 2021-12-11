@@ -16,6 +16,7 @@ restoshaman2	MazonAddon/Combat/ShamanResto2.lua
 bmmonk	MazonAddon/Combat/MonkBrewmaster.lua
 mwmonk	MazonAddon/Combat/MonkMistweaver.lua
 wwmonk	MazonAddon/Combat/MonkWindwalker.lua
+wwmonk2	MazonAddon/Combat/MonkWindwalker2.lua
 pvpmonk	MazonAddon/Combat/MonkPVPHealer.lua
 blooddk	MazonAddon/Combat/DKBlood.lua
 unholydk	MazonAddon/Combat/DKUnholy.lua
@@ -24,6 +25,7 @@ pvpdk2	MazonAddon/Combat/DKPvp2.lua
 restodruid	MazonAddon/Combat/DruidResto.lua
 tankdruid	MazonAddon/Combat/DruidTank.lua
 feraldruid	MazonAddon/Combat/DruidFeral.lua
+convoke	MazonAddon/Combat/DruidConvoke.lua
 pvpdruid	MazonAddon/Combat/DruidRestoPvp.lua
 mmhunterfollower	MazonAddon/Combat/HunterMMFollower.lua
 mwmonkfollower	MazonAddon/Combat/MonkMistweaverFollower.lua
@@ -77,4 +79,5 @@ disc	MazonAddon/Combat/PriestDisc.lua
 protpvp	MazonAddon/Combat/WarriorProtPvp.lua
 condemn	MazonAddon/Combat/WarriorCondemn.lua
 subtlety	MazonAddon/Combat/RogueSubtlety.lua
+sub2	MazonAddon/Combat/RogueSubtlety2.lua
 tbcmulti	MazonAddon/Combat/TBCMultibox.lua

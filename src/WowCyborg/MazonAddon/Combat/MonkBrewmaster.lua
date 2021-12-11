@@ -15,9 +15,9 @@ local spinningCraneKick = "6";
 local tigerPalm = "5";
 local expelHarm = "9";
 
-local celestialBrew = "SHIFT+1";
-local purifyingBrew = "SHIFT+2";
-local fortifyingBrew = "SHIFT+3";
+local celestialBrew = "F+5";
+local purifyingBrew = "F+6";
+local fortifyingBrew = "F+7";
 
 local incomingDamage = {}
 local meleeDamageInLast5Seconds = 0
@@ -25,7 +25,10 @@ local rangedDamageInLast5Seconds = 0
 
 WowCyborg_PAUSE_KEYS = {
   "F2",
-  "F4"
+  "F3",
+  "F4",
+  "F10",
+  "NUMPAD3",
 }
 
 function IsMelee()
@@ -65,7 +68,7 @@ function HandleDefensives()
     end
   end
 
-  if hpPercentage < 80 then
+  if hpPercentage < 90 then
     if IsCastableAtEnemyTarget("Expel Harm", 0) then
       WowCyborg_CURRENTATTACK = "Expel Harm";
       SetSpellRequest(expelHarm);

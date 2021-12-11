@@ -10,9 +10,9 @@ local crusaderStrike = 5;
 local lightOfDawn = 6;
 local hammerOfWrath = 7;
 local bestowFaith = 8;
-
-local beaconOfLight = "SHIFT+3";
-local lightOfTheMartyr = 9;
+local bestowFaithTarget = "F+5";
+local lightOfTheMartyr = "F+6";
+local beaconOfLight = "F+7";
 
 
 WowCyborg_PAUSE_KEYS = {
@@ -172,6 +172,9 @@ function RenderSingleTargetRotation(disableAutoTarget)
   local speed = GetUnitSpeed("player");
   local playerHp = GetHealthPercentage("player");
   local hp = GetHealthPercentage("target");
+  local focusHealth = GetHealthPercentage("focus");
+  local divine = FindBuff("player", "Divine Favor");
+
   if (tostring(hp) == "-nan(ind)") then
     hp = 100;
   end
@@ -197,19 +200,48 @@ function RenderSingleTargetRotation(disableAutoTarget)
 
   if UnitCanAttack("player", "target") == true then
     if speed == 0 then
-      if playerHp < 60 and IsCastable("Flash of Light", 4400) then
-        WowCyborg_CURRENTATTACK = "Flash of Light";
-        return SetSpellRequest(flashOfLight);
-      end
 
-      if playerHp < 80 and IsCastable("Holy Light", 2600) then
+      if divine ~= nil and playerHp < 95 and playerHp > 70 and IsCastable("Holy Light", 2600) then
         WowCyborg_CURRENTATTACK = "Holy Light";
         return SetSpellRequest(holyLight);
       end
+
+      if playerHp < 80 and IsCastable("Flash of Light", 4400) then
+        WowCyborg_CURRENTATTACK = "Flash of Light";
+        return SetSpellRequest(flashOfLight);
+      end
+    end
+    
+    if focusHealth < 95 then
+      if IsCastableAtFriendlyUnit("focus", "Bestow Faith", 0) then
+        WowCyborg_CURRENTATTACK = "Bestow Faith";
+        return SetSpellRequest(bestowFaithTarget);
+      end
     end
 
+    if playerHp < 95 and IsCastable("Bestow Faith", 0) then
+      WowCyborg_CURRENTATTACK = "Bestow Faith";
+      return SetSpellRequest(bestowFaith);
+    end
+    
     local repentence = FindDebuff("target", "Repentance");
     local freeze = FindDebuff("target", "Freezing Trap");
+      
+    if focusHealth > 0 then
+      if focusHealth < 95 then
+        if IsCastableAtFriendlyUnit("focus", "Bestow Faith", 0) then
+          WowCyborg_CURRENTATTACK = "Bestow Faith";
+          return SetSpellRequest(bestowFaithTarget);
+        end
+      end
+
+      if focusHealth < 80 and hp > 70 and speed > 0 then
+        if IsCastableAtFriendlyUnit("focus", "Light of the Martyr", 0) then
+          WowCyborg_CURRENTATTACK = "Light of the Martyr";
+          return SetSpellRequest(lightOfTheMartyr);
+        end
+      end
+    end
     
     if repentence == nil and freeze == nil then
       if IsCastableAtEnemyTarget("Judgment", 600) then
@@ -235,7 +267,7 @@ function RenderSingleTargetRotation(disableAutoTarget)
     return SetSpellRequest(nil);
   end
 
-  if UnitCanAttack("player", "target") == true then
+  if UnitCanAttack("player", "target") == true or GetTargetFullName() == nil then
     hp = GetHealthPercentage("player");
   end
 
@@ -249,14 +281,30 @@ function RenderSingleTargetRotation(disableAutoTarget)
     return SetSpellRequest(bestowFaith);
   end
   
-  if hp < 60 and IsCastable("Flash of Light", 4400) then
+  if divine ~= nil and hp < 95 and playerHp > 70 and IsCastable("Holy Light", 2600) then
+    WowCyborg_CURRENTATTACK = "Holy Light";
+    return SetSpellRequest(holyLight);
+  end
+
+  if hp < 80 and IsCastable("Flash of Light", 4400) then
     WowCyborg_CURRENTATTACK = "Flash of Light";
     return SetSpellRequest(flashOfLight);
   end
 
-  if hp < 99 and IsCastable("Holy Light", 2600) then
-    WowCyborg_CURRENTATTACK = "Holy Light";
-    return SetSpellRequest(holyLight);
+  if focusHealth > 0 then
+    if focusHealth < 95 then
+      if IsCastableAtFriendlyUnit("focus", "Bestow Faith", 0) then
+        WowCyborg_CURRENTATTACK = "Bestow Faith";
+        return SetSpellRequest(bestowFaithTarget);
+      end
+    end
+
+    if focusHealth < 80 and hp > 70 and speed > 0 then
+      if IsCastableAtFriendlyUnit("focus", "Light of the Martyr", 0) then
+        WowCyborg_CURRENTATTACK = "Light of the Martyr";
+        return SetSpellRequest(lightOfTheMartyr);
+      end
+    end
   end
 
   WowCyborg_CURRENTATTACK = "-";

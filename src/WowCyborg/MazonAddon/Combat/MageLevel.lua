@@ -5,6 +5,7 @@ local blast = 1;
 local barrage = 2;
 local explosion = 3;
 local fire = 4;
+local missiles = 5;
 
 function IsMelee()
   return CheckInteractDistance("target", 3);
@@ -25,9 +26,23 @@ end
 
 -- Single target
 function RenderSingleTargetRotation(aoe)
+  local charges = UnitPower("player", 16);
   local speed = GetUnitSpeed("player");
+  local clearCast = FindBuff("player", "Clearcasting");
 
-  if IsCastableAtEnemyTarget("Arcane Barrage", 0) then
+  if UnitChannelInfo("player") ~= nil then
+    WowCyborg_CURRENTATTACK = "Channelling";
+    return SetSpellRequest(nil);
+  end
+
+  if clearCast ~= nil and speed == 0 then
+    if IsCastableAtEnemyTarget("Arcane Missiles", 0) then
+      WowCyborg_CURRENTATTACK = "Arcane Missiles";
+      return SetSpellRequest(missiles);
+    end
+  end
+
+  if charges > 3 and IsCastableAtEnemyTarget("Arcane Barrage", 0) then
     WowCyborg_CURRENTATTACK = "Arcane Barrage";
     return SetSpellRequest(barrage);
   end
@@ -44,6 +59,16 @@ function RenderSingleTargetRotation(aoe)
     end
   end
 
+  if speed == 0 and IsCastableAtEnemyTarget("Arcane Blast", 0) then
+    WowCyborg_CURRENTATTACK = "Arcane Blast";
+    return SetSpellRequest(blast);
+  end
+
+  if IsCastableAtEnemyTarget("Arcane Barrage", 0) then
+    WowCyborg_CURRENTATTACK = "Arcane Barrage";
+    return SetSpellRequest(barrage);
+  end
+    
   WowCyborg_CURRENTATTACK = "-";
   return SetSpellRequest(nil);
 end

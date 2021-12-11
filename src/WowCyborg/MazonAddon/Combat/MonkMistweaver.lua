@@ -155,14 +155,6 @@ function RenderSingleTargetRotation()
     return SetSpellRequest(nil);
   end
 
-  local rmBuff = FindBuff("target", "Renewing Mist");
-  if rmBuff == nil then
-    local rmCharges = GetSpellCharges("Renewing Mist");
-    if rmCharges > 0 and IsCastableAtFriendlyTarget("Renewing Mist", 2800) then
-      return SetSpellRequest(renewingMist);
-    end
-  end
-
   if hp <= 80 and IsCastableAtFriendlyTarget("Soothing Mist", 800) and UnitChannelInfo("player") ~= "Soothing Mist" then
     return SetSpellRequest(soothingMist);
   end

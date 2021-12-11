@@ -15,6 +15,7 @@ local bladestorm = "2";
 local execute = "3";
 local mortalStrike = "4";
 local overpower = "5";
+local sweepingStrikes = "8";
 local ignorePain = "9";
 
 WowCyborg_PAUSE_KEYS = {
@@ -75,6 +76,14 @@ function RenderNormalRotation()
       WowCyborg_CURRENTATTACK = "Sharpen Blade";
       return SetSpellRequest("0");
     end
+  end
+
+  local nearbyEnemies = GetNearbyEnemyCount();
+  local ssStart, ssDuration = GetSpellCooldown("Sweeping Strikes");
+  local ssCdLeft = ssStart + ssDuration - GetTime();
+  if nearbyEnemies > 1 and ssCdLeft < 1 then
+    WowCyborg_CURRENTATTACK = "Sweeping strikes";
+    return SetSpellRequest(sweepingStrikes);
   end
 
   if IsCastableAtEnemyTarget("Mortal Strike", 30) then

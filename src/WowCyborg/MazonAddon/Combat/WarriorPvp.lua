@@ -21,6 +21,7 @@ local warbreaker = "F+9";
 local victoryRush = "SHIFT+3";
 
 WowCyborg_PAUSE_KEYS = {
+  "2",
   "F",
   "G",
   "R",
@@ -44,6 +45,15 @@ function RenderRangedRotation()
       return SetSpellRequest(execute);
     end
   end
+  
+  local hp = GetHealthPercentage("player");
+
+  if hp < 90 then
+    if IsCastable("Ignore Pain", 70) then
+      WowCyborg_CURRENTATTACK = "Ignore Pain";
+      return SetSpellRequest(ignorePain);
+    end
+  end
 
   if IsCastableAtEnemyTarget("Execute", 70) then
     WowCyborg_CURRENTATTACK = "Execute";
@@ -63,7 +73,7 @@ function RenderMultiTargetRotation()
   return RenderSingleTargetRotation(true)
 end
 
-function RenderSingleTargetRotation(defensive)
+function RenderSingleTargetRotation(skipSlow)
   local casting = UnitChannelInfo("player");
 
   if casting == "Shackles of Malediction" then
@@ -107,11 +117,13 @@ function RenderSingleTargetRotation(defensive)
   end
 
   local hamstringDebuff, hamstringTimeLeft = FindDebuff("target", "Hamstring");
-  if freedomBuff == nil and phowlDebuff == nil then
-    if hamstringDebuff == nil or hamstringTimeLeft < 3 then
-      if IsCastableAtEnemyTarget("Hamstring", 10) then
-        WowCyborg_CURRENTATTACK = "Hamstring";
-        return SetSpellRequest(hamstring);
+  if skipSlow == nil then
+    if freedomBuff == nil and phowlDebuff == nil then
+      if hamstringDebuff == nil or hamstringTimeLeft < 3 then
+        if IsCastableAtEnemyTarget("Hamstring", 10) then
+          WowCyborg_CURRENTATTACK = "Hamstring";
+          return SetSpellRequest(hamstring);
+        end
       end
     end
   end
@@ -160,15 +172,6 @@ function RenderSingleTargetRotation(defensive)
     end
   end
 
-  local ignorePainBuff = FindBuff("player", "Ignore Pain");
-  local hp = GetHealthPercentage("player");
-  if hp < 40 and ignorePainBuff == nil then
-    if IsCastable("Ignore Pain", 70) then
-      WowCyborg_CURRENTATTACK = "Ignore Pain";
-      return SetSpellRequest(ignorePain);
-    end
-  end
-
   if InMeleeRange() == false then
     WowCyborg_CURRENTATTACK = "-";
     return SetSpellRequest(nil);
@@ -184,8 +187,8 @@ function RenderSingleTargetRotation(defensive)
 
   local colossusDebuff = FindDebuff("target", "Colossus Smash");
   if colossusDebuff ~= nil and IsCastableAtEnemyTarget("Bladestorm", 0) then
-    WowCyborg_CURRENTATTACK = "Bladestorm";
-    return SetSpellRequest(bladestorm);
+    --WowCyborg_CURRENTATTACK = "Bladestorm";
+    --return SetSpellRequest(bladestorm);
   end
   
   if IsCastableAtEnemyTarget("Mortal Strike", 30) then
@@ -198,11 +201,9 @@ function RenderSingleTargetRotation(defensive)
     return SetSpellRequest(overpower);
   end
 
-  if defensive == true and ignorePainBuff == nil then
-    if IsCastable("Ignore Pain", 40) then
-      WowCyborg_CURRENTATTACK = "Ignore Pain";
-      return SetSpellRequest(ignorePain);
-    end
+  if IsCastable("Ignore Pain", 40) then
+    WowCyborg_CURRENTATTACK = "Ignore Pain";
+    return SetSpellRequest(ignorePain);
   end
 
   if IsCastableAtEnemyTarget("Slam", 60) then
