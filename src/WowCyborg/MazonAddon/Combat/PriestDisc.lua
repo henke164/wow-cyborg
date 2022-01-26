@@ -12,18 +12,18 @@ pwShield[4] = 4;
 pwShield[5] = 5;
 
 local schism = 6;
+local penanceTarget = 6;
 local purgeWicked = 7;
 local pwSolace = 8;
 local smite = 9;
-
+local holyNova = "F+5";
+local pwRadiance = "F+6";
 local penance = {};
 penance[1] = "CTRL+1";
 penance[2] = "CTRL+2";
 penance[3] = "CTRL+3";
 penance[4] = "CTRL+4";
 penance[5] = "CTRL+5";
-
-local pwRadiance = "SHIFT+2";
 
 local healingTarget = {
   index = nil,
@@ -144,32 +144,43 @@ function RenderMultiTargetRotation()
 end
 
 function RenderSingleTargetRotation()
+  if UnitChannelInfo("player") ~= nil then
+    WowCyborg_CURRENTATTACK = "-";
+    return SetSpellRequest(nil);
+  end
+
   local quaking = FindDebuff("player", "Quake");
 
   if healingTarget.time + 0.2 < GetTime() then
     local friendlyTargetName, damageAmount = FindFriendlyHealingTarget();
     if friendlyTargetName ~= nil then
       local memberindex = GetMemberIndex(friendlyTargetName);
-      if memberindex == nil then
-        WowCyborg_CURRENTATTACK = "No index";
-        return SetSpellRequest(nil);
+      if memberindex ~= nil then
+        healingTarget = {
+          name = friendlyTargetName,
+          index = memberindex,
+          damageAmount = damageAmount,
+          time = GetTime()
+        };
       end
-
-      healingTarget = {
-        name = friendlyTargetName,
-        index = memberindex,
-        damageAmount = damageAmount,
-        time = GetTime()
-      };
     end
   end
 
   local speed = GetUnitSpeed("player");
-  
-  local charges = GetSpellCharges("Power Word: Radiance");
-  if AoeHealingRequired() and charges > 0 and IsCastable("Power Word: Radiance", 6500) and quaking == nil and speed == 0 then
-    WowCyborg_CURRENTATTACK = "Power Word: Radiance";
-    return SetSpellRequest(pwRadiance);
+  if AoeHealingRequired() then
+
+    local revelationBuff = FindBuff("player", "Sudden Revelation");
+    local charges = GetSpellCharges("Power Word: Radiance");
+
+    if revelationBuff ~= nil then
+      WowCyborg_CURRENTATTACK = "Holy Nova";
+      return SetSpellRequest(holyNova);
+    end
+
+    if charges > 0 and IsCastable("Power Word: Radiance", 0) and quaking == nil and speed == 0 then
+      WowCyborg_CURRENTATTACK = "Power Word: Radiance";
+      return SetSpellRequest(pwRadiance);
+    end
   end
 
   if healingTarget.name ~= nil then
@@ -181,8 +192,8 @@ function RenderSingleTargetRotation()
         return SetSpellRequest(pwShield[healingTarget.index]);
       end
     end  
-    if hp <= 70 and healingTarget ~= nil then
-      if IsCastableAtFriendlyUnit(healingTarget.name, "Penance", 2000) then
+    if hp <= 80 and healingTarget ~= nil then
+      if IsCastableAtFriendlyUnit(healingTarget.name, "Penance", 0) then
         WowCyborg_CURRENTATTACK = "Penance";
         return SetSpellRequest(penance[healingTarget.index]);
       end
@@ -195,7 +206,7 @@ function RenderSingleTargetRotation()
   end
   
   local ptwDebuff = FindDebuff("target", "Purge the Wicked");
-  if ptwDebuff == nil and IsCastableAtEnemyTarget("Purge the Wicked", 1800) then
+  if ptwDebuff == nil and IsCastableAtEnemyTarget("Purge the Wicked", 0) then
     WowCyborg_CURRENTATTACK = "Purge the Wicked";
     return SetSpellRequest(purgeWicked);
   end
@@ -205,7 +216,12 @@ function RenderSingleTargetRotation()
     return SetSpellRequest(pwSolace);
   end
   
-  if IsCastableAtEnemyTarget("Smite", 500) and speed == 0 then
+  if IsCastableAtEnemyTarget("Penance", 0) then
+    WowCyborg_CURRENTATTACK = "Penance";
+    return SetSpellRequest(penanceTarget);
+  end
+
+  if (IsCastableAtEnemyTarget("Smite", 0) or IsCastableAtEnemyTarget("Ascended Blast", 0)) and speed == 0 then
     WowCyborg_CURRENTATTACK = "Smite";
     return SetSpellRequest(smite);
   end

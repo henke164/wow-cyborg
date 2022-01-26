@@ -48,7 +48,7 @@ function RenderRangedRotation()
   
   local hp = GetHealthPercentage("player");
 
-  if hp < 90 then
+  if hp < 60 then
     if IsCastable("Ignore Pain", 70) then
       WowCyborg_CURRENTATTACK = "Ignore Pain";
       return SetSpellRequest(ignorePain);
@@ -99,6 +99,7 @@ function RenderSingleTargetRotation(skipSlow)
   local speared = FindDebuff("target", "Spear of Bastion");
   local avatarBuff = FindBuff("player", "Avatar");
   local freedomBuff = FindBuff("target", "Blessing of Freedom");
+  local bsBuff = FindBuff("target", "Bladestorm");
   local phowlDebuff = FindDebuff("target", "Piercing howl");
 
   local vrBuff = FindBuff("player", "Victorious")
@@ -116,15 +117,12 @@ function RenderSingleTargetRotation(skipSlow)
     end
   end
 
-  local hamstringDebuff, hamstringTimeLeft = FindDebuff("target", "Hamstring");
-  if skipSlow == nil then
-    if freedomBuff == nil and phowlDebuff == nil then
-      if hamstringDebuff == nil or hamstringTimeLeft < 3 then
-        if IsCastableAtEnemyTarget("Hamstring", 10) then
-          WowCyborg_CURRENTATTACK = "Hamstring";
-          return SetSpellRequest(hamstring);
-        end
-      end
+  local avaStart, avaDuration = GetSpellCooldown("Avatar");
+  local avaCdLeft = avaStart + avaDuration - GetTime();
+  if avaCdLeft > 40 then
+    if IsCastableAtEnemyTarget("Warbreaker", 0) then
+      WowCyborg_CURRENTATTACK = "Warbreaker";
+      return SetSpellRequest(warbreaker);
     end
   end
 
@@ -135,20 +133,16 @@ function RenderSingleTargetRotation(skipSlow)
     return SetSpellRequest(sweepingStrikes);
   end
 
-  if sdBuff ~= nil then
-    if IsCastableAtEnemyTarget("Execute", 0) then
-      WowCyborg_CURRENTATTACK = "Execute";
-      return SetSpellRequest(execute);
-    end
-  end
-
   if IsCastableAtEnemyTarget("Execute", 20) then
     WowCyborg_CURRENTATTACK = "Execute";
     return SetSpellRequest(execute);
   end
 
   -- If mortal strike is ready
-  if IsCastableAtEnemyTarget("Mortal Strike", 0) then
+  local msStart, msDuration = GetSpellCooldown("Mortal Strike");
+  local msCdLeft = msStart + msDuration - GetTime();
+
+  if IsCastableAtEnemyTarget("Mortal Strike", 0) or (IsSpellInRange("Mortal Strike") and msCdLeft < 1) then
     if IsCastableAtEnemyTarget("Mortal Strike", 30) then
       WowCyborg_CURRENTATTACK = "Mortal Strike";
       return SetSpellRequest(mortalStrike);
@@ -163,9 +157,28 @@ function RenderSingleTargetRotation(skipSlow)
     return SetSpellRequest(mortalStrike);
   end
   
+  if sdBuff ~= nil then
+    if IsCastableAtEnemyTarget("Execute", 0) then
+      WowCyborg_CURRENTATTACK = "Execute";
+      return SetSpellRequest(execute);
+    end
+  end
+
+  local hamstringDebuff, hamstringTimeLeft = FindDebuff("target", "Hamstring");
+  if skipSlow == nil then
+    if freedomBuff == nil and phowlDebuff == nil and bsBuff == nil then
+      if hamstringDebuff == nil or hamstringTimeLeft < 2 then
+        if IsCastableAtEnemyTarget("Hamstring", 10) then
+          WowCyborg_CURRENTATTACK = "Hamstring";
+          return SetSpellRequest(hamstring);
+        end
+      end
+    end
+  end
+
   local hpp = GetHealthPercentage("target");
 
-  if tostring(hpp) ~= "-nan(ind)" and hpp > 0 and hpp < 50 then
+  if tostring(hpp) ~= "-nan(ind)" and hpp > 0 and hpp < 70 then
     if IsCastable("Sharpen Blade", 0) then
       WowCyborg_CURRENTATTACK = "Sharpen Blade";
       return SetSpellRequest("0");
@@ -191,19 +204,23 @@ function RenderSingleTargetRotation(skipSlow)
     --return SetSpellRequest(bladestorm);
   end
   
+  if IsCastableAtEnemyTarget("Overpower", 0) then
+    WowCyborg_CURRENTATTACK = "Overpower";
+    return SetSpellRequest(overpower);
+  end
+  
   if IsCastableAtEnemyTarget("Mortal Strike", 30) then
     WowCyborg_CURRENTATTACK = "Mortal Strike";
     return SetSpellRequest(mortalStrike);
   end
 
-  if IsCastableAtEnemyTarget("Overpower", 0) then
-    WowCyborg_CURRENTATTACK = "Overpower";
-    return SetSpellRequest(overpower);
-  end
+  local ignorePainBuff = FindBuff("player", "Ignore Pain");
 
-  if IsCastable("Ignore Pain", 40) then
-    WowCyborg_CURRENTATTACK = "Ignore Pain";
-    return SetSpellRequest(ignorePain);
+  if hpPercentage < 80 then
+    if ignorePainBuff == nil and IsCastable("Ignore Pain", 40) then
+      WowCyborg_CURRENTATTACK = "Ignore Pain";
+      return SetSpellRequest(ignorePain);
+    end
   end
 
   if IsCastableAtEnemyTarget("Slam", 60) then

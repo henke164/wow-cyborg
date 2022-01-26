@@ -4,7 +4,6 @@
   chaosStrike = "2";
   attack = "3";
   eyeBeam = "4";
-  chaosNova = "5";
   concentratedFlame = "6";
   glavies = "8";
 ]]--
@@ -13,11 +12,14 @@ local bladeDance = "1";
 local chaosStrike = "2";
 local attack = "3";
 local eyeBeam = "4";
-local chaosNova = "5";
+local immolationAura = "5";
+local consumeMagic = "6";
+local arcaneTorrent = "7";
 local glavies = "8";
 local felblade = "9";
 
 WowCyborg_PAUSE_KEYS = {
+  "F1",
   "F2",
   "F3",
   "F4",
@@ -28,15 +30,71 @@ WowCyborg_PAUSE_KEYS = {
   "F10",
   "LSHIFT",
   "NUMPAD1",
+  "NUMPAD3",
   "NUMPAD5",
-  "NUMPAD8"
+  "NUMPAD7",
+  "NUMPAD8",
+  "NUMPAD9"
 }
 
-function RenderMultiTargetRotation()
-  return RenderSingleTargetRotation()
+function HasDispellableBuff(target)
+  for i=1,40 do
+    local name, rank, icon, count, debuffType, duration, expirationTime, unitCaster, isStealable, shouldConsolidate, spellId = UnitBuff(target, i);
+    if name ~= nil then
+      if shouldConsolidate and debuffType == 12 then
+        return true;
+      end
+    end    
+  end
+  return false;
 end
 
-function RenderSingleTargetRotation()
+function IsMelee()
+  return CheckInteractDistance("target", 5);
+end
+
+function RenderMultiTargetRotation()
+  return RenderSingleTargetRotation(true)
+end
+
+function RenderSingleTargetRotation(skipGlavie)
+  local hp = GetHealthPercentage("player");
+  local fodder = FindBuff("player", "Fodder to the Flame");
+  local dispellable = HasDispellableBuff("target");
+
+  if hp < 50 then
+    if IsCastable("Blur", 0) then
+      WowCyborg_CURRENTATTACK = "Blur";
+      return SetSpellRequest("F+2");
+    end
+  end
+
+  local imprisonDebuff = FindDebuff("target", "Imprison");
+  local cycloneDebuff = FindDebuff("target", "Cyclone");
+  if imprisonDebuff ~= nil or cycloneDebuff ~= nil then
+    WowCyborg_CURRENTATTACK = "Imprison";
+    return SetSpellRequest(nil);
+  end
+
+  if skipGlavie == false or (fodder == nil and IsMounted("player") == false) then
+    if IsCastableAtEnemyTarget("Throw Glaive", 0) then
+      WowCyborg_CURRENTATTACK = "Throw Glaive";
+      return SetSpellRequest(glavies);
+    end
+  end
+
+  if dispellable then
+    if IsCastableAtEnemyTarget("Consume Magic", 0) then
+      WowCyborg_CURRENTATTACK = "Consume Magic";
+      return SetSpellRequest(consumeMagic);
+    end
+
+    if InMeleeRange() and IsCastable("Arcane Torrent", 0) then
+      WowCyborg_CURRENTATTACK = "Arcane Torrent";
+      return SetSpellRequest(arcaneTorrent);
+    end
+  end
+
   if InMeleeRange() == false then
     if IsCastableAtEnemyTarget("Felblade", 0) then
       WowCyborg_CURRENTATTACK = "Felblade";
@@ -63,6 +121,11 @@ function RenderSingleTargetRotation()
     return SetSpellRequest(nil);
   end
 
+  if IsMelee() and IsCastable("Immolation Aura", 0) then
+    WowCyborg_CURRENTATTACK = "Immolation Aura";
+    return SetSpellRequest(immolationAura);
+  end
+
   if IsCastableAtEnemyTarget("Eye Beam", 30) then
     WowCyborg_CURRENTATTACK = "Eye Beam";
     return SetSpellRequest(eyeBeam);
@@ -78,11 +141,6 @@ function RenderSingleTargetRotation()
     return SetSpellRequest(chaosStrike);
   end
 
-  if IsCastableAtEnemyTarget("Throw Glaive", 0) then
-    WowCyborg_CURRENTATTACK = "Throw Glaive";
-    return SetSpellRequest(glavies);
-  end
-  
   if IsCastableAtEnemyTarget("Felblade", 0) then
     WowCyborg_CURRENTATTACK = "Felblade";
     return SetSpellRequest(felblade);

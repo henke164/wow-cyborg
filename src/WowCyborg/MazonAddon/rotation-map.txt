@@ -17,7 +17,7 @@ bmmonk	MazonAddon/Combat/MonkBrewmaster.lua
 mwmonk	MazonAddon/Combat/MonkMistweaver.lua
 wwmonk	MazonAddon/Combat/MonkWindwalker.lua
 wwmonk2	MazonAddon/Combat/MonkWindwalker2.lua
-pvpmonk	MazonAddon/Combat/MonkPVPHealer.lua
+monkpvp	MazonAddon/Combat/MonkWindwalkerPvp.lua
 blooddk	MazonAddon/Combat/DKBlood.lua
 unholydk	MazonAddon/Combat/DKUnholy.lua
 pvpdk	MazonAddon/Combat/DKPvp.lua

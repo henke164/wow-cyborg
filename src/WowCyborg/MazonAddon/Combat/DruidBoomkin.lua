@@ -8,10 +8,16 @@ local starsurge = "7";
 ]]--
 
 WowCyborg_PAUSE_KEYS = {
-  "F",
+  "F1",
+  "F2",
+  "F3",
+  "F4",
   "F5",
   "F10",
+  "NUMPAD5",
+  "NUMPAD7",
   "F2",
+  "F",
   "R"
 }
 
@@ -21,9 +27,37 @@ local starfire = "3";
 local wrath = "4";
 local starfall = "6";
 local starsurge = "7";
-local cancelCast = "8";
+local loneEmpowerment = "8";
+
+-- Bear form
+local mangle = 2;
+local frenziedRegen = 3;
+local ironFur = 4;
 
 local shootStarsurge = false;
+
+function RenderBearRotation()
+  local hp = GetHealthPercentage("player");
+  if hp < 70 then
+    if IsCastable("Frenzied Regeneration", 10) then
+      WowCyborg_CURRENTATTACK = "Frenzied Regeneration";
+      return SetSpellRequest(frenziedRegen);
+    end
+    
+    if IsCastable("Ironfur", 40) then
+      WowCyborg_CURRENTATTACK = "Ironfur";
+      return SetSpellRequest(ironFur);
+    end    
+  end
+  
+  if IsCastableAtEnemyTarget("Mangle", 0) then
+    WowCyborg_CURRENTATTACK = "Mangle";
+    return SetSpellRequest(mangle);
+  end
+  
+  WowCyborg_CURRENTATTACK = "-";
+  return SetSpellRequest(nil);
+end
 
 function RenderMultiTargetRotation()
   return RenderSingleTargetRotation(true);
@@ -37,6 +71,11 @@ function RenderSingleTargetRotation(aoe)
     return SetSpellRequest(nil);
   end
 
+  local bear = FindBuff("player", "Bear Form");
+  if bear ~= nil then
+    return RenderBearRotation();
+  end
+
   local channelInfo = UnitChannelInfo("player");
   local castingInfo = UnitCastingInfo("player");
 
@@ -47,21 +86,29 @@ function RenderSingleTargetRotation(aoe)
 
   -- Handle dots
   local dot, dotTl = FindDebuff("target", "Moonfire");
-  if (dot == nil or dotTl < 2) and IsCastableAtEnemyTarget("Moonfire", 0) then
+  if (dot == nil or dotTl < 4) and IsCastableAtEnemyTarget("Moonfire", 0) then
     WowCyborg_CURRENTATTACK = "Moonfire";
     return SetSpellRequest(moonfire);
   end
   
   local dot2, dot2Tl = FindDebuff("target", "Sunfire");
-  if (dot2 == nil or dot2Tl < 2) and IsCastableAtEnemyTarget("Sunfire", 0) then
+  if (dot2 == nil or dot2Tl < 4) and IsCastableAtEnemyTarget("Sunfire", 0) then
     WowCyborg_CURRENTATTACK = "Sunfire";
     return SetSpellRequest(sunfire);
   end
 
   local starfallBuff, starfallBuffTl = FindBuff("player", "Starfall");
 
-  local frenzy = FindBuff("player", "Moonkin Frenzy");
+  local burstCd = GetSpellCooldown("Celestial Alignment", "spell");
 
+  if burstCd > 60 then
+    if IsCastableAtEnemyTarget("Starsurge", 0) and (IsCastable("Lone Empowerment", 0) or IsCastable("Empower Bond", 0)) then
+      WowCyborg_CURRENTATTACK = "Lone Empowerment";
+      return SetSpellRequest(loneEmpowerment);
+    end
+  end
+
+  local frenzy = FindBuff("player", "Moonkin Frenzy");
   if frenzy ~= nil then
     if IsCastableAtEnemyTarget("Starsurge", 0) then
       WowCyborg_CURRENTATTACK = "Starsurge";

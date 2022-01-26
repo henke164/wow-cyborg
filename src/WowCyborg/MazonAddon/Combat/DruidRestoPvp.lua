@@ -34,6 +34,13 @@ local rake = 2;
 local shred = 3;
 local maim = 4;
 
+-- Boomkin form
+local moonfire = "1";
+local sunfire = "2";
+local starfire = "3";
+local wrath = "4";
+local starsurge = "5";
+
 WowCyborg_PAUSE_KEYS = {
   "F2",
   "R",
@@ -93,6 +100,121 @@ end
 function IsMelee()
   return IsSpellInRange("Shred") == 1;
 end
+
+
+function RenderBoomkinRotation()
+  local ggBuff = FindBuff("player", "Galactic Guardian");
+  local dot, dotTl = FindDebuff("target", "Moonfire");
+  if (dot == nil or dotTl < 2) and IsCastableAtEnemyTarget("Moonfire", 0) then
+    WowCyborg_CURRENTATTACK = "Moonfire";
+    return SetSpellRequest(moonfire);
+  end
+  
+  local dot2, dot2Tl = FindDebuff("target", "Sunfire");
+  if (dot2 == nil or dot2Tl < 2) and IsCastableAtEnemyTarget("Sunfire", 0) then
+    WowCyborg_CURRENTATTACK = "Sunfire";
+    return SetSpellRequest(sunfire);
+  end
+
+  local speed = GetUnitSpeed("player");
+  local hotw = FindBuff("player", "Heart of the Wild");
+
+  if (speed == 0 or hotw ~= nil) and IsCastableAtEnemyTarget("Starsurge", 30) then
+    WowCyborg_CURRENTATTACK = "Starsurge";
+    return SetSpellRequest(starsurge);
+  end
+
+  local solar = FindBuff("player", "Eclipse (Solar)");
+  if solar ~= nil then
+    if speed > 0 then
+      if IsCastableAtEnemyTarget("Sunfire", 0) then
+        WowCyborg_CURRENTATTACK = "Sunfire";
+        return SetSpellRequest(sunfire);
+      end
+    end
+
+    if IsCastableAtEnemyTarget("Wrath", 0) then
+      WowCyborg_CURRENTATTACK = "Wrath";
+      return SetSpellRequest(wrath);
+    end
+  end
+  
+  local lunar = FindBuff("player", "Eclipse (Lunar)");
+  if lunar ~= nil then
+    if speed > 0 then
+      if IsCastableAtEnemyTarget("Moonfire", 0) then
+        WowCyborg_CURRENTATTACK = "Moonfire";
+        return SetSpellRequest(moonfire);
+      end
+    end
+
+    if IsCastableAtEnemyTarget("Starfire", 0) then
+      WowCyborg_CURRENTATTACK = "Starfire";
+      return SetSpellRequest(starfire);
+    end
+  end
+
+  local starfireCount = GetSpellCount("Starfire");
+  local wrathCount = GetSpellCount("Wrath");
+
+  if starfireCount > 0 then
+    if castingInfo == "Starfire" and starfireCount == 1 then
+      if IsCastableAtEnemyTarget("Wrath", 0) then
+        WowCyborg_CURRENTATTACK = "Wrath";
+        return SetSpellRequest(wrath);
+      end
+    end
+
+    if speed > 0 then
+      if IsCastableAtEnemyTarget("Moonfire", 0) then
+        WowCyborg_CURRENTATTACK = "Moonfire";
+        return SetSpellRequest(moonfire);
+      end
+    end
+
+    if IsCastableAtEnemyTarget("Starfire", 0) then
+      WowCyborg_CURRENTATTACK = "Starfire";
+      return SetSpellRequest(starfire);
+    end
+  end
+
+  if wrathCount > 0 then
+    if castingInfo == "Wrath" and wrathCount == 1 then
+      if IsCastableAtEnemyTarget("Starfire", 0) then
+        WowCyborg_CURRENTATTACK = "Starfire";
+        return SetSpellRequest(starfire);
+      end
+    end
+
+    if speed > 0 then
+      if IsCastableAtEnemyTarget("Sunfire", 0) then
+        WowCyborg_CURRENTATTACK = "Sunfire";
+        return SetSpellRequest(sunfire);
+      end
+    end
+
+    if IsCastableAtEnemyTarget("Wrath", 0) then
+      WowCyborg_CURRENTATTACK = "Wrath";
+      return SetSpellRequest(wrath);
+    end
+  end
+
+  if speed > 0 then
+    if IsCastableAtEnemyTarget("Moonfire", 0) then
+      WowCyborg_CURRENTATTACK = "Moonfire";
+      return SetSpellRequest(moonfire);
+    end
+  else
+    if IsCastableAtEnemyTarget("Moonfire", 0) then
+      WowCyborg_CURRENTATTACK = "Moonfire";
+      return SetSpellRequest(moonfire);
+    end
+  end
+
+  WowCyborg_CURRENTATTACK = "-";
+  return SetSpellRequest(nil);
+end
+
 
 function RenderBearRotation()
   local hp = GetHealthPercentage("player");
@@ -178,6 +300,11 @@ function RenderSingleTargetRotation(attack)
     return RenderBearRotation();
   end
 
+  local moonkin = FindBuff("player", "Moonkin Form");
+  if moonkin ~= nil then
+    return RenderBoomkinRotation();
+  end
+  
   local cat = FindBuff("player", "Cat Form");
   if cat ~= nil then
     return RenderCatRotation();
@@ -254,17 +381,17 @@ function RenderSingleTargetRotation(attack)
   end
 
   local t_, t__, t___, germinationTalented = GetTalentInfo(7,2,1);
-    local rejuvenationHot2, rejuvenationHotTL2 = FindBuff(target, "Rejuvenation (Germination)");
-    if (rejuvenationHot == nil or rejuvenationHotTL < 1) and IsCastableAtFriendlyUnit(target, "Rejuvenation", 1100) then
-      if germinationTalented then
-        WowCyborg_CURRENTATTACK = "Rejuvenation 2";
-        return SetSpellRequest(rejuvenation);
-      end
-    end
+  local rejuvenationHot2, rejuvenationHotTL2 = FindBuff(target, "Rejuvenation (Germination)");
+  if (rejuvenationHot == nil or rejuvenationHotTL < 1) and IsCastableAtFriendlyUnit(target, "Rejuvenation", 1100) then
+    WowCyborg_CURRENTATTACK = "Rejuvenation 2";
+    return SetSpellRequest(rejuvenation);
+  end
 
   if (rejuvenationHot2 == nil or rejuvenationHotTL2 < 1) and IsCastableAtFriendlyUnit(target, "Rejuvenation", 1100) then
-    WowCyborg_CURRENTATTACK = "Rejuvenation 1";
-    return SetSpellRequest(rejuvenation);
+    if germinationTalented then
+      WowCyborg_CURRENTATTACK = "Rejuvenation 1";
+      return SetSpellRequest(rejuvenation);
+    end
   end
 
   if hp <= 90 and IsCastableAtFriendlyUnit(target, "Adaptive Swarm", 500) then
@@ -272,7 +399,7 @@ function RenderSingleTargetRotation(attack)
     return SetSpellRequest(adaptiveSwarm);
   end
 
-  if IsCastableAtFriendlyUnit(target, "Lifebloom", 800) and hp <= 80 then
+  if IsCastableAtFriendlyUnit(target, "Lifebloom", 800) and hp <= 90 then
     local lifebloomBuff, lbBuffTl = FindBuff(target, "Lifebloom");
 
     if UnitIsPVP("player") then

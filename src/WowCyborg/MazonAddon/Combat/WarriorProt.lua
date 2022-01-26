@@ -49,7 +49,13 @@ end
 function RenderSingleTargetRotation()
   local nearbyEnemies = GetNearbyEnemyCount();
   local targetHp = GetHealthPercentage("target");
-  local bsBuff = FindBuff("player", "Battle Shout")
+  local bsBuff = FindBuff("player", "Battle Shout");
+  
+  if UnitChannelInfo("player") == "Fleshcraft" then
+    WowCyborg_CURRENTATTACK = "Fleshcrafting...";
+    return SetSpellRequest(nil);
+  end
+
   if bsBuff == nil and IsCastable("Battle Shout", 0) then
     WowCyborg_CURRENTATTACK = "Battle Shout";
     return SetSpellRequest(battleShout);

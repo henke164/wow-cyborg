@@ -58,57 +58,6 @@ function IsCastableAtEnemyName(spellName, target)
   return IsCastable(spellName, 0);
 end
 
-function GetTowerResult()
-  local castingInfo = UnitCastingInfo("Focus");
-  if castingInfo == "Twisted Reflection" then
-    if IsCastableAtEnemyName("Skull Bash", "Focus") then
-      WowCyborg_CURRENTATTACK = "Interrupt Twisted Reflection";
-      return SetSpellRequest("F+5");
-    end
-  end
-  
-  if castingInfo == "Drain Life" then
-    if IsCastableAtEnemyName("Skull Bash", "Focus") then
-      WowCyborg_CURRENTATTACK = "Interrupt Drain Life";
-      return SetSpellRequest("F+5");
-    end
-  end
-
-  for i = 1, 40 do
-    if UnitExists('nameplate' .. i) and CheckInteractDistance("nameplate"..i, 1) == true and UnitCanAttack("player", 'nameplate' .. i) then
-      local castingInfo, _, __, ___, castingEndTime = UnitCastingInfo("nameplate"..i);
-      if castingInfo == "Nether Storm" then
-        local finish = castingEndTime / 1000 - GetTime();
-        if finish < 1.7 then
-          if IsCastable("Incapacitating Roar", 0) then
-            WowCyborg_CURRENTATTACK = "Incapacitating Roar";
-            return SetSpellRequest("F+2");
-          end
-        end
-
-        if IsCastable("Thrash", 0) then
-          WowCyborg_CURRENTATTACK = "Thrash";
-          return SetSpellRequest(thrash);
-        end
-
-        if IsCastable("Swipe", 0) then
-          WowCyborg_CURRENTATTACK = "Swipe";
-          return SetSpellRequest(swipe);
-        end
-      end
-
-          
-      if UnitChannelInfo("nameplate"..i) == "Nether Storm" then
-        if IsCastable("Incapacitating Roar", 0) then
-          WowCyborg_CURRENTATTACK = "Incapacitating Roar";
-          return SetSpellRequest("F+2");
-        end
-      end
-
-    end
-  end
-end
-
 function RenderBoomkinRotation()
   local ggBuff = FindBuff("player", "Galactic Guardian");
   local dot, dotTl = FindDebuff("target", "Moonfire");
@@ -223,11 +172,6 @@ function RenderBoomkinRotation()
 end
 
 function RenderMultiTargetRotation()
-  local towerResult = GetTowerResult();
-  if towerResult then
-    return towerResult;
-  end
-
   if UnitChannelInfo("player") == "Fleshcraft" then
     WowCyborg_CURRENTATTACK = "-";
     return SetSpellRequest(nil);
@@ -304,11 +248,6 @@ function RenderMultiTargetRotation()
 end
 
 function RenderSingleTargetRotation()
-  local towerResult = GetTowerResult();
-  if towerResult then
-    return towerResult;
-  end
-
   if UnitChannelInfo("player") == "Convoke the Spirits" then
     WowCyborg_CURRENTATTACK = "-";
     return SetSpellRequest(nil);
@@ -363,10 +302,10 @@ function RenderSingleTargetRotation()
     return SetSpellRequest(nil);
   end
   
-  if IsCastableAtEnemyTarget("Maul", 40) then
-    WowCyborg_CURRENTATTACK = "Maul";
-    return SetSpellRequest("7");
-  end
+  --if IsCastableAtEnemyTarget("Maul", 40) then
+    --WowCyborg_CURRENTATTACK = "Maul";
+    --return SetSpellRequest("7");
+  --end
 
   local _, bleedDotTl, bleedDots = FindDebuff("target", "Thrash");
   

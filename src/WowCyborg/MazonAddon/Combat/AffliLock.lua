@@ -11,6 +11,8 @@ local phantom = "6";
 local darkglare = "7";
 local drainLife = "8";
 local rapidContagion = "9";
+local shadowbolt = "F+7";
+local deathbolt = "F+6";
 
 local interruptArena1 = "CTRL+1";
 local interruptArena2 = "CTRL+2";
@@ -73,7 +75,7 @@ function RenderSingleTargetRotation(skipslow)
   local corruptionDebuff = FindDebuff("target", "Corruption");
 
   if skipslow == nil then
-    if (coe == nil and bof == nil and bstorm == nil) then
+    if (coe == nil and bof == nil and bstorm == nil and speed ~= 0) then
       if IsCastableAtEnemyTarget("Curse of Exhaustion", 500) then
         WowCyborg_CURRENTATTACK = "Curse of Exhaustion";
         return SetSpellRequest("0");
@@ -158,7 +160,12 @@ function RenderSingleTargetRotation(skipslow)
       end
     end
 
-    if saveForContagion == false then
+    if saveForContagion == false and shards > 2 then
+      if IsCastableAtEnemyTarget("Deathbolt", 1000) then
+        WowCyborg_CURRENTATTACK = "Deathbolt";
+        return SetSpellRequest(deathbolt);
+      end
+      
       if IsCastableAtEnemyTarget("Agony", 500) and IsCastableAtEnemyTarget("Malefic Rapture", 250) then
         WowCyborg_CURRENTATTACK = "Malefic Rapture";
         return SetSpellRequest(maleficRapture);
@@ -180,10 +187,10 @@ function RenderSingleTargetRotation(skipslow)
         return SetSpellRequest(drainLife);
       end
     end
-
-    if IsCastableAtEnemyTarget("Shadow Bolt", 1000) then
-      WowCyborg_CURRENTATTACK = "Shadow Bolt";
-      return SetSpellRequest("0");
+    
+    if IsCastableAtEnemyTarget("Unstable Affliction", 500) then
+      WowCyborg_CURRENTATTACK = "Unstable Affliction";
+      return SetSpellRequest(unstableAffliction);
     end
   else
     if IsCastableAtEnemyTarget("Agony", 500) and agonyStacks < 10 then
@@ -192,6 +199,11 @@ function RenderSingleTargetRotation(skipslow)
     end
   end
 
+  if IsCastableAtEnemyTarget("Unstable Affliction", 500) then
+    WowCyborg_CURRENTATTACK = "Unstable Affliction";
+    return SetSpellRequest(unstableAffliction);
+  end
+  
   WowCyborg_CURRENTATTACK = "-";
   return SetSpellRequest(nil);
 end

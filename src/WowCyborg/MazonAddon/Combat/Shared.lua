@@ -103,7 +103,6 @@ function FindDebuff(target, buffName)
     end
   end
 end
-
 function IsCastable(spellName, requiredEnergy)
   local usable, known = IsUsableSpell(spellName);
   if (usable == false and known == false) then

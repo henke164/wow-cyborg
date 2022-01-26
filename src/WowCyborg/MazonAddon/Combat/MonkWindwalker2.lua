@@ -10,14 +10,17 @@
 ]]--
 
 local tigerPalm = "2";
-local chiBurst = "3";
+local fistOfTheWhiteTiger = "3";
 local fistsOfFury = "4";
 local risingSunKick = "5";
 local expelHarm = "6";
 local blackoutKick = "7";
 local spinningCraneKick = "8";
 local whirlinDragonPunch = "9";
-local fistOfTheWhiteTiger = "0";
+local chiBurst = "F+8";
+local ancestralCall = "F+5";
+local invokexuen = "F+6";
+local stormEarthFire = "F+7";
 
 WowCyborg_PAUSE_KEYS = {
   "F2",
@@ -97,6 +100,7 @@ function RenderMultiTargetRotation()
 end
 
 function RenderSingleTargetRotation()
+  local brewed = FindDebuff("target", "Bonedust Brew");
   local energy = UnitPower("player");
   local chi = UnitPower("player", 12);
   local bokBuff = FindBuff("player", "Blackout Kick!");
@@ -111,6 +115,30 @@ function RenderSingleTargetRotation()
     return SetSpellRequest(nil);
   end
   
+  if brewed then
+    if IsCastable("Ancestral Call", 0) then
+      WowCyborg_CURRENTATTACK = "Ancestral Call";
+      return SetSpellRequest(ancestralCall);
+    end
+
+    if IsCastableAtEnemyTarget("Invoke Xuen, the White Tiger", 0) then
+      WowCyborg_CURRENTATTACK = "Invoke Xuen";
+      return SetSpellRequest(invokexuen);
+    end
+
+    local stormBuff = FindBuff("player", "Storm, Earth, and Fire");
+    if stormBuff == nil and IsCastableAtEnemyTarget("Storm, Earth, and Fire", 0) then
+      WowCyborg_CURRENTATTACK = "Storm, Earth, and Fire";
+      return SetSpellRequest(stormEarthFire);
+    end
+
+    if IsCastableAtEnemyTarget("Invoke Xuen, the White Tiger", 0) then
+      WowCyborg_CURRENTATTACK = "Invoke Xuen";
+      return SetSpellRequest(invokexuen);
+    end
+    
+  end
+
   if chi < 3 then
     if IsCastableAtEnemyTarget("Fist of the White Tiger", 80) then
       WowCyborg_CURRENTATTACK = "Fist of the White Tiger";
@@ -143,7 +171,7 @@ function RenderSingleTargetRotation()
     return SetSpellRequest(spinningCraneKick);
   end
 
-  if IsCastableAtEnemyTarget("Rising Sun Kick", 0) then
+  if chi > 1 and IsCastableAtEnemyTarget("Rising Sun Kick", 0) then
     WowCyborg_CURRENTATTACK = "Rising Sun Kick";
     return SetSpellRequest(risingSunKick);
   end
