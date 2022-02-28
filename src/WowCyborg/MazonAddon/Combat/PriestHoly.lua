@@ -25,16 +25,6 @@ penance[3] = "CTRL+3";
 penance[4] = "CTRL+4";
 penance[5] = "CTRL+5";
 
-WowCyborg_PAUSE_KEYS = {
-  "0",
-  "R",
-  "LSHIFT",
-  "NUMPAD1",
-  "NUMPAD3",
-  "NUMPAD8",
-  "§"
-}
-
 local healingTarget = {
   index = nil,
   name = nil,

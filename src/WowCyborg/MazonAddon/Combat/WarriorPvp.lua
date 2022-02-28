@@ -133,7 +133,7 @@ function RenderSingleTargetRotation(skipSlow)
     return SetSpellRequest(sweepingStrikes);
   end
 
-  if IsCastableAtEnemyTarget("Execute", 20) then
+  if IsCastableAtEnemyTarget("Execute", 40) then
     WowCyborg_CURRENTATTACK = "Execute";
     return SetSpellRequest(execute);
   end

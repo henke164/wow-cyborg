@@ -24,6 +24,9 @@ local victoryRush = "SHIFT+2";
 WowCyborg_PAUSE_KEYS = {
   "F2",
   "F3",
+  "NUMPAD5",
+  "F",
+  "LSHIFT"
 }
 
 function RenderMultiTargetRotation()
@@ -88,7 +91,7 @@ function RenderSingleTargetRotation(aoe)
   end
 
   if enrageBuff ~= nil and enrageTime > 0 and aoe then
-    if IsCastableAtEnemyTarget("Bladestorm", 0) then
+    if IsCastableAtEnemyTarget("Bladestorm", 0) or IsCastableAtEnemyTarget("Dragon Roar", 0) then
       WowCyborg_CURRENTATTACK = "Bladestorm";
       return SetSpellRequest(bladestorm);
     end

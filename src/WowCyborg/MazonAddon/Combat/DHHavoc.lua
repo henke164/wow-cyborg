@@ -34,14 +34,15 @@ WowCyborg_PAUSE_KEYS = {
   "NUMPAD5",
   "NUMPAD7",
   "NUMPAD8",
-  "NUMPAD9"
+  "NUMPAD9",
+  "MOUSE3"
 }
 
 function HasDispellableBuff(target)
   for i=1,40 do
     local name, rank, icon, count, debuffType, duration, expirationTime, unitCaster, isStealable, shouldConsolidate, spellId = UnitBuff(target, i);
     if name ~= nil then
-      if shouldConsolidate and debuffType == 12 then
+      if shouldConsolidate and (debuffType == 12 or debuffType == 10) then
         return true;
       end
     end    
@@ -76,7 +77,7 @@ function RenderSingleTargetRotation(skipGlavie)
     return SetSpellRequest(nil);
   end
 
-  if skipGlavie == false or (fodder == nil and IsMounted("player") == false) then
+  if skipGlavie ~= true or (fodder == nil and IsMounted("player") == false) then
     if IsCastableAtEnemyTarget("Throw Glaive", 0) then
       WowCyborg_CURRENTATTACK = "Throw Glaive";
       return SetSpellRequest(glavies);
