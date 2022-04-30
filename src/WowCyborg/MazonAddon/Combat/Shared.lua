@@ -11,7 +11,7 @@ end
 
 local spellButtonTexture;
 local buttonCombinerTexture;
-local letterButtonTexture;
+local letterToggleTexture;
 
 function CreateDefaultFrame(x, y, width, height)
   local frame = CreateFrame("Frame");
@@ -29,9 +29,8 @@ function CreateDefaultFrame(x, y, width, height)
 end
 
 function CreateRotationFrame()
-  frame, spellButtonTexture = CreateDefaultFrame(frameSize, frameSize, frameSize, frameSize);
-  __, letterButton1Texture = CreateDefaultFrame(frameSize, frameSize * 2, frameSize, frameSize);
-  __, letterButton2Texture = CreateDefaultFrame(frameSize * 2, frameSize * 2, frameSize, frameSize);
+  _, letterToggleTexture = CreateDefaultFrame(frameSize, frameSize, frameSize, frameSize);
+  frame, spellButtonTexture = CreateDefaultFrame(frameSize * 2, frameSize, frameSize, frameSize);
   _, buttonCombinerTexture = CreateDefaultFrame(frameSize * 3, frameSize, frameSize, frameSize);
   
   frame:EnableKeyboard(true);
@@ -66,21 +65,42 @@ function SetSpellRequest(buttonCombination)
     r, g, b = GetColorFromNumber(nil);
     buttonCombinerTexture:SetColorTexture(r, g, b);
     spellButtonTexture:SetColorTexture(r, g, b);
-    letterButtonTexture:SetColorTexture(r, g, b);
     return true
   end
 
   local b1, b2 = strsplit("+", buttonCombination);
-  
   if b2 == nil then
+    local letterNum1, letterNum2 = GetNumbersFromLetter(b1);
+    if letterNum1 ~= nil and letterNum2 ~= nil then
+      -- Alphabetic keypress
+      letterToggleTexture:SetColorTexture(0, 1, 0);
+      spellButtonTexture:SetColorTexture(GetColorFromNumber(letterNum1));
+      buttonCombinerTexture:SetColorTexture(GetColorFromNumber(letterNum2));
+      print("setting colors ")
+      print(letterNum1)
+      print(letterNum2)
+      return true;
+    end
+
+    -- Numeric keypress
+    letterToggleTexture:SetColorTexture(GetColorFromButton(nil));
     buttonCombinerTexture:SetColorTexture(GetColorFromButton(nil));
-    letterButtonTexture:SetColorTexture(GetColorFromButton(nil));
     spellButtonTexture:SetColorTexture(GetColorFromNumber(tonumber(b1)));
     return true
   end
 
+  local letterNum1, letterNum2 = GetNumbersFromLetter(b2);
+  if letterNum1 ~= nil and letterNum2 ~= nil then
+    -- Alphabetic keypress
+    letterToggleTexture:SetColorTexture(0, 1, 0);
+    spellButtonTexture:SetColorTexture(GetColorFromNumber(letterNum1));
+    buttonCombinerTexture:SetColorTexture(GetColorFromNumber(letterNum2));
+    return true;
+  end
+
+  -- Numeric keypress
+  letterToggleTexture:SetColorTexture(GetColorFromButton(nil));
   buttonCombinerTexture:SetColorTexture(GetColorFromButton(b1));
-  letterButtonTexture:SetColorTexture(GetColorFromNumber(tonumber(b2)));
   spellButtonTexture:SetColorTexture(GetColorFromNumber(tonumber(b2)));
   return true
 end

@@ -19,6 +19,7 @@ wwmonk	MazonAddon/Combat/MonkWindwalker.lua
 wwmonk2	MazonAddon/Combat/MonkWindwalker2.lua
 monkpvp	MazonAddon/Combat/MonkWindwalkerPvp.lua
 blooddk	MazonAddon/Combat/DKBlood.lua
+blooddk2	MazonAddon/Combat/DKBlood2.lua
 unholydk	MazonAddon/Combat/DKUnholy.lua
 pvpdk	MazonAddon/Combat/DKPvp.lua
 pvpdk2	MazonAddon/Combat/DKPvp2.lua
@@ -62,13 +63,16 @@ resto	MazonAddon/Combat/DruidResto2.lua
 bmhunter2	MazonAddon/Combat/HunterBM2.lua
 bmhunter3	MazonAddon/Combat/HunterBM3.lua
 island	MazonAddon/Combat/IslandGroup.lua
-destro	MazonAddon/Combat/DestroLock.lua
+destro	MazonAddon/Combat/Destro.lua
 demo	MazonAddon/Combat/DemoLock.lua
+demo2	MazonAddon/Combat/DemoLock2.lua
 affli	MazonAddon/Combat/AffliLock.lua
+afflipve	MazonAddon/Combat/AffliPve.lua
 group	MazonAddon/Combat/Group.lua
 tailor	MazonAddon/Combat/Tailor.lua
 demoLvl	MazonAddon/Combat/DemoLeveling.lua
 holypala	MazonAddon/Combat/PalaHoly.lua
+palaraid	MazonAddon/Combat/PalaHolyRaider.lua
 holypvp	MazonAddon/Combat/PalaHolyPvp.lua
 protpala	MazonAddon/Combat/PalaTank.lua
 retripala	MazonAddon/Combat/PalaRetri.lua

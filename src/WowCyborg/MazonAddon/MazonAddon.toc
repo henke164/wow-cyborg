@@ -8,5 +8,4 @@ Combat\Rotation.lua
 Combat\Shared.lua
 
 MazonAddon.lua
-Positioning\PlayerPositioning.lua
 OCR.lua

@@ -164,9 +164,6 @@
     <None Include="MazonAddon\Combat\DruidTank.lua">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="MazonAddon\Combat\Group.lua">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
     <None Include="MazonAddon\Combat\HunterBM.lua">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

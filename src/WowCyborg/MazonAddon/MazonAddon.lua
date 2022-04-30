@@ -76,6 +76,6 @@ function CreateFacingCheckFrame()
 end
 
 CreateCombatFrame();
-CreateFacingCheckFrame();
+--CreateFacingCheckFrame();
 CreateRotationFrame();
 CreateWrapperFrame();
