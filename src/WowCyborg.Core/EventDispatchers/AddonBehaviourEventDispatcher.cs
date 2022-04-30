@@ -212,6 +212,11 @@ namespace WowCyborg.Core.EventDispatchers
                 return Keys.LShiftKey;
             }
 
+            if (c.R > 200 && c.G > 200 && c.B == 0)
+            {
+                return Keys.LMenu;
+            }
+
             if (c.R > 200 && c.G == 0 && c.B == 0)
             {
                 return Keys.F1;

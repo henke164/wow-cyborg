@@ -187,11 +187,6 @@ function RenderSingleTargetRotation(skipslow)
         return SetSpellRequest(drainLife);
       end
     end
-    
-    if IsCastableAtEnemyTarget("Unstable Affliction", 500) then
-      WowCyborg_CURRENTATTACK = "Unstable Affliction";
-      return SetSpellRequest(unstableAffliction);
-    end
   else
     if IsCastableAtEnemyTarget("Agony", 500) and agonyStacks < 10 then
       WowCyborg_CURRENTATTACK = "Agony";
@@ -199,9 +194,9 @@ function RenderSingleTargetRotation(skipslow)
     end
   end
 
-  if IsCastableAtEnemyTarget("Unstable Affliction", 500) then
-    WowCyborg_CURRENTATTACK = "Unstable Affliction";
-    return SetSpellRequest(unstableAffliction);
+  if IsCastableAtEnemyTarget("Shadow Bolt", 500) then
+    WowCyborg_CURRENTATTACK = "Shadow Bolt";
+    return SetSpellRequest(shadowbolt);
   end
   
   WowCyborg_CURRENTATTACK = "-";

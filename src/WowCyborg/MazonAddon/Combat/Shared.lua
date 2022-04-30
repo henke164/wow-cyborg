@@ -11,6 +11,7 @@ end
 
 local spellButtonTexture;
 local buttonCombinerTexture;
+local letterButtonTexture;
 
 function CreateDefaultFrame(x, y, width, height)
   local frame = CreateFrame("Frame");
@@ -28,7 +29,9 @@ function CreateDefaultFrame(x, y, width, height)
 end
 
 function CreateRotationFrame()
-  frame, spellButtonTexture = CreateDefaultFrame(frameSize * 2, frameSize, frameSize, frameSize);
+  frame, spellButtonTexture = CreateDefaultFrame(frameSize, frameSize, frameSize, frameSize);
+  __, letterButton1Texture = CreateDefaultFrame(frameSize, frameSize * 2, frameSize, frameSize);
+  __, letterButton2Texture = CreateDefaultFrame(frameSize * 2, frameSize * 2, frameSize, frameSize);
   _, buttonCombinerTexture = CreateDefaultFrame(frameSize * 3, frameSize, frameSize, frameSize);
   
   frame:EnableKeyboard(true);
@@ -63,6 +66,7 @@ function SetSpellRequest(buttonCombination)
     r, g, b = GetColorFromNumber(nil);
     buttonCombinerTexture:SetColorTexture(r, g, b);
     spellButtonTexture:SetColorTexture(r, g, b);
+    letterButtonTexture:SetColorTexture(r, g, b);
     return true
   end
 
@@ -70,11 +74,13 @@ function SetSpellRequest(buttonCombination)
   
   if b2 == nil then
     buttonCombinerTexture:SetColorTexture(GetColorFromButton(nil));
+    letterButtonTexture:SetColorTexture(GetColorFromButton(nil));
     spellButtonTexture:SetColorTexture(GetColorFromNumber(tonumber(b1)));
     return true
   end
 
   buttonCombinerTexture:SetColorTexture(GetColorFromButton(b1));
+  letterButtonTexture:SetColorTexture(GetColorFromNumber(tonumber(b2)));
   spellButtonTexture:SetColorTexture(GetColorFromNumber(tonumber(b2)));
   return true
 end
@@ -103,6 +109,7 @@ function FindDebuff(target, buffName)
     end
   end
 end
+
 function IsCastable(spellName, requiredEnergy)
   local usable, known = IsUsableSpell(spellName);
   if (usable == false and known == false) then

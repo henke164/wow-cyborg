@@ -141,20 +141,10 @@ function RenderSingleTargetRotation()
       end
     end
 
-<<<<<<< HEAD
-    if IsMelee() then
-      WowCyborg_CURRENTATTACK = "Claw";
-      return SetSpellRequest(claw);
-    end
-
-    WowCyborg_CURRENTATTACK = "-";
-    return SetSpellRequest(nil);
-=======
     --if IsCastableAtEnemyTarget("Claw", 0) then
       WowCyborg_CURRENTATTACK = "Claw";
       return SetSpellRequest(claw);
     --end
->>>>>>> b7b6ecd464949b37c4a941f4bb784c6febfb99d8
   end
 
   WowCyborg_CURRENTATTACK = "-";

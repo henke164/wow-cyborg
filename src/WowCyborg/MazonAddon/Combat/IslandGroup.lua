@@ -11,18 +11,19 @@
 ]]--
 
 local sendingMail = false;
+local pressSendMailButton = false;
 local clickedAt = 0;
 local switchCounter = 0;
 local lastRepair = 0;
 local mountCounter = 0;
 local repairVendorName = "Drix Blackwrench";
 local mailerNpcName = "Katy Stampwhistle";
-local createRepair = "SHIFT+6";
-local createRepairAt = 0;
-local targetRepair = "SHIFT+5";
-local targetMailer = "SHIFT+7";
-local interact = "CTRL+0";
-local targetMacro = "9";
+local targetRepair = "F+5";
+local targetMailer = "F+6";
+local sendMailMacro = "F+7";
+
+local interact = "F+9";
+local targetMacro = "F+8";
 
 local barbedShot = "1";
 local killCommand = "2";
@@ -130,14 +131,35 @@ function RenderWarlockRotation()
     end
   end
 
+  local petHp = GetHealthPercentage("pet");
+  if tostring(petHp) == "-nan(ind)" then
+    if IsCastable("Fel domination", 0) then
+      WowCyborg_CURRENTATTACK = "Fel domination";
+      return SetSpellRequest(8);
+    end
+    
+    if IsCastable("Summon Imp", 0) then
+      WowCyborg_CURRENTATTACK = "Summon Imp";
+      return SetSpellRequest(0);
+    end
+  end
+
   if (UnitCanAttack("player", "target")) then
+    local nearbyEnemies = GetNearbyEnemyCount();
     local dcBuff = FindBuff("player", "Demonic Calling");
     local shards = UnitPower("player", 7)
     if shards >= 2 then
       WowCyborg_CURRENTATTACK = "Hand of Gul'dan";
       return SetSpellRequest("4");
     end
-  
+
+    if nearbyEnemies > 3 then
+      if IsCastable("Summon Demonic Tyrant", 0) then
+        WowCyborg_CURRENTATTACK = "Summon Demonic Tyrant";
+        return SetSpellRequest("2");
+      end
+    end
+    
     local dcoBuff = FindBuff("player", "Demonic Core")
     if dcoBuff ~= nil then 
       WowCyborg_CURRENTATTACK = "Demonic";
@@ -353,6 +375,76 @@ function RenderHunterRotation()
   return SetSpellRequest(nil);
 end
 
+-------------------------------------- Paladin VENDOR --------------------------------------------
+
+function RenderPaladinRotation()
+  local vendorResult = HandleVendoring()
+  if vendorResult == true then
+    return;
+  end
+
+  local target = UnitName("target")
+  local targetHp = GetHealthPercentage("target")
+  if target == nil or UnitCanAttack("player", "target") == false or targetHp < 2 then
+    WowCyborg_CURRENTATTACK = "Target"
+    return SetSpellRequest(targetMacro)
+  end
+
+  local holyPower = UnitPower("player", 9);
+  local poweredUp = holyPower > 2;
+
+  local divine = FindBuff("player", "Divine Purpose")
+  if poweredUp == false then
+    poweredUp = divine ~= nil;
+  end
+
+  local concetration = FindBuff("player", "Consecration");
+  if concetration == nil and IsCastableAtEnemyTarget("Consecration", 0) then
+    WowCyborg_CURRENTATTACK = "Consecration";
+    return SetSpellRequest(6);
+  end
+
+  local nearbyEnemies = GetNearbyEnemyCount();
+
+  if nearbyEnemies > 4 and IsCastable("Avenging Wrath", 0) then
+    WowCyborg_CURRENTATTACK = "Avenging Wrath";
+    return SetSpellRequest("F+4");
+  end
+
+  if IsCastableAtEnemyTarget("Avenger's Shield", 0) then
+    WowCyborg_CURRENTATTACK = "Avenger's Shield";
+    return SetSpellRequest(2);
+  end
+
+  if IsCastableAtEnemyTarget("Hammer of Wrath", 0) then
+    WowCyborg_CURRENTATTACK = "Hammer of Wrath";
+    return SetSpellRequest(5);
+  end
+
+  if IsCastableAtEnemyTarget("Blessed Hammer", 0) then
+    WowCyborg_CURRENTATTACK = "Blessed Hammer";
+    return SetSpellRequest(3);
+  end
+
+  if IsCastableAtEnemyTarget("Shield of the Righteous", 0) and poweredUp then
+    WowCyborg_CURRENTATTACK = "Shield of the Righteous";
+    return SetSpellRequest(4);
+  end
+
+  if IsCastableAtEnemyTarget("Judgment", 0) then
+    WowCyborg_CURRENTATTACK = "Judgment";
+    return SetSpellRequest(1);
+  end
+  
+  if IsCastableAtEnemyTarget("Divine Toll", 0) then
+    WowCyborg_CURRENTATTACK = "Divine Toll";
+    return SetSpellRequest(7);
+  end
+
+  WowCyborg_CURRENTATTACK = "-";
+  return SetSpellRequest(nil);
+end
+
 -------------------------------------- DK VENDOR --------------------------------------------
 function RenderDKRotation()
   local vendorResult = HandleVendoring()
@@ -429,25 +521,44 @@ function RenderBoomkinRotation()
   end
 
   local eclipse = UnitPower("player", 8);
+  local speed = GetUnitSpeed("player");
 
-  if eclipse >= 40 then
-    WowCyborg_CURRENTATTACK = "Starsurge"
-    return SetSpellRequest("5")
+  if eclipse >= 50 then
+    WowCyborg_CURRENTATTACK = "Starfall"
+    return SetSpellRequest("6")
   end
 
-  local sfDebuff = FindDebuff("target", "Sunfire");
-  if sfDebuff == nil then
-    WowCyborg_CURRENTATTACK = "Sunfire"
-    return SetSpellRequest("2")
+  local solar = FindBuff("player", "Eclipse (Solar)");
+  if solar ~= nil then
+    if speed > 0 then
+      if IsCastableAtEnemyTarget("Sunfire", 0) then
+        WowCyborg_CURRENTATTACK = "Sunfire";
+        return SetSpellRequest(sunfire);
+      end
+    end
+
+    if IsCastableAtEnemyTarget("Wrath", 0) then
+      WowCyborg_CURRENTATTACK = "Wrath";
+      return SetSpellRequest(wrath);
+    end
+  end
+  
+  local lunar = FindBuff("player", "Eclipse (Lunar)");
+  if lunar ~= nil then
+    if speed > 0 then
+      if IsCastableAtEnemyTarget("Moonfire", 0) then
+        WowCyborg_CURRENTATTACK = "Moonfire";
+        return SetSpellRequest(moonfire);
+      end
+    end
+
+    if IsCastableAtEnemyTarget("Starfire", 0) then
+      WowCyborg_CURRENTATTACK = "Starfire";
+      return SetSpellRequest(starfire);
+    end
   end
 
-  local sfDebuff = FindDebuff("target", "Moonfire");
-  if sfDebuff == nil then
-    WowCyborg_CURRENTATTACK = "Moonfire"
-    return SetSpellRequest("1")
-  end
-
-  WowCyborg_CURRENTATTACK = "Solar wrath " .. solarEmpowerment
+  WowCyborg_CURRENTATTACK = "Solar wrath";
   return SetSpellRequest("4")
 end
 
@@ -456,6 +567,11 @@ function RenderMultiTargetRotation()
 end
 
 function RenderSingleTargetRotation()
+  if pressSendMailButton then
+    WowCyborg_CURRENTATTACK = "Pressing Send!"
+    return SetSpellRequest(sendMailMacro)
+  end
+
   if sendingMail then
     return HandleMailing()
   end
@@ -476,8 +592,8 @@ function RenderSingleTargetRotation()
     return;
   end
   
-  if name == "Worrax" then
-    return RenderMazonRotation()
+  if className == "Hunter" then
+    return RenderHunterRotation()
   end
   
   if className == "Warlock" then
@@ -495,6 +611,10 @@ function RenderSingleTargetRotation()
   if className == "Mage" then
     return RenderDKRotation()--RenderMageRotation()
   end
+  
+  if className == "Paladin" then
+    return RenderPaladinRotation()
+  end
 
   WowCyborg_CURRENTATTACK = "-"
   return SetSpellRequest(nil)
@@ -506,7 +626,7 @@ function SellJunk()
     for s=1,GetContainerNumSlots(b) do 
       i={GetContainerItemInfo(b,s)}
       n=i[7]
-      if n and string.find(n,"Deep Sea Satin") == nil and (string.find(n,"Map") or string.find(n,"9d9d9d") or string.find(n,"1eff00")) then 
+      if n then 
         v={GetItemInfo(n)}
         q=i[2]
         c=c+v[11]*q;
@@ -575,7 +695,7 @@ function HandleMailing()
   end
 
   if GossipFrame:IsVisible() == true then
-    SelectGossipOption(1);
+    C_GossipInfo.SelectOption(1);
     return true;
   end
   
@@ -594,17 +714,20 @@ end
 
 function SendLootToBank() 
   MailFrameTab_OnClick(MailFrame,2) 
-  SendMailNameEditBox:SetText("Mazbank")
+  SendMailNameEditBox:SetText("Mazonbank")
   SendMailSubjectEditBox:SetText("payout")
 
-  local money = GetMoney()
-  if (money > 100000) then
-    SetSendMailMoney(money - 100000)
-  end
+  local money = floor(GetMoney() / 10000);
+  SendMailMoneyGold:SetText(money);
   
   local c,i,n,v=0;
-  for b=0,4 do 
+  local count = 0;
+  for b=0,4 do
     for s=1,GetContainerNumSlots(b) do 
+      if count > 11 then
+        break;
+      end
+
       i={GetContainerItemInfo(b,s)}
       n=i[7]
       if n then
@@ -612,20 +735,23 @@ function SendLootToBank()
         quality = v[3];
         ilvl = v[4];
         if ilvl ~= nil and quality ~= nil then
-          if (string.find(n,"Tidespray Linen") ~= nil or (quality == 4 and ilvl < 400)) then
-            if (C_Item.IsBound(ItemLocation:CreateFromBagAndSlot(b, s)) == false) then
-              q=i[2]
-              c=c+v[11]*q;
-              UseContainerItem(b,s)
-              print(n,q)
-            end
-          end;
+          if (C_Item.IsBound(ItemLocation:CreateFromBagAndSlot(b, s)) == false) then
+            q=i[2]
+            c=c+v[11]*q;
+            UseContainerItem(b,s)
+            count = count + 1
+          end
         end;
       end;
     end;
   end;
 
-  SendMailFrame_SendMail()
+  C_Timer.After(3, function()
+    print("Sending mail...");
+    SendMailNameEditBox:ClearFocus();
+    pressSendMailButton = false;
+    WowCyborg_DISABLED = false;
+  end)
 end
 
 function CreateMailListenerFrame()
@@ -633,26 +759,22 @@ function CreateMailListenerFrame()
   frame:RegisterEvent("CHAT_MSG_SAY");
   frame:SetScript("OnEvent", function(self, event, ...)
     command = ...;
-    if string.find(command, "mailtime", 1, true) then
-      print("Mail")
-      sendingMail = true;      
+    if string.find(command, ".", 1, true) then
+      sendingMail = true;  
+      C_Timer.After(5, function()
+        print("Sending mail...");
+        WowCyborg_DISABLED = true;
+        SendLootToBank()
+      end)    
     end
-
-    if string.find(command, "pay", 1, true) then
-      WowCyborg_DISABLED = true;
-      SendLootToBank()
-    end
-
-    if string.find(command, "ok", 1, true) then
-      WowCyborg_DISABLED = false;
+    
+    if string.find(command, "k", 1, true) then
+      print("Resuming...");
+      pressSendMailButton = false;
       sendingMail = false;
       lastCheckSum = 0;
       lastCheckTime = 0;
       MailFrame:Hide()
-    end
-
-    if string.find(command, "reload", 1, true) then
-      ReloadUI();
     end
   end)
 end

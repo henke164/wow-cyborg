@@ -2,16 +2,15 @@
   Button    Spell
 ]]--
 
-local wakeOfAshes = 1;
-local bladeOfJustice = 2;
-local judgment = 3;
-local hammerOfWrath = 4;
-local crusaderStrike = 5;
-local templarsVeridict = 6;
-local divineStorm = 7;
-local divineToll = 8;
-local seraphim = 9;
-
+local buttons = {}
+buttons["wake_of_ashes"] = "1";
+buttons["blade_of_justice"] = "2";
+buttons["judgment"] = "3";
+buttons["hammer_of_wrath"] = "4";
+buttons["crusader_strike"] = "5";
+buttons["templars_verdict"] = "6";
+buttons["divine_storm"] = "7";
+buttons["consecration"] = "9";
 
 WowCyborg_PAUSE_KEYS = {
   "F1",
@@ -24,6 +23,12 @@ WowCyborg_PAUSE_KEYS = {
   "F",
   "R",
   "LSHIFT",
+  "NUMPAD1",
+  "NUMPAD2",
+  "NUMPAD5",
+  "NUMPAD7",
+  "NUMPAD8",
+  "NUMPAD9",
   "ESCAPE",
   "NUMPAD5"
 }
@@ -33,89 +38,39 @@ function IsMelee()
 end
 
 function RenderMultiTargetRotation()
-  return RenderSingleTargetRotation(true);
+  Hekili.DB.profile.toggles.mode.value = "aoe";
+  return RenderRotation();
 end
 
-function RenderSingleTargetRotation(aoe)
-  local saveForSeraphim = false;
-  local holyPower = UnitPower("player", 9);
-  local epowerBuff = FindBuff("player", "Empyrean Power");
-  local wrathBuff = FindBuff("player", "Avenging Wrath");
-  local awCd = GetSpellCooldown("Avenging Wrath", "spell");
+function RenderSingleTargetRotation()
+  Hekili.DB.profile.toggles.mode.value = "single";
+  return RenderRotation();
+end
 
-  if wrathBuff ~= nil or awCd > 45 then
+function RenderRotation()
+  if IsMelee() == false then
+    WowCyborg_CURRENTATTACK = "Out of range";
+    return SetSpellRequest(nil);
+  end
 
-    if IsCastable("Seraphim", 0) then
-      saveForSeraphim = true
-      if holyPower > 2 then
-        WowCyborg_CURRENTATTACK = "Seraphim";
-        return SetSpellRequest(seraphim);
-      end
-    end
-
-    local seraphimBuff = FindBuff("player", "Seraphim");
-    if seraphimBuff ~= nil and IsCastableAtEnemyTarget("Divine Toll", 0) then
-      WowCyborg_CURRENTATTACK = "Divine Toll";
-      return SetSpellRequest(divineToll);
+  local actionName = Hekili.GetQueue().Cooldowns[1].actionName;
+  WowCyborg_CURRENTATTACK = actionName;
+  local button = buttons[actionName];
+  
+  if button ~= nil then
+    local ready = true;
+    if ready then
+      return SetSpellRequest(button);
     end
   end
 
-  if epowerBuff ~= nil then
-    if IsCastableAtEnemyTarget("Divine Storm", 0) then
-      WowCyborg_CURRENTATTACK = "Divine Storm";
-      return SetSpellRequest(divineStorm);
-    end
-  end
+  actionName = Hekili.GetQueue().Primary[1].actionName;
+  WowCyborg_CURRENTATTACK = actionName;
+  button = buttons[actionName];
   
-  local hp = GetHealthPercentage("player");
-  if hp < 75 then
-    if (holyPower > 2) then
-      WowCyborg_CURRENTATTACK = "Word of Glory";
-      return SetSpellRequest("CTRL+1");
-    end
+  if button ~= nil then
+    return SetSpellRequest(button);
   end
-
-  if holyPower >= 3 and saveForSeraphim == false then
-    if aoe == nil then
-      if IsCastableAtEnemyTarget("Templar's Verdict", 0) then
-        WowCyborg_CURRENTATTACK = "Templar's Verdict";
-        return SetSpellRequest(templarsVeridict);
-      end
-    elseif aoe ~= nil and aoe == true then
-      if IsCastableAtEnemyTarget("Divine Storm", 0) then
-        WowCyborg_CURRENTATTACK = "Divine Storm";
-        return SetSpellRequest(divineStorm);
-      end
-    end
-  end
-
-  if IsMelee() and IsCastableAtEnemyTarget("Wake of Ashes", 0) then
-    WowCyborg_CURRENTATTACK = "Wake of Ashes";
-    return SetSpellRequest(wakeOfAshes);
-  end
-  
-  if IsCastableAtEnemyTarget("Blade of Justice", 0) then
-    WowCyborg_CURRENTATTACK = "Blade of Justice";
-    return SetSpellRequest(bladeOfJustice);
-  end
-  
-  if IsCastableAtEnemyTarget("Judgment", 0) then
-    WowCyborg_CURRENTATTACK = "Judgment";
-    return SetSpellRequest(judgment);
-  end
-  
-  if IsCastableAtEnemyTarget("Hammer of Wrath", 0) then
-    WowCyborg_CURRENTATTACK = "Hammer of Wrath";
-    return SetSpellRequest(hammerOfWrath);
-  end
-  
-  if IsCastableAtEnemyTarget("Crusader Strike", 0) then
-    WowCyborg_CURRENTATTACK = "Crusader Strike";
-    return SetSpellRequest(crusaderStrike);
-  end
-
-  WowCyborg_CURRENTATTACK = "-";
-  return SetSpellRequest(nil);
 end
 
 print("Retri pala rotation loaded");

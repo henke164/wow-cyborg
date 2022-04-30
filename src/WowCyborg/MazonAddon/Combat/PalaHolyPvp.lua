@@ -7,13 +7,25 @@ local holyLight = 2;
 local holyShock = 3;
 local judgment = 4;
 local crusaderStrike = 5;
-local lightOfDawn = 6;
-local hammerOfWrath = 7;
-local bestowFaith = 8;
-local bestowFaithTarget = "F+5";
-local lightOfTheMartyr = "F+6";
-local beaconOfLight = "F+7";
+local bestowFaith = "F+5";
+local bestowFaithTarget = "F+6";
+local lightOfTheMartyr = "F+7";
+local beaconOfLight = "F+9";
+local hammerOfWrath = "F+8";
 
+local holyShock = {};
+holyShock[1] = "6";
+holyShock[2] = "7";
+holyShock[3] = "8";
+holyShock[4] = "9";
+holyShock[5] = "0";
+
+local wog = {};
+wog[1] = "ALT+6";
+wog[2] = "ALT+7";
+wog[3] = "ALT+8";
+wog[4] = "ALT+9";
+wog[5] = "ALT+0";
 
 WowCyborg_PAUSE_KEYS = {
   "F1",
@@ -24,6 +36,7 @@ WowCyborg_PAUSE_KEYS = {
   "F7",
   "NUMPAD1",
   "NUMPAD2",
+  "NUMPAD3",
   "NUMPAD5",
   "NUMPAD7",
   "NUMPAD8",
@@ -132,13 +145,6 @@ function AoeHealingRequired()
 end
 
 function RenderMultiTargetRotation()
-  local holyPower = UnitPower("player", 9);
-  if AoeHealingRequired() and IsCastable("Light of Dawn", 0) and holyPower > 2 then
-    WowCyborg_CURRENTATTACK = "Light of Dawn";
-    SetSpellRequest(lightOfDawn);
-    return true;
-  end
-
   return RenderSingleTargetRotation(true);
 end
 
@@ -185,17 +191,13 @@ function RenderSingleTargetRotation(disableAutoTarget)
   if friendlyTargetName ~= nil and IsCastable("Word of Glory", 0) and holyPower > 2 then
     local memberindex = GetMemberIndex(friendlyTargetName);
     WowCyborg_CURRENTATTACK = "Word of Glory " .. friendlyTargetName;
-    if memberindex + 5 == 10 then
-      return SetSpellRequest("CTRL+0");
-    else
-      return SetSpellRequest("CTRL+" .. (memberindex + 5));
-    end
+    return SetSpellRequest(wog[memberindex]);
   end
 
   if friendlyTargetName ~= nil and IsCastable("Holy Shock", 1600) then
     local memberindex = GetMemberIndex(friendlyTargetName);
     WowCyborg_CURRENTATTACK = "Shock " .. friendlyTargetName;
-    return SetSpellRequest("CTRL+" .. memberindex);
+    return SetSpellRequest(holyShock[memberindex]);
   end
 
   if UnitCanAttack("player", "target") == true then

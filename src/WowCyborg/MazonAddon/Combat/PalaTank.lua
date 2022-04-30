@@ -2,15 +2,15 @@
   Button    Spell
 ]]--
 
-local judgment = 1;
-local avengersShield = 2;
-local blessedHammer = 3;
-local shieldOfTheRighteous = 4;
-local hammerOfWrath = 5;
-local consecration = 6;
-local seraphim = 7;
-local defender = 8;
-local guardian = 9;
+local consecration = 1;
+local judgment = 2;
+local avengersShield = 3;
+local guardian = 4;
+local defender = 5;
+local blessedHammer = 6;
+local shieldOfTheRighteous = 7;
+local hammerOfWrath = 8;
+local seraphim = 9;
 
 local wog = {};
 wog[1] = "F+5";
@@ -20,22 +20,20 @@ wog[4] = "F+8";
 wog[5] = "F+9";
 
 WowCyborg_PAUSE_KEYS = {
-  "F1",
-  "F2",
-  "F3",
-  "F4",
-  "F7",
-  "0",
+  "§",
   "F",
   "R",
+  "X",
   "NUMPAD1",
   "NUMPAD5",
+  "NUMPAD7",
+  "NUMPAD8",
   "NUMPAD9",
   "ESCAPE",
 }
 
 function IsMelee()
-  return CheckInteractDistance("target", 3);
+  return IsSpellInRange("Rebuke", "target") ~= 0;
 end
 
 function GetMemberIndex(name)
@@ -96,7 +94,14 @@ function FindHealingTarget()
 end
 
 function RenderMultiTargetRotation()
-  return RenderSingleTargetRotation();
+  local hp = GetHealthPercentage("player");
+  
+  if hp > 90 then
+    return SetSpellRequest("F+4");
+  end
+
+  WowCyborg_CURRENTATTACK = "-";
+  return SetSpellRequest(nil);
 end
 
 function RenderSingleTargetRotation()
@@ -113,6 +118,14 @@ function RenderSingleTargetRotation()
     end
   end
 
+  local shiningBuff, tl, shiningStacks, _, icon = FindBuff("player", "Shining Light");
+  if shiningBuff ~= nil and shiningStacks == 1 and icon == 1360763 then
+    if hp < 50 then
+      WowCyborg_CURRENTATTACK = "Word of Glory";
+      return SetSpellRequest(wog[1]);
+    end
+  end
+
   local concetration = FindBuff("player", "Consecration");
   local speed = GetUnitSpeed("player");
   if concetration == nil and IsMelee() and IsCastableAtEnemyTarget("Consecration", 0) and speed == 0 then
@@ -120,45 +133,46 @@ function RenderSingleTargetRotation()
     return SetSpellRequest(consecration);
   end
 
-  local shiningBuff, tl, shiningStacks, icon = FindBuff("player", "Shining Light");
-  if hp < 90 then
-    if shiningBuff ~= nil and shiningStacks == 1 and icon == 1360763 then
-      WowCyborg_CURRENTATTACK = "Word of Glory";
-      return SetSpellRequest(wog[1]);
-    end
+  local poweredUp = holyPower > 2;
+
+  local divine = FindBuff("player", "Divine Purpose")
+  if poweredUp == false then
+    poweredUp = divine ~= nil;
   end
 
   if hp < 60 then
-    if (holyPower > 2) then
+    if (poweredUp) then
       WowCyborg_CURRENTATTACK = "Word of Glory";
       return SetSpellRequest(wog[1]);
     end
   end
-  
-  if hp < 50 then
-    if IsCastable("Ardent Defender", 0) then
-      WowCyborg_CURRENTATTACK = "Ardent Defender";
-      return SetSpellRequest(defender);
-    end
-  end
 
-  if hp < 30 then
-    if IsCastable("Guardian of Ancient Kings", 0) then
-      WowCyborg_CURRENTATTACK = "Guardian of Ancient Kings";
-      return SetSpellRequest(guardian);
+  if WowCyborg_INCOMBAT then
+    if hp < 50 then
+      if IsCastable("Ardent Defender", 0) then
+        WowCyborg_CURRENTATTACK = "Ardent Defender";
+        return SetSpellRequest(defender);
+      end
     end
-  end
 
-  if (holyPower > 2) then
-    if IsCastable("Seraphim", 0) then
-      WowCyborg_CURRENTATTACK = "Seraphim";
-      return SetSpellRequest(seraphim);
+    if hp < 40 then
+      if IsCastable("Guardian of Ancient Kings", 0) then
+        WowCyborg_CURRENTATTACK = "Guardian of Ancient Kings";
+        return SetSpellRequest(guardian);
+      end
     end
+    
+    if (poweredUp) then
+      if IsCastable("Seraphim", 0) then
+        WowCyborg_CURRENTATTACK = "Seraphim";
+        return SetSpellRequest(seraphim);
+      end
+    end  
   end
 
   local friendlyTargetName = FindHealingTarget();
   if friendlyTargetName ~= nil and IsCastable("Word of Glory", 0) then
-    if (holyPower > 2 and GetHealthPercentage(friendlyTargetName) < 60) then
+    if (poweredUp and GetHealthPercentage(friendlyTargetName) < 60) then
       local memberindex = GetMemberIndex(friendlyTargetName);
       WowCyborg_CURRENTATTACK = "Word of Glory " .. friendlyTargetName;
       return SetSpellRequest(wog[memberindex]);
@@ -171,7 +185,14 @@ function RenderSingleTargetRotation()
     end
   end
 
-  if IsMelee() and IsCastableAtEnemyTarget("Shield of the Righteous", 0) and holyPower > 2 then
+  if shiningBuff ~= nil and shiningStacks == 1 and icon == 1360763 then
+    if hp < 80 then
+      WowCyborg_CURRENTATTACK = "Word of Glory";
+      return SetSpellRequest(wog[1]);
+    end
+  end
+
+  if IsMelee() and IsCastableAtEnemyTarget("Shield of the Righteous", 0) and poweredUp then
     WowCyborg_CURRENTATTACK = "Shield of the Righteous";
     return SetSpellRequest(shieldOfTheRighteous);
   end

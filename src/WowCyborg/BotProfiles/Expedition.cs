@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel;
 using System.Windows.Forms;
 using WowCyborg.Core;
 using WowCyborg.Core.Commanders;
@@ -41,6 +42,13 @@ namespace WowCyborg.BotProfiles
 
                 if (keyRequest.ModifierKey != Keys.None)
                 {
+                    if (keyRequest.ModifierKey == Keys.F1)
+                    {
+                        var converter = TypeDescriptor.GetConverter(typeof(Keys));
+                        var key = (Keys)converter.ConvertFromString("F" + keyRequest.Key.ToString().Replace("D", ""));
+                        KeyHandler.PressKey(key);
+                        return;
+                    }
                     KeyHandler.ModifiedKeypress(keyRequest.ModifierKey, keyRequest.Key);
                 }
                 else

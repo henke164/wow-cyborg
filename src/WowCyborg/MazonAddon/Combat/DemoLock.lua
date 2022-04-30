@@ -1,16 +1,18 @@
 --[[
   Button    Spell
 ]]--
-
-local implosion = "1";
-local decimatingBolt = "2";
-local callDreadStalkers = "3";
-local handOfGulDan = "4";
-local demonbolt = "5";
-local shadowbolt = "6";
-local demonicStrength = "7";
-local powerSiphon = "8";
-local curseOfExhaustion = "F+6";
+local buttons = {}
+buttons["summon_demonic_tyrant"] = "1";
+buttons["grimoire_felguard"] = "2";
+buttons["call_dreadstalkers"] = "3";
+buttons["hand_of_guldan"] = "4";
+buttons["demonbolt"] = "5";
+buttons["shadow_bolt"] = "6";
+buttons["soul_rot"] = "7";
+buttons["implosion"] = "8";
+buttons["blood_fury"] = "9";
+buttons["gladiators_badge"] = "9";
+local stopCast = "F+7";
 
 WowCyborg_PAUSE_KEYS = {
   "LSHIFT",
@@ -18,122 +20,82 @@ WowCyborg_PAUSE_KEYS = {
   "NUMPAD3",
   "NUMPAD4",
   "NUMPAD5",
-  "F1",
   "F4",
   "F",
   "§"
 }
 
 function RenderMultiTargetRotation()
+  if WowCyborg_INCOMBAT == false then
+    return SetSpellRequest(nil);
+  end
+
+  local quaking = FindDebuff("player", "Quake");
+  if quaking then
+    return SetSpellRequest(nil);
+  end
+
+  local actionName = Hekili.GetQueue().Cooldowns[1].actionName;
+  
+  WowCyborg_CURRENTATTACK = actionName;
+  local button = buttons[actionName];
+  
+  if actionName == "grimoire_felguard" then
+    if IsCastableAtEnemyTarget("Grimoire: Felguard", 0) == false then
+      return RenderSingleTargetRotation();
+    end
+  end
+  
+  if actionName == "summon_demonic_tyrant" then
+    if IsCastableAtEnemyTarget("Summon Demonic Tyrant", 0) == false then
+      return RenderSingleTargetRotation();
+    end
+  end
+
+  if actionName == "blood_fury" then
+    if IsCastable("Blood Fury", 0) == false then
+      return RenderSingleTargetRotation();
+    end
+  end
+
+  if button ~= nil then
+    return SetSpellRequest(button);
+  end
+
   return RenderSingleTargetRotation();
 end
 
 function RenderSingleTargetRotation()
-  local speed = GetUnitSpeed("player");
-  local demonicPowerBuff = FindBuff("player", "Demonic Power");
-  local felObeliskBuff = FindBuff("player", "Fel Obelisk");
-
-  if UnitChannelInfo("player") == "Drain Life" then
-    WowCyborg_CURRENTATTACK = "Draining life";
-    return SetSpellRequest(nil);
-  end
-  
-  if UnitChannelInfo("player") == "Fleshcraft" then
-    WowCyborg_CURRENTATTACK = "Fleshcraft";
+  if WowCyborg_INCOMBAT == false then
     return SetSpellRequest(nil);
   end
 
-  if demonicPowerBuff ~= nil then
-    if IsCastable("Grimoire:Felguard", 0) then
-      WowCyborg_CURRENTATTACK = "Grimoire:Felguard";
-      return SetSpellRequest(felguard);
-    end
+  local quaking = FindDebuff("player", "Quake");
+  if quaking then
+    return SetSpellRequest(nil);
   end
 
-  if felObeliskBuff ~= nil then
-    if IsCastable("Blood Fury", 0) then
-      WowCyborg_CURRENTATTACK = "Blood Fury";
-      return SetSpellRequest("9");
-    end
-  end
+  local actionName = Hekili.GetQueue().Primary[1].actionName;
 
-  local shards = UnitPower("player", 7);
-  local targetHp = GetHealthPercentage("target");
-
-  if targetHp < 10 and IsCastableAtEnemyTarget("Implosion", 0) then
-    WowCyborg_CURRENTATTACK = "Implosion";
-    return SetSpellRequest(implosion);
-  end
+  WowCyborg_CURRENTATTACK = actionName;
+  local button = buttons[actionName];
   
-  local dcBuff, dcTl, dcStacks = FindBuff("player", "Demonic Core");
-
-  if dcBuff ~= nil and (speed == 1 or shards < 5) then
-    if IsCastableAtEnemyTarget("Demonbolt", 0) then
-      WowCyborg_CURRENTATTACK = "Demonbolt";
-      return SetSpellRequest(demonbolt);
-    end
-  else
-    if IsCastableAtEnemyTarget("Demonbolt", 0) and IsCastable("Power Siphon", 0) then
-      WowCyborg_CURRENTATTACK = "Power Siphon";
-      return SetSpellRequest(powerSiphon);
-    end
-  end
-
-  if IsCastableAtEnemyTarget("Demonic Strength", 0) then
-    local petHp = GetHealthPercentage("pet");
-    local isFelstorming = FindBuff("pet", "Felstorm");
-    if petHp ~= nil and isFelstorming == nil then
-      WowCyborg_CURRENTATTACK = "Demonic Strength";
-      return SetSpellRequest(demonicStrength);
-    end
-  end
-  
-  if shards > 1 and IsCastableAtEnemyTarget("Call Dreadstalkers", 0) then
-    WowCyborg_CURRENTATTACK = "Call Dreadstalkers";
-    return SetSpellRequest(callDreadStalkers);
-  end
-  
-  if speed == 0 and shards >= 4 and IsCastableAtEnemyTarget("Hand of Gul'dan", 0) then
-    WowCyborg_CURRENTATTACK = "Hand of Gul'dan";
-    return SetSpellRequest(handOfGulDan);
-  end
-
-  if dcBuff ~= nil and IsCastableAtEnemyTarget("Demonbolt", 0) then
-    WowCyborg_CURRENTATTACK = "Demonbolt";
-    return SetSpellRequest(demonbolt);
-  end
-
-  if speed == 0 and shards >= 3 and IsCastableAtEnemyTarget("Hand of Gul'dan", 0) then
-    WowCyborg_CURRENTATTACK = "Hand of Gul'dan";
-    return SetSpellRequest(handOfGulDan);
-  end
-  
-  if speed == 0 and IsCastableAtEnemyTarget("Decimating Bolt", 0) then
-    if UnitCastingInfo("player") ~= "Decimating Bolt" then
-      WowCyborg_CURRENTATTACK = "Decimating Bolt";
-      return SetSpellRequest(decimatingBolt);
-    end
-  end
-
-  if speed == 0 and IsCastableAtEnemyTarget("Shadow Bolt", 0) then
-    if UnitCastingInfo("player") ~= "Shadow Bolt" then
-      WowCyborg_CURRENTATTACK = "Shadow Bolt";
-      return SetSpellRequest(shadowbolt);
-    end
-  end
-
-  if speed > 0 then
-    local exhaust = FindDebuff("target", "Curse of Exhaustion");
-    if exhaust == nil then
-      if IsCastableAtEnemyTarget("Curse of Exhaustion", 0) then
-        WowCyborg_CURRENTATTACK = "Curse of Exhaustion";
-        return SetSpellRequest(curseOfExhaustion);
+  if UnitCastingInfo("player") == "Shadow Bolt" then
+    local dcBuff, dcTl, dcStacks = FindBuff("player", "Demonic Core");
+    local shards = UnitPower("player", 7);
+    if dcBuff ~= nil and shards < 4 then
+      if IsCastableAtEnemyTarget("Demonbolt", 0) then
+        WowCyborg_CURRENTATTACK = "Cancel";
+        return SetSpellRequest(stopCast);
       end
     end
   end
 
-  WowCyborg_CURRENTATTACK = "-";
+  if button ~= nil then
+    return SetSpellRequest(button);
+  end
+
   return SetSpellRequest(nil);
 end
 
-print("Demo lock rotation loaded");
+print("Demo 2 lock rotation loaded");

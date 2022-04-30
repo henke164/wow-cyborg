@@ -1,175 +1,99 @@
---[[p
+--[[
   Button    Spell
-  local rollTheBones = "1";
-  local adrenalineRush = "2";
-  local betweenTheEyes = "3";
-  local sinisterStrike = "4";
-  local dispatch = "5";
-  local pistolShot = "6";
 ]]--
-
-local shadowBlades = "1";
-local sliceNDice = "2";
-local shadowStrike = "4";
-local rupture = "3";
-local symbolsOfDeath = "5";
-local shadowDance = "5";
-local backstab = "6";
-local coldBlood = "6";
-local eviscerate = "7";
-local serratedBoneSpike = "8";
+local buttons = {}
+buttons["shadow_blades"] = "1";
+buttons["slice_and_dice"] = "2";
+buttons["rupture"] = "3";
+buttons["symbols_of_death"] = "4";
+buttons["shadowstrike"] = "5";
+buttons["shadow_dance"] = "5";
+buttons["backstab"] = "6";
+buttons["eviscerate"] = "7";
+buttons["flagellation"] = "8";
+buttons["black_powder"] = "9";
+buttons["shuriken_storm"] = "0";
+buttons["shuriken_tornado"] = "F+6";
+buttons["vanish"] = "F+7";
 
 WowCyborg_PAUSE_KEYS = {
-  "F",
-  "R",
-  "LSHIFT",
-  "F1",
   "F2",
   "F3",
-  "F5",
-  "F6",
-  "F7",
-  "F11",
-  "NUMPAD1",
+  "R",
+  "LSHIFT",
+  "NUMPAD2",
+  "NUMPAD3",
+  "NUMPAD4",
   "NUMPAD5",
-  "NUMPAD9",
+  "F4",
+  "F",
+  "§"
 }
 
-function GetSdCooldown()
-  local sdStart, sdDuration = GetSpellCooldown("Shadow Dance");
-  local tl = sdStart + sdDuration - GetTime();
-  if tl < 1 then
-    return 0;
-  end
-
-  return tl;
-end
-
 function RenderMultiTargetRotation()
-  return RenderSingleTargetRotation(true)
+  Hekili.DB.profile.toggles.mode.value = "aoe";
+  return RenderRotation();
 end
 
 function RenderSingleTargetRotation()
-  local stealth = FindBuff("player", "Stealth");
-  local energy = (UnitPower("player") / UnitPowerMax("player")) * 100;
-  local points = GetComboPoints("player", "target");
-  local sliceBuff, sliceDuration = FindBuff("Player", "Slice and Dice");
-  local ruptureDebuff, ruptureDuration = FindDebuff("target", "Rupture");
-
-  local assasinsMark = FindBuff("Player", "Master Assassin's Mark");
-  local shadowDanceBuff = FindBuff("Player", "Shadow Dance");
-  if shadowDanceBuff ~= nil then
-    if IsCastable("Shadow Blades", 0) then
-      WowCyborg_CURRENTATTACK = "Shadow Blades";
-      return SetSpellRequest(shadowBlades);
-    end
-
-    if IsCastable("Cold Blood", 0) then
-      WowCyborg_CURRENTATTACK = "Cold Blood";
-      return SetSpellRequest(coldBlood);
-    end
-    
-    if IsCastable("Symbols of Death", 0) then
-      WowCyborg_CURRENTATTACK = "Symbols of Death";
-      return SetSpellRequest(symbolsOfDeath);
-    end
-      
-    if (points > 5) then
-      if IsCastableAtEnemyTarget("Eviscerate", 35) then
-        WowCyborg_CURRENTATTACK = "Eviscerate";
-        return SetSpellRequest(eviscerate);
-      end
-    end
-
-    if IsCastableAtEnemyTarget("Shadowstrike", 0) then
-      WowCyborg_CURRENTATTACK = "Shadowstrike";
-      return SetSpellRequest(shadowStrike);
-    end
-    
-    WowCyborg_CURRENTATTACK = "-";
-    return SetSpellRequest(nil);
-  end
-
-  if stealth ~= nil then
-    if IsCastable("Cold Blood", 0) then
-      WowCyborg_CURRENTATTACK = "Cold Blood";
-      return SetSpellRequest(coldBlood);
-    end
-
-    WowCyborg_CURRENTATTACK = "-";
-    return SetSpellRequest(nil);
-  end
-
-  if InMeleeRange() == false then
-    if IsCastableAtEnemyTarget("Serrated Bone Spike", 15) then
-      WowCyborg_CURRENTATTACK = "Serrated Bone Spike";
-      return SetSpellRequest(serratedBoneSpike);
-    end
-
-    WowCyborg_CURRENTATTACK = "-";
-    return SetSpellRequest(nil);
-  end
-
-  if assasinsMark ~= nil then
-    if IsCastable("Shadow Blades", 0) then
-      WowCyborg_CURRENTATTACK = "Shadow Blades";
-      return SetSpellRequest(shadowBlades);
-    end
-  end
-
-  if (points > 4) then
-    if sliceBuff == nil or sliceDuration < 9 then
-      if IsCastable("Slice and Dice", 0) then
-        WowCyborg_CURRENTATTACK = "Slice and Dice";
-        return SetSpellRequest(sliceNDice);
-      end
-    end
-
-    if ruptureDebuff == nil or ruptureDuration < 9 then
-      if IsCastable("Rupture", 0) then
-        WowCyborg_CURRENTATTACK = "Rupture";
-        return SetSpellRequest(rupture);
-      end
-    end
-  end
-
-  local shadowDanceCd = GetSdCooldown();
-
-  if IsCastable("Symbols of Death", 0) then
-    if shadowDanceCd == 0 or shadowDanceCd > 30 then
-      if energy >= 50 then
-        WowCyborg_CURRENTATTACK = "Shadow Dance";
-        return SetSpellRequest(shadowDance);
-      end
-
-      WowCyborg_CURRENTATTACK = "-";
-      return SetSpellRequest(nil);
-    end
-  end
-
-  if (points > 5) then
-    if IsCastableAtEnemyTarget("Eviscerate", 35) then
-      WowCyborg_CURRENTATTACK = "Eviscerate";
-      return SetSpellRequest(eviscerate);
-    end
-  end
-
-  if IsCastableAtEnemyTarget("Backstab", 35) then
-    WowCyborg_CURRENTATTACK = "Backstab";
-    return SetSpellRequest(backstab);
-  end
-
-  if IsCastableAtEnemyTarget("Serrated Bone Spike", 15) then
-    WowCyborg_CURRENTATTACK = "Serrated Bone Spike";
-    return SetSpellRequest(serratedBoneSpike);
-  end
-
-  WowCyborg_CURRENTATTACK = "-";
-  return SetSpellRequest(nil);
+  Hekili.DB.profile.toggles.mode.value = "single";
+  return RenderRotation();
 end
 
-function InMeleeRange()
-  return IsSpellInRange("Ambush", "target") == 1;
+function RenderRotation()
+  if IsMelee() == false then
+    WowCyborg_CURRENTATTACK = "Out of range";
+    return SetSpellRequest(nil);
+  end
+
+  local actionName = Hekili.GetQueue().Cooldowns[1].actionName;
+  WowCyborg_CURRENTATTACK = actionName;
+  local button = buttons[actionName];
+  
+  if button ~= nil then
+    local ready = true;
+    if actionName == "shuriken_tornado" then
+      if IsCastableAtEnemyTarget("Shuriken Tornado", 0) == false then
+        ready = false;
+      end
+    end
+    
+    if actionName == "symbols_of_death" then
+      if IsCastableAtEnemyTarget("Symbols of Death", 0) == false then
+        ready = false;
+      end
+    end
+    
+    if actionName == "shadow_blades" then
+      if IsCastableAtEnemyTarget("Shadow Blades", 0) == false then
+        ready = false;
+      end
+    end
+
+    if ready then
+      return SetSpellRequest(button);
+    end
+  end
+
+  actionName = Hekili.GetQueue().Primary[1].actionName;
+  WowCyborg_CURRENTATTACK = actionName;
+  button = buttons[actionName];
+  
+  if button ~= nil then
+    return SetSpellRequest(button);
+  end
 end
 
-print("Rogue Outlaw rotation loaded");
+function IsMelee()
+  if UnitCanAttack("player", "target") == false then
+    return false;
+  end
+
+  if TargetIsAlive() == false then
+    return false;
+  end;
+
+  return IsSpellInRange("Eviscerate") == 1;
+end
+
+print("Sub rogue rotation loaded");
