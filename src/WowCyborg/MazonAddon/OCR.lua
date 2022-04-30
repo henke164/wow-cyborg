@@ -39,6 +39,9 @@ function GetColorFromButton(button)
   if button == "SHIFT" then
     return 0,1,0;
   end
+  if button == "ALT" then
+    return 1,1,0;
+  end
   if button == "CTRL" then
     return 0,0,1;
   end
