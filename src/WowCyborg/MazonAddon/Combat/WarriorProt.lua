@@ -82,6 +82,7 @@ function RenderSingleTargetRotation()
   
   local dangerHpLossLimit = UnitHealthMax("player") * 0.5;
 
+  local outburst = FindBuff("player", "Outburst")
   local vrBuff = FindBuff("player", "Victorious")
   if hpPercentage < 80 and 
     IsCastableAtEnemyTarget("Victory Rush", 0) and 
@@ -110,6 +111,17 @@ function RenderSingleTargetRotation()
     end
   end
 
+  local requiredAmount = 20000;
+  if targetHp < 20 and nearbyEnemies == 1 then
+    requiredAmount = 10000;
+  end
+    
+  local _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, ipAmount = FindUnitBuff("player", "Ignore Pain");
+  
+  local ipBuff, ipTl = FindBuff("player", "Ignore Pain");
+  local needIgnorePain = InCombatLockdown() and CheckInteractDistance("target", 3) and
+    (ipBuff == nil or ipTl < 3 or ipAmount < requiredAmount);
+
   if InCombatLockdown() then
     if InMeleeRange() then
       local sbBuff = FindBuff("player", "Shield Block")
@@ -119,23 +131,33 @@ function RenderSingleTargetRotation()
       end
     end
 
-    if hpPercentage < 95 or nearbyEnemies > 2 then
-      local ipBuff, ipTl = FindBuff("player", "Ignore Pain");
-      if (ipBuff == nil or ipTl < 3) and IsCastableAtEnemyTarget("Ignore Pain", 40) then
-        WowCyborg_CURRENTATTACK = "Ignore Pain";
-        return SetSpellRequest(ignorePain);
-      end
+    if (ipBuff == nil or ipTl < 3) and IsCastableAtEnemyTarget("Ignore Pain", 35) then
+      WowCyborg_CURRENTATTACK = "Ignore Pain";
+      return SetSpellRequest(ignorePain);
     end
   end
 
-  local avatarBuff = FindBuff("player", "Avatar")
-
-  if IsCastableAtEnemyTarget("Avatar", 0) and targetHp > 10 then
-    WowCyborg_CURRENTATTACK = "Avatar";
-    return SetSpellRequest(avatar);
-  end
-  
+  local nearbyEnemies = GetNearbyEnemyCount();
   if nearbyEnemies > 3 then
+    if outburst ~= nil then
+      if IsCastableAtEnemyTarget("Thunder Clap", 0) then
+        WowCyborg_CURRENTATTACK = "Thunder Clap";
+        return SetSpellRequest(thunderClap);
+      end
+    end
+
+    if IsCastableAtEnemyTarget("Revenge", 20) and (ipBuff ~= nil and ipTl > 3) then
+      WowCyborg_CURRENTATTACK = "Revenge";
+      return SetSpellRequest(revenge);
+    end
+
+    if outburst == nil and rage < 50 then
+      if IsCastableAtEnemyTarget("Shield Slam", 0) then
+        WowCyborg_CURRENTATTACK = "Shield Slam";
+        return SetSpellRequest(shieldSlam);
+      end
+    end
+
     if IsCastableAtEnemyTarget("Thunder Clap", 0) then
       WowCyborg_CURRENTATTACK = "Thunder Clap";
       return SetSpellRequest(thunderClap);
@@ -152,13 +174,25 @@ function RenderSingleTargetRotation()
     if IsCastableAtEnemyTarget("Shield Slam", 0) then
       WowCyborg_CURRENTATTACK = "Shield Slam";
       return SetSpellRequest(shieldSlam);
-    end    
-  else
+    end
+  else -- SINGLE target
     if IsCastableAtEnemyTarget("Shield Slam", 0) then
       WowCyborg_CURRENTATTACK = "Shield Slam";
       return SetSpellRequest(shieldSlam);
     end
     
+    if rage > 70 then
+      if targetHp < 20 and IsCastableAtEnemyTarget("Execute", 0) and (ipBuff ~= nil and ipTl > 3)  then
+        WowCyborg_CURRENTATTACK = "Execute";
+        return SetSpellRequest(execute);
+      end
+  
+      if IsCastableAtEnemyTarget("Revenge", 0) then
+        WowCyborg_CURRENTATTACK = "Revenge";
+        return SetSpellRequest(revenge);
+      end
+    end
+
     if IsCastableAtEnemyTarget("Thunder Clap", 0) then
       WowCyborg_CURRENTATTACK = "Thunder Clap";
       return SetSpellRequest(thunderClap);
@@ -171,33 +205,16 @@ function RenderSingleTargetRotation()
         return SetSpellRequest(revenge);
       end
     end
-
-    if IsCastableAtEnemyTarget("Shield Slam", 0) then
-      WowCyborg_CURRENTATTACK = "Shield Slam";
-      return SetSpellRequest(shieldSlam);
-    end
   end
 
-  if targetHp < 95 and IsCastableAtEnemyTarget("Demoralizing Shout", 0) then
+  if needIgnorePain and IsCastableAtEnemyTarget("Ignore Pain", 35) then
+    WowCyborg_CURRENTATTACK = "Ignore Pain";
+    return SetSpellRequest(ignorePain);
+  end
+  
+  if IsCastableAtEnemyTarget("Demoralizing Shout", 0) and CheckInteractDistance("target", 3) then
     WowCyborg_CURRENTATTACK = "Demoralizing Shout";
     return SetSpellRequest(demoralizingShout);
-  end
-
-  if rage > 70 then
-    if targetHp < 20 and IsCastableAtEnemyTarget("Execute", 60) then
-      WowCyborg_CURRENTATTACK = "Execute";
-      return SetSpellRequest(execute);
-    end
-
-    if IsCastableAtEnemyTarget("Revenge", 30) then
-      WowCyborg_CURRENTATTACK = "Revenge";
-      return SetSpellRequest(revenge);
-    end
-  end
-
-  if IsCurrentSpell(6603) == false then
-    WowCyborg_CURRENTATTACK = "Attack";
-    return SetSpellRequest(attack);
   end
 
   WowCyborg_CURRENTATTACK = "-";

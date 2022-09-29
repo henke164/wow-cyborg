@@ -1,105 +1,56 @@
 --[[
   Button    Spell
-  mongooseBite = "1";
-  coordinatedAssault = "2";
-  killCommand = "3";
-  wildfireBomb = "4";
-  serpentSting = "5";
-  viperSting = "6";
-  breathOfTheDying = "7";
-  mendPet = "9";
 ]]--
 
-local mongooseBite = "1";
-local coordinatedAssault = "2";
-local killCommand = "3";
-local wildfireBomb = "4";
-local serpentSting = "5";
-local viperSting = "6";
-local breathOfTheDying = "7";
-local wingClip = "8";
-local mendPet = "9";
+local buttons = {}
+
+buttons["serpent_sting"] = "1";
+buttons["wildfire_bomb"] = "2";
+buttons["raptor_strike"] = "3";
+buttons["carve"] = "4";
+buttons["kill_command"] = "5";
+buttons["kill_shot"] = "6";
+buttons["scars_of_fraternal_strife"] = "7";
+
+WowCyborg_PAUSE_KEYS = {
+  "F1",
+  "F3",
+  "F4",
+  "F8",
+  "F10",
+  "NUMPAD1",
+  "NUMPAD5"
+}
 
 function RenderMultiTargetRotation()
-  local wc = FindDebuff("target", "Wing Clip");
-  if wc == nil and IsCastableAtEnemyTarget("Wing Clip", 0) then
-    WowCyborg_CURRENTATTACK = "Wing Clip";
-    return SetSpellRequest(wingClip);
-  end
-  return RenderSingleTargetRotation();
+  Hekili.DB.profile.toggles.mode.value = "aoe";
+  return RenderRotation();
 end
 
 function RenderSingleTargetRotation()
-  local petHp = GetHealthPercentage("pet");
-  if tostring(petHp) ~= "-nan(ind)" and petHp > 1 and petHp < 90 then
-    if IsCastable("Mend pet", 0) then
-      WowCyborg_CURRENTATTACK = "Mend pet";
-      return SetSpellRequest(mendPet);
-    end
-  end
+  Hekili.DB.profile.toggles.mode.value = "single";
+  return RenderRotation();
+end
 
-  local mw = FindDebuff("target", "Mortal Wounds");
-  local targetHp = GetHealthPercentage("target");
-  if targetHp < 60 and mw == nil then
-    if IsCastableAtEnemyTarget("Viper Sting", 0) then
-      WowCyborg_CURRENTATTACK = "Viper Sting";
-      return SetSpellRequest(viperSting);
-    end
-  end
-  
-  if targetHp < 80 then
-    if IsCastableAtEnemyTarget("Reaping Flames", 0) then
-      WowCyborg_CURRENTATTACK = "Reaping Flames";
-      return SetSpellRequest(breathOfTheDying);
-    end
-  end
-
-  local piBuff, piTime, piStacks = FindBuff("player", "Primeval Intuition");
-
-  if (piStacks == nil or piStacks < 5) or piTime < 4 then
-    if IsCastableAtEnemyTarget("Raptor Strike", 30) then
-      WowCyborg_CURRENTATTACK = "Mongoose Bite";
-      return SetSpellRequest(mongooseBite);
-    end
-  end
-
+function RenderRotation()
   if WowCyborg_INCOMBAT == false then
     return SetSpellRequest(nil);
   end
-  
-  local coordBuff = FindBuff("player", "Coordinated Assault");
-  if coordBuff == nil and IsCastableAtEnemyTarget("Raptor Strike", 30) and IsCastable("Coordinated Assault", 0) then
-    WowCyborg_CURRENTATTACK = "Coordinated Assault";
-    return SetSpellRequest(coordinatedAssault);
-  end
 
-  local focus = UnitPower("player");
-  if focus < 85 and IsCastableAtEnemyTarget("Kill Command", 0) then
-    WowCyborg_CURRENTATTACK = "Kill Command";
-    return SetSpellRequest(killCommand);
-  end
+  if IsCastableAtEnemyTarget("Serpent Sting", 0) then
+    actionName = Hekili.GetQueue().Primary[1].actionName;
+    if actionName == "resonating_arrow" then
+      actionName = Hekili.GetQueue().Primary[2].actionName;
+    end
 
-  if IsCastableAtEnemyTarget("Wildfire Bomb", 0) then
-    WowCyborg_CURRENTATTACK = "Wildfire Bomb";
-    return SetSpellRequest(wildfireBomb);
-  end
-    
-  if (piStacks == nil or piStacks < 5) and coordBuff == nil then
-    if IsCastableAtEnemyTarget("Serpent Sting", 0) then
-      WowCyborg_CURRENTATTACK = "Serpent Sting";
-      return SetSpellRequest(serpentSting);
+    WowCyborg_CURRENTATTACK = actionName;
+    button = buttons[actionName];
+    if button ~= nil then
+      return SetSpellRequest(button);
     end
   end
 
-  if IsCastableAtEnemyTarget("Raptor Strike", 30) then
-    WowCyborg_CURRENTATTACK = "Mongoose Bite";
-    return SetSpellRequest(mongooseBite);
-  end
-  
-  if focus > 60 and IsCastableAtEnemyTarget("Serpent Sting", 0) then
-    WowCyborg_CURRENTATTACK = "Serpent Sting";
-    return SetSpellRequest(serpentSting);
-  end
+  return SetSpellRequest(nil);
 end
 
-print("Survival hunter rotation loaded");
+print("Survhunter rotation loaded");

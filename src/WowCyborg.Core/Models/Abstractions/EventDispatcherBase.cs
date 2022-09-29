@@ -20,6 +20,12 @@ namespace WowCyborg.Core.Models.Abstractions
 
         public void AddGameHandle(IntPtr hWnd, Action<IntPtr, Event> onEventTriggeredCallback)
         {
+            if (_onEventTriggeredCallbacks.ContainsKey(hWnd))
+            {
+                OnGameHandleAdded?.Invoke(hWnd);
+                return;
+            }
+
             _onEventTriggeredCallbacks.Add(hWnd, onEventTriggeredCallback);
             _hWnds.Add(hWnd);
 

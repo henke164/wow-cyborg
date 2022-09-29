@@ -17,8 +17,8 @@ local dispatch = "5";
 local pistolShot = "6";
 local bladeFlurry = "7";
 local adrenalineRush = "8";
-local mfd = "9";
-local bonespike = "0";
+local flagellation = "9";
+local bladeRush = "0";
 
 WowCyborg_PAUSE_KEYS = {
   "F",
@@ -36,6 +36,16 @@ WowCyborg_PAUSE_KEYS = {
   "NUMPAD9",
 }
 function RenderMultiTargetRotation()
+  if InMeleeRange() == false then
+    WowCyborg_CURRENTATTACK = "-";
+    return SetSpellRequest(nil);
+  end
+
+  if IsCastableAtEnemyTarget("Flagellation", 0) then
+    WowCyborg_CURRENTATTACK = "Flagellation";
+    return SetSpellRequest(flagellation);
+  end
+
   return RenderSingleTargetRotation(true)
 end
 
@@ -72,6 +82,12 @@ function RenderSingleTargetRotation(aoe)
       WowCyborg_CURRENTATTACK = "Blade Flurry";
       return SetSpellRequest(bladeFlurry);
     end
+      
+    if IsCastableAtEnemyTarget("Blade Rush", 0) then
+      WowCyborg_CURRENTATTACK = "Blade Rush";
+      return SetSpellRequest(bladeRush);
+    end
+
   end
 
   local points = GetComboPoints("player", "target");
@@ -96,13 +112,6 @@ function RenderSingleTargetRotation(aoe)
     end
   end
 
-  if points < 2 then
-    if IsCastableAtEnemyTarget("Marked for Death", 0) then
-      WowCyborg_CURRENTATTACK = "Marked for Death";
-      return SetSpellRequest(mfd);
-    end
-  end
-
   if sliceBuff == nil and points > 0 then
     if IsCastable("Slice and Dice", 0) then
       WowCyborg_CURRENTATTACK = "Slice and Dice";
@@ -121,12 +130,6 @@ function RenderSingleTargetRotation(aoe)
     return SetSpellRequest(sinisterStrike);
   end
   
-  local boneSpikeCharges = GetSpellCharges("Serrated Bone Spike")
-  if boneSpikeCharges > 0 and points < 4 and IsCastableAtEnemyTarget("Serrated Bone Spike", 15) then
-    WowCyborg_CURRENTATTACK = "Serrated Bone Spike";
-    return SetSpellRequest(bonespike);
-  end
-
   WowCyborg_CURRENTATTACK = "-";
   return SetSpellRequest(nil);
 end

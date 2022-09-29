@@ -7,11 +7,10 @@ local holyLight = 2;
 local holyShock = 3;
 local judgment = 4;
 local crusaderStrike = 5;
-local bestowFaith = "F+5";
-local bestowFaithTarget = "F+6";
-local lightOfTheMartyr = "F+7";
-local beaconOfLight = "F+9";
-local hammerOfWrath = "F+8";
+local bestowFaith = "SHIFT+4";
+local bestowFaithTarget = "SHIFT+5";
+local beaconOfLight = "SHIFT+6";
+local hammerOfWrath = "SHIFT+3";
 
 local holyShock = {};
 holyShock[1] = "6";
@@ -21,11 +20,11 @@ holyShock[4] = "9";
 holyShock[5] = "0";
 
 local wog = {};
-wog[1] = "ALT+6";
-wog[2] = "ALT+7";
-wog[3] = "ALT+8";
-wog[4] = "ALT+9";
-wog[5] = "ALT+0";
+wog[1] = "F+5";
+wog[2] = "F+6";
+wog[3] = "F+7";
+wog[4] = "F+8";
+wog[5] = "F+9";
 
 WowCyborg_PAUSE_KEYS = {
   "F1",
@@ -175,6 +174,11 @@ function RenderSingleTargetRotation(disableAutoTarget)
     end
   end
 
+  local casting = UnitChannelInfo("player");
+  if casting == "Fleshcraft" then
+    return true;
+  end
+  
   local speed = GetUnitSpeed("player");
   local playerHp = GetHealthPercentage("player");
   local hp = GetHealthPercentage("target");
@@ -234,13 +238,6 @@ function RenderSingleTargetRotation(disableAutoTarget)
         if IsCastableAtFriendlyUnit("focus", "Bestow Faith", 0) then
           WowCyborg_CURRENTATTACK = "Bestow Faith";
           return SetSpellRequest(bestowFaithTarget);
-        end
-      end
-
-      if focusHealth < 80 and hp > 70 and speed > 0 then
-        if IsCastableAtFriendlyUnit("focus", "Light of the Martyr", 0) then
-          WowCyborg_CURRENTATTACK = "Light of the Martyr";
-          return SetSpellRequest(lightOfTheMartyr);
         end
       end
     end

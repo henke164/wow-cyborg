@@ -4,6 +4,7 @@ boomkin	MazonAddon/Combat/DruidBoomkin.lua
 furypvp	MazonAddon/Combat/WarriorFuryPvp.lua
 protwarrior	MazonAddon/Combat/WarriorProt.lua
 armswarrior	MazonAddon/Combat/WarriorArms.lua
+retpvp	MazonAddon/Combat/RetriPVP.lua
 pvpwarr	MazonAddon/Combat/WarriorPvp.lua
 bmhunter	MazonAddon/Combat/HunterBM.lua
 mmhunter	MazonAddon/Combat/HunterMM.lua
@@ -76,6 +77,7 @@ palaraid	MazonAddon/Combat/PalaHolyRaider.lua
 holypvp	MazonAddon/Combat/PalaHolyPvp.lua
 protpala	MazonAddon/Combat/PalaTank.lua
 retripala	MazonAddon/Combat/PalaRetri.lua
+retripala2	MazonAddon/Combat/PalaRetri2.lua
 skinner	MazonAddon/Combat/Skinner.lua
 trial	MazonAddon/Combat/TrialSeller.lua
 frostdk	MazonAddon/Combat/DKFrost.lua

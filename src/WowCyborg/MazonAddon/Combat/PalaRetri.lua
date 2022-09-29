@@ -1,7 +1,6 @@
 --[[
   Button    Spell
 ]]--
-
 local buttons = {}
 buttons["wake_of_ashes"] = "1";
 buttons["blade_of_justice"] = "2";
@@ -11,26 +10,25 @@ buttons["crusader_strike"] = "5";
 buttons["templars_verdict"] = "6";
 buttons["divine_storm"] = "7";
 buttons["consecration"] = "9";
+buttons["gladiators_badge"] = "9";
+buttons["vanquishers_hammer"] = "8";
+buttons["shield_of_vengeance"] = "F+1";
 
 WowCyborg_PAUSE_KEYS = {
-  "F1",
   "F2",
   "F3",
   "F4",
   "F5",
   "F7",
+  "NUMPAD1",
+  "NUMPAD2",
+  "NUMPAD5",
+  "NUMPAD9",
   "0",
   "F",
   "R",
   "LSHIFT",
-  "NUMPAD1",
-  "NUMPAD2",
-  "NUMPAD5",
-  "NUMPAD7",
-  "NUMPAD8",
-  "NUMPAD9",
-  "ESCAPE",
-  "NUMPAD5"
+  "ESCAPE"
 }
 
 function IsMelee()
@@ -38,39 +36,40 @@ function IsMelee()
 end
 
 function RenderMultiTargetRotation()
-  Hekili.DB.profile.toggles.mode.value = "aoe";
-  return RenderRotation();
-end
-
-function RenderSingleTargetRotation()
-  Hekili.DB.profile.toggles.mode.value = "single";
-  return RenderRotation();
-end
-
-function RenderRotation()
-  if IsMelee() == false then
-    WowCyborg_CURRENTATTACK = "Out of range";
+  if WowCyborg_INCOMBAT == false then
     return SetSpellRequest(nil);
   end
 
-  local actionName = Hekili.GetQueue().Cooldowns[1].actionName;
+  local actionName = Hekili.GetQueue().Primary[1].actionName;
+  
   WowCyborg_CURRENTATTACK = actionName;
   local button = buttons[actionName];
-  
-  if button ~= nil then
-    local ready = true;
-    if ready then
-      return SetSpellRequest(button);
-    end
+  if actionName == "templars_verdict" and IsMelee() then
+    button = "7"
   end
-
-  actionName = Hekili.GetQueue().Primary[1].actionName;
-  WowCyborg_CURRENTATTACK = actionName;
-  button = buttons[actionName];
   
   if button ~= nil then
     return SetSpellRequest(button);
   end
+
+  return RenderSingleTargetRotation();
+end
+
+function RenderSingleTargetRotation()
+  if WowCyborg_INCOMBAT == false then
+    return SetSpellRequest(nil);
+  end
+
+  local actionName = Hekili.GetQueue().Primary[1].actionName;
+
+  WowCyborg_CURRENTATTACK = actionName;
+  local button = buttons[actionName];
+  
+  if button ~= nil then
+    return SetSpellRequest(button);
+  end
+
+  return SetSpellRequest(nil);
 end
 
 print("Retri pala rotation loaded");

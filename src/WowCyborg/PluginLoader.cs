@@ -8,7 +8,7 @@ using WowCyborg.PluginUtilities.Models;
 
 namespace WowCyborg
 {
-    class PluginLoader
+    public class PluginLoader
     {
         public static IList<PluginBase> GetPlugins(ApplicationSettings settings)
         {

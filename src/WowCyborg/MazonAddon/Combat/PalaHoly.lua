@@ -8,24 +8,31 @@ local holyShock = 3;
 local judgment = 4;
 local crusaderStrike = 5;
 local lightOfDawn = 6;
-local hammerOfWrath = 7;
+local hammerOfWrath = "SHIFT+3";
 
-local beaconOfLight = "SHIFT+3";
-local lightOfTheMartyr = 9;
+local wog = {};
+wog[1] = "F+5";
+wog[2] = "F+6";
+wog[3] = "F+7";
+wog[4] = "F+8";
+wog[5] = "F+9";
 
+local shock = {};
+shock[1] = "6";
+shock[2] = "7";
+shock[3] = "8";
+shock[4] = "9";
+shock[5] = "0";
 
 WowCyborg_PAUSE_KEYS = {
   "F1",
   "F2",
   "F3",
   "F4",
-  "F5",
-  "F7",
   "NUMPAD1",
   "NUMPAD2",
   "NUMPAD5",
   "NUMPAD9",
-  "0",
   "F",
   "R",
   "LSHIFT",
@@ -141,53 +148,23 @@ function RenderMultiTargetRotation()
   return RenderSingleTargetRotation(true);
 end
 
-function HandleTankPreHots()
-  if FindBuff("focus", "Beacon of Light") == nil then
-    if IsCastableAtFriendlyUnit("focus", "Beacon of Light", 500) and IsSpellInRange("Beacon of Light", "focus") then
-      local focusHp = GetHealthPercentage("focus");
-      if focusHp > 0 then
-        WowCyborg_CURRENTATTACK = "Beacon of Light";
-        SetSpellRequest(beaconOfLight);
-        return true;
-      end
-    end
-  end
-
-  return false;
-end
-
 function IsMelee()
   return IsSpellInRange("Crusader Strike") == 1;
 end
 
-function RenderSingleTargetRotation(disableAutoTarget)
-  local quaking = FindDebuff("player", "Quake");
-
-  if disableAutoTarget == nil then
-    local tankPreHot = HandleTankPreHots();
-    if tankPreHot then
-      return;
-    end
-  end
-
-  local speed = GetUnitSpeed("player");
-  
+function RenderSingleTargetRotation()  
   local friendlyTargetName = FindShockHealingTarget();
   local holyPower = UnitPower("player", 9);
   if friendlyTargetName ~= nil and IsCastable("Word of Glory", 0) and holyPower > 2 then
     local memberindex = GetMemberIndex(friendlyTargetName);
     WowCyborg_CURRENTATTACK = "Word of Glory " .. friendlyTargetName;
-    if memberindex + 5 == 10 then
-      return SetSpellRequest("CTRL+0");
-    else
-      return SetSpellRequest("CTRL+" .. (memberindex + 5));
-    end
+    return SetSpellRequest(wog[memberindex]);
   end
 
   if friendlyTargetName ~= nil and IsCastable("Holy Shock", 1600) then
     local memberindex = GetMemberIndex(friendlyTargetName);
     WowCyborg_CURRENTATTACK = "Shock " .. friendlyTargetName;
-    return SetSpellRequest("CTRL+" .. memberindex);
+    return SetSpellRequest(shock[memberindex]);
   end
 
   if UnitCanAttack("player", "target") == true then

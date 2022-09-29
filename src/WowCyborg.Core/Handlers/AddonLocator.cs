@@ -44,6 +44,18 @@ namespace WowCyborg.Core.Handlers
                 return procs.Select(p => p.MainWindowHandle).ToList();
             }
 
+            procs = Process.GetProcessesByName("WowB");
+            if (procs.Length > 0)
+            {
+                return procs.Select(p => p.MainWindowHandle).ToList();
+            }
+
+            procs = Process.GetProcessesByName("World of Warcraft");
+            if (procs.Length > 0)
+            {
+                return procs.Select(p => p.MainWindowHandle).ToList();
+            }
+
             procs = Process.GetProcessesByName("WowClassic");
             return procs.Select(p => p.MainWindowHandle).ToList();
         }
@@ -189,7 +201,17 @@ namespace WowCyborg.Core.Handlers
 
             if (processes.Length == 0)
             {
+                processes = Process.GetProcessesByName("WowB");
+            }
+
+            if (processes.Length == 0)
+            {
                 processes = Process.GetProcessesByName("WowClassic");
+            }
+
+            if (processes.Length == 0)
+            {
+                processes = Process.GetProcessesByName("World of Warcraft");
             }
 
             if (processes.Length == 1)

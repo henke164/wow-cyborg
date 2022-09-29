@@ -709,7 +709,6 @@ function HandleMailing()
     SetSpellRequest(interact);
     return true;
   end
-
 end
 
 function SendLootToBank() 

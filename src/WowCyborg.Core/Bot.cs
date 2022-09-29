@@ -109,42 +109,21 @@ namespace WowCyborg.Core
 
         private void SetupEventBehaviours()
         {
-            EventManager.On(HWnd, "PlayerTransformChanged", (Event ev) =>
-            {
-                HandleOnPlayerTransformChanged((Transform)ev.Data);
-            });
-
-            EventManager.On(HWnd, "DeathChanged", (Event ev) =>
-            {
-                if ((bool)ev.Data)
-                {
-                    CorpseTransform = new Transform(
-                        CurrentTransform.Position.X,
-                        CurrentTransform.Position.Y,
-                        CurrentTransform.Position.Z,
-                        CurrentTransform.Rotation);
-
-                    TargetLocation = null;
-                    Paused = false;
-                }
-                else
-                {
-                    CorpseTransform = null;
-                }
-            });
+            EventManager.On(HWnd, "PlayerTransformChanged", OnPlayerTransformChanged);
+            EventManager.On(HWnd, "DeathChanged", OnDeathChanged);
         }
 
-        private void HandleOnPlayerTransformChanged(Transform currentTransform)
+        private void OnPlayerTransformChanged(Event ev)
         {
-            CurrentTransform = currentTransform;
-            _rotationCommander.UpdateCurrentTransform(currentTransform);
+            CurrentTransform = (Transform)ev.Data;
+            _rotationCommander.UpdateCurrentTransform(CurrentTransform);
 
             if (TargetLocation == null)
             {
                 return;
             }
 
-            if (Vector3.Distance(TargetLocation, currentTransform.Position) <= 0.0025)
+            if (Vector3.Distance(TargetLocation, CurrentTransform.Position) <= 0.0025)
             {
                 TargetLocation = null;
                 _movementCommander.Stop();
@@ -158,7 +137,26 @@ namespace WowCyborg.Core
                 _onDestinationReached?.Invoke();
             }
         }
-        
+
+        private void OnDeathChanged(Event ev)
+        {
+            if ((bool)ev.Data)
+            {
+                CorpseTransform = new Transform(
+                    CurrentTransform.Position.X,
+                    CurrentTransform.Position.Y,
+                    CurrentTransform.Position.Z,
+                    CurrentTransform.Rotation);
+
+                TargetLocation = null;
+                Paused = false;
+            }
+            else
+            {
+                CorpseTransform = null;
+            }
+        }
+
         private void StartMovementTask()
         {
             _runningTask = Task.Run(() =>

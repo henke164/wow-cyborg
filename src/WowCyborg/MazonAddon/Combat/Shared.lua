@@ -43,6 +43,7 @@ function CreateRotationFrame()
     end
 
     PreventAzeriteBeamAbortion();
+    HandleSpeak();
 
     if WowCyborg_PAUSE_UNTIL > GetTime() then
       WowCyborg_CURRENTATTACK = "Paused";
@@ -76,9 +77,6 @@ function SetSpellRequest(buttonCombination)
       letterToggleTexture:SetColorTexture(0, 1, 0);
       spellButtonTexture:SetColorTexture(GetColorFromNumber(letterNum1));
       buttonCombinerTexture:SetColorTexture(GetColorFromNumber(letterNum2));
-      print("setting colors ")
-      print(letterNum1)
-      print(letterNum2)
       return true;
     end
 
@@ -116,6 +114,15 @@ function FindBuff(target, buffName)
     if name ~= nil and buffName ~= nil and string.lower(name) == string.lower(buffName) then
       local time = GetTime();
       return name, etime - time, stacks, i, icon;
+    end
+  end
+end
+
+function FindUnitBuff(target, buffName)
+  for i=1,40 do
+    local name = UnitBuff(target, i);
+    if name ~= nil and buffName ~= nil and string.lower(name) == string.lower(buffName) then
+      return UnitBuff(target, i);
     end
   end
 end
@@ -453,4 +460,92 @@ function GetNearbyEnemyCount(interactDistance)
   end
 
   return count;
+end
+
+-- Dragonflight auto quest
+function CreateOption(npc, text, index)
+  local option = {}
+  option.npc = npc;
+  option.text = text;
+  option.index = index;
+  return option;
+end
+
+local optionsToSelect = {};
+table.insert(optionsToSelect, CreateOption("Pathfinder Tacha", "interested in", 1));
+table.insert(optionsToSelect, CreateOption("Cataloger Kieule", "new discovery", 1));
+table.insert(optionsToSelect, CreateOption("Boss Magor", "buy something", 1));
+table.insert(optionsToSelect, CreateOption("Kodethi", "Welcome", 1));
+table.insert(optionsToSelect, CreateOption("Archmage Khadgar", "We have much to discuss", 1));
+table.insert(optionsToSelect, CreateOption(nil, "Each page is filled with an elegant,", 1));
+table.insert(optionsToSelect, CreateOption(nil, "<The first column asks for your name.>", 1));
+table.insert(optionsToSelect, CreateOption(nil, "<The middle column asks for", 3));
+table.insert(optionsToSelect, CreateOption(nil, "<The final column asks for", 4));
+table.insert(optionsToSelect, CreateOption("Sendrax", "A single egg remains.", 1));
+table.insert(optionsToSelect, CreateOption("Alexstrasza the Life-Binder", "The Ruby Lifeshrine", 1));
+table.insert(optionsToSelect, CreateOption("Gurgthock", "rumble", 1));
+
+function HandleSpeak()
+  if GossipFrame:IsVisible() ~= true then
+    return true;
+  end
+
+  local avaQuests = C_GossipInfo.GetAvailableQuests();
+  for _, v in ipairs(avaQuests) do
+    C_GossipInfo.SelectAvailableQuest(v.questID);
+    return;
+  end
+
+  local quests = C_GossipInfo.GetActiveQuests();
+  for _, v in ipairs(quests) do
+    if (v.isComplete == true) then
+      C_GossipInfo.SelectActiveQuest(v.questID);
+      return;
+    end
+  end
+
+  local options = C_GossipInfo.GetOptions();
+  for _, v in ipairs(options) do
+    local textFound = string.find(v.name, "(Quest)");
+    if textFound ~= nil then
+      print("Selecting Quest option");
+      C_GossipInfo.SelectOption(v.gossipOptionID);
+      return;
+    end
+  end
+
+  local npcOptions = {};
+  for _, v in ipairs(optionsToSelect) do
+    if (v.npc == nil or v.npc == UnitName("target")) then
+      table.insert(npcOptions, v);
+    end
+  end
+  
+  local gossipText = C_GossipInfo.GetText();
+  for _, v in ipairs(npcOptions) do
+    local textFound = string.find(C_GossipInfo.GetText(), v.text);
+    if textFound ~= nil then
+      local optionId = C_GossipInfo.GetOptions()[v.index].gossipOptionID;
+      print("Selecting option " .. optionId);
+      C_GossipInfo.SelectOption(optionId);
+      return;
+    end
+  end
+end
+
+function SellTrashItems() 
+  local c,i,n,v=0;
+  for b=0,4 do
+    for s=1,GetContainerNumSlots(b) do 
+      i={GetContainerItemInfo(b,s)}
+      n=i[7]
+      if n then
+        v={GetItemInfo(n)}
+        quality = v[3];
+        if quality == 0 then
+          UseContainerItem(b,s)
+        end
+      end;
+    end;
+  end;
 end

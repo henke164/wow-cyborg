@@ -27,7 +27,7 @@ namespace WowCyborg.Core.Handlers
 
             return dispatcher;
         }
-        
+
         public static void On(IntPtr hWnd, string eventName, Action<Event> onEvent)
         {
             if (!EventSubscribers.ContainsKey(hWnd))
@@ -40,7 +40,10 @@ namespace WowCyborg.Core.Handlers
                 EventSubscribers[hWnd].Add(eventName, new List<Action<Event>>());
             }
 
-            EventSubscribers[hWnd][eventName].Add(onEvent);
+            if (!EventSubscribers[hWnd][eventName].Contains(onEvent))
+            {
+                EventSubscribers[hWnd][eventName].Add(onEvent);
+            }
         }
 
         private static void BroadcastEvent(IntPtr hWnd, Event ev)
@@ -56,6 +59,8 @@ namespace WowCyborg.Core.Handlers
             }
 
             var subscriberCount = EventSubscribers[hWnd][ev.Name].Count;
+            ev.HWnd = hWnd;
+
             for (var x = 0; x < subscriberCount; x++)
             {
                 EventSubscribers[hWnd][ev.Name][x](ev);

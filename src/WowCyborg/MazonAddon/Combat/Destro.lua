@@ -43,9 +43,10 @@ function RenderMultiTargetRotation()
   if doRainOfFire() == true then
     local shards = UnitPower("player", 7)
     local rorBuff = FindBuff("player", "Ritual of Ruin");
+    local castingInfo, _, _, _, endTime = UnitCastingInfo("player");
 
     if shards >= 3 or rorBuff ~= nil then
-      if UnitCastingInfo("player") ~= nil then
+      if castingInfo ~= nil and ((endTime / 1000) - GetTime()) < 0.5 then
         WowCyborg_CURRENTATTACK = "Cancel";
         return SetSpellRequest(stopCast);
       end

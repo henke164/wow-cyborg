@@ -32,18 +32,20 @@ namespace WowCyborg.Core.EventDispatchers
 
             AddonScreenshots[hWnd].SetPixel(0, 0, Color.White);
 
-            EventManager.On(hWnd, "ScreenChanged", (Event ev) =>
+            EventManager.On(hWnd, "ScreenChanged", OnScreenChanged);
+        }
+
+        void OnScreenChanged(Event ev)
+        {
+            var screenshot = (Bitmap)((Bitmap)ev.Data).Clone();
+            try
             {
-                var screenshot = (Bitmap)((Bitmap)ev.Data).Clone();
-                try
-                {
-                    AddonScreenshots[hWnd] = screenshot;
-                    AddonScreenshotSizes[hWnd] = screenshot.Size;
-                }
-                catch (Exception ex)
-                {
-                }
-            });
+                AddonScreenshots[ev.HWnd] = screenshot;
+                AddonScreenshotSizes[ev.HWnd] = screenshot.Size;
+            }
+            catch (Exception ex)
+            {
+            }
         }
 
         protected bool AddonIsGreenAt(IntPtr hWnd, int x, int y)
