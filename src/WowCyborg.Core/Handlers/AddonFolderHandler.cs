@@ -30,6 +30,11 @@ namespace WowCyborg.Core.Handlers
 
             if (process == null)
             {
+                process = Process.GetProcessesByName("WoWB").FirstOrDefault();
+            }
+
+            if (process == null)
+            {
                 process = Process.GetProcessesByName("WoWClassic").FirstOrDefault();
             }
 

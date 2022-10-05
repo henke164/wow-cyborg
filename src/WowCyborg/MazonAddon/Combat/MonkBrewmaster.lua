@@ -11,8 +11,8 @@ local blackoutKick = "1";
 local kegSmash = "2";
 local breathOfFire = "3";
 local rushingJadeWind = "4";
-local spinningCraneKick = "6";
 local tigerPalm = "5";
+local spinningCraneKick = "6";
 local expelHarm = "9";
 
 local celestialBrew = "F+5";
@@ -169,7 +169,7 @@ function CreateDamageTakenFrame()
 
       tinsert(incomingDamage, 1, DamageDetails);
 
-      local cutoff = timestamp - 5
+      local cuwff = timestamp - 5
       meleeDamageInLast5Seconds = 0
       rangedDamageInLast5Seconds = 0;
       for i = #incomingDamage, 1, -1 do

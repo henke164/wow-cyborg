@@ -79,3 +79,4 @@ CreateCombatFrame();
 --CreateFacingCheckFrame();
 CreateRotationFrame();
 CreateWrapperFrame();
+RenderGuideFrame();

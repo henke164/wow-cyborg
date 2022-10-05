@@ -83,6 +83,7 @@ trial	MazonAddon/Combat/TrialSeller.lua
 frostdk	MazonAddon/Combat/DKFrost.lua
 disc	MazonAddon/Combat/PriestDisc.lua
 protpvp	MazonAddon/Combat/WarriorProtPvp.lua
+protdf	MazonAddon/Combat/WarriorProtDF.lua
 condemn	MazonAddon/Combat/WarriorCondemn.lua
 subtlety	MazonAddon/Combat/RogueSubtlety.lua
 sub2	MazonAddon/Combat/RogueSubtlety2.lua

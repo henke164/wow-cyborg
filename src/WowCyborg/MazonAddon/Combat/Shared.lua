@@ -277,11 +277,6 @@ function RenderFontFrame()
       end
     end
 
-    if IsMouseButtonDown("MiddleButton") then
-      Pause(0.3);
-      return;
-    end
-
     for index, value in ipairs(WowCyborg_PAUSE_KEYS) do
       if value == key then
         Pause(0.3);
@@ -289,7 +284,18 @@ function RenderFontFrame()
     end
   end)
   
+  local middleButtonReleased = true;
   fontFrame:SetScript("OnUpdate", function(self, event, ...)
+    
+    if middleButtonReleased and IsMouseButtonDown("MiddleButton") then
+      WowCyborg_DISABLED = WowCyborg_DISABLED == false;
+      middleButtonReleased = false;
+    end
+
+    if IsMouseButtonDown("MiddleButton") == false then
+      middleButtonReleased = true;
+    end
+
     if WowCyborg_DISABLED == true then
       fontTexture:SetColorTexture(1, 1, 0);
       str:SetText("Disabled");
@@ -472,6 +478,7 @@ function CreateOption(npc, text, index)
 end
 
 local optionsToSelect = {};
+table.insert(optionsToSelect, CreateOption("Ebyssian", "A great journey", 1));
 table.insert(optionsToSelect, CreateOption("Pathfinder Tacha", "interested in", 1));
 table.insert(optionsToSelect, CreateOption("Cataloger Kieule", "new discovery", 1));
 table.insert(optionsToSelect, CreateOption("Boss Magor", "buy something", 1));
@@ -484,6 +491,34 @@ table.insert(optionsToSelect, CreateOption(nil, "<The final column asks for", 4)
 table.insert(optionsToSelect, CreateOption("Sendrax", "A single egg remains.", 1));
 table.insert(optionsToSelect, CreateOption("Alexstrasza the Life-Binder", "The Ruby Lifeshrine", 1));
 table.insert(optionsToSelect, CreateOption("Gurgthock", "rumble", 1));
+table.insert(optionsToSelect, CreateOption(nil, "It is an honor to serve", 1));
+table.insert(optionsToSelect, CreateOption("Talonstalker Kavia", "occupying", 1));
+table.insert(optionsToSelect, CreateOption("Archivist Edress", "history of the", 1));
+table.insert(optionsToSelect, CreateOption("Forgemaster Bazentus", "mortal", 1));
+table.insert(optionsToSelect, CreateOption("Wrathion", "grasp", 1));
+table.insert(optionsToSelect, CreateOption("Wrathion", "secure this courtyard", 1));
+table.insert(optionsToSelect, CreateOption("Left", "good fight", 1));
+table.insert(optionsToSelect, CreateOption("Talonstalker Kavia", "new ways", 1));
+table.insert(optionsToSelect, CreateOption("Archivist Edress", "books, scrolls, hours", 1));
+table.insert(optionsToSelect, CreateOption("Baskilan", "Well met", 1));
+table.insert(optionsToSelect, CreateOption("Forgemaster Bazentus", "begin building", 1));
+table.insert(optionsToSelect, CreateOption("Sabellian", "Are you ready to depart", 1));
+table.insert(optionsToSelect, CreateOption("Aru", "Hunting is about", 1));
+table.insert(optionsToSelect, CreateOption("Beastmaster Nuqut", "I tend to our beasts", 1));
+table.insert(optionsToSelect, CreateOption("Ohn Seshteng", "your arrival", 1));
+table.insert(optionsToSelect, CreateOption("Scout Tomul", "to keep up", 1));
+table.insert(optionsToSelect, CreateOption("Ohn Seshteng", "aid in the ritual", 2));
+table.insert(optionsToSelect, CreateOption("Elder Odgerel", "Clan Teerai", 1));
+table.insert(optionsToSelect, CreateOption("Ohn Arasara", "Stay true", 1));
+table.insert(optionsToSelect, CreateOption("Provisioner Zara", "seeks a hearth.", 1));
+table.insert(optionsToSelect, CreateOption("Sansok Khan", "Do you feel prepared", 1));
+table.insert(optionsToSelect, CreateOption("Sansok Khan", "traditions and guides", 4));
+table.insert(optionsToSelect, CreateOption("Sansok Khan", "honed a special connection", 1));
+table.insert(optionsToSelect, CreateOption("Sansok Khan", "military force", 2));
+table.insert(optionsToSelect, CreateOption("Sansok Khan", "hunting game", 1));
+table.insert(optionsToSelect, CreateOption("Matchmaker Osila", "Zandalari", 1));
+table.insert(optionsToSelect, CreateOption("Hunter Narman", "small pond", 1));
+table.insert(optionsToSelect, CreateOption("Khansguard Akato", "Khanam", 1));
 
 function HandleSpeak()
   if GossipFrame:IsVisible() ~= true then
@@ -525,27 +560,209 @@ function HandleSpeak()
   for _, v in ipairs(npcOptions) do
     local textFound = string.find(C_GossipInfo.GetText(), v.text);
     if textFound ~= nil then
+      if C_GossipInfo.GetOptions()[v.index] == nil then
+        return;
+      end
+
       local optionId = C_GossipInfo.GetOptions()[v.index].gossipOptionID;
-      print("Selecting option " .. optionId);
       C_GossipInfo.SelectOption(optionId);
       return;
     end
   end
 end
 
-function SellTrashItems() 
-  local c,i,n,v=0;
-  for b=0,4 do
-    for s=1,GetContainerNumSlots(b) do 
-      i={GetContainerItemInfo(b,s)}
-      n=i[7]
-      if n then
-        v={GetItemInfo(n)}
-        quality = v[3];
-        if quality == 0 then
-          UseContainerItem(b,s)
-        end
-      end;
-    end;
-  end;
+function SellItems(color)
+  print("Selling items");
+  for b = 0, 6 do
+    for s = 1, C_Container.GetContainerNumSlots(b) do 
+      local item = C_Container.GetContainerItemLink(b, s);
+      if item and string.find(item, color) then
+        print("Selling b:" .. b .. "s:" .. s);
+        C_Container.UseContainerItem(b,s);
+      end
+    end
+  end
 end
+
+function SellGrayItems()
+  SellItems("cFF9D9D9D");
+end
+
+function SellGreenItems()
+  SellItems("cFF1EFF00");
+end
+
+-- TOMTOM
+local steps = {};
+WowCyborg_guideHeader = nil;
+WowCyborg_guideDescription = nil;
+
+WowCyborg_Step = 1;
+
+local timer = CreateFrame("FRAME");
+local function setTimer(duration, func)
+	local endTime = GetTime() + duration;
+	timer:SetScript("OnUpdate", function()
+		if(endTime < GetTime()) then
+      print("Times up");
+			--time is up
+			func();
+			timer:SetScript("OnUpdate", nil);
+		end
+	end);
+end
+
+
+function CreateStep(x, y, zone, target, description, completeEvent, questId)
+  local step = {};
+  step.x = x;
+  step.y = y;
+  step.zone = zone;
+  step.description = description;
+  step.target = target;
+  step.completeEvent = completeEvent;
+  step.questId = questId;
+  return step;
+end
+
+function CreateButton(text, parent)
+	local button = CreateFrame("Button", nil, parent)
+	button:SetWidth(25)
+	button:SetHeight(25)
+	
+	button:SetText(text)
+	button:SetNormalFontObject("GameFontNormal")
+	
+	local ntex = button:CreateTexture()
+	ntex:SetTexture("Interface/Buttons/UI-Panel-Button-Up")
+	ntex:SetTexCoord(0, 0.625, 0, 0.6875)
+	ntex:SetAllPoints()	
+	button:SetNormalTexture(ntex)
+	
+	local htex = button:CreateTexture()
+	htex:SetTexture("Interface/Buttons/UI-Panel-Button-Highlight")
+	htex:SetTexCoord(0, 0.625, 0, 0.6875)
+	htex:SetAllPoints()
+	button:SetHighlightTexture(htex)
+	
+	local ptex = button:CreateTexture()
+	ptex:SetTexture("Interface/Buttons/UI-Panel-Button-Down")
+	ptex:SetTexCoord(0, 0.625, 0, 0.6875)
+	ptex:SetAllPoints()
+	button:SetPushedTexture(ptex)
+  return button;
+end
+
+function RenderGuideFrame()
+  local fontFrame, fontTexture = CreateDefaultFrame(0, 0, 250, 50);
+  fontFrame:SetMovable(true)
+  fontFrame:EnableMouse(true)
+  fontFrame:RegisterForDrag("LeftButton")
+  fontFrame:SetScript("OnDragStart", fontFrame.StartMoving)
+  fontFrame:SetScript("OnDragStop", fontFrame.StopMovingOrSizing)
+
+  fontFrame:RegisterEvent("QUEST_ACCEPTED");
+  fontFrame:RegisterEvent("QUEST_TURNED_IN");
+  fontFrame:RegisterEvent("QUEST_PROGRESS");
+  fontFrame:RegisterEvent("QUEST_COMPLETE");
+  fontFrame:RegisterEvent("QUEST_WATCH_UPDATE");
+  fontFrame:RegisterEvent("UNIT_QUEST_LOG_CHANGED");
+  fontFrame:RegisterEvent("NAME_PLATE_UNIT_ADDED");
+
+  local previous = CreateButton("<-", fontFrame);
+	previous:SetPoint("LEFT", fontFrame, "LEFT", 5, 0);
+  
+  local next = CreateButton("->", fontFrame);
+	next:SetPoint("RIGHT", fontFrame, "RIGHT", -5, 0);
+  
+  WowCyborg_guideHeader = fontFrame:CreateFontString(nil, "OVERLAY", "GameFontNormalSmall");
+  WowCyborg_guideHeader:SetPoint("CENTER", fontFrame, "CENTER", 0, 5);
+  WowCyborg_guideHeader:SetTextColor(1, 1, 1);
+
+  WowCyborg_guideDescription = fontFrame:CreateFontString(nil, "OVERLAY", "GameFontNormalSmall");
+  WowCyborg_guideDescription:SetPoint("CENTER", fontFrame, "CENTER", 0, -5);
+  WowCyborg_guideDescription:SetTextColor(1, 1, 1);
+
+  fontFrame:SetScript("OnEvent", function(self, event, ...)
+    local step = steps[WowCyborg_Step];
+    if step == nil then
+      return;
+    end
+
+    local target = UnitName("target");
+    print("Key:" .. event);
+
+    if (event == "NAME_PLATE_UNIT_ADDED" and step.target) then
+      local unitID = ...;
+      local name = UnitName(unitID);
+      if name == step.target then
+        SetRaidTarget(unitID, 8);
+      end
+    end
+
+    if (event == "QUEST_WATCH_UPDATE") then
+      local questId = ...
+      if step.completeEvent == event and step.questId == questId then
+
+      end
+    end
+
+    if step.target and step.completeEvent == event and step.target == target then
+      NextStep();
+    end
+  end);
+
+  previous:SetScript("OnClick", function(self, event)
+    PreviousStep();
+  end)
+    
+  next:SetScript("OnClick", function(self, event)
+    NextStep();
+  end)
+
+  setTimer(5, NextStep);
+end
+
+function PreviousStep()
+  WowCyborg_Step = WowCyborg_Step - 1;
+  local step = steps[WowCyborg_Step];
+  if step == nil then
+    WowCyborg_Step = 0;
+    return;
+  end
+  RenderStep(step);
+end
+
+function NextStep()
+  WowCyborg_Step = WowCyborg_Step + 1;
+  local step = steps[WowCyborg_Step];
+  if step == nil then
+    WowCyborg_Step = WowCyborg_Step - 1;
+    return;
+  end
+  RenderStep(step);
+end
+
+function RenderStep(step)
+  WowCyborg_guideHeader:SetText(WowCyborg_Step .. ". " .. step.target);
+  WowCyborg_guideDescription:SetText(step.description);
+  TomTom.db.profile.general.confirmremoveall = false;
+  SlashCmdList["TOMTOM_WAY"]("reset all");
+  SlashCmdList["TOMTOM_WAY"](step.zone .. " " .. step.x .. " " .. step.y .. " " .. step.description);
+
+  if step.target then
+    for i = 1, 100 do
+      local name = UnitName('nameplate' .. i);
+      if name and name == step.target then
+        local guid = UnitGUID('nameplate' .. i);
+        SetRaidTarget('nameplate' .. i, 8);
+      end
+    end
+  end
+end
+
+table.insert(steps, CreateStep(44.12, 38.05, "Orgrimmar", "Ebyssian", "Accept quest", "QUEST_ACCEPTED"));
+table.insert(steps, CreateStep(44.12, 38.05, "Orgrimmar", "Naleidea Rivergleam", "Accept quest", "QUEST_ACCEPTED"));
+table.insert(steps, CreateStep(44.12, 38.05, "Orgrimmar", "Scalecommander Cindrethresh", "Accept quest", "QUEST_ACCEPTED"));
+table.insert(steps, CreateStep(55.05, 89.44, "Orgrimmar", "Kodethi", "Talk", "QUEST_WATCH_UPDATE", 72256));
+table.insert(steps, CreateStep(55.86, 12.70, "Durotar", "Ebyssian", "Turn in quest", "QUEST_TURNED_IN", 72256));

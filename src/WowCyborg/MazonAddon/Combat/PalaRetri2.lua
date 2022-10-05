@@ -49,6 +49,14 @@ end
 
 function RenderSingleTargetRotation(aoe)
   local holyPower = UnitPower("player", 9);
+  local empBuff = FindBuff("player", "Empyrean Power");
+
+  if IsMelee() and empBuff then
+    if IsCastableAtEnemyTarget("Divine Storm", 0) then
+      WowCyborg_CURRENTATTACK = "Divine Storm";
+      return SetSpellRequest(divineStorm);
+    end
+  end
 
   if (IsMelee() and holyPower >= 5) then
     if (aoe == true) then

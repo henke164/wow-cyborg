@@ -3,8 +3,8 @@
 ]]--
 
 local consecration = 1;
-local judgment = 2;
-local avengersShield = 3;
+local avengersShield = 2;
+local judgment = 3;
 local guardian = 4;
 local defender = 5;
 local blessedHammer = 6;
