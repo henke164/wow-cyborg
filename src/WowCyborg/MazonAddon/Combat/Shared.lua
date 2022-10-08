@@ -1087,6 +1087,95 @@ table.insert(steps, CreateStep(62.35, 73.03, "The Waking Shores", "Alexstrasza t
 table.insert(steps, CreateStep(62.35, 73.03, "The Waking Shores", "Alexstrasza the Life-Binder", "Accept quest", "QUEST_ACCEPTED"));
 table.insert(steps, CreateStep(61.55, 68.59, "The Waking Shores", "Alexstrasza the Life-Binder", "Turn in quest", "QUEST_TURNED_IN"));
 table.insert(steps, CreateStep(61.55, 68.59, "The Waking Shores", "Alexstrasza the Life-Binder", "Accept quest", "QUEST_ACCEPTED"));
+table.insert(steps, CreateStep(45.95, 81.47, "The Waking Shores", "Iyali", "Fly and Turn in quest", "QUEST_TURNED_IN"));
+table.insert(steps, CreateStep(48.29, 88.59, "The Waking Shores", "Ambassador Taurasza", "Turn in quest", "QUEST_TURNED_IN"));
+table.insert(steps, CreateStep(48.29, 88.59, "The Waking Shores", "Ambassador Taurasza", "Accept quest", "QUEST_ACCEPTED"));
+table.insert(steps, CreateStep(77.73, 23.9, "Ohn'ahran Plains", "Scout Tomul", "Turn in quest", "QUEST_TURNED_IN"));
+table.insert(steps, CreateStep(77.73, 23.9, "Ohn'ahran Plains", "Scout Tomul", "Accept quest", "QUEST_ACCEPTED"));
+table.insert(steps, CreateStep(78.52, 26.98, "Ohn'ahran Plains", "Blazing Proto-Dragon", "Kill", "QUEST_WATCH_UPDATE"));
+table.insert(steps, CreateStep(78.62, 25.43, "Ohn'ahran Plains", "Scout Tomul", "Turn in quest", "QUEST_TURNED_IN"));
+table.insert(steps, CreateStep(78.62, 25.43, "Ohn'ahran Plains", "Scout Tomul", "Accept quest", "QUEST_ACCEPTED"));
+table.insert(steps, CreateStep(85.29, 25.39, "Ohn'ahran Plains", "Scout Tomul", "Turn in quest", "QUEST_TURNED_IN"));
+table.insert(steps, CreateStep(85.32, 25.37, "Ohn'ahran Plains", "Loyal Bakar", "Accept quest", "QUEST_ACCEPTED"));
+table.insert(steps, CreateStep(84.57, 25.25, "Ohn'ahran Plains", "Muqur Rain-Touched", "Accept quest", "QUEST_ACCEPTED"));
+table.insert(steps, CreateStep(84.41, 24.98, "Ohn'ahran Plains", "Farrier Roscha", "Accept quest", "QUEST_ACCEPTED"));
+table.insert(steps, CreateStep(84.38, 24.97, "Ohn'ahran Plains", "Apprentice Ehri", "Accept quest", "QUEST_ACCEPTED"));
+table.insert(steps, CreateStep(85.7, 25.32, "Ohn'ahran Plains", "Sansok Khan", "Talk", "QUEST_WATCH_UPDATE"));
+table.insert(steps, CreateStep(85.7, 25.32, "Ohn'ahran Plains", "Sansok Khan", "Turn in quest", "QUEST_TURNED_IN"));
+table.insert(steps, CreateStep(85.7, 25.32, "Ohn'ahran Plains", "Sansok Khan", "Accept quest", "QUEST_ACCEPTED"));
+table.insert(steps, CreateStep(85.7, 25.32, "Ohn'ahran Plains", "Sansok Khan", "Accept quest", "QUEST_ACCEPTED"));
+table.insert(steps, CreateStep(85.79, 26.56, "Ohn'ahran Plains", "Aru", "Talk", "QUEST_WATCH_UPDATE"));
+table.insert(steps, CreateStep(83.94, 25.93, "Ohn'ahran Plains", "Beastmaster Nuqut", "Talk", "QUEST_WATCH_UPDATE"));
+table.insert(steps, CreateStep(85.58, 20.9, "Ohn'ahran Plains", "Ohn Seshteng", "Talk", "QUEST_WATCH_UPDATE"));
+table.insert(steps, CreateStep(84.68, 22.87, "Ohn'ahran Plains", "Scout Tomul", "Turn in quest", "QUEST_TURNED_IN"));
+table.insert(steps, CreateStep(84.68, 22.87, "Ohn'ahran Plains", "Scout Tomul", "Turn in quest", "QUEST_TURNED_IN"));
+table.insert(steps, CreateStep(84.68, 22.87, "Ohn'ahran Plains", "Scout Tomul", "Accept quest", "QUEST_ACCEPTED"));
+table.insert(steps, CreateStep(83.19, 23.72, "Ohn'ahran Plains", "Scout Tomul", "Talk", "QUEST_WATCH_UPDATE"));
+table.insert(steps, CreateStep(85.01, 15.22, "Ohn'ahran Plains", "Ravenous Rockfang", "Get Gizzard and Fermur", "QUEST_WATCH_UPDATE", 70319));
+table.insert(steps, CreateStep(85.01, 15.22, "Ohn'ahran Plains", "Ravenous Rockfang", "Get Gizzard and Fermur", "QUEST_WATCH_UPDATE", 70319));
+table.insert(steps, CreateStep(77.73, 18.55, "Ohn'ahran Plains", "Swift Hornstrider", "Get Scale", "QUEST_WATCH_UPDATE", 70319));
+table.insert(steps, CreateStep(75.13, 25.04, "Ohn'ahran Plains", "Clearwater Ottuk", "Get Heart", "QUEST_WATCH_UPDATE", 70319));
+table.insert(steps, CreateStep(75.65, 31.63, "Ohn'ahran Plains", "Scout Tomul", "Turn in quest", "QUEST_TURNED_IN"));
+table.insert(steps, CreateStep(75.65, 31.63, "Ohn'ahran Plains", "Scout Tomul", "Accept quest", "QUEST_ACCEPTED"));
+table.insert(steps, CreateStep(76.7, 31.9, "Ohn'ahran Plains", nil, "Accept quest", "QUEST_ACCEPTED"));
+table.insert(steps, CreateStep(77.95, 35.3, "Ohn'ahran Plains", "Konkhular", "Kill", "QUEST_WATCH_UPDATE"));
+table.insert(steps, CreateStep(78.75, 30.91, "Ohn'ahran Plains", "Plainswalker Bull", "Kill Elephants", "QUEST_WATCH_UPDATE"));
+table.insert(steps, CreateStep(81.22, 29.87, "Ohn'ahran Plains", "Mudfin Mudrunner", "Talk", "QUEST_WATCH_UPDATE", 65950));
+table.insert(steps, CreateStep(80.57, 30.77, "Ohn'ahran Plains", "Khasar", "Turn in quest", "QUEST_TURNED_IN"));
+table.insert(steps, CreateStep(80.57, 30.77, "Ohn'ahran Plains", "Khasar", "Turn in quest", "QUEST_TURNED_IN"));
+table.insert(steps, CreateStep(80.58, 30.77, "Ohn'ahran Plains", "Khasar", "Accept quest", "QUEST_ACCEPTED"));
+table.insert(steps, CreateStep(80.58, 30.77, "Ohn'ahran Plains", "Khasar", "Accept quest", "QUEST_ACCEPTED"));
+table.insert(steps, CreateStep(80.58, 30.77, "Ohn'ahran Plains", "Khasar", "Accept quest", "QUEST_ACCEPTED"));
+
+table.insert(steps, CreateStep(84.43, 25.01, "Ohn'ahran Plains", "Farrier Roscha", "Complete all Murloc quests, then Turn in quest", "QUEST_TURNED_IN"));
+table.insert(steps, CreateStep(84.43, 25.01, "Ohn'ahran Plains", "Farrier Roscha", "Turn in quest", "QUEST_TURNED_IN"));
+table.insert(steps, CreateStep(84.57, 25.27, "Ohn'ahran Plains", "Muqur Rain-Touched", "Turn in quest", "QUEST_TURNED_IN"));
+table.insert(steps, CreateStep(75.65, 31.69, "Ohn'ahran Plains", "Scout Tomul", "Turn in quest", "QUEST_TURNED_IN"));
+table.insert(steps, CreateStep(75.65, 31.69, "Ohn'ahran Plains", "Scout Tomul", "Turn in quest", "QUEST_TURNED_IN"));
+table.insert(steps, CreateStep(75.65, 31.69, "Ohn'ahran Plains", "Scout Tomul", "Accept quest", "QUEST_ACCEPTED"));
+table.insert(steps, CreateStep(69.99, 37.96, "Ohn'ahran Plains", "Ohn Seshteng", "Turn in quest", "QUEST_TURNED_IN"));
+table.insert(steps, CreateStep(69.99, 37.96, "Ohn'ahran Plains", "Ohn Seshteng", "Accept quest", "QUEST_ACCEPTED"));
+table.insert(steps, CreateStep(69.95, 37.96, "Ohn'ahran Plains", "Ohn Seshteng", "Complete and Turn in quest", "QUEST_TURNED_IN"));
+table.insert(steps, CreateStep(69.99, 37.96, "Ohn'ahran Plains", "Ohn Seshteng", "Accept quest", "QUEST_ACCEPTED"));
+table.insert(steps, CreateStep(69.95, 37.96, "Ohn'ahran Plains", "Ohn Seshteng", "Talk", "QUEST_WATCH_UPDATE"));
+table.insert(steps, CreateStep(70, 37.97, "Ohn'ahran Plains", "Ohn Seshteng", "Turn in quest", "QUEST_TURNED_IN"));
+table.insert(steps, CreateStep(70.04, 37.99, "Ohn'ahran Plains", "Sansok Khan", "Accept quest", "QUEST_ACCEPTED"));
+table.insert(steps, CreateStep(61.45, 39.58, "Ohn'ahran Plains", "Sansok Khan", "Turn in quest", "QUEST_TURNED_IN"));
+table.insert(steps, CreateStep(61.45, 39.58, "Ohn'ahran Plains", "Sansok Khan", "Accept quest", "QUEST_ACCEPTED"));
+table.insert(steps, CreateStep(61.45, 39.58, "Ohn'ahran Plains", "Sansok Khan", "Accept quest", "QUEST_ACCEPTED"));
+table.insert(steps, CreateStep(61.45, 39.58, "Ohn'ahran Plains", "Sansok Khan", "Accept quest", "QUEST_ACCEPTED"));
+table.insert(steps, CreateStep(61.45, 39.58, "Ohn'ahran Plains", "Sansok Khan", "Accept quest", "QUEST_ACCEPTED"));
+
+table.insert(steps, CreateStep(63.6, 40.5, "Ohn'ahran Plains", "Hunter Narman", "Accept quest", "QUEST_ACCEPTED"));
+
+table.insert(steps, CreateStep(62.79, 40.66, "Ohn'ahran Plains", "Make Inn Home", "Talk", "QUEST_WATCH_UPDATE"));
+
+table.insert(steps, CreateStep(60.43, 40.73, "Ohn'ahran Plains", "Scout Tomul", "Turn in quest", "QUEST_TURNED_IN"));
+table.insert(steps, CreateStep(60.35, 40.76, "Ohn'ahran Plains", "Guard Bahir", "Accept quest", "QUEST_ACCEPTED"));
+
+table.insert(steps, CreateStep(59.96, 41.44, "Ohn'ahran Plains", "Nokhud Fighter", "Defeat", "QUEST_WATCH_UPDATE", 66017));
+table.insert(steps, CreateStep(59.18, 37.66, "Ohn'ahran Plains", "Qariin Dotur", "Turn in quest", "QUEST_TURNED_IN"));
+table.insert(steps, CreateStep(59.18, 37.66, "Ohn'ahran Plains", "Qariin Dotur", "Accept quest", "QUEST_ACCEPTED"));
+table.insert(steps, CreateStep(59.17, 37.59, "Ohn'ahran Plains", "Qariin Dotur", "Complete and Turn in quest", "QUEST_TURNED_IN"));
+table.insert(steps, CreateStep(60.01, 37.37, "Ohn'ahran Plains", "Elder Odgerel", "Talk", "QUEST_WATCH_UPDATE"));
+table.insert(steps, CreateStep(60.37, 37.61, "Ohn'ahran Plains", "Agari Dotur", "Talk", "QUEST_WATCH_UPDATE"));
+table.insert(steps, CreateStep(60.37, 37.71, "Ohn'ahran Plains", "Quartermaster Huseng", "Talk", "QUEST_WATCH_UPDATE"));
+table.insert(steps, CreateStep(62.17, 36.41, "Ohn'ahran Plains", "Windsage Kven", "Accept quest", "QUEST_ACCEPTED"));
+table.insert(steps, CreateStep(62.19, 35.76, "Ohn'ahran Plains", "Hearthkeeper Erden", "Buy Honey", "QUEST_WATCH_UPDATE"));
+table.insert(steps, CreateStep(62.79, 35.48, "Ohn'ahran Plains", "Windsage Dawa", "Accept quest", "QUEST_ACCEPTED"));
+table.insert(steps, CreateStep(62.97, 33.67, "Ohn'ahran Plains", "Ohn Seshteng", "Turn in quest", "QUEST_TURNED_IN"));
+table.insert(steps, CreateStep(62.97, 33.67, "Ohn'ahran Plains", "Ohn Seshteng", "Accept quest", "QUEST_ACCEPTED"));
+
+table.insert(steps, CreateStep(63.12, 34.08, "Ohn'ahran Plains", "Windsage Ordven", "Accept quest", "QUEST_ACCEPTED")); -- A disgrunded initiate?
+
+table.insert(steps, CreateStep(63.81, 35.91, "Ohn'ahran Plains", "Ohn Arasara", "Pick flowers and Talk", "QUEST_WATCH_UPDATE"));
+table.insert(steps, CreateStep(62.97, 33.73, "Ohn'ahran Plains", "Ohn Seshteng", "Turn in quest", "QUEST_TURNED_IN"));
+table.insert(steps, CreateStep(62.18, 35.71, "Ohn'ahran Plains", "Hearthkeeper Erden", "Buy milk", "QUEST_WATCH_UPDATE"));
+table.insert(steps, CreateStep(65.97, 25.11, "Ohn'ahran Plains", "Telemancer Aerilyn", "Turn in quest", "QUEST_TURNED_IN"));
+table.insert(steps, CreateStep(65.9, 25.13, "Ohn'ahran Plains", "Telemancer Aerilyn", "Accept quest", "QUEST_ACCEPTED"));
+table.insert(steps, CreateStep(64.03, 18.32, "Ohn'ahran Plains", "Skyscribe Adenedal", "Turn in quest", "QUEST_TURNED_IN"));
+table.insert(steps, CreateStep(64.03, 18.32, "Ohn'ahran Plains", "Skyscribe Adenedal", "Accept quest", "QUEST_ACCEPTED"));
+table.insert(steps, CreateStep(64.03, 18.32, "Ohn'ahran Plains", "Skyscribe Adenedal", "Accept quest", "QUEST_ACCEPTED"));
 
 table.insert(steps, CreateStep(55.86, 12.70, "Durotar", "NONE", "NONE", "NONE"));
 RenderGuideFrame();
