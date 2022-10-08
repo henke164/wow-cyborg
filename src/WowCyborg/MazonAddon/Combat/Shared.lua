@@ -469,6 +469,7 @@ function GetNearbyEnemyCount(interactDistance)
 end
 
 -- Dragonflight auto quest
+print ("Loading dragon flight autoquest...");
 function CreateOption(npc, text, index)
   local option = {}
   option.npc = npc;
@@ -612,11 +613,15 @@ local function setTimer(duration, func)
 	end);
 end
 
-function CreateButton(text, parent)
+function CreateButton(text, parent, width)
 	local button = CreateFrame("Button", nil, parent)
 	button:SetWidth(25)
 	button:SetHeight(25)
 	
+  if width then
+    button:SetWidth(width)
+  end
+  
 	button:SetText(text)
 	button:SetNormalFontObject("GameFontNormal")
 	
@@ -640,6 +645,27 @@ function CreateButton(text, parent)
   return button;
 end
 
+function PrintScript(type, description)
+  local zone = GetZoneText();
+  local target = UnitName("target");
+  local x, y = C_Map.GetPlayerMapPosition(C_Map.GetBestMapForUnit("player"), "player"):GetXY();
+  local str = "table.insert(steps, CreateStep(" ..
+    math.ceil(x * 10000) / 100 ..
+    ", " ..
+    math.ceil(y * 10000) / 100 ..
+  ", \"" .. zone .. "\", ";
+
+  if target == nil then
+    str = str .. "nil"
+  else
+    str = str .. "\"".. target .. "\""
+  end
+
+  str = str .. ", \"" .. description .. "\", \"" .. type .. "\"));";
+
+  error("\r\nCODE:\r\n\r\n" .. str .. "\r\n\r\n")
+end
+
 function RenderGuideFrame()
   local fontFrame, fontTexture = CreateDefaultFrame(0, 0, 250, 75);
   fontFrame:SetMovable(true)
@@ -658,10 +684,10 @@ function RenderGuideFrame()
   fontFrame:RegisterEvent("CHAT_MSG_MONSTER_SAY");
 
   local previous = CreateButton("<-", fontFrame);
-	previous:SetPoint("RIGHT", fontFrame, "BOTTOMRIGHT", -25, -50);
+	previous:SetPoint("RIGHT", fontFrame, "BOTTOMRIGHT", -25, -25);
   
   local next = CreateButton("->", fontFrame);
-	next:SetPoint("RIGHT", fontFrame, "BOTTOMRIGHT", 0, -50);
+	next:SetPoint("RIGHT", fontFrame, "BOTTOMRIGHT", 0, -25);
   
   WowCyborg_guideHeader = fontFrame:CreateFontString(nil, "OVERLAY", "GameFontNormalSmall");
   WowCyborg_guideHeader:SetPoint("CENTER", fontFrame, "CENTER", 0, 5);
@@ -700,9 +726,20 @@ function RenderGuideFrame()
       end
     end
 
-    if step.target and step.completeEvent == event and step.target == target then
-      NextStep();
-      return;
+    if (event == "QUEST_ACCEPTED") then
+      local questId = ...
+      if step.completeEvent == event and step.questId and step.questId == questId then
+        NextStep();
+        return;
+      end
+    end
+
+    if event == "QUEST_TURNED_IN" then
+      local questId = ...
+      if step.completeEvent == event and step.questId and step.questId == questId then
+        NextStep();
+        return;
+      end
     end
 
     if event == "CHAT_MSG_MONSTER_SAY" then
@@ -717,6 +754,11 @@ function RenderGuideFrame()
         end
       end
     end
+    
+    if step.target and step.completeEvent == event and step.target == target then
+      NextStep();
+      return;
+    end
   end);
 
   previous:SetScript("OnClick", function(self, event)
@@ -727,9 +769,29 @@ function RenderGuideFrame()
     NextStep();
   end)
 
+  
+  local c1 = CreateButton("Acc", fontFrame, 25);
+	c1:SetPoint("RIGHT", fontFrame, "BOTTOMRIGHT", -50, -25);
+  c1:SetScript("OnClick", function(self, event)
+    PrintScript("QUEST_ACCEPTED", "Accept quest");
+  end)
+  
+  local c2 = CreateButton("Tur", fontFrame, 25);
+	c2:SetPoint("RIGHT", fontFrame, "BOTTOMRIGHT", -75, -25);
+  c2:SetScript("OnClick", function(self, event)
+    PrintScript("QUEST_TURNED_IN", "Turn in quest");
+  end)
+  
+  local c3 = CreateButton("Upd", fontFrame, 25);
+	c3:SetPoint("RIGHT", fontFrame, "BOTTOMRIGHT", -100, -25);
+  c3:SetScript("OnClick", function(self, event)
+    PrintScript("QUEST_WATCH_UPDATE", "Talk");
+  end)
+
   setTimer(5, function()
     local step = steps[WowCyborg_Step];
     RenderStep(step);
+    print ("Dragon flight autoquest loaded!");
   end);
 end
 
@@ -861,4 +923,170 @@ table.insert(steps, CreateStep(66.35, 34.92, "The Waking Shores", "Wrathion", "T
 table.insert(steps, CreateStep(66.35, 34.92, "The Waking Shores", "Wrathion", "Accept quest", "QUEST_ACCEPTED"));
 table.insert(steps, CreateStep(66.35, 34.92, "The Waking Shores", "Wrathion", "Accept quest", "QUEST_ACCEPTED"));
 
+table.insert(steps, CreateStep(64.45, 33.16, "The Waking Shores", "Dragonhunter Igordan", "Kill", "QUEST_TURNED_IN", 66956));
+table.insert(steps, CreateStep(62.95, 29.44, "The Waking Shores", "Meatgrinder Sotok", "Kill and get quest", "QUEST_ACCEPTED", 65995));
+table.insert(steps, CreateStep(63.44, 28.87, "The Waking Shores", "Left", "Consult Left", "QUEST_WATCH_UPDATE", 65992));
+table.insert(steps, CreateStep(65.10, 29.34, "The Waking Shores", "Right", "Consult Right", "QUEST_WATCH_UPDATE", 65992));
+table.insert(steps, CreateStep(63.03, 33.34, "The Waking Shores", "Talonstalker Kavia", "Consult Talonstalker", "QUEST_WATCH_UPDATE", 65992));
+table.insert(steps, CreateStep(62.68, 33.08, "The Waking Shores", "Wrathion", "Turn in quest", "QUEST_TURNED_IN"));
+table.insert(steps, CreateStep(62.68, 33.08, "The Waking Shores", "Wrathion", "Turn in quest", "QUEST_TURNED_IN"));
+table.insert(steps, CreateStep(62.68, 33.08, "The Waking Shores", "Wrathion", "Turn in quest", "QUEST_TURNED_IN"));
+table.insert(steps, CreateStep(62.68, 33.08, "The Waking Shores", "Majordomo Selistra", "Accept quest", "QUEST_ACCEPTED"));
+
+table.insert(steps, CreateStep(61.04, 35.77, "The Waking Shores", "Injured Ruby Culler", "Injured Ruby Culler", "QUEST_WATCH_UPDATE", 65996));
+table.insert(steps, CreateStep(61.11, 36.75, "The Waking Shores", "Injured Ruby Culler", "Injured Ruby Culler", "QUEST_WATCH_UPDATE", 65996));
+table.insert(steps, CreateStep(59.05, 34.93, "The Waking Shores", "Injured Ruby Culler", "Injured Ruby Culler", "QUEST_WATCH_UPDATE", 65996));
+table.insert(steps, CreateStep(59.05, 34.93, "The Waking Shores", "Caretaker Ventraz", "Accept quest", "QUEST_ACCEPTED"));
+table.insert(steps, CreateStep(58.43, 31.02, "The Waking Shores", nil, "Kill elementals", "QUEST_WATCH_UPDATE", 66988));
+table.insert(steps, CreateStep(59.05, 34.93, "The Waking Shores", "Caretaker Ventraz", "Turn in quest", "QUEST_TURNED_IN"));
+table.insert(steps, CreateStep(56.64, 37.74, "The Waking Shores", "Injured Ruby Culler", "Injured Ruby Culler", "QUEST_WATCH_UPDATE", 65996));
+table.insert(steps, CreateStep(55.00, 30.80, "The Waking Shores", "Caretaker Azkra", "Turn in quest", "QUEST_TURNED_IN"));
+table.insert(steps, CreateStep(55.00, 30.80, "The Waking Shores", "Caretaker Azkra", "Accept quest", "QUEST_TURNED_IN"));
+table.insert(steps, CreateStep(55.15, 24.89, "The Waking Shores", "Sendrax", "Accept quest", "QUEST_ACCEPTED"));
+table.insert(steps, CreateStep(55.15, 24.89, "The Waking Shores", "Sendrax", "Accept quest", "QUEST_ACCEPTED"));
+table.insert(steps, CreateStep(55.15, 24.89, "The Waking Shores", nil, "Accept quest", "QUEST_ACCEPTED", 66000));
+table.insert(steps, CreateStep(56.66, 24.79, "The Waking Shores", "Dragonhunter Igordan", "Kill", "QUEST_TURNED_IN", 70648));
+
+table.insert(steps, CreateStep(56.16, 22.36, "The Waking Shores", "Sendrax", "Complete all quests and turn in", "QUEST_TURNED_IN"));
+table.insert(steps, CreateStep(56.16, 22.36, "The Waking Shores", "Sendrax", "Turn in quest", "QUEST_TURNED_IN"));
+table.insert(steps, CreateStep(56.16, 22.36, "The Waking Shores", "Sendrax", "Turn in quest", "QUEST_TURNED_IN"));
+table.insert(steps, CreateStep(56.16, 22.36, "The Waking Shores", "Sendrax", "Accept quest", "QUEST_ACCEPTED"));
+table.insert(steps, CreateStep(56.16, 22.36, "The Waking Shores", "Sendrax", "Talk", "QUEST_WATCH_UPDATE"));
+
+table.insert(steps, CreateStep(55.00, 30.69, "The Waking Shores", nil, "Grap and hand in egg", "QUEST_WATCH_UPDATE", 66001));
+table.insert(steps, CreateStep(54.53, 30.84, "The Waking Shores", "Apprentice Caretaker Zefren", "Accept quest", "QUEST_ACCEPTED"));
+table.insert(steps, CreateStep(54.53, 30.84, "The Waking Shores", "Apprentice Caretaker Zefren", "Complete and Turn in quest", "QUEST_TURNED_IN"));
+table.insert(steps, CreateStep(55.06, 30.99, "The Waking Shores", "Majordomo Selistra", "Turn in quest", "QUEST_TURNED_IN"));
+table.insert(steps, CreateStep(55.06, 30.99, "The Waking Shores", "Majordomo Selistra", "Accept quest", "QUEST_ACCEPTED"));
+
+-- Ruby Lifeshrine
+table.insert(steps, CreateStep(62.26, 72.91, "The Waking Shores", "Alexstrasza the Life-Binder", "Talk", "QUEST_WATCH_UPDATE"));
+table.insert(steps, CreateStep(62.26, 72.91, "The Waking Shores", "Alexstrasza the Life-Binder", "Turn in quest", "QUEST_TURNED_IN"));
+table.insert(steps, CreateStep(62.26, 72.91, "The Waking Shores", "Alexstrasza the Life-Binder", "Accept quest", "QUEST_ACCEPTED"));
+table.insert(steps, CreateStep(62.26, 72.91, "The Waking Shores", "Alexstrasza the Life-Binder", "Accept quest", "QUEST_ACCEPTED"));
+table.insert(steps, CreateStep(60.70, 74.02, "The Waking Shores", "Xius", "Talk", "QUEST_WATCH_UPDATE"));
+table.insert(steps, CreateStep(59.46, 72.47, "The Waking Shores", "Akxall", "Talk", "QUEST_WATCH_UPDATE"));
+table.insert(steps, CreateStep(58.36, 67.19, "The Waking Shores", "Lord Andestrasz", "Talk", "QUEST_WATCH_UPDATE"));
+table.insert(steps, CreateStep(57.69, 66.90, "The Waking Shores", "Lord Andestrasz", "Take Flight Path & Turn in quest", "QUEST_TURNED_IN"));
+table.insert(steps, CreateStep(57.69, 66.90, "The Waking Shores", "Lord Andestrasz", "Complete dragonflying", "QUEST_ACCEPTED", 68796));
+table.insert(steps, CreateStep(57.73, 66.76, "The Waking Shores", "Celormu", "Talk", "QUEST_ACCEPTED"));
+table.insert(steps, CreateStep(75.12, 55.04, "The Waking Shores", "Lord Andestrasz", "Turn in quest", "QUEST_TURNED_IN"));
+table.insert(steps, CreateStep(75.12, 55.04, "The Waking Shores", "Lord Andestrasz", "Accept quest", "QUEST_ACCEPTED"));
+table.insert(steps, CreateStep(74.11, 57.88, "The Waking Shores", "Glensera", "Talk", "QUEST_WATCH_UPDATE"));
+table.insert(steps, CreateStep(74.11, 57.88, "The Waking Shores", nil, "Press the platform", "QUEST_WATCH_UPDATE", 68797));
+table.insert(steps, CreateStep(75.12, 55.04, "The Waking Shores", "Lord Andestrasz", "Turn in quest", "QUEST_TURNED_IN"));
+table.insert(steps, CreateStep(75.12, 55.04, "The Waking Shores", "Lord Andestrasz", "Accept quest", "QUEST_ACCEPTED"));
+table.insert(steps, CreateStep(74.54, 56.94, "The Waking Shores", "Lithragosa", "Talk", "QUEST_WATCH_UPDATE"));
+table.insert(steps, CreateStep(74.54, 56.94, "The Waking Shores", "Lithragosa", "Open Dragonriding skill Track", "QUEST_WATCH_UPDATE"));
+table.insert(steps, CreateStep(73.24, 52.20, "The Waking Shores", "Celormu", "Talk", "QUEST_WATCH_UPDATE"));
+table.insert(steps, CreateStep(75.12, 55.04, "The Waking Shores", "Lord Andestrasz", "Turn in quest", "QUEST_TURNED_IN"));
+table.insert(steps, CreateStep(75.12, 55.04, "The Waking Shores", "Lord Andestrasz", "Accept quest", "QUEST_ACCEPTED"));
+table.insert(steps, CreateStep(61.57, 68.72, "The Waking Shores", "Mother Elion", "Fly back and Talk to Mother Elion", "QUEST_WATCH_UPDATE"));
+table.insert(steps, CreateStep(62.77, 70.44, "The Waking Shores", "Zahkrana", "Talk", "QUEST_WATCH_UPDATE"));
+table.insert(steps, CreateStep(62.77, 70.44, "The Waking Shores", "Zahkrana", "Turn in quest", "QUEST_TURNED_IN"));
+table.insert(steps, CreateStep(62.21, 70.57, "The Waking Shores", "Amella", "Accept quest", "QUEST_ACCEPTED"));
+table.insert(steps, CreateStep(61.09, 71.46, "The Waking Shores", "Ruby Whelpling", "Talk", "QUEST_WATCH_UPDATE"));
+table.insert(steps, CreateStep(62.34, 72.76, "The Waking Shores", "Majordomo Selistra", "Turn in quest", "QUEST_TURNED_IN"));
+table.insert(steps, CreateStep(62.36, 72.95, "The Waking Shores", "Alexstrasza the Life-Binder", "Turn in quest", "QUEST_TURNED_IN"));
+table.insert(steps, CreateStep(62.34, 72.99, "The Waking Shores", "Alexstrasza the Life-Binder", "Accept quest", "QUEST_ACCEPTED"));
+table.insert(steps, CreateStep(59.49, 72.7, "The Waking Shores", "Majordomo Selistra", "Turn in quest", "QUEST_TURNED_IN"));
+table.insert(steps, CreateStep(59.49, 72.7, "The Waking Shores", "Majordomo Selistra", "Accept quest", "QUEST_ACCEPTED"));
+table.insert(steps, CreateStep(59.43, 75.9, "The Waking Shores", "Commander Lethanak", "Turn in quest", "QUEST_TURNED_IN"));
+table.insert(steps, CreateStep(59.43, 75.9, "The Waking Shores", "Commander Lethanak", "Accept quest", "QUEST_ACCEPTED"));
+
+table.insert(steps, CreateStep(57.79, 76.65, "The Waking Shores", "Enraged Cliff", "Kill", "QUEST_WATCH_UPDATE"));
+table.insert(steps, CreateStep(59.76, 78.66, "The Waking Shores", "Enraged Cliff", "Kill", "QUEST_WATCH_UPDATE"));
+table.insert(steps, CreateStep(61.04, 79.12, "The Waking Shores", "Enraged Cliff", "Kill", "QUEST_WATCH_UPDATE"));
+table.insert(steps, CreateStep(60.91, 77.65, "The Waking Shores", "Enraged Cliff", "Kill", "QUEST_WATCH_UPDATE"));
+table.insert(steps, CreateStep(59.39, 75.87, "The Waking Shores", "Commander Lethanak", "Turn in quest", "QUEST_TURNED_IN"));
+table.insert(steps, CreateStep(59.39, 75.87, "The Waking Shores", "Commander Lethanak", "Accept quest", "QUEST_ACCEPTED"));
+table.insert(steps, CreateStep(59.47, 76.12, "The Waking Shores", "Majordomo Selistra", "Accept quest", "QUEST_ACCEPTED"));
+table.insert(steps, CreateStep(59.91, 75.95, "The Waking Shores", "Kildrumeh", "Accept quest", "QUEST_ACCEPTED"));
+
+table.insert(steps, CreateStep(57.34, 83.29, "The Waking Shores", nil, "Pick up egg", "QUEST_WATCH_UPDATE", 66121));
+table.insert(steps, CreateStep(55.33, 83.29, "The Waking Shores", nil, "Pick up egg", "QUEST_WATCH_UPDATE", 66121));
+table.insert(steps, CreateStep(54.8, 82.21, "The Waking Shores", "Klozicc the Ascended", "Kill", "QUEST_TURNED_IN"));
+table.insert(steps, CreateStep(54.97, 80.97, "The Waking Shores", nil, "Pick up egg", "QUEST_TURNED_IN", 66121));
+table.insert(steps, CreateStep(56.13, 81.27, "The Waking Shores", nil, "Pick up egg", "QUEST_WATCH_UPDATE", 66121));
+
+table.insert(steps, CreateStep(53.73, 80.23, "The Waking Shores", "Majordomo Selistra", "Turn in quest", "QUEST_TURNED_IN"));
+table.insert(steps, CreateStep(53.73, 80.23, "The Waking Shores", "Majordomo Selistra", "Turn in quest", "QUEST_TURNED_IN"));
+table.insert(steps, CreateStep(53.73, 80.23, "The Waking Shores", "Majordomo Selistra", "Accept quest", "QUEST_ACCEPTED"));
+
+table.insert(steps, CreateStep(53.46, 83.03, "The Waking Shores", "Jadzigeth", "Kill", "QUEST_WATCH_UPDATE"));
+table.insert(steps, CreateStep(53.73, 80.23, "The Waking Shores", "Majordomo Selistra", "Turn in quest", "QUEST_TURNED_IN"));
+table.insert(steps, CreateStep(53.73, 80.23, "The Waking Shores", "Majordomo Selistra", "Accept quest", "QUEST_ACCEPTED"));
+table.insert(steps, CreateStep(45.96, 81.48, "The Waking Shores", "Iyali", "Take Flightpath and Accept Meat-thod quest", "QUEST_ACCEPTED", 69898));
+table.insert(steps, CreateStep(47.42, 77.25, "The Waking Shores", "Pudgy Riverbeast", "Find Meat", "QUEST_WATCH_UPDATE"));
+table.insert(steps, CreateStep(46.2, 78.43, "The Waking Shores", "Majordomo Selistra", "Talk", "QUEST_WATCH_UPDATE"));
+table.insert(steps, CreateStep(46.19, 78.46, "The Waking Shores", "Majordomo Selistra", "Turn in quest", "QUEST_TURNED_IN"));
+table.insert(steps, CreateStep(46.12, 78.32, "The Waking Shores", "Alexstrasza the Life-Binder", "Accept quest", "QUEST_ACCEPTED"));
+
+table.insert(steps, CreateStep(42.5, 66.84, "The Waking Shores", "Wrathion", "Turn in quest", "QUEST_TURNED_IN"));
+table.insert(steps, CreateStep(42.5, 66.84, "The Waking Shores", "Scalecommander Emberthal", "Accept quest", "QUEST_ACCEPTED"));
+table.insert(steps, CreateStep(42.53, 66.79, "The Waking Shores", "Scalecommander Emberthal", "Talk, then Make Inn home", "QUEST_WATCH_UPDATE"));
+table.insert(steps, CreateStep(42.53, 66.79, "The Waking Shores", "Scalecommander Emberthal", "Turn in quest", "QUEST_TURNED_IN"));
+table.insert(steps, CreateStep(42.51, 66.79, "The Waking Shores", "Scalecommander Emberthal", "Accept quest", "QUEST_ACCEPTED"));
+table.insert(steps, CreateStep(42.49, 66.83, "The Waking Shores", "Wrathion", "Accept quest", "QUEST_ACCEPTED"));
+table.insert(steps, CreateStep(42.44, 66.19, "The Waking Shores", "Fao the Relentless", "Talk and take map", "QUEST_WATCH_UPDATE"));
+table.insert(steps, CreateStep(42.8, 66.82, "The Waking Shores", "Forgemaster Bazentus", "Talk", "QUEST_WATCH_UPDATE"));
+table.insert(steps, CreateStep(43.75, 67.23, "The Waking Shores", "Archivist Edress", "Talk", "QUEST_WATCH_UPDATE"));
+table.insert(steps, CreateStep(42.26, 69.33, "The Waking Shores", "Talonstalker Kavia", "Talk and complete", "QUEST_WATCH_UPDATE"));
+table.insert(steps, CreateStep(42.48, 66.85, "The Waking Shores", "Wrathion", "Turn in quest", "QUEST_TURNED_IN"));
+table.insert(steps, CreateStep(42.48, 66.85, "The Waking Shores", "Wrathion", "Turn in quest", "QUEST_TURNED_IN"));
+table.insert(steps, CreateStep(42.51, 66.83, "The Waking Shores", "Wrathion", "Accept quest", "QUEST_ACCEPTED"));
+table.insert(steps, CreateStep(42.51, 66.83, "The Waking Shores", "Wrathion", "Accept quest", "QUEST_ACCEPTED"));
+table.insert(steps, CreateStep(35.66, 68.55, "The Waking Shores", "Piercer Gigra", "Kill", "QUEST_WATCH_UPDATE"));
+table.insert(steps, CreateStep(34.82, 66.97, "The Waking Shores", "Olphis the Molten", "Kill", "QUEST_WATCH_UPDATE"));
+table.insert(steps, CreateStep(35.59, 60.72, "The Waking Shores", "Modak Flamespit", "Kill", "QUEST_WATCH_UPDATE"));
+table.insert(steps, CreateStep(34.03, 61.32, "The Waking Shores", "Wrathion", "Turn in quest", "QUEST_TURNED_IN"));
+table.insert(steps, CreateStep(34.03, 61.32, "The Waking Shores", "Wrathion", "Turn in quest", "QUEST_TURNED_IN"));
+table.insert(steps, CreateStep(34.03, 61.32, "The Waking Shores", "Wrathion", "Accept quest", "QUEST_ACCEPTED"));
+table.insert(steps, CreateStep(34.03, 61.32, "The Waking Shores", "Wrathion", "Talk", "QUEST_WATCH_UPDATE"));
+table.insert(steps, CreateStep(29.07, 58.79, "The Waking Shores", "Wrathion", "Accept quest", "QUEST_ACCEPTED"));
+table.insert(steps, CreateStep(29.07, 58.79, "The Waking Shores", "Wrathion", "Talk", "QUEST_WATCH_UPDATE"));
+table.insert(steps, CreateStep(27.14, 57.07, "The Waking Shores", "Champion Choruk", "Kill", "QUEST_WATCH_UPDATE"));
+table.insert(steps, CreateStep(26.42, 58.74, "The Waking Shores", "Wrathion", "Turn in quest", "QUEST_TURNED_IN"));
+table.insert(steps, CreateStep(26.42, 58.74, "The Waking Shores", "Wrathion", "Turn in quest", "QUEST_TURNED_IN"));
+table.insert(steps, CreateStep(26.4, 58.75, "The Waking Shores", "Wrathion", "Accept quest", "QUEST_ACCEPTED"));
+table.insert(steps, CreateStep(27.32, 62.57, "The Waking Shores", "Wrathion", "Talk", "QUEST_WATCH_UPDATE"));
+table.insert(steps, CreateStep(27.31, 62.62, "The Waking Shores", "Wrathion", "Turn in quest", "QUEST_TURNED_IN"));
+table.insert(steps, CreateStep(27.28, 62.78, "The Waking Shores", "Forgemaster Bazentus", "Accept quest", "QUEST_ACCEPTED"));
+table.insert(steps, CreateStep(23.84, 59.16, "The Waking Shores", "Scalecommander Emberthal", "Complete quest", "QUEST_WATCH_UPDATE"));
+table.insert(steps, CreateStep(27.28, 62.78, "The Waking Shores", "Forgemaster Bazentus", "Turn in quest", "QUEST_TURNED_IN"));
+table.insert(steps, CreateStep(27.28, 62.78, "The Waking Shores", "Forgemaster Bazentus", "Accept quest", "QUEST_ACCEPTED"));
+table.insert(steps, CreateStep(24.65, 60.94, "The Waking Shores", "Forgemaster Bazentus", "Click forge", "QUEST_WATCH_UPDATE"));
+table.insert(steps, CreateStep(24.74, 61.21, "The Waking Shores", "Forgemaster Bazentus", "Complete and Turn in quest", "QUEST_TURNED_IN"));
+table.insert(steps, CreateStep(24.71, 61.14, "The Waking Shores", "Forgemaster Bazentus", "Accept quest", "QUEST_ACCEPTED"));
+table.insert(steps, CreateStep(24.64, 60.94, "The Waking Shores", "Forgemaster Bazentus", "Click forge", "QUEST_WATCH_UPDATE"));
+table.insert(steps, CreateStep(24.64, 60.94, "The Waking Shores", "Forgemaster Bazentus", "Click forge", "QUEST_WATCH_UPDATE"));
+table.insert(steps, CreateStep(24.7, 61.1, "The Waking Shores", "Forgemaster Bazentus", "Turn in quest", "QUEST_TURNED_IN"));
+table.insert(steps, CreateStep(24.71, 61.14, "The Waking Shores", "Forgemaster Bazentus", "Accept quest", "QUEST_ACCEPTED"));
+table.insert(steps, CreateStep(27.34, 62.58, "The Waking Shores", "Wrathion", "Talk", "QUEST_WATCH_UPDATE"));
+table.insert(steps, CreateStep(27.34, 62.58, "The Waking Shores", "Wrathion", "Travel", "QUEST_WATCH_UPDATE"));
+table.insert(steps, CreateStep(24.48, 55.57, "The Waking Shores", "Wrathion", "Turn in quest", "QUEST_TURNED_IN"));
+table.insert(steps, CreateStep(24.48, 55.57, "The Waking Shores", "Wrathion", "Accept quest", "QUEST_ACCEPTED"));
+table.insert(steps, CreateStep(24.31, 55.88, "The Waking Shores", "Sabellian", "Accept quest", "QUEST_ACCEPTED"));
+table.insert(steps, CreateStep(24.99, 55.19, "The Waking Shores", "Left", "Talk", "QUEST_WATCH_UPDATE"));
+table.insert(steps, CreateStep(26.37, 54.64, "The Waking Shores", "Talonstalker Kavia", "Talk", "QUEST_WATCH_UPDATE"));
+table.insert(steps, CreateStep(25.14, 56.32, "The Waking Shores", "Archivist Edress", "Talk", "QUEST_WATCH_UPDATE"));
+table.insert(steps, CreateStep(25.14, 56.32, "The Waking Shores", "Archivist Edress", "Talk", "QUEST_WATCH_UPDATE"));
+table.insert(steps, CreateStep(24.4, 57.82, "The Waking Shores", "Forgemaster Bazentus", "Talk", "QUEST_WATCH_UPDATE"));
+table.insert(steps, CreateStep(24.33, 58.8, "The Waking Shores", "Baskilan", "Talk", "QUEST_WATCH_UPDATE"));
+table.insert(steps, CreateStep(24.43, 55.58, "The Waking Shores", "Wrathion", "Turn in quest", "QUEST_TURNED_IN"));
+table.insert(steps, CreateStep(24.33, 55.92, "The Waking Shores", "Sabellian", "Turn in quest", "QUEST_TURNED_IN"));
+table.insert(steps, CreateStep(24.34, 55.87, "The Waking Shores", "Sabellian", "Accept quest", "QUEST_ACCEPTED"));
+table.insert(steps, CreateStep(43.83, 66.4, "The Waking Shores", "Sabellian", "Use Hearthstone and Talk", "QUEST_WATCH_UPDATE"));
+table.insert(steps, CreateStep(57.92, 67.3, "The Waking Shores", "Sabellian", "Escort and Turn in quest", "QUEST_TURNED_IN"));
+table.insert(steps, CreateStep(57.94, 67.31, "The Waking Shores", "Sabellian", "Accept quest", "QUEST_ACCEPTED"));
+table.insert(steps, CreateStep(61.56, 68.69, "The Waking Shores", "Mother Elion", "Turn in quest", "QUEST_TURNED_IN"));
+table.insert(steps, CreateStep(61.56, 68.69, "The Waking Shores", "Mother Elion", "Accept quest", "QUEST_ACCEPTED"));
+table.insert(steps, CreateStep(61.57, 68.71, "The Waking Shores", "Mother Elion", "Complete and Turn in quest", "QUEST_TURNED_IN"));
+table.insert(steps, CreateStep(61.56, 68.69, "The Waking Shores", "Mother Elion", "Accept quest", "QUEST_ACCEPTED"));
+table.insert(steps, CreateStep(62.35, 73.03, "The Waking Shores", "Alexstrasza the Life-Binder", "Turn in quest", "QUEST_TURNED_IN"));
+table.insert(steps, CreateStep(62.35, 73.03, "The Waking Shores", "Alexstrasza the Life-Binder", "Accept quest", "QUEST_ACCEPTED"));
+table.insert(steps, CreateStep(61.55, 68.59, "The Waking Shores", "Alexstrasza the Life-Binder", "Turn in quest", "QUEST_TURNED_IN"));
+table.insert(steps, CreateStep(61.55, 68.59, "The Waking Shores", "Alexstrasza the Life-Binder", "Accept quest", "QUEST_ACCEPTED"));
+
 table.insert(steps, CreateStep(55.86, 12.70, "Durotar", "NONE", "NONE", "NONE"));
+RenderGuideFrame();
