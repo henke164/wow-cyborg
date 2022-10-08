@@ -480,7 +480,7 @@ end
 local optionsToSelect = {};
 table.insert(optionsToSelect, CreateOption("Ebyssian", "A great journey", 1));
 table.insert(optionsToSelect, CreateOption("Pathfinder Tacha", "interested in", 1));
-table.insert(optionsToSelect, CreateOption("Cataloger Kieule", "new discovery", 1));
+table.insert(optionsToSelect, CreateOption("Cataloger Coralie", "new discovery", 1));
 table.insert(optionsToSelect, CreateOption("Boss Magor", "buy something", 1));
 table.insert(optionsToSelect, CreateOption("Kodethi", "Welcome", 1));
 table.insert(optionsToSelect, CreateOption("Archmage Khadgar", "We have much to discuss", 1));
@@ -612,19 +612,6 @@ local function setTimer(duration, func)
 	end);
 end
 
-
-function CreateStep(x, y, zone, target, description, completeEvent, questId)
-  local step = {};
-  step.x = x;
-  step.y = y;
-  step.zone = zone;
-  step.description = description;
-  step.target = target;
-  step.completeEvent = completeEvent;
-  step.questId = questId;
-  return step;
-end
-
 function CreateButton(text, parent)
 	local button = CreateFrame("Button", nil, parent)
 	button:SetWidth(25)
@@ -654,7 +641,7 @@ function CreateButton(text, parent)
 end
 
 function RenderGuideFrame()
-  local fontFrame, fontTexture = CreateDefaultFrame(0, 0, 250, 50);
+  local fontFrame, fontTexture = CreateDefaultFrame(0, 0, 250, 75);
   fontFrame:SetMovable(true)
   fontFrame:EnableMouse(true)
   fontFrame:RegisterForDrag("LeftButton")
@@ -668,12 +655,13 @@ function RenderGuideFrame()
   fontFrame:RegisterEvent("QUEST_WATCH_UPDATE");
   fontFrame:RegisterEvent("UNIT_QUEST_LOG_CHANGED");
   fontFrame:RegisterEvent("NAME_PLATE_UNIT_ADDED");
+  fontFrame:RegisterEvent("CHAT_MSG_MONSTER_SAY");
 
   local previous = CreateButton("<-", fontFrame);
-	previous:SetPoint("LEFT", fontFrame, "LEFT", 5, 0);
+	previous:SetPoint("RIGHT", fontFrame, "BOTTOMRIGHT", -25, -50);
   
   local next = CreateButton("->", fontFrame);
-	next:SetPoint("RIGHT", fontFrame, "RIGHT", -5, 0);
+	next:SetPoint("RIGHT", fontFrame, "BOTTOMRIGHT", 0, -50);
   
   WowCyborg_guideHeader = fontFrame:CreateFontString(nil, "OVERLAY", "GameFontNormalSmall");
   WowCyborg_guideHeader:SetPoint("CENTER", fontFrame, "CENTER", 0, 5);
@@ -690,7 +678,10 @@ function RenderGuideFrame()
     end
 
     local target = UnitName("target");
-    print("Key:" .. event);
+    if event ~= "NAME_PLATE_UNIT_ADDED" then
+      print("Key:" .. event);
+      print(...);
+    end
 
     if (event == "NAME_PLATE_UNIT_ADDED" and step.target) then
       local unitID = ...;
@@ -702,13 +693,29 @@ function RenderGuideFrame()
 
     if (event == "QUEST_WATCH_UPDATE") then
       local questId = ...
-      if step.completeEvent == event and step.questId == questId then
-
+      print(questId);
+      if step.completeEvent == event and ((target and step.target == target) or step.questId == questId) then
+        NextStep();
+        return;
       end
     end
 
     if step.target and step.completeEvent == event and step.target == target then
       NextStep();
+      return;
+    end
+
+    if event == "CHAT_MSG_MONSTER_SAY" then
+      if step.npcMessage then
+        local message = ...
+        print(message);
+        print(step.npcMessage);
+        local textFound = string.find(message, step.npcMessage);
+        if textFound then
+          NextStep();
+          return;
+        end
+      end
     end
   end);
 
@@ -720,7 +727,10 @@ function RenderGuideFrame()
     NextStep();
   end)
 
-  setTimer(5, NextStep);
+  setTimer(5, function()
+    local step = steps[WowCyborg_Step];
+    RenderStep(step);
+  end);
 end
 
 function PreviousStep()
@@ -740,11 +750,24 @@ function NextStep()
     WowCyborg_Step = WowCyborg_Step - 1;
     return;
   end
+
+  if (step.description == 'Board ship to Dragon Isles...') then
+    print("Remember:");
+    print("Judgment to put in dragonflight bar");
+    print("Sea Ray ready");
+    print("Stand on the far front of Zeppelin");
+  end
+
   RenderStep(step);
 end
 
 function RenderStep(step)
-  WowCyborg_guideHeader:SetText(WowCyborg_Step .. ". " .. step.target);
+  if (step and step.target) then
+    WowCyborg_guideHeader:SetText(WowCyborg_Step .. ". " .. step.target);
+  else
+    WowCyborg_guideHeader:SetText(WowCyborg_Step .. ". ");
+  end
+
   WowCyborg_guideDescription:SetText(step.description);
   TomTom.db.profile.general.confirmremoveall = false;
   SlashCmdList["TOMTOM_WAY"]("reset all");
@@ -761,8 +784,81 @@ function RenderStep(step)
   end
 end
 
-table.insert(steps, CreateStep(44.12, 38.05, "Orgrimmar", "Ebyssian", "Accept quest", "QUEST_ACCEPTED"));
+function CreateStep(x, y, zone, target, description, completeEvent, questId, npcMessage)
+  local step = {};
+  step.x = x;
+  step.y = y;
+  step.zone = zone;
+  step.description = description;
+  step.target = target;
+  step.completeEvent = completeEvent;
+  step.questId = questId;
+  step.npcMessage = npcMessage;
+  return step;
+end
+
+table.insert(steps, CreateStep(44.12, 38.05, "Orgrimmar", "Ebyssian", "Turn in and accept quest", "QUEST_ACCEPTED"));
+table.insert(steps, CreateStep(44.12, 38.05, "Orgrimmar", "Ebyssian", "Turn in quest", "QUEST_TURNED_IN"));
 table.insert(steps, CreateStep(44.12, 38.05, "Orgrimmar", "Naleidea Rivergleam", "Accept quest", "QUEST_ACCEPTED"));
 table.insert(steps, CreateStep(44.12, 38.05, "Orgrimmar", "Scalecommander Cindrethresh", "Accept quest", "QUEST_ACCEPTED"));
-table.insert(steps, CreateStep(55.05, 89.44, "Orgrimmar", "Kodethi", "Talk", "QUEST_WATCH_UPDATE", 72256));
-table.insert(steps, CreateStep(55.86, 12.70, "Durotar", "Ebyssian", "Turn in quest", "QUEST_TURNED_IN", 72256));
+table.insert(steps, CreateStep(38.60, 56.97, "Orgrimmar", "Pathfinder Tacha", "Talk", "UNIT_QUEST_LOG_CHANGED"));
+table.insert(steps, CreateStep(71.41, 50.68, "Orgrimmar", "Cataloger Coralie", "Talk", "UNIT_QUEST_LOG_CHANGED"));
+table.insert(steps, CreateStep(57.10, 54.11, "Orgrimmar", "Boss Magor", "Talk", "UNIT_QUEST_LOG_CHANGED"));
+table.insert(steps, CreateStep(55.06, 89.60, "Orgrimmar", "Kodethi", "Talk", "QUEST_WATCH_UPDATE"));
+table.insert(steps, CreateStep(55.86, 12.70, "Durotar", "Naleidea Rivergleam", "Turn in quest", "QUEST_TURNED_IN"));
+table.insert(steps, CreateStep(55.86, 12.70, "Durotar", "Naleidea Rivergleam", "Turn in quest", "QUEST_TURNED_IN"));
+table.insert(steps, CreateStep(55.86, 12.70, "Durotar", "Archmage Khadgar", "Accept quest", "QUEST_ACCEPTED"));
+table.insert(steps, CreateStep(55.86, 12.70, "Durotar", "Ebyssian", "Accept quest", "QUEST_TURNED_IN"));
+table.insert(steps, CreateStep(55.86, 12.70, "Durotar", "Naleidea Rivergleam", "Accept quest", "QUEST_ACCEPTED"));
+table.insert(steps, CreateStep(55.06, 89.60, "Durotar", nil, "Board ship to Dragon Isles...", "QUEST_WATCH_UPDATE", 65444));
+table.insert(steps, CreateStep(80.63, 27.67, "The Waking Shores", "Naleidea Rivergleam", "Turn in quest", "QUEST_TURNED_IN"));
+table.insert(steps, CreateStep(80.63, 27.67, "The Waking Shores", "Naleidea Rivergleam", "Accept Quest", "QUEST_ACCEPTED"));
+table.insert(steps, CreateStep(80.63, 27.67, "The Waking Shores", "Scalecommander Cindrethresh", "Accept Quest", "QUEST_ACCEPTED"));
+table.insert(steps, CreateStep(80.63, 27.67, "The Waking Shores", "Boss Magor", "Accept Quest", "QUEST_ACCEPTED"));
+table.insert(steps, CreateStep(80.32, 26.32, "The Waking Shores", "Protodragon Rib Cage", "Click on the Rib Cage. Kill and loot Dragons", "QUEST_WATCH_UPDATE", 65452));
+table.insert(steps, CreateStep(78.80, 24.46, "The Waking Shores", "Archivist Spearblossom", "Rescue Spearblossom", "QUEST_WATCH_UPDATE", 65452));
+table.insert(steps, CreateStep(77.49, 22.17, "The Waking Shores", "Ancient Hornswog", "Kill the frog", "QUEST_WATCH_UPDATE", 66076));
+table.insert(steps, CreateStep(77.33, 29.88, "The Waking Shores", "Spelunker Lazee", "Rescue Spelunker", "QUEST_WATCH_UPDATE", 65452));
+-- Wingrest Embrassy
+table.insert(steps, CreateStep(76.63, 33.56, "The Waking Shores", "Naleidea Rivergleam", "Turn in quest", "QUEST_TURNED_IN"));
+table.insert(steps, CreateStep(76.63, 33.56, "The Waking Shores", "Naleidea Rivergleam", "Accept quest", "QUEST_ACCEPTED"));
+table.insert(steps, CreateStep(76.29, 33.04, "The Waking Shores", "Scalecommander Cindrethresh", "Talk with Sendrax, then turn in quest", "QUEST_TURNED_IN"));
+table.insert(steps, CreateStep(75.96, 33.25, "The Waking Shores", "Boss Magor", "Turn in quest", "QUEST_TURNED_IN"));
+table.insert(steps, CreateStep(76.63, 33.56, "The Waking Shores", "Sendrax", "Turn in quest", "QUEST_TURNED_IN"));
+table.insert(steps, CreateStep(76.63, 33.56, "The Waking Shores", "Sendrax", "Accept quest", "QUEST_ACCEPTED"));
+
+table.insert(steps, CreateStep(76.31, 35.57, "The Waking Shores", "Ambassador Fastrasz", "Talk", "QUEST_WATCH_UPDATE", 69911));
+table.insert(steps, CreateStep(76.31, 35.57, "The Waking Shores", nil, "Press the book", "QUEST_WATCH_UPDATE", 69911));
+table.insert(steps, CreateStep(75.62, 34.16, "The Waking Shores", nil, "Press the Stone", "QUEST_WATCH_UPDATE", 69911));
+table.insert(steps, CreateStep(78.39, 31.80, "The Waking Shores", nil, "Press the Brazier", "QUEST_WATCH_UPDATE", 69911));
+table.insert(steps, CreateStep(76.63, 33.56, "The Waking Shores", "Sendrax", "Turn in quest", "QUEST_TURNED_IN"));
+table.insert(steps, CreateStep(76.63, 33.56, "The Waking Shores", "Sendrax", "Accept quest", "UNIT_QUEST_LOG_CHANGED"));
+table.insert(steps, CreateStep(76.63, 33.56, "The Waking Shores", "Sendrax", "Talk", nil, nil, "We were trained to only use these signal flares"));
+table.insert(steps, CreateStep(76.36, 33.09, "The Waking Shores", "Warlord Breka Grimaxe", "Accept quest", "QUEST_ACCEPTED"));
+table.insert(steps, CreateStep(76.36, 33.09, "The Waking Shores", "Aster Cloudgaze", "Accept quest", "QUEST_ACCEPTED"));
+table.insert(steps, CreateStep(76.36, 33.09, "The Waking Shores", "Aster Cloudgaze", "Use the disk (1), jump off when it lands.", nil, nil, "Incredible! The elements"));
+table.insert(steps, CreateStep(76.72, 34.55, "The Waking Shores", "Captain Garrick", "Turn in quest", "QUEST_TURNED_IN"));
+table.insert(steps, CreateStep(76.27, 34.40, "The Waking Shores", "Sendrax", "Be near Sendrax", nil, nil, "Here they come!"));
+table.insert(steps, CreateStep(76.36, 33.09, "The Waking Shores", "Aster Cloudgaze", "Use the disk (1), jump off when it lands.", nil, nil, "Incredible! The elements"));
+table.insert(steps, CreateStep(76.36, 33.09, "The Waking Shores", "Aster Cloudgaze", "Complete and turn in quest", "QUEST_TURNED_IN"));
+table.insert(steps, CreateStep(76.19, 34.50, "The Waking Shores", "Wrathion", "Turn in quest", "QUEST_TURNED_IN"));
+table.insert(steps, CreateStep(76.19, 34.50, "The Waking Shores", "Majordomo Selistra", "Accept quest", "QUEST_ACCEPTED"));
+table.insert(steps, CreateStep(76.63, 33.56, "The Waking Shores", "Majordomo Selistra", "Talk", nil, nil, "Cadet Sendrax, escort the"));
+table.insert(steps, CreateStep(76.25, 34.40, "The Waking Shores", "Sendrax", "Turn in quest", "QUEST_TURNED_IN"));
+table.insert(steps, CreateStep(76.25, 34.40, "The Waking Shores", "Sendrax", "Accept quest", "UNIT_QUEST_LOG_CHANGED"));
+table.insert(steps, CreateStep(76.63, 33.56, "The Waking Shores", "Sendrax", "Talk", "QUEST_WATCH_UPDATE", 65760));
+table.insert(steps, CreateStep(71.20, 40.76, "The Waking Shores", "Commander Lethanak", "Follow Sendrax", "QUEST_TURNED_IN"));
+table.insert(steps, CreateStep(71.20, 40.76, "The Waking Shores", "Commander Lethanak", "Accept quest", "QUEST_ACCEPTED"));
+table.insert(steps, CreateStep(71.37, 44.59, "The Waking Shores", "Whimpering Whelpling", "Save Whelpling (Kill Djaradins)", "QUEST_WATCH_UPDATE", 65990));
+table.insert(steps, CreateStep(71.00, 46.66, "The Waking Shores", "Whimpering Whelpling", "Save Whelpling (Kill Djaradins)", "QUEST_WATCH_UPDATE", 65990));
+table.insert(steps, CreateStep(69.89, 45.28, "The Waking Shores", "Whimpering Whelpling", "Save Whelpling (Kill Djaradins)", "QUEST_WATCH_UPDATE", 65990));
+table.insert(steps, CreateStep(69.37, 43.41, "The Waking Shores", "Whimpering Whelpling", "Save Whelpling (Kill Djaradins)", "QUEST_WATCH_UPDATE", 65990));
+table.insert(steps, CreateStep(71.20, 40.76, "The Waking Shores", "Commander Lethanak", "Turn in quest", "QUEST_TURNED_IN"));
+table.insert(steps, CreateStep(71.20, 40.76, "The Waking Shores", "Commander Lethanak", "Turn in quest", "QUEST_TURNED_IN"));
+table.insert(steps, CreateStep(71.20, 40.76, "The Waking Shores", "Commander Lethanak", "Accept quest", "QUEST_ACCEPTED"));
+table.insert(steps, CreateStep(66.35, 34.92, "The Waking Shores", nil, "Run to Wrathion", "QUEST_WATCH_UPDATE", 65991));
+table.insert(steps, CreateStep(66.35, 34.92, "The Waking Shores", "Wrathion", "Turn in quest", "QUEST_TURNED_IN"));
+table.insert(steps, CreateStep(66.35, 34.92, "The Waking Shores", "Wrathion", "Accept quest", "QUEST_ACCEPTED"));
+table.insert(steps, CreateStep(66.35, 34.92, "The Waking Shores", "Wrathion", "Accept quest", "QUEST_ACCEPTED"));
+
+table.insert(steps, CreateStep(55.86, 12.70, "Durotar", "NONE", "NONE", "NONE"));

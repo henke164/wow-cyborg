@@ -3,6 +3,7 @@
 ## Notes: OCR Addon for WowPal.
 ## Author: Mazon
 ## Version: 1.0.0
+## SavedVariablesPerCharacter: WowCyborg_Step
 
 Combat\Rotation.lua
 Combat\Shared.lua
