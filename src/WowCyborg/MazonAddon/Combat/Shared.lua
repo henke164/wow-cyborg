@@ -731,6 +731,25 @@ function RenderGuideFrame()
     NextStep();
   end)
 
+  
+  local c1 = CreateButton("Acc", fontFrame, 25);
+	c1:SetPoint("RIGHT", fontFrame, "BOTTOMRIGHT", -50, -25);
+  c1:SetScript("OnClick", function(self, event)
+    PrintScript("QUEST_ACCEPTED", "Accept quest");
+  end)
+  
+  local c2 = CreateButton("Tur", fontFrame, 25);
+	c2:SetPoint("RIGHT", fontFrame, "BOTTOMRIGHT", -75, -25);
+  c2:SetScript("OnClick", function(self, event)
+    PrintScript("QUEST_TURNED_IN", "Turn in quest");
+  end)
+  
+  local c3 = CreateButton("Upd", fontFrame, 25);
+	c3:SetPoint("RIGHT", fontFrame, "BOTTOMRIGHT", -100, -25);
+  c3:SetScript("OnClick", function(self, event)
+    PrintScript("QUEST_WATCH_UPDATE", "Talk");
+  end)
+
   setTimer(5, function()
     local step = steps[WowCyborg_Step];
     RenderStep(step);
