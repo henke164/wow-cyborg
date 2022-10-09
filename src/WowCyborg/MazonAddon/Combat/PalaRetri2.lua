@@ -22,6 +22,13 @@ local divineStorm = 7;
 local consecration = 9;
 local seraphim = 0;
 
+local wog = {};
+wog[1] = "F+5";
+wog[2] = "F+6";
+wog[3] = "F+7";
+wog[4] = "F+8";
+wog[5] = "F+9";
+
 WowCyborg_PAUSE_KEYS = {
   "F2",
   "F3",
@@ -50,6 +57,32 @@ end
 function RenderSingleTargetRotation(aoe)
   local holyPower = UnitPower("player", 9);
   local empBuff = FindBuff("player", "Empyrean Power");
+  local hp = GetHealthPercentage("player");
+
+  local shiningBuff, tl, shiningStacks, _, icon = FindBuff("player", "Shining Light");
+  if shiningBuff ~= nil and shiningStacks == 1 and icon == 1360763 then
+    if hp < 50 and saveHolyPower == false then
+      WowCyborg_CURRENTATTACK = "Word of Glory";
+      return SetSpellRequest(wog[1]);
+    end
+  end
+
+  local poweredUp = holyPower > 2;
+  if hp < 40 then
+    if (poweredUp) then
+      WowCyborg_CURRENTATTACK = "Word of Glory";
+      return SetSpellRequest(wog[1]);
+    end
+  end
+
+  if WowCyborg_INCOMBAT == false then
+    if hp < 80 then
+      if (poweredUp) then
+        WowCyborg_CURRENTATTACK = "Word of Glory";
+        return SetSpellRequest(wog[1]);
+      end
+    end
+  end
 
   if IsMelee() and empBuff then
     if IsCastableAtEnemyTarget("Divine Storm", 0) then

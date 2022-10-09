@@ -1,0 +1,12 @@
+## Interface: 80000
+## Title: DragonflightGuideAddon
+## Notes: Dragonflight Guide.
+## Author: Mazon
+## Version: 1.0.0
+## SavedVariablesPerCharacter: WowCyborg_Step, WowCyborg_Paste
+
+AutoSpeak.lua
+Functions.lua
+QuestData.lua
+Editor.lua
+DragonflightGuideAddon.lua
