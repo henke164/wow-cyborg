@@ -99,6 +99,34 @@ table.insert(optionsToSelect, CreateOption("Siaszerathel", "Chromie... I", 1));
 table.insert(optionsToSelect, CreateOption("Andantenormu", "To be lost in time", 1));
 table.insert(optionsToSelect, CreateOption("Nozdormu", "I fear time may unravel", 1));
 table.insert(optionsToSelect, CreateOption("Chromie", "This is going to be one doozie", 1));
+table.insert(optionsToSelect, CreateOption("Theramus", "You're still around?", 1));
+table.insert(optionsToSelect, CreateOption("Theramus", "Ysera and I build this", 1));
+table.insert(optionsToSelect, CreateOption("Belika", "With the clans", 1));
+table.insert(optionsToSelect, CreateOption("Boku", "Glad to see you again", 1));
+table.insert(optionsToSelect, CreateOption("Ohn Seshteng", "enemy positions", 1));
+table.insert(optionsToSelect, CreateOption("Merithra", "battle has begun", 1));
+table.insert(optionsToSelect, CreateOption("Gerithus", "You've done it", 1));
+table.insert(optionsToSelect, CreateOption("Sansok Khan", "Sansok frowns", 1));
+table.insert(optionsToSelect, CreateOption("Merithra", "Do you have something", 1));
+table.insert(optionsToSelect, CreateOption("Tigari Khan", "offer the dragons", 3));
+table.insert(optionsToSelect, CreateOption("Khanam Matra Sarest", "trusted to uphold our vow", 3));
+table.insert(optionsToSelect, CreateOption("Bree'jo", "Good day being", 1));
+table.insert(optionsToSelect, CreateOption("Bree'jo", "Dat thing", 1));
+table.insert(optionsToSelect, CreateOption("Duncan Ironeye", "Ye", 1));
+table.insert(optionsToSelect, CreateOption("Julk", "", 1));
+table.insert(optionsToSelect, CreateOption("Supply Portal", "Need anything", 1));
+table.insert(optionsToSelect, CreateOption("Kalecgos", "great jelp so far", 1));
+table.insert(optionsToSelect, CreateOption(nil, "You who stand whence", 1));
+table.insert(optionsToSelect, CreateOption("Korrikunit the Whalebringer", "Been too long", 1));
+table.insert(optionsToSelect, CreateOption("Jokomuupat", "spread south all", 1));
+table.insert(optionsToSelect, CreateOption("Babunituk", "Soup isn't ready", 1));
+table.insert(optionsToSelect, CreateOption("Noriko the All-Remembering", "push forward", 1));
+table.insert(optionsToSelect, CreateOption("Brena", "Busy at the moment", 1));
+table.insert(optionsToSelect, CreateOption("Akiun", "Akiun gazes", 1));
+table.insert(optionsToSelect, CreateOption("Tuskarr Fisherman", "She was clearly killed", 1));
+table.insert(optionsToSelect, CreateOption("Tuskarr Hunter", "Gnolls would", 1));
+table.insert(optionsToSelect, CreateOption("Tuskarr Craftsman", "daggers embedded", 1));
+table.insert(optionsToSelect, CreateOption("Festering Gnoll", "foul gnoll", 1));
 
 
 function HandleSpeak()
