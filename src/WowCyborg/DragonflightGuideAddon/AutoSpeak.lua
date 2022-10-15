@@ -64,7 +64,7 @@ table.insert(optionsToSelect, CreateOption("Khanam Matra Sarest", "Have you rall
 table.insert(optionsToSelect, CreateOption("Khanam Matra Sarest", "The Horn of Drusahl is one", 1));
 table.insert(optionsToSelect, CreateOption("Khanam Matra Sarest", "But first", 1));
 table.insert(optionsToSelect, CreateOption("Gerithus", "My mother is kind", 1));
-table.insert(optionsToSelect, CreateOption("Sariosa", "Greetings! Oh my", 1));
+table.insert(optionsToSelect, CreateOption("Sariosa", "Greetings! Oh my", 2));
 table.insert(optionsToSelect, CreateOption("Sidra the Mender", "The Primalists", 1));
 table.insert(optionsToSelect, CreateOption("Guard-Captain Alowen", "The Primalists", 1));
 table.insert(optionsToSelect, CreateOption("Aronus", "Care for a lift?", 1));
@@ -107,7 +107,10 @@ table.insert(optionsToSelect, CreateOption("Nozdormu", "I fear time may unravel"
 table.insert(optionsToSelect, CreateOption("Chromie", "This is going to be one doozie", 1));
 table.insert(optionsToSelect, CreateOption("Theramus", "You're still around?", 1));
 table.insert(optionsToSelect, CreateOption("Theramus", "Ysera and I build this", 1));
+table.insert(optionsToSelect, CreateOption("Theramus", "His aura is sullen", 1));
+table.insert(optionsToSelect, CreateOption("Theramus", "But now that magic", 1));
 table.insert(optionsToSelect, CreateOption("Belika", "With the clans", 1));
+table.insert(optionsToSelect, CreateOption("Injured Cub", "wounded cub", 1));
 table.insert(optionsToSelect, CreateOption("Boku", "Glad to see you again", 1));
 table.insert(optionsToSelect, CreateOption("Ohn Seshteng", "enemy positions", 1));
 table.insert(optionsToSelect, CreateOption("Merithra", "battle has begun", 1));
