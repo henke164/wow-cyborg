@@ -79,12 +79,16 @@ function HandleSpeak()
 end
 
 function RenderStep(step)
+  local header = WowCyborg_Step .. ". ";
   if (step and step.target) then
-    WowCyborg_guideHeader:SetText(WowCyborg_Step .. ". " .. step.target);
-  else
-    WowCyborg_guideHeader:SetText(WowCyborg_Step .. ". ");
+    header = header .. step.target;
   end
 
+  if (step and step.questId) then
+    header = header .. " (" .. step.questId .. ")";
+  end
+
+  WowCyborg_guideHeader:SetText(header);
   WowCyborg_guideDescription:SetText(step.description);
   TomTom.db.profile.general.confirmremoveall = false;
   SlashCmdList["TOMTOM_WAY"]("reset all");
