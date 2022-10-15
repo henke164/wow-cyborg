@@ -12,6 +12,9 @@ table.insert(optionsToSelect, CreateOption("Pathfinder Tacha", "interested in", 
 table.insert(optionsToSelect, CreateOption("Cataloger Coralie", "new discovery", 1));
 table.insert(optionsToSelect, CreateOption("Boss Magor", "buy something", 1));
 table.insert(optionsToSelect, CreateOption("Kodethi", "Welcome", 1));
+table.insert(optionsToSelect, CreateOption("Fao the Relentless", "My strategies", 1));
+table.insert(optionsToSelect, CreateOption("Holthkastrasz", "Welcome, young one.", 1));
+table.insert(optionsToSelect, CreateOption("Belika", "Being a good hunter", 1));
 table.insert(optionsToSelect, CreateOption("Archmage Khadgar", "We have much to discuss", 1));
 table.insert(optionsToSelect, CreateOption(nil, "Each page is filled with an elegant,", 1));
 table.insert(optionsToSelect, CreateOption(nil, "<The first column asks for your name.>", 1));
@@ -22,9 +25,12 @@ table.insert(optionsToSelect, CreateOption("Alexstrasza the Life-Binder", "The R
 table.insert(optionsToSelect, CreateOption("Gurgthock", "rumble", 1));
 table.insert(optionsToSelect, CreateOption(nil, "It is an honor to serve", 1));
 table.insert(optionsToSelect, CreateOption("Talonstalker Kavia", "occupying", 1));
+table.insert(optionsToSelect, CreateOption("Lord Andestrasz", "The skies beckon", 1));
 table.insert(optionsToSelect, CreateOption("Archivist Edress", "history of the", 1));
 table.insert(optionsToSelect, CreateOption("Forgemaster Bazentus", "mortal", 1));
 table.insert(optionsToSelect, CreateOption("Wrathion", "grasp", 1));
+table.insert(optionsToSelect, CreateOption("Wrathion", "So close to completing my destiny", 1));
+table.insert(optionsToSelect, CreateOption("Scalecommander Emberthal", "There is so much more", 1));
 table.insert(optionsToSelect, CreateOption("Wrathion", "secure this courtyard", 1));
 table.insert(optionsToSelect, CreateOption("Left", "good fight", 1));
 table.insert(optionsToSelect, CreateOption("Talonstalker Kavia", "new ways", 1));

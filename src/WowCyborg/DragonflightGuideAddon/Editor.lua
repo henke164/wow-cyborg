@@ -16,8 +16,8 @@ function PrintScript(type, description)
 
   str = str .. ", \"" .. description .. "\", \"" .. type .. "\"));";
 
-  paste = paste .. "\r\n" .. str;
-  KethoEditBox_Show(paste);
+  WowCyborg_Paste = WowCyborg_Paste .. "\r\n" .. str;
+  KethoEditBox_Show(WowCyborg_Paste);
 end
 
 -- Edit box
@@ -116,7 +116,7 @@ function KethoEditBox_Show(text)
       local c4 = CreateButton("CLEAR", KethoEditBox, 110);
       c4:SetPoint("RIGHT", KethoEditBox, "BOTTOMLEFT", 100, 0);
       c4:SetScript("OnClick", function(self, event)
-        paste = "";
+        WowCyborg_Paste = "";
         KethoEditBox_Show("");
       end)
   end

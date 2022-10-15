@@ -3,7 +3,7 @@
 ## Notes: Dragonflight Guide.
 ## Author: Mazon
 ## Version: 1.0.0
-## SavedVariablesPerCharacter: WowCyborg_Step, WowCyborg_Paste
+## SavedVariablesPerCharacter: WowCyborg_Step, WowCyborg_Paste, WowCyborg_CompletedSteps
 
 AutoSpeak.lua
 Functions.lua

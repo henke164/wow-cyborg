@@ -11,6 +11,11 @@ function SellItems(color)
   end
 end
 
+function AutoSellItems()
+  SellGrayItems();
+  SellGreenItems();
+end
+
 function SellGrayItems()
   SellItems("cFF9D9D9D");
 end
@@ -19,7 +24,11 @@ function SellGreenItems()
   SellItems("cFF1EFF00");
 end
 
-function CreateDefaultFrame(x, y, width, height)
+function SellBlueItems()
+  SellItems("cFF0070DD");
+end
+
+function CreateDFGuideFrame(x, y, width, height)
   local frame = CreateFrame("Frame");
   frame:ClearAllPoints();
   frame:SetPoint("BOTTOMLEFT", UIParent, "BOTTOMLEFT", x, y);

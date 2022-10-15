@@ -2,6 +2,7 @@ WowCyborg_Paste = "";
 WowCyborg_guideHeader = nil;
 WowCyborg_guideDescription = nil;
 WowCyborg_Step = 1;
+WowCyborg_CompletedSteps = {};
 
 -- Dragonflight auto quest
 print ("Loading Dragonflight guide...");
@@ -15,6 +16,16 @@ local function setTimer(duration, func)
 			func();
 		end
 	end);
+end
+
+function IsCompleted(step)
+  for _, completedStep in ipairs(WowCyborg_CompletedSteps) do
+    if (completedStep.event == step.completeEvent and step.questId and completedStep.questId == step.questId) then
+      print("Step already completed");
+      return true;
+    end
+  end;
+  return false;
 end
 
 function HandleSpeak()
@@ -90,15 +101,15 @@ function RenderStep(step)
   end
 end
 
+local skullOnGUID = "";
 function RenderGuideFrame()
-  local frame = CreateDefaultFrame(50, 300, 250, 100);
+  local frame = CreateDFGuideFrame(50, 300, 250, 100);
 
   frame:RegisterEvent("QUEST_ACCEPTED");
   frame:RegisterEvent("QUEST_TURNED_IN");
   frame:RegisterEvent("QUEST_PROGRESS");
   frame:RegisterEvent("QUEST_COMPLETE");
   frame:RegisterEvent("QUEST_WATCH_UPDATE");
-  frame:RegisterEvent("UNIT_QUEST_LOG_CHANGED");
   frame:RegisterEvent("NAME_PLATE_UNIT_ADDED");
   frame:RegisterEvent("CHAT_MSG_MONSTER_SAY");
 
@@ -123,45 +134,91 @@ function RenderGuideFrame()
     end
 
     local target = UnitName("target");
-    if event ~= "NAME_PLATE_UNIT_ADDED" then
-      print(...);
-    end
-
     if (event == "NAME_PLATE_UNIT_ADDED" and step.target) then
       local unitID = ...;
       local name = UnitName(unitID);
       if name == step.target then
-        SetRaidTarget(unitID, 8);
+        local guid = UnitGUID(unitID);
+        if skullOnGUID ~= guid then
+          skullOnGUID = guid;
+          SetRaidTarget(unitID, 8);
+        end
       end
     end
 
     if (event == "QUEST_WATCH_UPDATE") then
       local questId = ...
-      print(questId);
+      print ("QUEST_WATCH_UPDATE: " .. questId);
+      local uncompleted = 0;
+
+      for q = 1, 10 do
+        local text, _, fulfilled = GetQuestObjectiveInfo(questId, q, false);
+        if fulfilled == false then
+          uncompleted = uncompleted + 1;
+        end
+      end
+
+      local completedQuest = uncompleted <= 1;
+
+      if completedQuest then
+        print("COMPLETED: " .. questId);
+      end
+      
+      if step.completeEvent == "COMPLETED" and completedQuest and step.questId == questId then
+        NextStep();
+        return;
+      end
+
       if step.completeEvent == event and ((target and step.target == target) or step.questId == questId) then
         NextStep();
         return;
+      end
+
+      local completedStep = {};
+      completedStep.event = "QUEST_WATCH_UPDATE";
+      completedStep.questId = questId;
+      table.insert(WowCyborg_CompletedSteps, completedStep);
+      
+      if (completedQuest) then
+        local completedStep = {};
+        completedStep.event = "COMPLETED";
+        completedStep.questId = questId;
+        table.insert(WowCyborg_CompletedSteps, completedStep);
       end
     end
 
     if (event == "QUEST_ACCEPTED") then
       local questId = ...
+      print ("QUEST_ACCEPTED: " .. questId);
+
       if step.completeEvent == event and step.questId and step.questId == questId then
         NextStep();
         return;
       end
+
+      local completedStep = {};
+      completedStep.event = "QUEST_ACCEPTED";
+      completedStep.questId = questId;
+      table.insert(WowCyborg_CompletedSteps, completedStep);
     end
 
     if event == "QUEST_TURNED_IN" then
       local questId = ...
+      print ("QUEST_TURNED_IN: " .. questId);
       if step.completeEvent == event and step.questId and step.questId == questId then
         NextStep();
         return;
       end
+
+      local completedStep = {};
+      completedStep.event = "QUEST_TURNED_IN";
+      completedStep.questId = questId;
+      table.insert(WowCyborg_CompletedSteps, completedStep);
     end
 
     if event == "CHAT_MSG_MONSTER_SAY" then
       if step.npcMessage then
+        local message = ...
         local textFound = string.find(message, step.npcMessage);
         if textFound then
           NextStep();
@@ -181,7 +238,7 @@ function RenderGuideFrame()
   end)
     
   next:SetScript("OnClick", function(self, event)
-    NextStep();
+    NextStep(true);
   end)
 
   setTimer(2, function()
@@ -200,12 +257,16 @@ function PreviousStep()
   RenderStep(step);
 end
 
-function NextStep()
+function NextStep(skipAutoSkipCompletedQuests)
   WowCyborg_Step = WowCyborg_Step + 1;
   local step = steps[WowCyborg_Step];
   if step == nil then
     WowCyborg_Step = WowCyborg_Step - 1;
     return;
+  end
+
+  if (skipAutoSkipCompletedQuests ~= true and IsCompleted(steps[WowCyborg_Step])) then
+    return NextStep(skipAutoSkipCompletedQuests);
   end
 
   if (step.description == 'Board ship to Dragon Isles...') then
