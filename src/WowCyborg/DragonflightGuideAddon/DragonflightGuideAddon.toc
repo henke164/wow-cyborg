@@ -10,3 +10,4 @@ Functions.lua
 QuestData.lua
 Editor.lua
 DragonflightGuideAddon.lua
+XpTimer.lua

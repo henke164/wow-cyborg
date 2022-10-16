@@ -89,6 +89,7 @@ table.insert(optionsToSelect, CreateOption("Toejam the Terrible", "Toejam", 1));
 table.insert(optionsToSelect, CreateOption("Brena", "Make yourself", 1));
 table.insert(optionsToSelect, CreateOption("Neelo", "Who are you?", 1));
 table.insert(optionsToSelect, CreateOption("Kalecgos", "The blue dragons must", 1));
+table.insert(optionsToSelect, CreateOption("Kalecgos", "It's good to see you", 1));
 table.insert(optionsToSelect, CreateOption("Sindragosa", "Shall we begin?", 1));
 table.insert(optionsToSelect, CreateOption("Valdrakken Citizen", "Who maintained", 1));
 table.insert(optionsToSelect, CreateOption("Valdrakken Citizen", "What", 1));
@@ -103,6 +104,7 @@ table.insert(optionsToSelect, CreateOption("Chromie", "Are you ready? This ball 
 table.insert(optionsToSelect, CreateOption("Soridormi", "We must hold", 1));
 table.insert(optionsToSelect, CreateOption("Siaszerathel", "Chromie... I", 1));
 table.insert(optionsToSelect, CreateOption("Andantenormu", "To be lost in time", 1));
+table.insert(optionsToSelect, CreateOption("Andantenormu", "This will not make you", 1));
 table.insert(optionsToSelect, CreateOption("Nozdormu", "I fear time may unravel", 1));
 table.insert(optionsToSelect, CreateOption("Chromie", "This is going to be one doozie", 1));
 table.insert(optionsToSelect, CreateOption("Theramus", "You're still around?", 1));
@@ -136,6 +138,7 @@ table.insert(optionsToSelect, CreateOption("Tuskarr Fisherman", "She was clearly
 table.insert(optionsToSelect, CreateOption("Tuskarr Hunter", "Gnolls would", 1));
 table.insert(optionsToSelect, CreateOption("Tuskarr Craftsman", "daggers embedded", 1));
 table.insert(optionsToSelect, CreateOption("Festering Gnoll", "foul gnoll", 1));
+table.insert(optionsToSelect, CreateOption("Badly Injured Guardian", "This guardian is covered", 1));
 
 
 function HandleSpeak()

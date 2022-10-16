@@ -90,9 +90,11 @@ function RenderStep(step)
 
   WowCyborg_guideHeader:SetText(header);
   WowCyborg_guideDescription:SetText(step.description);
-  TomTom.db.profile.general.confirmremoveall = false;
-  SlashCmdList["TOMTOM_WAY"]("reset all");
-  SlashCmdList["TOMTOM_WAY"](step.zone .. " " .. step.x .. " " .. step.y .. " " .. step.description);
+  if TomTom ~= nil then
+    TomTom.db.profile.general.confirmremoveall = false;
+    SlashCmdList["TOMTOM_WAY"]("reset all");
+    SlashCmdList["TOMTOM_WAY"](step.zone .. " " .. step.x .. " " .. step.y .. " " .. step.description);
+  end
 
   if step.target then
     for i = 1, 100 do
@@ -122,10 +124,15 @@ function RenderGuideFrame()
   
   local next = CreateButton("->", frame);
 	next:SetPoint("RIGHT", frame, "BOTTOMRIGHT", -5, 15);
-  
+
+  WowCyborg_XPPerHour = frame:CreateFontString(nil, "OVERLAY", "GameFontNormalSmall");
+  WowCyborg_XPPerHour:SetPoint("LEFT", frame, "BOTTOMLEFT", 8, 15);
+  WowCyborg_XPPerHour:SetTextColor(1, 1, 0);
+  WowCyborg_XPPerHour:SetText("XP/Hour: 0");
+
   WowCyborg_guideHeader = frame:CreateFontString(nil, "OVERLAY", "GameFontNormalSmall");
   WowCyborg_guideHeader:SetPoint("LEFT", frame, "LEFT", 8, 30);
-  WowCyborg_guideHeader:SetTextColor(1, 1, 0);
+  WowCyborg_guideHeader:SetTextColor(0, 1, 0);
 
   WowCyborg_guideDescription = frame:CreateFontString(nil, "OVERLAY", "GameFontNormalSmall");
   WowCyborg_guideDescription:SetPoint("LEFT", frame, "LEFT", 8, 15);
