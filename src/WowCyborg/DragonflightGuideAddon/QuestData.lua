@@ -28,13 +28,14 @@ table.insert(steps, CreateStep(55.86, 12.70, "Durotar", "Archmage Khadgar", "Acc
 table.insert(steps, CreateStep(55.86, 12.70, "Durotar", "Ebyssian", "Accept quest", "QUEST_TURNED_IN", 65439));
 table.insert(steps, CreateStep(55.86, 12.70, "Durotar", "Naleidea Rivergleam", "Accept quest", "QUEST_ACCEPTED", 65444));
 table.insert(steps, CreateStep(55.06, 89.60, "Durotar", nil, "Board ship to Dragon Isles...", "QUEST_WATCH_UPDATE", 65444));
+table.insert(steps, CreateStep(66.48, 20.41, "The Waking Shores", nil, "Jump off boat", "QUEST_WATCH_UPDATE", 65444));
 table.insert(steps, CreateStep(80.63, 27.67, "The Waking Shores", "Naleidea Rivergleam", "Turn in quest", "QUEST_TURNED_IN", 65444));
 table.insert(steps, CreateStep(80.63, 27.67, "The Waking Shores", "Naleidea Rivergleam", "Accept Quest", "QUEST_ACCEPTED", 65452));
 table.insert(steps, CreateStep(80.63, 27.67, "The Waking Shores", "Scalecommander Cindrethresh", "Accept Quest", "QUEST_ACCEPTED", 65453));
 table.insert(steps, CreateStep(80.63, 27.67, "The Waking Shores", "Boss Magor", "Accept Quest", "QUEST_ACCEPTED", 65451));
 table.insert(steps, CreateStep(80.32, 26.32, "The Waking Shores", "Protodragon Rib Cage", "Click on the Rib Cage. Kill and loot Dragons", "QUEST_WATCH_UPDATE", 65452));
 table.insert(steps, CreateStep(78.80, 24.46, "The Waking Shores", "Archivist Spearblossom", "Rescue Spearblossom", "QUEST_WATCH_UPDATE", 65452));
-table.insert(steps, CreateStep(77.49, 22.17, "The Waking Shores", "Ancient Hornswog", "Kill", "QUEST_WATCH_UPDATE", 66076));
+--table.insert(steps, CreateStep(77.49, 22.17, "The Waking Shores", "Ancient Hornswog", "Kill", "QUEST_WATCH_UPDATE", 66076));
 table.insert(steps, CreateStep(77.33, 29.88, "The Waking Shores", "Spelunker Lazee", "Rescue Spelunker", "QUEST_WATCH_UPDATE", 65452));
 table.insert(steps, CreateStep(77.33, 29.88, "The Waking Shores", "Complete quest", "Practice materials", "COMPLETED", 65451));
 table.insert(steps, CreateStep(77.33, 29.88, "The Waking Shores", "Complete quest", "Primal Pets", "COMPLETED", 65453));
@@ -91,9 +92,9 @@ table.insert(steps, CreateStep(62.68, 33.08, "The Waking Shores", "Majordomo Sel
 table.insert(steps, CreateStep(61.04, 35.77, "The Waking Shores", "Injured Ruby Culler", "Injured Ruby Culler", "QUEST_WATCH_UPDATE", 65996));
 table.insert(steps, CreateStep(61.11, 36.75, "The Waking Shores", "Injured Ruby Culler", "Injured Ruby Culler", "QUEST_WATCH_UPDATE", 65996));
 table.insert(steps, CreateStep(59.05, 34.93, "The Waking Shores", "Injured Ruby Culler", "Injured Ruby Culler", "QUEST_WATCH_UPDATE", 65996));
-table.insert(steps, CreateStep(59.05, 34.93, "The Waking Shores", "Caretaker Ventraz", "Accept quest", "QUEST_ACCEPTED", 66998));
-table.insert(steps, CreateStep(59.05, 34.93, "The Waking Shores", "Caretaker Ventraz", "Kill elementals", "COMPLETED", 66998));
-table.insert(steps, CreateStep(59.05, 34.93, "The Waking Shores", "Caretaker Ventraz", "Turn in quest", "QUEST_TURNED_IN"));
+--table.insert(steps, CreateStep(59.05, 34.93, "The Waking Shores", "Caretaker Ventraz", "Accept quest", "QUEST_ACCEPTED", 66998));
+--table.insert(steps, CreateStep(59.05, 34.93, "The Waking Shores", "Caretaker Ventraz", "Kill elementals", "COMPLETED", 66998));
+--table.insert(steps, CreateStep(59.05, 34.93, "The Waking Shores", "Caretaker Ventraz", "Turn in quest", "QUEST_TURNED_IN", 66998));
 table.insert(steps, CreateStep(56.64, 34.74, "The Waking Shores", "Injured Ruby Culler", "Injured Ruby Culler", "QUEST_WATCH_UPDATE", 65996));
 table.insert(steps, CreateStep(55.00, 30.80, "The Waking Shores", "Caretaker Azkra", "Turn in quest", "QUEST_TURNED_IN", 95996));
 table.insert(steps, CreateStep(55.00, 30.80, "The Waking Shores", "Caretaker Azkra", "Accept quest", "QUEST_ACCEPTED", 65997));
@@ -340,8 +341,8 @@ table.insert(steps, CreateStep(61.45, 39.58, "Ohn'ahran Plains", "Sansok Khan", 
 table.insert(steps, CreateStep(61.45, 39.58, "Ohn'ahran Plains", "Sansok Khan", "Accept quest", "QUEST_ACCEPTED", 66018));
 table.insert(steps, CreateStep(61.45, 39.58, "Ohn'ahran Plains", "Sansok Khan", "Accept quest", "QUEST_ACCEPTED", 72429)); -- Bugged?
 table.insert(steps, CreateStep(63.6, 40.5, "Ohn'ahran Plains", "Hunter Narman", "Accept quest", "QUEST_ACCEPTED", 70739));
-table.insert(steps, CreateStep(62.79, 40.69, "Ohn'ahran Plains", "Hearthkeeper Berulan", "Make Inn Home", nil, nil, "Maruukai is now your home."));
-table.insert(steps, CreateStep(62.09, 41.47, "Ohn'ahran Plains", "Bakhushek", "Accept quest", "QUEST_ACCEPTED", 65837));
+table.insert(steps, CreateStep(62.79, 40.69, "Ohn'ahran Plains", "Hearthkeeper Berulan", "Make Inn Home", nil, nil, "is now your home."));
+table.insert(steps, CreateStep(62.09, 41.47, "Ohn'ahran Plains", "Beastmaster Tirren", "Accept quest", "QUEST_ACCEPTED", 65837));
 table.insert(steps, CreateStep(60.43, 40.73, "Ohn'ahran Plains", "Scout Tomul", "Turn in quest", "QUEST_TURNED_IN", 66018));
 table.insert(steps, CreateStep(60.35, 40.76, "Ohn'ahran Plains", "Guard Bahir", "Accept quest", "QUEST_ACCEPTED", 66021));
 table.insert(steps, CreateStep(59.96, 41.44, "Ohn'ahran Plains", "Nokhud Fighter", "Defeat", "COMPLETED", 66021));
