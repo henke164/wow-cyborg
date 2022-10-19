@@ -1,3 +1,6 @@
+
+print ("Loading Autospeak...");
+
 function CreateOption(npc, text, index)
   local option = {}
   option.npc = npc;
@@ -89,7 +92,6 @@ table.insert(optionsToSelect, CreateOption("Toejam the Terrible", "Toejam", 1));
 table.insert(optionsToSelect, CreateOption("Brena", "Make yourself", 1));
 table.insert(optionsToSelect, CreateOption("Neelo", "Who are you?", 1));
 table.insert(optionsToSelect, CreateOption("Kalecgos", "The blue dragons must", 1));
-table.insert(optionsToSelect, CreateOption("Kalecgos", "It's good to see you", 1));
 table.insert(optionsToSelect, CreateOption("Sindragosa", "Shall we begin?", 1));
 table.insert(optionsToSelect, CreateOption("Valdrakken Citizen", "Who maintained", 1));
 table.insert(optionsToSelect, CreateOption("Valdrakken Citizen", "What", 1));
@@ -104,7 +106,6 @@ table.insert(optionsToSelect, CreateOption("Chromie", "Are you ready? This ball 
 table.insert(optionsToSelect, CreateOption("Soridormi", "We must hold", 1));
 table.insert(optionsToSelect, CreateOption("Siaszerathel", "Chromie... I", 1));
 table.insert(optionsToSelect, CreateOption("Andantenormu", "To be lost in time", 1));
-table.insert(optionsToSelect, CreateOption("Andantenormu", "This will not make you", 1));
 table.insert(optionsToSelect, CreateOption("Nozdormu", "I fear time may unravel", 1));
 table.insert(optionsToSelect, CreateOption("Chromie", "This is going to be one doozie", 1));
 table.insert(optionsToSelect, CreateOption("Theramus", "You're still around?", 1));
@@ -138,7 +139,6 @@ table.insert(optionsToSelect, CreateOption("Tuskarr Fisherman", "She was clearly
 table.insert(optionsToSelect, CreateOption("Tuskarr Hunter", "Gnolls would", 1));
 table.insert(optionsToSelect, CreateOption("Tuskarr Craftsman", "daggers embedded", 1));
 table.insert(optionsToSelect, CreateOption("Festering Gnoll", "foul gnoll", 1));
-table.insert(optionsToSelect, CreateOption("Badly Injured Guardian", "This guardian is covered", 1));
 
 
 function HandleSpeak()
@@ -195,4 +195,78 @@ end
 local update = CreateFrame("FRAME");
 update:SetScript("OnUpdate", function()
   HandleSpeak();
+  
+  if SetSpellRequest ~= nil then
+    local step = steps[WowCyborg_Step];
+    if step.target and UnitName("target") == step.target then
+      local distance = CheckInteractDistance("target", 3);
+      if distance then
+        SetSpellRequest("CTRL+0")
+      end
+    end
+  end
+
+end);
+
+-- Quick quest
+
+print ("Loading QQuest");
+local qqFrame = CreateFrame("FRAME");
+qqFrame:RegisterEvent("QUEST_COMPLETE");
+qqFrame:RegisterEvent("QUEST_DETAIL");
+qqFrame:RegisterEvent("QUEST_PROGRESS");
+
+qqFrame:SetScript("OnEvent", function(self, event, ...)
+  if (event == "QUEST_DETAIL") then
+    local id = GetQuestID();
+    for _, step in ipairs(steps) do
+      if (step.questId == id) then
+        AcceptQuest();
+        break;
+      end
+    end;
+  end
+
+  if (event == "QUEST_PROGRESS") then
+    if not IsQuestCompletable() then
+      return
+    end
+
+    CompleteQuest()
+  end
+
+  if (event == "QUEST_COMPLETE") then
+    local numItemRewards = GetNumQuestChoices();
+    if GetNumQuestChoices() <= 1 then
+			GetQuestReward(1);
+      return;
+		end
+
+    local highestItemValue, highestItemValueIndex = 0
+
+    for index = 1, numItemRewards do
+      local itemLink = GetQuestItemLink('choice', index)
+      if itemLink then
+        local _, _, _, _, _, _, _, _, _, _, itemValue = GetItemInfo(itemLink)
+        local itemID = GetItemInfoFromHyperlink(itemLink)
+        itemValue = cashRewards[itemID] or itemValue
+
+        if itemValue > highestItemValue then
+          highestItemValue = itemValue
+          highestItemValueIndex = index
+        end
+      else
+        GetQuestItemInfo('choice', index)
+        return
+      end
+    end
+
+    if highestItemValueIndex then
+      QuestInfoItem_OnClick(QuestInfoRewardsFrame.RewardButtons[highestItemValueIndex])
+    end
+  end
+end);
+
+CinematicFrame:HookScript("OnShow", function(self, ...)
+  CinematicFrame_CancelCinematic();
 end);
