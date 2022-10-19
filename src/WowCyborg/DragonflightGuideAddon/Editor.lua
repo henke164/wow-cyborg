@@ -14,14 +14,14 @@ function PrintScript(type, description)
     str = str .. "\"".. target .. "\""
   end
 
-  str = str .. ", \"" .. description .. "\", \"" .. type .. "\"));";
+  str = str .. ", \"" .. description .. "\", \"" .. type .. "\", " .. WowCyborg_lastUpdatedQuest .. "));";
 
   WowCyborg_Paste = WowCyborg_Paste .. "\r\n" .. str;
-  KethoEditBox_Show(WowCyborg_Paste);
+  OpenGuideEditor(WowCyborg_Paste);
 end
 
 -- Edit box
-function KethoEditBox_Show(text)
+function OpenGuideEditor(text)
   if not KethoEditBox then
       local f = CreateFrame("Frame", "KethoEditBox", UIParent, "DialogBoxFrame")
       f:SetPoint("CENTER")
@@ -113,11 +113,17 @@ function KethoEditBox_Show(text)
         end
       end)
       
-      local c4 = CreateButton("CLEAR", KethoEditBox, 110);
-      c4:SetPoint("RIGHT", KethoEditBox, "BOTTOMLEFT", 100, 0);
+      local c4 = CreateButton("Complete", KethoEditBox, 100);
+      c4:SetPoint("RIGHT", KethoEditBox, "BOTTOMRIGHT", -310, 0);
       c4:SetScript("OnClick", function(self, event)
+        PrintScript("COMPLETED", "Complete quest");
+      end)
+
+      local c5 = CreateButton("CLEAR", KethoEditBox, 110);
+      c5:SetPoint("RIGHT", KethoEditBox, "BOTTOMLEFT", 100, 0);
+      c5:SetScript("OnClick", function(self, event)
         WowCyborg_Paste = "";
-        KethoEditBox_Show("");
+        OpenGuideEditor("");
       end)
   end
   
@@ -127,4 +133,4 @@ function KethoEditBox_Show(text)
   KethoEditBox:Show()
 end
 
---KethoEditBox_Show();
+--OpenGuideEditor();
