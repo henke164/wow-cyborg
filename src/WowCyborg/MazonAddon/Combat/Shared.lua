@@ -43,7 +43,6 @@ function CreateRotationFrame()
     end
 
     PreventAzeriteBeamAbortion();
-    HandleSpeak();
 
     if WowCyborg_PAUSE_UNTIL > GetTime() then
       WowCyborg_CURRENTATTACK = "Paused";
