@@ -72,6 +72,7 @@ afflipve	MazonAddon/Combat/AffliPve.lua
 group	MazonAddon/Combat/Group.lua
 tailor	MazonAddon/Combat/Tailor.lua
 demoLvl	MazonAddon/Combat/DemoLeveling.lua
+pala	MazonAddon/Combat/Pala.lua
 holypala	MazonAddon/Combat/PalaHoly.lua
 palaraid	MazonAddon/Combat/PalaHolyRaider.lua
 holypvp	MazonAddon/Combat/PalaHolyPvp.lua

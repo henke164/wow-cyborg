@@ -13,7 +13,7 @@ function CreateStep(x, y, zone, target, description, completeEvent, questId, npc
   return step;
 end
 
-table.insert(steps, CreateStep(44.12, 38.05, "Orgrimmar", "Ebyssian", "Turn in quest", "QUEST_TURNED_IN"));
+table.insert(steps, CreateStep(44.12, 38.05, "Orgrimmar", "Ebyssian", "Turn in quest", "QUEST_TURNED_IN", 65435));
 table.insert(steps, CreateStep(44.12, 38.05, "Orgrimmar", "Ebyssian", "Accept quest", "QUEST_ACCEPTED", 65437));
 table.insert(steps, CreateStep(44.12, 38.05, "Orgrimmar", "Ebyssian", "Turn in quest", "QUEST_TURNED_IN", 65437));
 table.insert(steps, CreateStep(44.12, 38.05, "Orgrimmar", "Naleidea Rivergleam", "Accept quest", "QUEST_ACCEPTED", 65443));
@@ -100,9 +100,9 @@ table.insert(steps, CreateStep(62.68, 33.08, "The Waking Shores", "Majordomo Sel
 table.insert(steps, CreateStep(61.04, 35.77, "The Waking Shores", "Injured Ruby Culler", "Injured Ruby Culler", "QUEST_WATCH_UPDATE", 65996));
 table.insert(steps, CreateStep(61.11, 36.75, "The Waking Shores", "Injured Ruby Culler", "Injured Ruby Culler", "QUEST_WATCH_UPDATE", 65996));
 table.insert(steps, CreateStep(59.05, 34.93, "The Waking Shores", "Injured Ruby Culler", "Injured Ruby Culler", "QUEST_WATCH_UPDATE", 65996));
---table.insert(steps, CreateStep(59.05, 34.93, "The Waking Shores", "Caretaker Ventraz", "Accept quest", "QUEST_ACCEPTED", 66998));
---table.insert(steps, CreateStep(59.05, 34.93, "The Waking Shores", "Caretaker Ventraz", "Kill elementals", "COMPLETED", 66998));
---table.insert(steps, CreateStep(59.05, 34.93, "The Waking Shores", "Caretaker Ventraz", "Turn in quest", "QUEST_TURNED_IN", 66998));
+table.insert(steps, CreateStep(59.05, 34.93, "The Waking Shores", "Caretaker Ventraz", "Accept quest", "QUEST_ACCEPTED", 66998));
+table.insert(steps, CreateStep(59.05, 34.93, "The Waking Shores", "Caretaker Ventraz", "Kill elementals", "COMPLETED", 66998));
+table.insert(steps, CreateStep(59.05, 34.93, "The Waking Shores", "Caretaker Ventraz", "Turn in quest", "QUEST_TURNED_IN", 66998));
 table.insert(steps, CreateStep(56.64, 34.74, "The Waking Shores", "Injured Ruby Culler", "Injured Ruby Culler", "QUEST_WATCH_UPDATE", 65996));
 table.insert(steps, CreateStep(55.00, 30.80, "The Waking Shores", "Caretaker Azkra", "Turn in quest", "QUEST_TURNED_IN", 95996));
 table.insert(steps, CreateStep(55.00, 30.80, "The Waking Shores", "Caretaker Azkra", "Accept quest", "QUEST_ACCEPTED", 65997));

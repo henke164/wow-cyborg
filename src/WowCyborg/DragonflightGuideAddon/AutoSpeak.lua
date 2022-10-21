@@ -192,22 +192,6 @@ function HandleSpeak()
   end
 end
 
-local update = CreateFrame("FRAME");
-update:SetScript("OnUpdate", function()
-  HandleSpeak();
-  
-  if SetSpellRequest ~= nil then
-    local step = steps[WowCyborg_Step];
-    if step.target and UnitName("target") == step.target then
-      local distance = CheckInteractDistance("target", 3);
-      if distance then
-        SetSpellRequest("CTRL+0")
-      end
-    end
-  end
-
-end);
-
 -- Quick quest
 
 print ("Loading QQuest");
@@ -215,8 +199,28 @@ local qqFrame = CreateFrame("FRAME");
 qqFrame:RegisterEvent("QUEST_COMPLETE");
 qqFrame:RegisterEvent("QUEST_DETAIL");
 qqFrame:RegisterEvent("QUEST_PROGRESS");
+qqFrame:RegisterEvent("GOSSIP_SHOW");
+qqFrame:RegisterEvent("GOSSIP_CONFIRM");
 
 qqFrame:SetScript("OnEvent", function(self, event, ...)
+  if (event == "GOSSIP_SHOW") then
+    for index, info in next, C_GossipInfo.GetActiveQuests() do
+			if not IsQuestIgnored(info.questID) then
+				if info.isComplete and not C_QuestLog.IsWorldQuest(info.questID) then
+					C_GossipInfo.SelectActiveQuest(index)
+				end
+			end
+		end
+
+    for index, info in next, C_GossipInfo.GetAvailableQuests() do
+			if not IsQuestIgnored(info.questID) then
+				if not info.isTrivial or ns.ShouldAcceptTrivialQuests() then
+					C_GossipInfo.SelectAvailableQuest(index)
+				end
+			end
+		end
+  end
+
   if (event == "QUEST_DETAIL") then
     local id = GetQuestID();
     for _, step in ipairs(steps) do
