@@ -50,6 +50,16 @@ WowCyborg_PAUSE_KEYS = {
   "ESCAPE",
 }
 
+local combatFrame = CreateFrame("FRAME");
+local lootUntil = 0;
+combatFrame:RegisterEvent("PLAYER_REGEN_ENABLED");
+combatFrame:SetScript("OnEvent", function(self, event, ...)
+  if event == "PLAYER_REGEN_ENABLED" then
+    lootUntil = GetTime() + 2;
+  end
+end)
+
+
 function IsMelee()
   return IsSpellInRange("Rebuke", "target") ~= 0;
 end
@@ -135,12 +145,19 @@ function RenderSingleTankTargetRotation(saveHolyPower)
     saveHolyPower = false;
   end
 
+  local concetration = FindBuff("player", "Consecration");
+  local speed = GetUnitSpeed("player");
   local nearbyEnemies = GetNearbyEnemyCount();
   local hp = GetHealthPercentage("player");
   local targetHp = GetHealthPercentage("target");
   local holyPower = UnitPower("player", 9);
   local wrathBuff = FindBuff("player", "Avenging Wrath");
   local sentinelBuff = FindBuff("player", "Sentinel");
+
+  if speed == 0 and lootUntil > GetTime() then
+    WowCyborg_CURRENTATTACK = "Loot-A-Rang";
+    return SetSpellRequest("0");
+  end
 
   if (wrathBuff or sentinelBuff or targetHp < 20) and nearbyEnemies < 4 then
     if IsCastableAtEnemyTarget("Hammer of Wrath", 0) then
@@ -157,8 +174,6 @@ function RenderSingleTankTargetRotation(saveHolyPower)
     end
   end
 
-  local concetration = FindBuff("player", "Consecration");
-  local speed = GetUnitSpeed("player");
   if concetration == nil and IsMelee() and IsCastableAtEnemyTarget("Consecration", 0) and speed == 0 then
     WowCyborg_CURRENTATTACK = "Consecration";
     return SetSpellRequest(consecration);
