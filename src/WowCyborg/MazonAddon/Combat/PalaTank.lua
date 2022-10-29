@@ -86,7 +86,7 @@ function FindHealingTarget()
     end
   end
 
-  if lowestHealth ~= nil and lowestHealth.hp < 60 then
+  if lowestHealth ~= nil and lowestHealth.hp < 70 then
     return lowestHealth.name, 0;
   end
 
@@ -118,7 +118,7 @@ function RenderSingleTargetRotation(saveHolyPower)
 
   local shiningBuff, tl, shiningStacks, _, icon = FindBuff("player", "Shining Light");
   if shiningBuff ~= nil and shiningStacks == 1 and icon == 1360763 then
-    if hp < 50 and saveHolyPower == false then
+    if hp < 50 then
       WowCyborg_CURRENTATTACK = "Word of Glory";
       return SetSpellRequest(wog[1]);
     end
@@ -217,22 +217,34 @@ function RenderSingleTargetRotation(saveHolyPower)
     WowCyborg_CURRENTATTACK = "Avenger's Shield";
     return SetSpellRequest(avengersShield);
   end
-  
-  if CheckInteractDistance("target", 3) and IsCastableAtEnemyTarget("Blessed Hammer", 0) then
-    WowCyborg_CURRENTATTACK = "Blessed Hammer";
-    return SetSpellRequest(blessedHammer);
+
+  if IsCastableAtEnemyTarget("Blessed Hammer", 0) then
+    if IsMelee() and concetration == nil and IsCastableAtEnemyTarget("Consecration", 0) then
+      WowCyborg_CURRENTATTACK = "Consecration";
+      return SetSpellRequest(consecration);
+    end
+
+    if CheckInteractDistance("target", 3) and IsCastableAtEnemyTarget("Blessed Hammer", 0) then
+      WowCyborg_CURRENTATTACK = "Blessed Hammer";
+      return SetSpellRequest(blessedHammer);
+    end
   end
   
-  if IsCastableAtEnemyTarget("Hammer of the Righteous", 0) then
-    if CheckInteractDistance("target", 3) and concetration == nil and IsCastableAtEnemyTarget("Consecration", 0) then
+  if IsMelee() and IsCastableAtEnemyTarget("Hammer of the Righteous", 0) then
+    if concetration == nil and IsCastableAtEnemyTarget("Consecration", 0) then
       WowCyborg_CURRENTATTACK = "Consecration";
       return SetSpellRequest(consecration);
     end
     
-    if IsMelee() and concetration ~= nil then
+    if concetration ~= nil then
       WowCyborg_CURRENTATTACK = "Hammer of the Righteous";
       return SetSpellRequest(blessedHammer);
     end
+  end
+  
+  if IsMelee() and IsCastableAtEnemyTarget("Judgment", 0) then
+    WowCyborg_CURRENTATTACK = "Judgment";
+    return SetSpellRequest(judgment);
   end
   
   WowCyborg_CURRENTATTACK = "-";

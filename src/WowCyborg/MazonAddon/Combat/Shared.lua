@@ -407,7 +407,7 @@ function GetActiveEnemies()
   return inRange;
 end
 
-local delay = 0.5
+local delay = 0.1;
 function GetCurrentSpellGCD(spellName)
   if UnitSpellHaste == nil then
     return 1.5;

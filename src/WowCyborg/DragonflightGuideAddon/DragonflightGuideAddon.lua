@@ -159,7 +159,6 @@ function RenderGuideFrame()
 
     if (event == "QUEST_WATCH_UPDATE") then
       local questId = ...
-      print ("QUEST_WATCH_UPDATE: " .. questId);
       local uncompleted = 0;
 
       for q = 1, 10 do
@@ -170,11 +169,6 @@ function RenderGuideFrame()
       end
 
       local completedQuest = uncompleted <= 1;
-
-      if completedQuest then
-        print("COMPLETED: " .. questId);
-      end
-      
       if step.completeEvent == "COMPLETED" and completedQuest and step.questId == questId then
         NextStep();
         return;
@@ -200,8 +194,6 @@ function RenderGuideFrame()
 
     if (event == "QUEST_ACCEPTED") then
       local questId = ...
-      print ("QUEST_ACCEPTED: " .. questId);
-
       if step.completeEvent == event and step.questId and step.questId == questId then
         NextStep();
         return;
@@ -215,7 +207,6 @@ function RenderGuideFrame()
 
     if event == "QUEST_TURNED_IN" then
       local questId = ...
-      print ("QUEST_TURNED_IN: " .. questId);
       if step.completeEvent == event and step.questId and step.questId == questId then
         NextStep();
         return;
