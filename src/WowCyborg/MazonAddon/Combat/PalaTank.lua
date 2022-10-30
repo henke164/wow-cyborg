@@ -102,6 +102,7 @@ function RenderSingleTargetRotation(saveHolyPower)
     saveHolyPower = false;
   end
 
+  local bastionBuff = FindBuff("player", "Bastion of Light");
   local nearbyEnemies = GetNearbyEnemyCount();
   local hp = GetHealthPercentage("player");
   local targetHp = GetHealthPercentage("target");
@@ -117,7 +118,7 @@ function RenderSingleTargetRotation(saveHolyPower)
   end
 
   local shiningBuff, tl, shiningStacks, _, icon = FindBuff("player", "Shining Light");
-  if shiningBuff ~= nil and shiningStacks == 1 and icon == 1360763 then
+  if (shiningBuff ~= nil and shiningStacks == 1 and icon == 1360763) or bastionBuff ~= nil then
     if hp < 50 then
       WowCyborg_CURRENTATTACK = "Word of Glory";
       return SetSpellRequest(wog[1]);
@@ -131,7 +132,7 @@ function RenderSingleTargetRotation(saveHolyPower)
     return SetSpellRequest(consecration);
   end
 
-  local poweredUp = holyPower > 2;
+  local poweredUp = holyPower > 2 or bastionBuff ~= nil;
 
   local divine = FindBuff("player", "Divine Purpose")
   if poweredUp == false then
@@ -160,7 +161,7 @@ function RenderSingleTargetRotation(saveHolyPower)
       end
     end
     
-    if (poweredUp) then
+    if (holyPower > 2) then
       if IsCastable("Seraphim", 0) then
         WowCyborg_CURRENTATTACK = "Seraphim";
         return SetSpellRequest(seraphim);
