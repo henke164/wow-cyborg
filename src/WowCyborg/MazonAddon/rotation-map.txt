@@ -9,6 +9,7 @@ pvpwarr	MazonAddon/Combat/WarriorPvp.lua
 bmhunter	MazonAddon/Combat/HunterBM.lua
 mmhunter	MazonAddon/Combat/HunterMM.lua
 eleshaman	MazonAddon/Combat/ShamanEle.lua
+argus	MazonAddon/Combat/Argus.lua
 elepvp	MazonAddon/Combat/ShamanElePvp.lua
 enhshaman	MazonAddon/Combat/ShamanEnhancement.lua
 enhshaman2	MazonAddon/Combat/ShamanEnhancement2.lua
