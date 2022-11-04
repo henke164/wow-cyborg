@@ -17,15 +17,15 @@ function AutoSellItems()
 end
 
 function SellGrayItems()
-  SellItems("cFF9D9D9D");
+  SellItems("cff9d9d9d");
 end
 
 function SellGreenItems()
-  SellItems("cFF1EFF00");
+  SellItems("cff1eff00");
 end
 
 function SellBlueItems()
-  SellItems("cFF0070DD");
+  SellItems("cff0070dd");
 end
 
 function CreateDFGuideFrame(x, y, width, height)

@@ -139,6 +139,7 @@ table.insert(optionsToSelect, CreateOption("Tuskarr Fisherman", "She was clearly
 table.insert(optionsToSelect, CreateOption("Tuskarr Hunter", "Gnolls would", 1));
 table.insert(optionsToSelect, CreateOption("Tuskarr Craftsman", "daggers embedded", 1));
 table.insert(optionsToSelect, CreateOption("Festering Gnoll", "foul gnoll", 1));
+table.insert(optionsToSelect, CreateOption("Old Grimtusk", "Is this really the best", 1));
 
 
 function HandleSpeak()

@@ -193,25 +193,25 @@ table.insert(steps, CreateStep(53.73, 80.23, "The Waking Shores", "Majordomo Sel
 table.insert(steps, CreateStep(48.5, 82.67, "The Waking Shores", "Cataloger Wulferd", "Accept quest", "QUEST_ACCEPTED", 66524));
 table.insert(steps, CreateStep(46.2, 78.43, "The Waking Shores", "Majordomo Selistra", "Talk", "QUEST_WATCH_UPDATE", 66124));
 table.insert(steps, CreateStep(46.19, 78.46, "The Waking Shores", "Majordomo Selistra", "Turn in quest", "QUEST_TURNED_IN", 66124));
-table.insert(steps, CreateStep(46.12, 78.32, "The Waking Shores", "Alexstrasza the Life-Binder", "Accept quest", "QUEST_ACCEPTED", 66079));
-
-table.insert(steps, CreateStep(39.04, 83.31, "The Waking Shores", "Cataloger Wulferd", "Complete quest", "COMPLETED", 66524));
-table.insert(steps, CreateStep(39.04, 83.31, "The Waking Shores", "Cataloger Wulferd", "Turn in quest", "QUEST_TURNED_IN", 66524));
-table.insert(steps, CreateStep(39.04, 83.31, "The Waking Shores", "Cataloger Wulferd", "Accept quest", "QUEST_ACCEPTED", 66525));
-table.insert(steps, CreateStep(39.09, 83.33, "The Waking Shores", "Dervishian", "Accept quest", "QUEST_ACCEPTED", 66526));
-table.insert(steps, CreateStep(40.75, 85.38, "The Waking Shores", "Infused Proto-Drake", "Photograph", "COMPLETED", 66525));
-table.insert(steps, CreateStep(40.75, 85.38, "The Waking Shores", nil, "Free dragons", "COMPLETED", 66525));
-table.insert(steps, CreateStep(39.05, 83.29, "The Waking Shores", "Cataloger Wulferd", "Accept quest", "QUEST_ACCEPTED", 66527));
-table.insert(steps, CreateStep(39.04, 83.33, "The Waking Shores", nil, "Complete quest", "COMPLETED", 66527));
-table.insert(steps, CreateStep(39.04, 83.27, "The Waking Shores", "Cataloger Wulferd", "Turn in quest", "QUEST_TURNED_IN", 66527));
-table.insert(steps, CreateStep(39.05, 83.29, "The Waking Shores", "Cataloger Wulferd", "Turn in quest", "QUEST_TURNED_IN", 66525));
-table.insert(steps, CreateStep(39.05, 83.29, "The Waking Shores", "Dervishian", "Turn in quest", "QUEST_TURNED_IN", 66526));
-table.insert(steps, CreateStep(39.11, 83.31, "The Waking Shores", "Dervishian", "Accept quest", "QUEST_ACCEPTED", 66528));
-table.insert(steps, CreateStep(39.39, 83.71, "The Waking Shores", nil, "Click", "QUEST_WATCH_UPDATE", 66528));
-table.insert(steps, CreateStep(39.11, 83.31, "The Waking Shores", "Dervishian", "Turn in quest", "QUEST_TURNED_IN", 66528));
-table.insert(steps, CreateStep(39.11, 83.31, "The Waking Shores", "Dervishian", "Accept quest", "QUEST_ACCEPTED", 66529));
-table.insert(steps, CreateStep(38.9, 83.54, "The Waking Shores", "Dervishian", "Talk", "QUEST_WATCH_UPDATE", 66529));
-table.insert(steps, CreateStep(38.76, 83.67, "The Waking Shores", "Dervishian", "Turn in quest", "QUEST_TURNED_IN", 66529));
+table.insert(steps, CreateStep(46.12, 78.32, "The Waking Shores", "Alexstrasza the Life-Binder", "Accept quest", "QUEST_ACCEPTED", 66079));--
+-- Photo quests ?
+--table.insert(steps, CreateStep(39.04, 83.31, "The Waking Shores", "Cataloger Wulferd", "Complete quest", "COMPLETED", 66524));
+--table.insert(steps, CreateStep(39.04, 83.31, "The Waking Shores", "Cataloger Wulferd", "Turn in quest", "QUEST_TURNED_IN", 66524));
+--table.insert(steps, CreateStep(39.04, 83.31, "The Waking Shores", "Cataloger Wulferd", "Accept quest", "QUEST_ACCEPTED", 66525));
+--table.insert(steps, CreateStep(39.09, 83.33, "The Waking Shores", "Dervishian", "Accept quest", "QUEST_ACCEPTED", 66526));
+--table.insert(steps, CreateStep(40.75, 85.38, "The Waking Shores", "Infused Proto-Drake", "Photograph", "COMPLETED", 66525));
+--table.insert(steps, CreateStep(40.75, 85.38, "The Waking Shores", nil, "Free dragons", "COMPLETED", 66525));
+--table.insert(steps, CreateStep(39.05, 83.29, "The Waking Shores", "Cataloger Wulferd", "Accept quest", "QUEST_ACCEPTED", 66527));
+--table.insert(steps, CreateStep(39.04, 83.33, "The Waking Shores", nil, "Complete quest", "COMPLETED", 66527));
+--table.insert(steps, CreateStep(39.04, 83.27, "The Waking Shores", "Cataloger Wulferd", "Turn in quest", "QUEST_TURNED_IN", 66527));
+--table.insert(steps, CreateStep(39.05, 83.29, "The Waking Shores", "Cataloger Wulferd", "Turn in quest", "QUEST_TURNED_IN", 66525));
+--table.insert(steps, CreateStep(39.05, 83.29, "The Waking Shores", "Dervishian", "Turn in quest", "QUEST_TURNED_IN", 66526));
+--table.insert(steps, CreateStep(39.11, 83.31, "The Waking Shores", "Dervishian", "Accept quest", "QUEST_ACCEPTED", 66528));
+--table.insert(steps, CreateStep(39.39, 83.71, "The Waking Shores", nil, "Click", "QUEST_WATCH_UPDATE", 66528));
+--table.insert(steps, CreateStep(39.11, 83.31, "The Waking Shores", "Dervishian", "Turn in quest", "QUEST_TURNED_IN", 66528));
+--table.insert(steps, CreateStep(39.11, 83.31, "The Waking Shores", "Dervishian", "Accept quest", "QUEST_ACCEPTED", 66529));
+--table.insert(steps, CreateStep(38.9, 83.54, "The Waking Shores", "Dervishian", "Talk", "QUEST_WATCH_UPDATE", 66529));
+--table.insert(steps, CreateStep(38.76, 83.67, "The Waking Shores", "Dervishian", "Turn in quest", "QUEST_TURNED_IN", 66529));
 -- Obsidian Bulwark
 table.insert(steps, CreateStep(42.5, 66.84, "The Waking Shores", "Wrathion", "Turn in quest", "QUEST_TURNED_IN", 66079));
 table.insert(steps, CreateStep(42.5, 66.84, "The Waking Shores", "Scalecommander Emberthal", "Make Inn home, Then accept quest", "QUEST_ACCEPTED", 72241));
@@ -484,7 +484,7 @@ table.insert(steps, CreateStep(41.6, 56.75, "Ohn'ahran Plains", "Elder Nazuun", 
 table.insert(steps, CreateStep(41.6, 56.75, "Ohn'ahran Plains", "Elder Nazuun", "Accept quest", "QUEST_ACCEPTED", 66834));
 table.insert(steps, CreateStep(40.14, 57.81, "Ohn'ahran Plains", nil, "Complete quest", "COMPLETED", 66834));
 table.insert(steps, CreateStep(41.6, 56.74, "Ohn'ahran Plains", "Elder Nazuun", "Turn in quest", "QUEST_TURNED_IN", 66834));
-table.insert(steps, CreateStep(41.6, 56.74, "Ohn'ahran Plains", "Elder Nazuun", "Accept dungeon quest", "QUEST_TURNED_IN", 66690));
+table.insert(steps, CreateStep(41.6, 56.74, "Ohn'ahran Plains", "Elder Nazuun", "Accept dungeon quest", "QUEST_ACCEPTED", 66690));
 table.insert(steps, CreateStep(41.86, 61.76, "Ohn'ahran Plains", "Khansguard Jebotai", "Turn in quest", "QUEST_TURNED_IN", 66222));
 table.insert(steps, CreateStep(41.86, 61.76, "Ohn'ahran Plains", "Khansguard Jebotai", "Turn in quest", "QUEST_TURNED_IN", 71027)); -- 66
 table.insert(steps, CreateStep(41.86, 61.76, "Ohn'ahran Plains", "Khansguard Jebotai", "Accept quest", "QUEST_ACCEPTED", 70229));
@@ -558,50 +558,53 @@ table.insert(steps, CreateStep(72.31, 50.69, "Ohn'ahran Plains", "Gerithus", "Ta
 -- Shady Sanctuary
 table.insert(steps, CreateStep(28.27, 57.71, "Ohn'ahran Plains", "Merithra", "Turn in quest", "QUEST_TURNED_IN", 66344));
 table.insert(steps, CreateStep(28.27, 57.71, "Ohn'ahran Plains", "Merithra", "Accept quest", "QUEST_ACCEPTED", 70220));
-table.insert(steps, CreateStep(29.97, 58.33, "Ohn'ahran Plains", "Gracus", "Accept quest", "QUEST_ACCEPTED", 70062));
+--table.insert(steps, CreateStep(29.97, 58.33, "Ohn'ahran Plains", "Gracus", "Accept quest", "QUEST_ACCEPTED", 70062));
 table.insert(steps, CreateStep(29.84, 57.69, "Ohn'ahran Plains", "Sariosa", "Talk", "QUEST_WATCH_UPDATE", 70220));
 table.insert(steps, CreateStep(30.19, 55.73, "Ohn'ahran Plains", "Sidra the Mender", "Talk", "QUEST_WATCH_UPDATE", 70220));
 table.insert(steps, CreateStep(29.13, 55.29, "Ohn'ahran Plains", "Guard-Captain Alowen", "Talk", "QUEST_WATCH_UPDATE", 70220));
 table.insert(steps, CreateStep(29.29, 56.44, "Ohn'ahran Plains", "Aronus", "Talk", "QUEST_WATCH_UPDATE", 70220));
 table.insert(steps, CreateStep(29.71, 60.02, "Ohn'ahran Plains", "Viranikus", "Talk", "QUEST_WATCH_UPDATE", 70220));
-table.insert(steps, CreateStep(29.97, 58.33, "Ohn'ahran Plains", "Flyspawn Beetle", "Complete quest", "COMPLETED", 70062));
-table.insert(steps, CreateStep(29.61, 58.68, "Ohn'ahran Plains", "Gracus", "Turn in quest", "QUEST_TURNED_IN", 70062));
-table.insert(steps, CreateStep(29.54, 58.76, "Ohn'ahran Plains", "Gracus", "Accept quest", "QUEST_ACCEPTED", 70069));
-table.insert(steps, CreateStep(29.97, 58.33, "Ohn'ahran Plains", "Flyspawn Beetle", "Complete quest", "COMPLETED", 70069));
-table.insert(steps, CreateStep(30.36, 58.2, "Ohn'ahran Plains", "Gracus", "Turn in quest", "QUEST_TURNED_IN", 70069));
-table.insert(steps, CreateStep(30.36, 58.19, "Ohn'ahran Plains", "Gracus", "Accept quest", "QUEST_ACCEPTED", 70070));
-table.insert(steps, CreateStep(28.29, 57.7, "Ohn'ahran Plains", "Merithra", "Turn in quest", "QUEST_TURNED_IN", 70220));
-table.insert(steps, CreateStep(28.28, 57.69, "Ohn'ahran Plains", "Merithra", "Accept quest", "QUEST_ACCEPTED", 66331));
-table.insert(steps, CreateStep(27.15, 56.61, "Ohn'ahran Plains", "Queasy Hornswog", "Kill", "QUEST_WATCH_UPDATE", 70070));
-table.insert(steps, CreateStep(25.11, 56.91, "Ohn'ahran Plains", "Celina Crunchyleaves", "Accept quest", "QUEST_ACCEPTED", 65899));
-table.insert(steps, CreateStep(24.85, 64.46, "Ohn'ahran Plains", "Theramus", "Search Caves and Talk", "COMPLETED", 65899));
-table.insert(steps, CreateStep(24.47, 63.02, "Ohn'ahran Plains", "Celina Crunchyleaves", "Turn in quest", "QUEST_TURNED_IN", 65899));
-table.insert(steps, CreateStep(24.46, 62.99, "Ohn'ahran Plains", "Celina Crunchyleaves", "Accept quest", "QUEST_ACCEPTED", 65903));
-table.insert(steps, CreateStep(24.48, 63, "Ohn'ahran Plains", "Felina Starrunner", "Accept quest", "QUEST_ACCEPTED", 65900));
-table.insert(steps, CreateStep(22.89, 66.34, "Ohn'ahran Plains", "Territorial Coastling", "Kill", "QUEST_TURNED_IN", 69852));
-table.insert(steps, CreateStep(22.89, 66.34, "Ohn'ahran Plains", "Glade hopper", "Capture", "COMPLETED", 65903));
-table.insert(steps, CreateStep(22.67, 62.59, "Ohn'ahran Plains", nil, "Complete quest", "COMPLETED", 65900));
-table.insert(steps, CreateStep(24.44, 63, "Ohn'ahran Plains", "Celina Crunchyleaves", "Turn in quest", "QUEST_TURNED_IN", 65903));
-table.insert(steps, CreateStep(24.46, 62.98, "Ohn'ahran Plains", "Felina Starrunner", "Talk", "QUEST_WATCH_UPDATE", 65900));
-table.insert(steps, CreateStep(24.52, 63.07, "Ohn'ahran Plains", "Felina Starrunner", "Turn in quest", "QUEST_TURNED_IN", 65900));
-table.insert(steps, CreateStep(24.52, 63.07, "Ohn'ahran Plains", "Felina Starrunner", "Accept quest", "QUEST_ACCEPTED", 65902));
-table.insert(steps, CreateStep(24.85, 64.44, "Ohn'ahran Plains", "Theramus", "Talk", "QUEST_WATCH_UPDATE", 65902));
-table.insert(steps, CreateStep(24.85, 64.44, "Ohn'ahran Plains", "Theramus", "Place rabbit", "COMPLETED", 65902));
-table.insert(steps, CreateStep(24.48, 63.04, "Ohn'ahran Plains", "Felina Starrunner", "Turn in quest", "QUEST_TURNED_IN", 65902));
-table.insert(steps, CreateStep(24.48, 63.04, "Ohn'ahran Plains", "Felina Starrunner", "Accept quest", "QUEST_ACCEPTED", 65905));
-table.insert(steps, CreateStep(24.47, 63.01, "Ohn'ahran Plains", "Celina Crunchyleaves", "Accept quest", "QUEST_ACCEPTED", 65937));
-table.insert(steps, CreateStep(24.89, 60.34, "Ohn'ahran Plains", "Injured Cub", "Talk", "QUEST_WATCH_UPDATE", 65937));
-table.insert(steps, CreateStep(24.89, 60.34, "Ohn'ahran Plains", nil, "Pick up Decayed Flower", "QUEST_WATCH_UPDATE", 65937));
-table.insert(steps, CreateStep(24.47, 63.01, "Ohn'ahran Plains", "Celina Crunchyleaves", "Turn in quest", "QUEST_TURNED_IN", 65937));
-table.insert(steps, CreateStep(24.47, 63.01, "Ohn'ahran Plains", "Felina Starrunner", "Turn in quest", "QUEST_TURNED_IN", 65905));
-table.insert(steps, CreateStep(24.47, 63.01, "Ohn'ahran Plains", "Celina Crunchyleaves", "Accept quest", "QUEST_ACCEPTED", 65904));
-table.insert(steps, CreateStep(24.59, 64.15, "Ohn'ahran Plains", "Theramus", "Talk", "QUEST_WATCH_UPDATE", 65904));
-table.insert(steps, CreateStep(24.6, 63.97, "Ohn'ahran Plains", "Celina Crunchyleaves", "Turn in quest", "QUEST_TURNED_IN", 65904));
-table.insert(steps, CreateStep(24.57, 63.98, "Ohn'ahran Plains", "Felina Starrunner", "Accept quest", "QUEST_ACCEPTED", 66011));
-table.insert(steps, CreateStep(24.96, 65.87, "Ohn'ahran Plains", "Theramus", "Talk", "QUEST_WATCH_UPDATE", 66011));
-table.insert(steps, CreateStep(26.29, 65.37, "Ohn'ahran Plains", "Ripsaw the Stalker", "Kill", "QUEST_WATCH_UPDATE", 69851));
-table.insert(steps, CreateStep(24.97, 65.84, "Ohn'ahran Plains", "Theramus", "Turn in quest", "QUEST_TURNED_IN", 66011));
-table.insert(steps, CreateStep(29.06, 58.68, "Ohn'ahran Plains", "Gracus", "Turn in quest", "QUEST_TURNED_IN", 70070)); -- LATER?
+
+--table.insert(steps, CreateStep(29.97, 58.33, "Ohn'ahran Plains", "Flyspawn Beetle", "Complete quest", "COMPLETED", 70062));
+--table.insert(steps, CreateStep(29.61, 58.68, "Ohn'ahran Plains", "Gracus", "Turn in quest", "QUEST_TURNED_IN", 70062));
+--table.insert(steps, CreateStep(29.54, 58.76, "Ohn'ahran Plains", "Gracus", "Accept quest", "QUEST_ACCEPTED", 70069));
+--table.insert(steps, CreateStep(29.97, 58.33, "Ohn'ahran Plains", "Flyspawn Beetle", "Complete quest", "COMPLETED", 70069));
+--table.insert(steps, CreateStep(30.36, 58.2, "Ohn'ahran Plains", "Gracus", "Turn in quest", "QUEST_TURNED_IN", 70069));
+--table.insert(steps, CreateStep(30.36, 58.19, "Ohn'ahran Plains", "Gracus", "Accept quest", "QUEST_ACCEPTED", 70070));
+
+--table.insert(steps, CreateStep(28.29, 57.7, "Ohn'ahran Plains", "Merithra", "Turn in quest", "QUEST_TURNED_IN", 70220));
+--table.insert(steps, CreateStep(28.28, 57.69, "Ohn'ahran Plains", "Merithra", "Accept quest", "QUEST_ACCEPTED", 66331));
+--table.insert(steps, CreateStep(27.15, 56.61, "Ohn'ahran Plains", "Queasy Hornswog", "Kill", "QUEST_WATCH_UPDATE", 70070));
+--table.insert(steps, CreateStep(25.11, 56.91, "Ohn'ahran Plains", "Celina Crunchyleaves", "Accept quest", "QUEST_ACCEPTED", 65899));
+--table.insert(steps, CreateStep(24.85, 64.46, "Ohn'ahran Plains", "Theramus", "Search Caves and Talk", "COMPLETED", 65899));
+--table.insert(steps, CreateStep(24.47, 63.02, "Ohn'ahran Plains", "Celina Crunchyleaves", "Turn in quest", "QUEST_TURNED_IN", 65899));
+--table.insert(steps, CreateStep(24.46, 62.99, "Ohn'ahran Plains", "Celina Crunchyleaves", "Accept quest", "QUEST_ACCEPTED", 65903));
+--table.insert(steps, CreateStep(24.48, 63, "Ohn'ahran Plains", "Felina Starrunner", "Accept quest", "QUEST_ACCEPTED", 65900));
+--table.insert(steps, CreateStep(22.89, 66.34, "Ohn'ahran Plains", "Territorial Coastling", "Kill", "QUEST_TURNED_IN", 69852));
+--table.insert(steps, CreateStep(22.89, 66.34, "Ohn'ahran Plains", "Glade hopper", "Capture", "COMPLETED", 65903));
+--table.insert(steps, CreateStep(22.67, 62.59, "Ohn'ahran Plains", nil, "Complete quest", "COMPLETED", 65900));
+--table.insert(steps, CreateStep(24.44, 63, "Ohn'ahran Plains", "Celina Crunchyleaves", "Turn in quest", "QUEST_TURNED_IN", 65903));
+--table.insert(steps, CreateStep(24.46, 62.98, "Ohn'ahran Plains", "Felina Starrunner", "Talk", "QUEST_WATCH_UPDATE", 65900));
+--table.insert(steps, CreateStep(24.52, 63.07, "Ohn'ahran Plains", "Felina Starrunner", "Turn in quest", "QUEST_TURNED_IN", 65900));
+--table.insert(steps, CreateStep(24.52, 63.07, "Ohn'ahran Plains", "Felina Starrunner", "Accept quest", "QUEST_ACCEPTED", 65902));
+--table.insert(steps, CreateStep(24.85, 64.44, "Ohn'ahran Plains", "Theramus", "Talk", "QUEST_WATCH_UPDATE", 65902));
+--table.insert(steps, CreateStep(24.85, 64.44, "Ohn'ahran Plains", "Theramus", "Place rabbit", "COMPLETED", 65902));
+--table.insert(steps, CreateStep(24.48, 63.04, "Ohn'ahran Plains", "Felina Starrunner", "Turn in quest", "QUEST_TURNED_IN", 65902));
+--table.insert(steps, CreateStep(24.48, 63.04, "Ohn'ahran Plains", "Felina Starrunner", "Accept quest", "QUEST_ACCEPTED", 65905));
+--table.insert(steps, CreateStep(24.47, 63.01, "Ohn'ahran Plains", "Celina Crunchyleaves", "Accept quest", "QUEST_ACCEPTED", 65937));
+--table.insert(steps, CreateStep(24.89, 60.34, "Ohn'ahran Plains", "Injured Cub", "Talk", "QUEST_WATCH_UPDATE", 65937));
+--table.insert(steps, CreateStep(24.89, 60.34, "Ohn'ahran Plains", nil, "Pick up Decayed Flower", "QUEST_WATCH_UPDATE", 65937));
+--table.insert(steps, CreateStep(24.47, 63.01, "Ohn'ahran Plains", "Celina Crunchyleaves", "Turn in quest", "QUEST_TURNED_IN", 65937));
+--table.insert(steps, CreateStep(24.47, 63.01, "Ohn'ahran Plains", "Felina Starrunner", "Turn in quest", "QUEST_TURNED_IN", 65905));
+--table.insert(steps, CreateStep(24.47, 63.01, "Ohn'ahran Plains", "Celina Crunchyleaves", "Accept quest", "QUEST_ACCEPTED", 65904));
+--table.insert(steps, CreateStep(24.59, 64.15, "Ohn'ahran Plains", "Theramus", "Talk", "QUEST_WATCH_UPDATE", 65904));
+--table.insert(steps, CreateStep(24.6, 63.97, "Ohn'ahran Plains", "Celina Crunchyleaves", "Turn in quest", "QUEST_TURNED_IN", 65904));
+--table.insert(steps, CreateStep(24.57, 63.98, "Ohn'ahran Plains", "Felina Starrunner", "Accept quest", "QUEST_ACCEPTED", 66011));
+--table.insert(steps, CreateStep(24.96, 65.87, "Ohn'ahran Plains", "Theramus", "Talk", "QUEST_WATCH_UPDATE", 66011));
+--table.insert(steps, CreateStep(26.29, 65.37, "Ohn'ahran Plains", "Ripsaw the Stalker", "Kill", "QUEST_WATCH_UPDATE", 69851));
+--table.insert(steps, CreateStep(24.97, 65.84, "Ohn'ahran Plains", "Theramus", "Turn in quest", "QUEST_TURNED_IN", 66011));
+--table.insert(steps, CreateStep(29.06, 58.68, "Ohn'ahran Plains", "Gracus", "Turn in quest", "QUEST_TURNED_IN", 70070)); -- LATER?
+
 table.insert(steps, CreateStep(27.58, 46.09, "Ohn'ahran Plains", "Belika", "Talk", "QUEST_WATCH_UPDATE", 66331));
 table.insert(steps, CreateStep(25.74, 44.29, "Ohn'ahran Plains", "Boku", "Talk", "QUEST_WATCH_UPDATE", 66331));
 table.insert(steps, CreateStep(26.18, 40.13, "Ohn'ahran Plains", "Ohn Seshteng", "Talk", "QUEST_WATCH_UPDATE", 66331));
@@ -636,16 +639,16 @@ table.insert(steps, CreateStep(22.15, 50.97, "Ohn'ahran Plains", "Merithra", "Ac
 table.insert(steps, CreateStep(22.15, 50.97, "Ohn'ahran Plains", "Khanam Matra Sarest", "Accept dungeon quest", "QUEST_ACCEPTED", 66339));
 table.insert(steps, CreateStep(71.61, 80.55, "Ohn'ahran Plains", "Masud the Wise", "Turn in quest", "QUEST_TURNED_IN", 66340));
 table.insert(steps, CreateStep(71.61, 80.55, "Ohn'ahran Plains", "Masud the Wise", "Accept quest", "QUEST_ACCEPTED", 65686));
-table.insert(steps, CreateStep(72.01, 81.09, "Ohn'ahran Plains", "Azley", "Accept quest", "QUEST_ACCEPTED", 69915));
-table.insert(steps, CreateStep(72.01, 81.07, "Ohn'ahran Plains", "Azley", "Accept quest", "QUEST_ACCEPTED", 69981));
-table.insert(steps, CreateStep(72.01, 81.07, "Ohn'ahran Plains", "Azley", "Accept quest", "QUEST_ACCEPTED", 69919));
-table.insert(steps, CreateStep(74.48, 82.22, "Ohn'ahran Plains", "Forkriver Goat", "Kill", "COMPLETED", 69915));
-table.insert(steps, CreateStep(74.57, 81.04, "Ohn'ahran Plains", "Bree'jo", "Talk", "QUEST_WATCH_UPDATE", 69981));
-table.insert(steps, CreateStep(77.26, 73.17, "Ohn'ahran Plains", "Duncan Ironeye", "Talk", "QUEST_WATCH_UPDATE", 69981));
-table.insert(steps, CreateStep(67.07, 80.93, "Ohn'ahran Plains", nil, "Click", "QUEST_WATCH_UPDATE", 69981));
-table.insert(steps, CreateStep(72.04, 81.1, "Ohn'ahran Plains", "Azley", "Turn in quest", "QUEST_TURNED_IN", 69915));
-table.insert(steps, CreateStep(72.04, 81.1, "Ohn'ahran Plains", "Mahra Treebender", "Turn in quest", "QUEST_TURNED_IN", 69981));
-table.insert(steps, CreateStep(72.01, 81.07, "Ohn'ahran Plains", "Azley", "Turn in quest", "QUEST_TURNED_IN", 69919));
+--table.insert(steps, CreateStep(72.01, 81.09, "Ohn'ahran Plains", "Azley", "Accept quest", "QUEST_ACCEPTED", 69915));
+--table.insert(steps, CreateStep(72.01, 81.07, "Ohn'ahran Plains", "Azley", "Accept quest", "QUEST_ACCEPTED", 69981));
+--table.insert(steps, CreateStep(72.01, 81.07, "Ohn'ahran Plains", "Azley", "Accept quest", "QUEST_ACCEPTED", 69919));
+--table.insert(steps, CreateStep(74.48, 82.22, "Ohn'ahran Plains", "Forkriver Goat", "Kill", "COMPLETED", 69915));
+--table.insert(steps, CreateStep(74.57, 81.04, "Ohn'ahran Plains", "Bree'jo", "Talk", "QUEST_WATCH_UPDATE", 69981));
+--table.insert(steps, CreateStep(77.26, 73.17, "Ohn'ahran Plains", "Duncan Ironeye", "Talk", "QUEST_WATCH_UPDATE", 69981));
+--table.insert(steps, CreateStep(67.07, 80.93, "Ohn'ahran Plains", nil, "Click", "QUEST_WATCH_UPDATE", 69981));
+--table.insert(steps, CreateStep(72.04, 81.1, "Ohn'ahran Plains", "Azley", "Turn in quest", "QUEST_TURNED_IN", 69915));
+--table.insert(steps, CreateStep(72.04, 81.1, "Ohn'ahran Plains", "Mahra Treebender", "Turn in quest", "QUEST_TURNED_IN", 69981));
+--table.insert(steps, CreateStep(72.01, 81.07, "Ohn'ahran Plains", "Azley", "Turn in quest", "QUEST_TURNED_IN", 69919));
 table.insert(steps, CreateStep(41.44, 35.63, "The Azure Span:Dragon Isles", "Glania of the Blessed Ones", "Turn in quest", "QUEST_TURNED_IN", 65686));
 table.insert(steps, CreateStep(41.44, 35.63, "The Azure Span:Dragon Isles", "Glania of the Blessed Ones", "Accept quest", "QUEST_ACCEPTED", 66228));
 table.insert(steps, CreateStep(41.26, 35.85, "The Azure Span:Dragon Isles", "Miva Star-Eye", "Accept quest", "QUEST_ACCEPTED", 67174));
@@ -784,8 +787,42 @@ table.insert(steps, CreateStep(13.87, 49.47, "The Azure Span:Dragon Isles", nil,
 table.insert(steps, CreateStep(13.91, 50.05, "The Azure Span:Dragon Isles", "Rokkutuk", "Talk", "QUEST_WATCH_UPDATE", 72435));
 table.insert(steps, CreateStep(12.47, 50.31, "The Azure Span:Dragon Isles", nil, "Pick up shield", "QUEST_WATCH_UPDATE", 66210));
 table.insert(steps, CreateStep(12.48, 49.39, "The Azure Span:Dragon Isles", nil, "Pick up sculpture", "QUEST_WATCH_UPDATE", 66210));
+table.insert(steps, CreateStep(13.19, 48.79, "The Azure Span:Dragon Isles", "Bukarakikk", "Accept quest", "QUEST_ACCEPTED", 66217));
 
---table.insert(steps, CreateStep(13.19, 48.79, "The Azure Span:Dragon Isles", "Bukarakikk", "Accept quest", "QUEST_ACCEPTED")); 34k xp
+-- Alternative:
+table.insert(steps, CreateStep(12.93, 48.73, "The Azure Span:Dragon Isles", "Hanu", "Accept quest", "QUEST_ACCEPTED", 66218));
+table.insert(steps, CreateStep(10.62, 46.89, "The Azure Span:Dragon Isles", "Neelo", "Talk", "QUEST_WATCH_UPDATE", 66218));
+table.insert(steps, CreateStep(7.63, 44.39, "The Azure Span:Dragon Isles", "Mordigan Ironjaw", "Accept quest", "QUEST_ACCEPTED", 66781));
+table.insert(steps, CreateStep(7.22, 45.11, "The Azure Span:Dragon Isles", nil, "Click", "QUEST_WATCH_UPDATE", 66781));
+table.insert(steps, CreateStep(7.61, 44.38, "The Azure Span:Dragon Isles", "Mordigan Ironjaw", "Turn in quest", "QUEST_TURNED_IN", 66781));
+table.insert(steps, CreateStep(7.63, 44.33, "The Azure Span:Dragon Isles", "LOU-C Fitzcog", "Accept quest", "QUEST_ACCEPTED", 66164));
+table.insert(steps, CreateStep(7.65, 44.28, "The Azure Span:Dragon Isles", "Examiner Rowe", "Accept quest", "QUEST_ACCEPTED", 66154));
+table.insert(steps, CreateStep(7.63, 44.25, "The Azure Span:Dragon Isles", "Aelnara", "Accept quest", "QUEST_ACCEPTED", 66147));
+table.insert(steps, CreateStep(10.36, 43.36, "The Azure Span:Dragon Isles", nil, "Complete quests", "COMPLETED", 66164));
+table.insert(steps, CreateStep(10.36, 43.36, "The Azure Span:Dragon Isles", nil, "Complete quests", "COMPLETED", 66154));
+table.insert(steps, CreateStep(10.36, 43.36, "The Azure Span:Dragon Isles", nil, "Complete quests", "COMPLETED", 66147));
+table.insert(steps, CreateStep(7.65, 44.29, "The Azure Span:Dragon Isles", "Examiner Rowe", "Turn in quest", "QUEST_TURNED_IN", 66154));
+table.insert(steps, CreateStep(7.65, 44.29, "The Azure Span:Dragon Isles", "Aelnara", "Turn in quest", "QUEST_TURNED_IN", 66147));
+table.insert(steps, CreateStep(7.65, 44.29, "The Azure Span:Dragon Isles", "LOU-C Fitzcog", "Turn in quest", "QUEST_TURNED_IN", 66164));
+table.insert(steps, CreateStep(7.65, 44.29, "The Azure Span:Dragon Isles", "LOU-C Fitzcog", "Accept quest", "QUEST_ACCEPTED", 66175));
+table.insert(steps, CreateStep(7.63, 44.3, "The Azure Span:Dragon Isles", nil, "Click", "QUEST_WATCH_UPDATE", 66175));
+table.insert(steps, CreateStep(10.61, 46.91, "The Azure Span:Dragon Isles", "Neelo", "Turn in quest", "QUEST_TURNED_IN", 66218));
+table.insert(steps, CreateStep(7.63, 44.3, "The Azure Span:Dragon Isles", "LOU-C Fitzcog", "Turn in quest", "QUEST_TURNED_IN", 66175));
+table.insert(steps, CreateStep(7.63, 44.3, "The Azure Span:Dragon Isles", "LOU-C Fitzcog", "Accept quest", "QUEST_ACCEPTED", 66177));
+table.insert(steps, CreateStep(7.5, 44.31, "The Azure Span:Dragon Isles", "Wayun", "Accept quest", "QUEST_ACCEPTED", 66232));
+
+table.insert(steps, CreateStep(9.38, 42.56, "The Azure Span:Dragon Isles", nil, "Click", "QUEST_WATCH_UPDATE", 66177));
+table.insert(steps, CreateStep(10.01, 41.33, "The Azure Span:Dragon Isles", nil, "Click", "QUEST_WATCH_UPDATE", 66177));
+table.insert(steps, CreateStep(9.96, 39.69, "The Azure Span:Dragon Isles", nil, "Click", "QUEST_WATCH_UPDATE", 66177));
+table.insert(steps, CreateStep(10.64, 41.24, "The Azure Span:Dragon Isles", nil, "Click", "QUEST_WATCH_UPDATE", 66177));
+table.insert(steps, CreateStep(10.76, 41.19, "The Azure Span:Dragon Isles", "Aelnara", "Turn in quest", "QUEST_TURNED_IN", 66177));
+table.insert(steps, CreateStep(10.76, 41.19, "The Azure Span:Dragon Isles", "Aelnara", "Accept quest", "QUEST_ACCEPTED", 66187));
+table.insert(steps, CreateStep(11.23, 41.04, "The Azure Span:Dragon Isles", "Mordigan Ironjaw", "Kill", "QUEST_WATCH_UPDATE", 66187));
+table.insert(steps, CreateStep(10.77, 41.2, "The Azure Span:Dragon Isles", "Aelnara", "Turn in quest", "QUEST_TURNED_IN", 66187));
+table.insert(steps, CreateStep(10.77, 41.2, "The Azure Span:Dragon Isles", "Aelnara", "Accept quest", "QUEST_ACCEPTED", 66559));
+table.insert(steps, CreateStep(7.66, 44.29, "The Azure Span:Dragon Isles", "Examiner Rowe", "Turn in quest", "QUEST_TURNED_IN", 66559));
+table.insert(steps, CreateStep(7.47, 44.3, "The Azure Span:Dragon Isles", "Wayun", "Turn in quest", "QUEST_TURNED_IN", 66232));
+
 table.insert(steps, CreateStep(12.44, 49.41, "The Azure Span:Dragon Isles", "Elder Nappa", "Accept quest", "QUEST_ACCEPTED", 66213));
 table.insert(steps, CreateStep(12.44, 49.36, "The Azure Span:Dragon Isles", "Elder Poa", "Talk", "COMPLETED", 66213));
 table.insert(steps, CreateStep(12.43, 49.4, "The Azure Span:Dragon Isles", "Elder Nappa", "Turn in quest", "QUEST_TURNED_IN", 66213));
@@ -794,9 +831,12 @@ table.insert(steps, CreateStep(13.15, 48.61, "The Azure Span:Dragon Isles", nil,
 table.insert(steps, CreateStep(13.24, 49.56, "The Azure Span:Dragon Isles", "Brena", "Turn in quest", "QUEST_TURNED_IN", 66210));
 table.insert(steps, CreateStep(13.24, 49.54, "The Azure Span:Dragon Isles", "Kalecgos", "Accept quest", "QUEST_ACCEPTED", 65850));
 table.insert(steps, CreateStep(13.23, 49.52, "The Azure Span:Dragon Isles", "Brena", "Talk and follow, then click the boat", "QUEST_WATCH_UPDATE", 65850));
+table.insert(steps, CreateStep(11.33, 53.74, "The Azure Span:Dragon Isles", "Krojek The Shoreprowler", "Kill", "QUEST_WATCH_UPDATE", 66217));
+table.insert(steps, CreateStep(13.19, 48.79, "The Azure Span:Dragon Isles", "Turn in quest", "Turn in quest", "QUEST_TURNED_IN", 66217));
 table.insert(steps, CreateStep(12.95, 50.4, "The Azure Span:Dragon Isles", "Kalecgos", "Turn in quest", "QUEST_TURNED_IN", 65850));
 table.insert(steps, CreateStep(12.95, 50.4, "The Azure Span:Dragon Isles", "Kalecgos", "Accept quest", "QUEST_ACCEPTED", 65911));
 table.insert(steps, CreateStep(39.46, 63.02, "The Azure Span:Dragon Isles", "Kalecgos", "Hearthstone to Azure Archives and Turn in quest", "QUEST_TURNED_IN", 65911));
+
 table.insert(steps, CreateStep(39.46, 63.02, "The Azure Span:Dragon Isles", "Kalecgos", "Accept quest", "QUEST_ACCEPTED", 66027));
 table.insert(steps, CreateStep(39.46, 63.02, "The Azure Span:Dragon Isles", "Kalecgos", "Talk", "QUEST_WATCH_UPDATE", 66027));
 table.insert(steps, CreateStep(39.46, 63.02, "The Azure Span:Dragon Isles", "Kalecgos", "Turn in quest", "QUEST_TURNED_IN", 66027));
@@ -804,6 +844,26 @@ table.insert(steps, CreateStep(39.46, 63.02, "The Azure Span:Dragon Isles", "Kal
 table.insert(steps, CreateStep(65.82, 25.34, "The Azure Span:Dragon Isles", "Drok Scrollstabber", "Turn in quest", "QUEST_TURNED_IN", 65886));
 table.insert(steps, CreateStep(65.82, 25.34, "The Azure Span:Dragon Isles", "Drok Scrollstabber", "Accept quest", "QUEST_ACCEPTED", 65887));
 table.insert(steps, CreateStep(65.82, 25.34, "The Azure Span:Dragon Isles", "Drok Scrollstabber", "Accept quest", "QUEST_ACCEPTED", 67299));
+table.insert(steps, CreateStep(65.92, 25.43, "The Azure Span:Dragon Isles", "Tuskarr Elder", "Accept quest", "QUEST_ACCEPTED", 66708));
+table.insert(steps, CreateStep(59.26, 39.74, "The Azure Span:Dragon Isles", "Old Grimtusk", "Turn in quest", "QUEST_TURNED_IN", 66708));
+table.insert(steps, CreateStep(59.26, 39.74, "The Azure Span:Dragon Isles", "Old Grimtusk", "Accept quest", "QUEST_ACCEPTED", 66709));
+table.insert(steps, CreateStep(59.19, 39.86, "The Azure Span:Dragon Isles", "Old Grimtusk", "Complete quest", "COMPLETED", 66709));
+table.insert(steps, CreateStep(59.19, 39.86, "The Azure Span:Dragon Isles", "Old Grimtusk", "Turn in quest", "QUEST_TURNED_IN", 66709));
+table.insert(steps, CreateStep(59.29, 39.77, "The Azure Span:Dragon Isles", "Old Grimtusk", "Accept quest", "QUEST_ACCEPTED", 66715));
+table.insert(steps, CreateStep(58.44, 42.01, "The Azure Span:Dragon Isles", "Frostbite", "Turn in quest", "QUEST_TURNED_IN", 66715));
+table.insert(steps, CreateStep(58.44, 42.01, "The Azure Span:Dragon Isles", "Frostbite", "Accept quest", "QUEST_ACCEPTED", 66703));
+
+table.insert(steps, CreateStep(57.68, 41.83, "The Azure Span:Dragon Isles", "Snowhide Shaman", "Kill", "QUEST_WATCH_UPDATE", 66703))
+table.insert(steps, CreateStep(57.68, 41.83, "The Azure Span:Dragon Isles", "Snowhide Shaman", "Kill", "QUEST_WATCH_UPDATE", 66703));
+table.insert(steps, CreateStep(57.68, 41.83, "The Azure Span:Dragon Isles", "Snowhide Shaman", "Kill", "QUEST_WATCH_UPDATE", 66703));
+table.insert(steps, CreateStep(57.83, 44.85, "The Azure Span:Dragon Isles", "Snoll the Icebreaker", "Kill", "QUEST_WATCH_UPDATE", 66703));
+table.insert(steps, CreateStep(58.37, 42.06, "The Azure Span:Dragon Isles", "Frostbite", "Turn in quest", "QUEST_TURNED_IN", 66718));
+table.insert(steps, CreateStep(58.37, 42.03, "The Azure Span:Dragon Isles", "Frostbite", "Accept quest", "QUEST_ACCEPTED", 67050));
+table.insert(steps, CreateStep(58.25, 41.94, "The Azure Span:Dragon Isles", nil, "Complete quest", "COMPLETED", 67050));
+table.insert(steps, CreateStep(58.25, 41.94, "The Azure Span:Dragon Isles", nil, "Complete quest", "COMPLETED", 67050));
+table.insert(steps, CreateStep(58.46, 40.55, "The Azure Span:Dragon Isles", "Old Grimtusk", "Turn in quest", "QUEST_TURNED_IN", 67050));
+table.insert(steps, CreateStep(58.46, 40.55, "The Azure Span:Dragon Isles", nil, "Accept quest", "QUEST_ACCEPTED", 66730));
+
 table.insert(steps, CreateStep(66.08, 25.45, "The Azure Span:Dragon Isles", "Proto-Drake", "Kill", "QUEST_WATCH_UPDATE", 67299));
 table.insert(steps, CreateStep(65.83, 25.34, "The Azure Span:Dragon Isles", "Drok Scrollstabber", "Turn in quest", "QUEST_TURNED_IN", 67299));
 table.insert(steps, CreateStep(70.11, 33.33, "The Azure Span:Dragon Isles", "Summoned Destroyer", "Kill", "QUEST_TURNED_IN", 69895));
