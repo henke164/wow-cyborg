@@ -90,3 +90,4 @@ condemn	MazonAddon/Combat/WarriorCondemn.lua
 subtlety	MazonAddon/Combat/RogueSubtlety.lua
 sub2	MazonAddon/Combat/RogueSubtlety2.lua
 tbcmulti	MazonAddon/Combat/TBCMultibox.lua
+evoker	MazonAddon/Combat/EvokerDps.lua

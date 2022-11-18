@@ -33,7 +33,7 @@ WowCyborg_PAUSE_KEYS = {
 }
 
 function IsMelee()
-  return IsSpellInRange("Rebuke", "target") ~= 0;
+  return IsSpellInRange("Rebuke", "target") == 1;
 end
 
 function GetMemberIndex(name)
@@ -196,7 +196,7 @@ function RenderSingleTargetRotation(saveHolyPower)
     return SetSpellRequest(shieldOfTheRighteous);
   end
 
-  if nearbyEnemies > 2 and IsCastableAtEnemyTarget("Avenger's Shield", 0) then
+  if IsCastableAtEnemyTarget("Avenger's Shield", 0) then
     WowCyborg_CURRENTATTACK = "Avenger's Shield";
     return SetSpellRequest(avengersShield);
   end
@@ -219,33 +219,35 @@ function RenderSingleTargetRotation(saveHolyPower)
     return SetSpellRequest(avengersShield);
   end
 
-  if IsCastableAtEnemyTarget("Blessed Hammer", 0) then
-    if IsMelee() and concetration == nil and IsCastableAtEnemyTarget("Consecration", 0) then
-      WowCyborg_CURRENTATTACK = "Consecration";
-      return SetSpellRequest(consecration);
-    end
+  if IsMelee() then
+    if IsCastableAtEnemyTarget("Blessed Hammer", 0) then
+      if concetration == nil and IsCastableAtEnemyTarget("Consecration", 0) then
+        WowCyborg_CURRENTATTACK = "Consecration";
+        return SetSpellRequest(consecration);
+      end
 
-    if CheckInteractDistance("target", 3) and IsCastableAtEnemyTarget("Blessed Hammer", 0) then
-      WowCyborg_CURRENTATTACK = "Blessed Hammer";
-      return SetSpellRequest(blessedHammer);
-    end
-  end
-  
-  if IsMelee() and IsCastableAtEnemyTarget("Hammer of the Righteous", 0) then
-    if concetration == nil and IsCastableAtEnemyTarget("Consecration", 0) then
-      WowCyborg_CURRENTATTACK = "Consecration";
-      return SetSpellRequest(consecration);
+      if IsCastableAtEnemyTarget("Blessed Hammer", 0) then
+        WowCyborg_CURRENTATTACK = "Blessed Hammer";
+        return SetSpellRequest(blessedHammer);
+      end
     end
     
-    if concetration ~= nil then
-      WowCyborg_CURRENTATTACK = "Hammer of the Righteous";
-      return SetSpellRequest(blessedHammer);
+    if IsCastableAtEnemyTarget("Hammer of the Righteous", 0) then
+      if concetration == nil and IsCastableAtEnemyTarget("Consecration", 0) then
+        WowCyborg_CURRENTATTACK = "Consecration";
+        return SetSpellRequest(consecration);
+      end
+      
+      if concetration ~= nil then
+        WowCyborg_CURRENTATTACK = "Hammer of the Righteous";
+        return SetSpellRequest(blessedHammer);
+      end
     end
-  end
-  
-  if IsMelee() and IsCastableAtEnemyTarget("Judgment", 0) then
-    WowCyborg_CURRENTATTACK = "Judgment";
-    return SetSpellRequest(judgment);
+    
+    if IsCastableAtEnemyTarget("Judgment", 0) then
+      WowCyborg_CURRENTATTACK = "Judgment";
+      return SetSpellRequest(judgment);
+    end
   end
   
   WowCyborg_CURRENTATTACK = "-";

@@ -35,6 +35,7 @@ local battleShout = "CTRL+3";
 local heroicThrow = "0";
 
 WowCyborg_PAUSE_KEYS = {
+  "F1",
   "F2",
   "F3",
   "R",
@@ -84,10 +85,8 @@ function RenderSingleTargetRotation()
 
   local outburst = FindBuff("player", "Outburst")
   local vrBuff = FindBuff("player", "Victorious")
-  if hpPercentage < 80 and 
-    IsCastableAtEnemyTarget("Victory Rush", 0) and 
-    vrBuff == "Victorious" then
-    WowCyborg_CURRENTATTACK = "Victory Rush";
+  if hpPercentage < 70 and IsCastableAtEnemyTarget("Impending Victory", 10) then
+    WowCyborg_CURRENTATTACK = "Impending Victory";
     return SetSpellRequest(victoryRush);
   end
 
@@ -137,7 +136,14 @@ function RenderSingleTargetRotation()
     end
   end
 
+  local avatarBuff = FindBuff("player", "Avatar");
   local nearbyEnemies = GetNearbyEnemyCount();
+
+  if avatarBuff ~= nil and IsCastableAtEnemyTarget("Thunder Clap", 0) then
+    WowCyborg_CURRENTATTACK = "Thunder Clap";
+    return SetSpellRequest(thunderClap);
+  end
+
   if nearbyEnemies > 3 then
     if outburst ~= nil then
       if IsCastableAtEnemyTarget("Thunder Clap", 0) then
@@ -146,7 +152,7 @@ function RenderSingleTargetRotation()
       end
     end
 
-    if IsCastableAtEnemyTarget("Revenge", 20) and (ipBuff ~= nil and ipTl > 3) then
+    if IsCastableAtEnemyTarget("Revenge", 30) and (ipBuff ~= nil and ipTl > 3) then
       WowCyborg_CURRENTATTACK = "Revenge";
       return SetSpellRequest(revenge);
     end
