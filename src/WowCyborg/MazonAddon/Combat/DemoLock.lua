@@ -10,8 +10,8 @@ buttons["demonbolt"] = "5";
 buttons["shadow_bolt"] = "6";
 buttons["soul_rot"] = "7";
 buttons["implosion"] = "8";
-buttons["blood_fury"] = "9";
-buttons["gladiators_badge"] = "9";
+buttons["blood_fury"] = "F+1";
+buttons["demonic_strength"] = "9";
 local stopCast = "F+7";
 
 WowCyborg_PAUSE_KEYS = {

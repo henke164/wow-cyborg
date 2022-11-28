@@ -6,7 +6,7 @@ buttons["incinerate"] = "2";
 buttons["conflagrate"] = "3";
 buttons["cataclysm"] = "1";
 buttons["immolate"] = "4";
--- buttons["summon_infernal"] = "5";
+buttons["channel_demonfire"] = "5";
 buttons["soul_rot"] = "6";
 buttons["chaos_bolt"] = "7";
 buttons["dark_soul_instability"] = "F+1";
@@ -75,6 +75,12 @@ end
 function RenderSingleTargetRotation()
   Hekili.DB.profile.toggles.mode.value = "single";
   
+  
+  if UnitChannelInfo("player") then
+    WowCyborg_CURRENTATTACK = "-";
+    return SetSpellRequest(nil);
+  end
+
   if WowCyborg_INCOMBAT == false and doRainOfFire() == false then
     return SetSpellRequest(nil);
   end

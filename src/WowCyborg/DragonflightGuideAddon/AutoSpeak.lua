@@ -138,9 +138,9 @@ table.insert(optionsToSelect, CreateOption("Akiun", "Akiun gazes", 1));
 table.insert(optionsToSelect, CreateOption("Tuskarr Fisherman", "She was clearly killed", 1));
 table.insert(optionsToSelect, CreateOption("Tuskarr Hunter", "Gnolls would", 1));
 table.insert(optionsToSelect, CreateOption("Tuskarr Craftsman", "daggers embedded", 1));
+table.insert(optionsToSelect, CreateOption(nil, "Boku's belongings", 1));
 table.insert(optionsToSelect, CreateOption("Festering Gnoll", "foul gnoll", 1));
 table.insert(optionsToSelect, CreateOption("Old Grimtusk", "Is this really the best", 1));
-
 
 function HandleSpeak()
   if GossipFrame:IsVisible() ~= true then
@@ -195,30 +195,47 @@ end
 
 -- Quick quest
 
-print ("Loading QQuest");
 local qqFrame = CreateFrame("FRAME");
 qqFrame:RegisterEvent("QUEST_COMPLETE");
 qqFrame:RegisterEvent("QUEST_DETAIL");
 qqFrame:RegisterEvent("QUEST_PROGRESS");
 qqFrame:RegisterEvent("GOSSIP_SHOW");
 qqFrame:RegisterEvent("GOSSIP_CONFIRM");
+qqFrame:RegisterEvent("QUEST_GREETING");
+qqFrame:RegisterEvent("QUEST_LOG_UPDATE");
+qqFrame:RegisterEvent("QUEST_ACCEPT_CONFIRM");
 
 qqFrame:SetScript("OnEvent", function(self, event, ...)
+  if (event == "QUEST_GREETING") then
+    for index = 1, GetNumActiveQuests() do
+      local _, isComplete = GetActiveTitle(index)
+      if isComplete and not C_QuestLog.IsWorldQuest(GetActiveQuestID(index)) then
+        SelectActiveQuest(index)
+      end
+		end
+
+		for index = 1, GetNumAvailableQuests() do
+        SelectAvailableQuest(index)
+		end
+  end
+
   if (event == "GOSSIP_SHOW") then
     for index, info in next, C_GossipInfo.GetActiveQuests() do
-			if not IsQuestIgnored(info.questID) then
-				if info.isComplete and not C_QuestLog.IsWorldQuest(info.questID) then
-					C_GossipInfo.SelectActiveQuest(index)
-				end
-			end
+      for _, step in ipairs(steps) do
+        if (step.questId == info.questID) then
+					C_GossipInfo.SelectActiveQuest(index);
+          break;
+        end
+      end;
 		end
 
     for index, info in next, C_GossipInfo.GetAvailableQuests() do
-			if not IsQuestIgnored(info.questID) then
-				if not info.isTrivial or ns.ShouldAcceptTrivialQuests() then
+      for _, step in ipairs(steps) do
+        if (step.questId == info.questID) then
 					C_GossipInfo.SelectAvailableQuest(index)
-				end
-			end
+          break;
+        end
+      end;
 		end
   end
 
@@ -254,8 +271,6 @@ qqFrame:SetScript("OnEvent", function(self, event, ...)
       if itemLink then
         local _, _, _, _, _, _, _, _, _, _, itemValue = GetItemInfo(itemLink)
         local itemID = GetItemInfoFromHyperlink(itemLink)
-        itemValue = cashRewards[itemID] or itemValue
-
         if itemValue > highestItemValue then
           highestItemValue = itemValue
           highestItemValueIndex = index

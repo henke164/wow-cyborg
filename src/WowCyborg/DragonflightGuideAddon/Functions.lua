@@ -1,3 +1,14 @@
+local timer = CreateFrame("FRAME");
+function setTimer(duration, func)
+	local endTime = GetTime() + duration;
+	timer:SetScript("OnUpdate", function()
+		if(endTime < GetTime()) then
+			timer:SetScript("OnUpdate", nil);
+			func();
+		end
+	end);
+end
+
 function SellItems(color)
   print("Selling items");
   for b = 0, 6 do
@@ -86,3 +97,36 @@ function CreateButton(text, parent, width)
 	button:SetPushedTexture(ptex)
   return button;
 end
+
+function Countdown()
+  setTimer(1, function()
+    print(WowCyborg_Countdown);
+    if (WowCyborg_Countdown > 0) then
+      WowCyborg_Countdown = WowCyborg_Countdown - 1;
+      Countdown();
+    end
+  end);
+end
+
+
+local downcounter = CreateFrame("FRAME");
+downcounter:RegisterEvent("CHAT_MSG_MONSTER_SAY");
+downcounter:SetScript("OnEvent", function(self, event, ...)
+  if event == "CHAT_MSG_MONSTER_SAY" then
+    local message = ...;
+    if (message == "We were trained to only use these signal flares if the situation is dire.") then
+      WowCyborg_Countdown = 36;
+      Countdown();
+    end
+
+    if (message == "Here they come!") then
+      WowCyborg_Countdown = 45;
+      Countdown();
+    end
+    
+    if (message == "Cadet Sendrax, escort the adventurer to Commander Lethanak outside Dragonheart Outpost.") then
+      WowCyborg_Countdown = 45;
+      Countdown();
+    end
+  end
+end);

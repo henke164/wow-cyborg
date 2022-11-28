@@ -3,11 +3,11 @@
 ]]--
 
 local consecration = 1;
-local avengersShield = 2;
+local blessedHammer = 2;
 local judgment = 3;
 local guardian = 4;
 local defender = 5;
-local blessedHammer = 6;
+local avengersShield = 6;
 local shieldOfTheRighteous = 7;
 local hammerOfWrath = 8;
 local seraphim = 9;
@@ -109,6 +109,8 @@ function RenderSingleTargetRotation(saveHolyPower)
   local holyPower = UnitPower("player", 9);
   local wrathBuff = FindBuff("player", "Avenging Wrath");
   local sentinelBuff = FindBuff("player", "Sentinel");
+  local concetration = FindBuff("player", "Consecration");
+  local speed = GetUnitSpeed("player");
 
   if (wrathBuff or sentinelBuff or targetHp < 20) and nearbyEnemies < 4 then
     if IsCastableAtEnemyTarget("Hammer of Wrath", 0) then
@@ -119,14 +121,11 @@ function RenderSingleTargetRotation(saveHolyPower)
 
   local shiningBuff, tl, shiningStacks, _, icon = FindBuff("player", "Shining Light");
   if (shiningBuff ~= nil and shiningStacks == 1 and icon == 1360763) or bastionBuff ~= nil then
-    if hp < 50 then
+    if hp < 60 then
       WowCyborg_CURRENTATTACK = "Word of Glory";
       return SetSpellRequest(wog[1]);
     end
   end
-
-  local concetration = FindBuff("player", "Consecration");
-  local speed = GetUnitSpeed("player");
   if concetration == nil and IsMelee() and IsCastableAtEnemyTarget("Consecration", 0) and speed == 0 then
     WowCyborg_CURRENTATTACK = "Consecration";
     return SetSpellRequest(consecration);
@@ -139,7 +138,7 @@ function RenderSingleTargetRotation(saveHolyPower)
     poweredUp = divine ~= nil;
   end
 
-  if hp < 60 then
+  if hp < 50 then
     if (poweredUp) then
       WowCyborg_CURRENTATTACK = "Word of Glory";
       return SetSpellRequest(wog[1]);
@@ -185,6 +184,11 @@ function RenderSingleTargetRotation(saveHolyPower)
   end
 
   if shiningBuff ~= nil and shiningStacks == 1 and icon == 1360763 then
+    if GetHealthPercentage("mouseover") < 70 and IsCastable("Word of Glory", 0) and UnitCanAttack("player", "mouseover") then
+      WowCyborg_CURRENTATTACK = "Word of Glory";
+      return SetSpellRequest("F+4");
+    end
+
     if hp < 80 then
       WowCyborg_CURRENTATTACK = "Word of Glory";
       return SetSpellRequest(wog[1]);
@@ -201,8 +205,7 @@ function RenderSingleTargetRotation(saveHolyPower)
     return SetSpellRequest(avengersShield);
   end
   
-  local judgmentDebuff = FindDebuff("target", "Judgment")
-  if judgmentDebuff == nil and IsCastableAtEnemyTarget("Judgment", 0) then
+  if IsCastableAtEnemyTarget("Judgment", 0) and holyPower < 3 then
     WowCyborg_CURRENTATTACK = "Judgment";
     return SetSpellRequest(judgment);
   end
@@ -219,7 +222,12 @@ function RenderSingleTargetRotation(saveHolyPower)
     return SetSpellRequest(avengersShield);
   end
 
-  if IsMelee() then
+  if concetration == nil and CheckInteractDistance("target", 3) and IsCastableAtEnemyTarget("Consecration", 0) and speed == 0 then
+    WowCyborg_CURRENTATTACK = "Consecration";
+    return SetSpellRequest(consecration);
+  end
+
+  if CheckInteractDistance("target", 3) then
     if IsCastableAtEnemyTarget("Blessed Hammer", 0) then
       if concetration == nil and IsCastableAtEnemyTarget("Consecration", 0) then
         WowCyborg_CURRENTATTACK = "Consecration";
@@ -231,7 +239,9 @@ function RenderSingleTargetRotation(saveHolyPower)
         return SetSpellRequest(blessedHammer);
       end
     end
+  end
     
+  if IsMelee() then
     if IsCastableAtEnemyTarget("Hammer of the Righteous", 0) then
       if concetration == nil and IsCastableAtEnemyTarget("Consecration", 0) then
         WowCyborg_CURRENTATTACK = "Consecration";
@@ -243,13 +253,18 @@ function RenderSingleTargetRotation(saveHolyPower)
         return SetSpellRequest(blessedHammer);
       end
     end
-    
-    if IsCastableAtEnemyTarget("Judgment", 0) then
-      WowCyborg_CURRENTATTACK = "Judgment";
-      return SetSpellRequest(judgment);
-    end
   end
   
+  if IsCastableAtEnemyTarget("Judgment", 0) and holyPower < 3 then
+    WowCyborg_CURRENTATTACK = "Judgment";
+    return SetSpellRequest(judgment);
+  end
+  
+  if CheckInteractDistance("target", 3) and IsCastableAtEnemyTarget("Consecration", 0) and speed == 0 then
+    WowCyborg_CURRENTATTACK = "Consecration";
+    return SetSpellRequest(consecration);
+  end
+
   WowCyborg_CURRENTATTACK = "-";
   return SetSpellRequest(nil);
 end

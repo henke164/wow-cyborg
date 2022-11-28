@@ -2,26 +2,21 @@ WowCyborg_Paste = "";
 WowCyborg_guideHeader = nil;
 WowCyborg_guideDescription = nil;
 WowCyborg_Step = 1;
+WowCyborg_lastUpdatedQuest = 0;
 WowCyborg_CompletedSteps = {};
+WowCyborg_Countdown = 0;
 
 -- Dragonflight auto quest
 print ("Loading Dragonflight guide...");
 
-local timer = CreateFrame("FRAME");
-local function setTimer(duration, func)
-	local endTime = GetTime() + duration;
-	timer:SetScript("OnUpdate", function()
-		if(endTime < GetTime()) then
-			timer:SetScript("OnUpdate", nil);
-			func();
-		end
-	end);
+function ResetGuide()
+  WowCyborg_Step = 1;
+  WowCyborg_CompletedSteps = {};
 end
 
 function IsCompleted(step)
   for _, completedStep in ipairs(WowCyborg_CompletedSteps) do
     if (completedStep.event == step.completeEvent and step.questId and completedStep.questId == step.questId) then
-      print("Step already completed");
       return true;
     end
   end;
@@ -160,6 +155,7 @@ function RenderGuideFrame()
     if (event == "QUEST_WATCH_UPDATE") then
       local questId = ...
       local uncompleted = 0;
+      WowCyborg_lastUpdatedQuest = questId;
 
       for q = 1, 10 do
         local text, _, fulfilled = GetQuestObjectiveInfo(questId, q, false);
@@ -169,6 +165,7 @@ function RenderGuideFrame()
       end
 
       local completedQuest = uncompleted <= 1;
+
       if step.completeEvent == "COMPLETED" and completedQuest and step.questId == questId then
         NextStep();
         return;
@@ -194,6 +191,7 @@ function RenderGuideFrame()
 
     if (event == "QUEST_ACCEPTED") then
       local questId = ...
+      WowCyborg_lastUpdatedQuest = questId;
       if step.completeEvent == event and step.questId and step.questId == questId then
         NextStep();
         return;
@@ -207,6 +205,7 @@ function RenderGuideFrame()
 
     if event == "QUEST_TURNED_IN" then
       local questId = ...
+      WowCyborg_lastUpdatedQuest = questId;
       if step.completeEvent == event and step.questId and step.questId == questId then
         NextStep();
         return;
@@ -272,10 +271,11 @@ function NextStep(skipAutoSkipCompletedQuests)
   end
 
   if (step.description == 'Board ship to Dragon Isles...') then
+    print("-----------------");
     print("Remember:");
     print("Judgment to put in dragonflight bar");
-    print("Sea Ray ready");
-    print("Stand on the far front of Zeppelin");
+    print("PVP-MODE");
+    print("-----------------");
   end
 
   RenderStep(step);
