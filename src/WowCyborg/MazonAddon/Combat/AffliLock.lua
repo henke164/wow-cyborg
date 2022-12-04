@@ -37,13 +37,17 @@ function RenderSingleTargetRotation(skipslow)
   local soulshape = FindBuff("player", "Soulshape");
 
   local hp = GetHealthPercentage("player");
-  local darkSoulBuff = FindBuff("player", "Dark Soul: Misery");
-  local darkSoulCd = GetSpellCooldown("Dark Soul: Misery", "spell");
+  local isBursting = FindBuff("player", "Blood Fury") ~= nil;
   local inevitBuff, inevitTl, inevitStacks = FindBuff("player", "Inevitable Demise");
 
   local shards = UnitPower("player", 7);
   local speed = GetUnitSpeed("player");
   
+  if UnitChannelInfo("player") then
+    WowCyborg_CURRENTATTACK = "-";
+    return SetSpellRequest(nil);
+  end
+
   if UnitChannelInfo("arena1") == "Convoke the Spirits" then
     WowCyborg_CURRENTATTACK = "Interrupt 1";
     return SetSpellRequest(interruptArena1);
@@ -122,21 +126,21 @@ function RenderSingleTargetRotation(skipslow)
     end  
   end
 
-  if darkSoulBuff ~= nil or darkSoulCd > 30 and agonyDebuff ~= nil then
+  if isBursting and agonyDebuff ~= nil then
     if IsCastable("Rapid Contagion", 0) and shards > 2 then
       WowCyborg_CURRENTATTACK = "Rapid Contagion";
       return SetSpellRequest(rapidContagion);
     end
   end
   
-  if darkSoulBuff ~= nil or darkSoulCd > 30 and agonyDebuff ~= nil then
+  if isBursting and agonyDebuff ~= nil then
     if IsCastableAtEnemyTarget("Phantom Singularity", 250) then
       WowCyborg_CURRENTATTACK = "Phantom Singularity";
       return SetSpellRequest(phantom);
     end
   end
 
-  if darkSoulBuff ~= nil or darkSoulCd > 60 and agonyDebuff ~= nil then
+  if isBursting and agonyDebuff ~= nil then
     if speed == 0 then
       if IsCastableAtEnemyTarget("Soul Rot", 250) then
         WowCyborg_CURRENTATTACK = "Soul Rot";
@@ -155,7 +159,7 @@ function RenderSingleTargetRotation(skipslow)
 
     if IsCastable("Rapid Contagion", 0) then
       local rcCd = GetSpellCooldown("Rapid Contagion", "spell");
-      if darkSoulBuff ~= nil or darkSoulCd > 30 and agonyDebuff ~= nil and rcCd < 2 then
+      if isBursting and agonyDebuff ~= nil and rcCd < 2 then
         saveForContagion = true;
       end
     end

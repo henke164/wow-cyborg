@@ -11,7 +11,8 @@ buttons["templars_verdict"] = "6";
 buttons["divine_storm"] = "7";
 buttons["consecration"] = "9";
 buttons["gladiators_badge"] = "9";
-buttons["vanquishers_hammer"] = "8";
+buttons["exorcism"] = "8";
+buttons["seraphim"] = "0";
 buttons["shield_of_vengeance"] = "F+1";
 
 WowCyborg_PAUSE_KEYS = {
@@ -64,7 +65,11 @@ function RenderSingleTargetRotation()
 
   WowCyborg_CURRENTATTACK = actionName;
   local button = buttons[actionName];
-  
+
+  if actionName == "templars_verdict" and IsMelee() == false then
+    return SetSpellRequest(nil);
+  end
+
   if button ~= nil then
     return SetSpellRequest(button);
   end

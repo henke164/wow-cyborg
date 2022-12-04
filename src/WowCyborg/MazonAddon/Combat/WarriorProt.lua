@@ -41,6 +41,8 @@ WowCyborg_PAUSE_KEYS = {
   "R",
   "NUMPAD5",
   "NUMPAD7",
+  "NUMPAD8",
+  "§"
 }
 
 function RenderMultiTargetRotation()
@@ -52,11 +54,6 @@ function RenderSingleTargetRotation()
   local targetHp = GetHealthPercentage("target");
   local bsBuff = FindBuff("player", "Battle Shout");
   
-  if UnitChannelInfo("player") == "Fleshcraft" then
-    WowCyborg_CURRENTATTACK = "Fleshcrafting...";
-    return SetSpellRequest(nil);
-  end
-
   if bsBuff == nil and IsCastable("Battle Shout", 0) then
     WowCyborg_CURRENTATTACK = "Battle Shout";
     return SetSpellRequest(battleShout);
@@ -187,13 +184,13 @@ function RenderSingleTargetRotation()
       return SetSpellRequest(shieldSlam);
     end
     
-    if rage > 70 then
-      if targetHp < 20 and IsCastableAtEnemyTarget("Execute", 0) and (ipBuff ~= nil and ipTl > 3)  then
+    if rage > 20 then
+      if targetHp < 20 and IsCastableAtEnemyTarget("Execute", 0) then
         WowCyborg_CURRENTATTACK = "Execute";
         return SetSpellRequest(execute);
       end
   
-      if IsCastableAtEnemyTarget("Revenge", 0) then
+      if IsCastableAtEnemyTarget("Revenge", 40) then
         WowCyborg_CURRENTATTACK = "Revenge";
         return SetSpellRequest(revenge);
       end

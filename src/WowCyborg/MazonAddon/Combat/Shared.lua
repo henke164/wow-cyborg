@@ -150,7 +150,7 @@ function IsCastable(spellName, requiredEnergy)
 
   local totalCd = GetCooldown(spellName);
 
-  if totalCd < GetCurrentSpellGCD(spellName) then
+  if totalCd < 0 then -- GetCurrentSpellGCD(spellName) then
     return true;
   end
   
@@ -407,7 +407,7 @@ function GetActiveEnemies()
   return inRange;
 end
 
-local delay = 0.1;
+local delay = 0.5;
 function GetCurrentSpellGCD(spellName)
   if UnitSpellHaste == nil then
     return 1.5;

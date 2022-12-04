@@ -227,7 +227,7 @@ function RenderSingleTargetRotation(saveHolyPower)
     return SetSpellRequest(consecration);
   end
 
-  if CheckInteractDistance("target", 3) then
+  if IsMelee() or CheckInteractDistance("target", 3) then
     if IsCastableAtEnemyTarget("Blessed Hammer", 0) then
       if concetration == nil and IsCastableAtEnemyTarget("Consecration", 0) then
         WowCyborg_CURRENTATTACK = "Consecration";

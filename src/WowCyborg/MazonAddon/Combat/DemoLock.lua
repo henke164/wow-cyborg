@@ -5,21 +5,24 @@ local buttons = {}
 buttons["summon_demonic_tyrant"] = "1";
 buttons["grimoire_felguard"] = "2";
 buttons["call_dreadstalkers"] = "3";
-buttons["hand_of_guldan"] = "4";
+buttons["shadow_bolt"] = "4";
 buttons["demonbolt"] = "5";
-buttons["shadow_bolt"] = "6";
-buttons["soul_rot"] = "7";
+buttons["hand_of_guldan"] = "6";
+buttons["power_siphon"] = "7";
 buttons["implosion"] = "8";
 buttons["blood_fury"] = "F+1";
 buttons["demonic_strength"] = "9";
+buttons["soul_strike"] = "0";
 local stopCast = "F+7";
 
 WowCyborg_PAUSE_KEYS = {
   "LSHIFT",
+  "NUMPAD1",
   "NUMPAD2",
   "NUMPAD3",
   "NUMPAD4",
   "NUMPAD5",
+  "NUMPAD7",
   "F4",
   "F",
   "§"

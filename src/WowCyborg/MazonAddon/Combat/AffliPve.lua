@@ -6,8 +6,8 @@ buttons["unstable_affliction"] = "1";
 buttons["agony"] = "2";
 buttons["corruption"] = "3";
 buttons["malefic_rapture"] = "4";
-buttons["soul_rot"] = "5";
-buttons["phantom_singularity"] = "6";
+buttons["seed_of_corruption"] = "5";
+buttons["drain_soul"] = "6";
 buttons["summon_darkglare"] = "7";
 buttons["drain_life"] = "8";
 buttons["blood_fury"] = "9";
@@ -25,28 +25,16 @@ WowCyborg_PAUSE_KEYS = {
 }
 
 function RenderMultiTargetRotation()
-  if WowCyborg_INCOMBAT == false then
-    return SetSpellRequest(nil);
-  end
-
-  local castingInfo = UnitChannelInfo("player");
-  if castingInfo ~= nil then
-    return SetSpellRequest(nil);
-  end
-
-  local actionName = Hekili.GetQueue().Cooldowns[1].actionName;
-  
-  WowCyborg_CURRENTATTACK = actionName;
-  local button = buttons[actionName];
-  
-  if button ~= nil then
-    return SetSpellRequest(button);
-  end
-
-  return RenderSingleTargetRotation();
+  return RenderSingleTargetRotation(true);
 end
 
-function RenderSingleTargetRotation()
+function RenderSingleTargetRotation(aoe)
+  if aoe then
+    Hekili.DB.profile.toggles.mode.value = "aoe";
+  else
+    Hekili.DB.profile.toggles.mode.value = "single";
+  end
+
   if WowCyborg_INCOMBAT == false then
     return SetSpellRequest(nil);
   end

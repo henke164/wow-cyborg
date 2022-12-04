@@ -9,7 +9,7 @@ buttons["crusader_strike"] = "5";
 buttons["divine_storm"] = "7";
 buttons["consecration"] = "9";
 buttons["gladiators_badge"] = "9";
-buttons["vanquishers_hammer"] = "8";
+buttons["exorcism"] = "8";
 buttons["shield_of_vengeance"] = "F+1";
 
 local wakeOfashes = 1;
