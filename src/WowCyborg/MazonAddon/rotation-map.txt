@@ -4,6 +4,8 @@ boomkin	MazonAddon/Combat/DruidBoomkin.lua
 furypvp	MazonAddon/Combat/WarriorFuryPvp.lua
 protwarrior	MazonAddon/Combat/WarriorProt.lua
 armswarrior	MazonAddon/Combat/WarriorArms.lua
+arms	MazonAddon/Combat/WarriorArms2.lua
+fury	MazonAddon/Combat/WarriorFury2.lua
 retpvp	MazonAddon/Combat/RetriPVP.lua
 pvpwarr	MazonAddon/Combat/WarriorPvp.lua
 bmhunter	MazonAddon/Combat/HunterBM.lua

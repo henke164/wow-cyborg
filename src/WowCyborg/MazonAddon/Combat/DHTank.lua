@@ -31,10 +31,10 @@ WowCyborg_PAUSE_KEYS = {
 }
 
 function RenderMultiTargetRotation()
-  return RenderSingleTargetRotation(true)
+  return RenderSingleTargetRotation()
 end
 
-function RenderSingleTargetRotation(fireSigil)
+function RenderSingleTargetRotation()
   if InMeleeRange() == false then
     WowCyborg_CURRENTATTACK = "-";
     return SetSpellRequest(nil);
@@ -47,7 +47,7 @@ function RenderSingleTargetRotation(fireSigil)
     end
   end
   
-  if UnitChannelInfo("player") == "Fel Devastation" then
+  if UnitChannelInfo("player") then
     WowCyborg_CURRENTATTACK = "-";
     return SetSpellRequest(nil);
   end
@@ -57,7 +57,7 @@ function RenderSingleTargetRotation(fireSigil)
     return SetSpellRequest(fieryBrand);
   end
 
-  if IsCastable("Sigil of Flame", 0) and fireSigil then
+  if IsCastable("Sigil of Flame", 0) then
     WowCyborg_CURRENTATTACK = "Sigil of Flame";
     return SetSpellRequest(sigilOfFlame);
   end

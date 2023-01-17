@@ -24,11 +24,14 @@ WowCyborg_PAUSE_KEYS = {
   "F",
   "R",
   "X",
+  "F4",
   "NUMPAD1",
   "NUMPAD5",
   "NUMPAD7",
   "NUMPAD8",
   "NUMPAD9",
+  "UP",
+  "LSHIFT",
   "ESCAPE",
 }
 
@@ -86,7 +89,7 @@ function FindHealingTarget()
     end
   end
 
-  if lowestHealth ~= nil and lowestHealth.hp < 70 then
+  if lowestHealth ~= nil and lowestHealth.hp < 60 then
     return lowestHealth.name, 0;
   end
 
@@ -112,20 +115,19 @@ function RenderSingleTargetRotation(saveHolyPower)
   local concetration = FindBuff("player", "Consecration");
   local speed = GetUnitSpeed("player");
 
-  if (wrathBuff or sentinelBuff or targetHp < 20) and nearbyEnemies < 4 then
-    if IsCastableAtEnemyTarget("Hammer of Wrath", 0) then
-      WowCyborg_CURRENTATTACK = "Hammer of Wrath";
-      return SetSpellRequest(hammerOfWrath);
-    end
+  if (UnitChannelInfo("target") or UnitCastingInfo("target")) and IsCastableAtEnemyTarget("Avenger's Shield", 0) then
+    WowCyborg_CURRENTATTACK = "Avenger's Shield";
+    return SetSpellRequest(avengersShield);
   end
 
   local shiningBuff, tl, shiningStacks, _, icon = FindBuff("player", "Shining Light");
-  if (shiningBuff ~= nil and shiningStacks == 1 and icon == 1360763) or bastionBuff ~= nil then
-    if hp < 60 then
-      WowCyborg_CURRENTATTACK = "Word of Glory";
+  if (shiningBuff ~= nil and shiningStacks > 0 and icon == 1360763) or bastionBuff ~= nil then
+    if hp < 70 then
+      WowCyborg_CURRENTATTACK = "Word of Glory (Self)";
       return SetSpellRequest(wog[1]);
     end
   end
+
   if concetration == nil and IsMelee() and IsCastableAtEnemyTarget("Consecration", 0) and speed == 0 then
     WowCyborg_CURRENTATTACK = "Consecration";
     return SetSpellRequest(consecration);
@@ -140,7 +142,7 @@ function RenderSingleTargetRotation(saveHolyPower)
 
   if hp < 50 then
     if (poweredUp) then
-      WowCyborg_CURRENTATTACK = "Word of Glory";
+      WowCyborg_CURRENTATTACK = "Word of Glory (Self)";
       return SetSpellRequest(wog[1]);
     end
   end
@@ -169,29 +171,24 @@ function RenderSingleTargetRotation(saveHolyPower)
   end
 
   local friendlyTargetName = FindHealingTarget();
-  if friendlyTargetName ~= nil and IsCastable("Word of Glory", 0) then
-    if (poweredUp and GetHealthPercentage(friendlyTargetName) < 60) and saveHolyPower == false then
+  if friendlyTargetName ~= nil then
+    if poweredUp and saveHolyPower == false then
       local memberindex = GetMemberIndex(friendlyTargetName);
       WowCyborg_CURRENTATTACK = "Word of Glory " .. friendlyTargetName;
       return SetSpellRequest(wog[memberindex]);
     end
 
-    if shiningBuff ~= nil and shiningStacks == 1 and icon == 1360763 then
+    if shiningBuff ~= nil and shiningStacks > 0 and icon == 1360763 then
       local memberindex = GetMemberIndex(friendlyTargetName);
       WowCyborg_CURRENTATTACK = "Word of Glory " .. friendlyTargetName;
       return SetSpellRequest(wog[memberindex]);
     end
   end
 
-  if shiningBuff ~= nil and shiningStacks == 1 and icon == 1360763 then
-    if GetHealthPercentage("mouseover") < 70 and IsCastable("Word of Glory", 0) and UnitCanAttack("player", "mouseover") then
-      WowCyborg_CURRENTATTACK = "Word of Glory";
-      return SetSpellRequest("F+4");
-    end
-
-    if hp < 80 then
-      WowCyborg_CURRENTATTACK = "Word of Glory";
-      return SetSpellRequest(wog[1]);
+  if (wrathBuff or sentinelBuff or targetHp < 20) and nearbyEnemies < 4 then
+    if IsCastableAtEnemyTarget("Hammer of Wrath", 0) then
+      WowCyborg_CURRENTATTACK = "Hammer of Wrath";
+      return SetSpellRequest(hammerOfWrath);
     end
   end
 

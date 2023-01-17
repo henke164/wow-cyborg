@@ -13,6 +13,7 @@ buttons["implosion"] = "8";
 buttons["blood_fury"] = "F+1";
 buttons["demonic_strength"] = "9";
 buttons["soul_strike"] = "0";
+buttons["doom"] = "F+6";
 local stopCast = "F+7";
 
 WowCyborg_PAUSE_KEYS = {
@@ -55,6 +56,12 @@ function RenderMultiTargetRotation()
     end
   end
 
+  if actionName == "nether_portal" then
+    if IsCastableAtEnemyTarget("Nether Portal", 0) == false then
+      return RenderSingleTargetRotation();
+    end
+  end
+
   if actionName == "blood_fury" then
     if IsCastable("Blood Fury", 0) == false then
       return RenderSingleTargetRotation();
@@ -80,20 +87,16 @@ function RenderSingleTargetRotation()
 
   local actionName = Hekili.GetQueue().Primary[1].actionName;
 
+  if actionName == "doom" then
+    local doomDebuff = FindDebuff("target", "Doom");
+    if doomDebuff ~= nil then
+      actionName = Hekili.GetQueue().Primary[2].actionName;
+    end
+  end
+  
   WowCyborg_CURRENTATTACK = actionName;
   local button = buttons[actionName];
   
-  if UnitCastingInfo("player") == "Shadow Bolt" then
-    local dcBuff, dcTl, dcStacks = FindBuff("player", "Demonic Core");
-    local shards = UnitPower("player", 7);
-    if dcBuff ~= nil and shards < 4 then
-      if IsCastableAtEnemyTarget("Demonbolt", 0) then
-        WowCyborg_CURRENTATTACK = "Cancel";
-        return SetSpellRequest(stopCast);
-      end
-    end
-  end
-
   if button ~= nil then
     return SetSpellRequest(button);
   end

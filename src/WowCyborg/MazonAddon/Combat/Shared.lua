@@ -150,7 +150,7 @@ function IsCastable(spellName, requiredEnergy)
 
   local totalCd = GetCooldown(spellName);
 
-  if totalCd < 0 then -- GetCurrentSpellGCD(spellName) then
+  if totalCd < GetCurrentSpellGCD(spellName) then
     return true;
   end
   
@@ -219,12 +219,13 @@ end
 function GetHealthPercentage(unit)
   local maxHp = UnitHealthMax(unit);
   local hp = UnitHealth(unit);
+  local absorb = UnitGetTotalHealAbsorbs(unit);
 
   if maxHp == 0 or hp == 0 then
     return 0;
   end
 
-  return (hp / maxHp) * 100;
+  return ((hp - absorb) / maxHp) * 100;
 end
 
 function TargetIsAlive()

@@ -3,6 +3,7 @@
 ]]--
 local buttons = {}
 buttons["wake_of_ashes"] = "1";
+buttons["radiant_decree"] = "1";
 buttons["blade_of_justice"] = "2";
 buttons["judgment"] = "3";
 buttons["hammer_of_wrath"] = "4";
@@ -41,6 +42,7 @@ function RenderMultiTargetRotation()
     return SetSpellRequest(nil);
   end
 
+  Hekili.DB.profile.toggles.mode.value = "aoe";
   local actionName = Hekili.GetQueue().Primary[1].actionName;
   
   WowCyborg_CURRENTATTACK = actionName;
@@ -61,6 +63,7 @@ function RenderSingleTargetRotation()
     return SetSpellRequest(nil);
   end
 
+  Hekili.DB.profile.toggles.mode.value = "single";
   local actionName = Hekili.GetQueue().Primary[1].actionName;
 
   WowCyborg_CURRENTATTACK = actionName;

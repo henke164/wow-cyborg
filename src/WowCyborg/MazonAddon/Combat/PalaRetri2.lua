@@ -3,6 +3,7 @@
 ]]--
 local buttons = {}
 buttons["wake_of_ashes"] = "1";
+buttons["radiant_decree"] = "1";
 buttons["blade_of_justice"] = "2";
 buttons["hammer_of_wrath"] = "4";
 buttons["crusader_strike"] = "5";

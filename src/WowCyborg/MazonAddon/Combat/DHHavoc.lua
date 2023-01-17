@@ -10,20 +10,22 @@
 
 local bladeDance = "1";
 local chaosStrike = "2";
-local attack = "3";
+local essenceBreak = "3";
 local eyeBeam = "4";
 local immolationAura = "5";
 local consumeMagic = "6";
 local arcaneTorrent = "7";
 local glavies = "8";
 local felblade = "9";
+local glaviesHeal = "F+4";
+local sigilOfFlame = "F+5";
+local attack = "F+6";
+local glaiveTempest = "F+7";
 
 WowCyborg_PAUSE_KEYS = {
   "F1",
   "F2",
   "F3",
-  "F4",
-  "F7",
   "0",
   "R",
   "F",
@@ -50,10 +52,6 @@ function HasDispellableBuff(target)
   return false;
 end
 
-function IsMelee()
-  return CheckInteractDistance("target", 5);
-end
-
 function RenderMultiTargetRotation()
   return RenderSingleTargetRotation(true)
 end
@@ -61,7 +59,14 @@ end
 function RenderSingleTargetRotation(skipGlavie)
   local hp = GetHealthPercentage("player");
   local fodder = FindBuff("player", "Fodder to the Flame");
+  local ctBuff = FindBuff("player", "Chaos Theory");
+  local eBreakDebuff = FindBuff("target", "Essence Break");
   local dispellable = HasDispellableBuff("target");
+
+  if UnitChannelInfo("player") then
+    WowCyborg_CURRENTATTACK = "-";
+    return SetSpellRequest(nil);
+  end
 
   if hp < 50 then
     if IsCastable("Blur", 0) then
@@ -77,11 +82,24 @@ function RenderSingleTargetRotation(skipGlavie)
     return SetSpellRequest(nil);
   end
 
-  if skipGlavie ~= true or (fodder == nil and IsMounted("player") == false) then
-    if IsCastableAtEnemyTarget("Throw Glaive", 0) then
+  local glaiveCharges = GetSpellCharges("Throw Glaive");
+  if glaiveCharges == 2 and eBreakDebuff == nil then
+    if IsCastableAtEnemyTarget("Throw Glaive", 25) then
       WowCyborg_CURRENTATTACK = "Throw Glaive";
       return SetSpellRequest(glavies);
     end
+  end
+
+  if fodder ~= nil and hp < 70 then
+    if IsCastableAtEnemyTarget("Throw Glaive", 25) then
+      WowCyborg_CURRENTATTACK = "Throw Glaive";
+      return SetSpellRequest(glaviesHeal);
+    end
+  end
+
+  if InMeleeRange() and IsCastableAtEnemyTarget("Glaive Tempest", 30) then
+    WowCyborg_CURRENTATTACK = "Glaive Tempest";
+    return SetSpellRequest(glaiveTempest);
   end
 
   if dispellable then
@@ -94,6 +112,11 @@ function RenderSingleTargetRotation(skipGlavie)
       WowCyborg_CURRENTATTACK = "Arcane Torrent";
       return SetSpellRequest(arcaneTorrent);
     end
+  end
+
+  if CheckInteractDistance("target", 3) and IsCastableAtEnemyTarget("Immolation Aura", 0) then
+    WowCyborg_CURRENTATTACK = "Immolation Aura";
+    return SetSpellRequest(immolationAura);
   end
 
   if InMeleeRange() == false then
@@ -117,19 +140,21 @@ function RenderSingleTargetRotation(skipGlavie)
     return SetSpellRequest(attack);
   end
 
-  if UnitChannelInfo("player") == "Eye Beam" then
-    WowCyborg_CURRENTATTACK = "-";
-    return SetSpellRequest(nil);
+  if ctBuff then
+    if IsCastableAtEnemyTarget("Chaos Strike", 40) or IsCastableAtEnemyTarget("Annihilation", 70) then
+      WowCyborg_CURRENTATTACK = "Chaos Strike";
+      return SetSpellRequest(chaosStrike);
+    end  
   end
-
-  if IsMelee() and IsCastable("Immolation Aura", 0) then
-    WowCyborg_CURRENTATTACK = "Immolation Aura";
-    return SetSpellRequest(immolationAura);
-  end
-
+  
   if IsCastableAtEnemyTarget("Eye Beam", 30) then
     WowCyborg_CURRENTATTACK = "Eye Beam";
     return SetSpellRequest(eyeBeam);
+  end
+
+  if CheckInteractDistance("target", 3) and IsCastable("Essence Break", 0) then
+    WowCyborg_CURRENTATTACK = "Essence Break";
+    return SetSpellRequest(essenceBreak);
   end
 
   if IsCastableAtEnemyTarget("Death Sweep", 15) or IsCastableAtEnemyTarget("Blade Dance", 15) then
@@ -142,6 +167,11 @@ function RenderSingleTargetRotation(skipGlavie)
     return SetSpellRequest(chaosStrike);
   end
 
+  if IsCastableAtEnemyTarget("Sigil of Flame", 0) then
+    WowCyborg_CURRENTATTACK = "Sigil of Flame";
+    return SetSpellRequest(sigilOfFlame);
+  end
+
   if IsCastableAtEnemyTarget("Felblade", 0) then
     WowCyborg_CURRENTATTACK = "Felblade";
     return SetSpellRequest(felblade);
@@ -152,7 +182,7 @@ function RenderSingleTargetRotation(skipGlavie)
 end
 
 function InMeleeRange()
-  return IsSpellInRange("Chaos Strike", "target") == 1;
+  return IsSpellInRange("Disrupt", "target") == 1;
 end
 
 print("Demon hunter havoc rotation loaded");

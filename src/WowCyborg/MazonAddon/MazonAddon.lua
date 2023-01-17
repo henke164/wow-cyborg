@@ -38,44 +38,24 @@ function CreateCombatFrame()
   end)
 end
 
+function CreateAlertFrame()
+  local frame = CreateFrame("Frame");
+  frame:RegisterEvent("CHAT_MSG_RAID_BOSS_EMOTE");
+
+  frame:SetScript("OnEvent", function(self, event, ...)
+    print("BOSS EMOTE!");
+    if event == "CHAT_MSG_RAID_BOSS_EMOTE" then
+      PlaySoundFile(567478);
+    end
+  end)
+end
+
 function TargetIsAlive()
   hp = UnitHealth("target");
   return hp > 0;
 end
 
-function CreateFacingCheckFrame()
-  local frame, texture = CreateDefaultFrame(frameSize, frameSize, frameSize, frameSize);
-  frame:RegisterEvent("UI_ERROR_MESSAGE");
-  frame:RegisterEvent("PLAYER_DAMAGE_DONE_MODS");
-  texture:SetColorTexture(1, 0, 0);
-  
-  local lastCheck = GetTime();
-  frame:SetScript("OnUpdate", function(self, event, ...)
-    local time = GetTime();
-    if time > lastCheck + 0.5 then
-      lastCheck = time;
-      texture:SetColorTexture(0, 1, 0);
-    end
-  end)
-
-  frame:SetScript("OnEvent", function(self, event, ...)
-    if event == "UI_ERROR_MESSAGE" then
-      code, msg = ...;
-      if msg == "Target needs to be in front of you." or
-        msg == "You are facing the wrong way!" then
-        texture:SetColorTexture(1, 0, 0);
-        lastCheck = GetTime();
-      end
-
-      if code == 255 then
-        texture:SetColorTexture(0, 0, 1);
-        lastCheck = GetTime();
-      end
-    end
-  end)
-end
-
 CreateCombatFrame();
---CreateFacingCheckFrame();
 CreateRotationFrame();
 CreateWrapperFrame();
+CreateAlertFrame();

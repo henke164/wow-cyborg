@@ -113,7 +113,8 @@ function RenderGuideFrame()
   frame:RegisterEvent("QUEST_WATCH_UPDATE");
   frame:RegisterEvent("NAME_PLATE_UNIT_ADDED");
   frame:RegisterEvent("CHAT_MSG_MONSTER_SAY");
-
+  frame:RegisterEvent("CHAT_MSG_RAID_BOSS_EMOTE");
+  
   local previous = CreateButton("<-", frame);
 	previous:SetPoint("RIGHT", frame, "BOTTOMRIGHT", -32, 15);
   
@@ -226,6 +227,10 @@ function RenderGuideFrame()
           return;
         end
       end
+    end
+
+    if event == "CHAT_MSG_RAID_BOSS_EMOTE" then
+      PlaySound(8960);
     end
     
     if step.target and step.completeEvent == event and step.target == target then
