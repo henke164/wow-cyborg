@@ -1,111 +1,78 @@
 --[[
+  Button    Spell
 ]]--
+local buttons = {}
+buttons["frostbolt"] = "1";
+buttons["ice_lance"] = "2";
+buttons["shifting_power"] = "3";
+buttons["rune_of_power"] = "4";
+buttons["flurry"] = "5";
+buttons["blizzard"] = "6";
+buttons["ice_floes"] = "7";
+buttons["ice_nova"] = "8";
 
-local icyVeins = 1;
-local iceLance = 2;
-local flurry = 3;
-local frozenOrb = 4;
-local cometStorm = 5;
-local ebonbolt = 6;
-local glacialSpike = 7;
-local blizzard = 8;
-local frostbolt = 9;
-local toggle = false;
+WowCyborg_PAUSE_KEYS = {
+  "F1",
+  "F2",
+  "F3",
+  "NUMPAD5",
+  "R",
+  "F",
+  "§"
+}
 
--- Multi target
 function RenderMultiTargetRotation()
-  return RenderSingleTargetRotation(true);
+  Hekili.DB.profile.toggles.mode.value = "aoe";
+  if WowCyborg_INCOMBAT == false then
+    return SetSpellRequest(nil);
+  end
+
+  return RenderRotation();
 end
 
--- Single target
-function RenderSingleTargetRotation(aoe)
+function RenderSingleTargetRotation()
+  Hekili.DB.profile.toggles.mode.value = "single";
+  if WowCyborg_INCOMBAT == false then
+    return SetSpellRequest(nil);
+  end
+
+  return RenderRotation();
+end
+
+
+function RenderRotation()
+  if UnitChannelInfo("player") ~= nil then
+    return SetSpellRequest(nil);
+  end
+
   local quaking = FindDebuff("player", "Quake");
-  if quaking ~= nil then
-    WowCyborg_CURRENTATTACK = "Quake!";
+  if quaking then
     return SetSpellRequest(nil);
   end
 
-  local castingSpell = UnitCastingInfo("player");
+  local actionName = Hekili.GetQueue().Primary[1].actionName;
+  button = buttons[actionName];
 
-  if castingSpell == "Focusing Azerite Beam" then
-    WowCyborg_CURRENTATTACK = "Shooting azerite";
-    return SetSpellRequest(nil);
-  end
-
-  if IsCastableAtEnemyTarget("Frostbolt", 0) and IsCastable("Icy Veins", 0) then
-    WowCyborg_CURRENTATTACK = "Icy Veins";
-    return SetSpellRequest(icyVeins);
-  end
-
-  if aoe ~= nil then
-    if IsCastableAtEnemyTarget("Blizzard", 0) then
-      WowCyborg_CURRENTATTACK = "Blizzard";
-      return SetSpellRequest(blizzard);
-    end
-  end
-
-  local bfBuff = FindBuff("player", "Brain Freeze");
-  if bfBuff ~= nil then
-    local iciclesBuff, iciclesCount = FindBuff("player", "Icicles");
-
-    if iciclesBuff and aoe == nil then
-      if iciclesCount < 4 then
-        if IsCastableAtEnemyTarget("Ebonbolt", 0) and toggle == false then
-          WowCyborg_CURRENTATTACK = "Ebonbolt";
-          return SetSpellRequest(ebonbolt);
-        end
-        if IsCastableAtEnemyTarget("Frostbolt", 0) then
-          WowCyborg_CURRENTATTACK = "Frostbolt";
-          return SetSpellRequest(frostbolt);
-        end
-      end
-      if iciclesCount > 3 then
-        if IsCastableAtEnemyTarget("Glacial Spike", 0) then
-          toggle = true;
-          WowCyborg_CURRENTATTACK = "Glacial Spike";
-          return SetSpellRequest(glacialSpike);
+  WowCyborg_CURRENTATTACK = actionName;
+  
+  if actionName == "fireball" then
+    local speed = GetUnitSpeed("player");
+    if speed > 0 then
+      if FindBuff("player", "Ice Floes") == nil then
+        if IsCastable("Ice Floes", 0) then
+          return SetSpellRequest("7");
+        else
+          return SetSpellRequest("8");
         end
       end
     end
-
-    toggle = false;
-    WowCyborg_CURRENTATTACK = "Flurry";
-    return SetSpellRequest(flurry);
   end
 
-  if IsCastableAtEnemyTarget("Frozen Orb", 0) then
-    WowCyborg_CURRENTATTACK = "Frozen Orb";
-    return SetSpellRequest(frozenOrb);
+  if button ~= nil then
+    return SetSpellRequest(button);
   end
-
-  local fofBuff = FindBuff("player", "Fingers of Frost");
-  if (fofBuff ~= nil or IsMoving()) and IsCastableAtEnemyTarget("Ice Lance", 0) and WowCyborg_INCOMBAT then
-    WowCyborg_CURRENTATTACK = "Ice Lance";
-    return SetSpellRequest(iceLance);
-  end
-
-  if IsCastableAtEnemyTarget("Comet Storm", 0) then
-    WowCyborg_CURRENTATTACK = "Comet Storm";
-    return SetSpellRequest(cometStorm);
-  end
-
-  if (iciclesBuff == nil or iciclesCount < 4) and IsCastableAtEnemyTarget("Ebonbolt", 0) then
-    WowCyborg_CURRENTATTACK = "Ebonbolt";
-    return SetSpellRequest(ebonbolt);
-  end
-
-  if bfBuff ~= nil and IsCastableAtEnemyTarget("Glacial Spike", 0) then
-    WowCyborg_CURRENTATTACK = "Glacial Spike";
-    return SetSpellRequest(glacialSpike);
-  end
-
-  if IsCastableAtEnemyTarget("Frostbolt", 0) then
-    WowCyborg_CURRENTATTACK = "Frostbolt";
-    return SetSpellRequest(frostbolt);
-  end
-
-  WowCyborg_CURRENTATTACK = "-";
+  
   return SetSpellRequest(nil);
 end
 
-print("Frost mage rotation loaded");
+print("Mage rotation loaded");
