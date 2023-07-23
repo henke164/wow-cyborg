@@ -2,10 +2,10 @@
   Button    Spell
 ]]--
 local demonicTyrant = "1";
-local felguard = "2";
+local demonbolt = "2";
 local callDreadStalkers = "3";
 local handOfGulDan = "4";
-local demonbolt = "5";
+local felguard = "5";
 local shadowbolt = "6";
 local soulRot = "7";
 local implosion = "8";

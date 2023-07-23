@@ -136,23 +136,26 @@ function RenderSingleTargetRotation()
     WowCyborg_CURRENTATTACK = "Thunder Clap";
     return SetSpellRequest(thunderClap);
   end
-
+      
   if nearbyEnemies > 1 then
-    if outburst ~= nil then
-      if IsCastableAtEnemyTarget("Thunder Clap", 0) then
-        WowCyborg_CURRENTATTACK = "Thunder Clap";
-        return SetSpellRequest(thunderClap);
-      end
+    if IsCastableAtEnemyTarget("Thunder Clap", 0) then
+      WowCyborg_CURRENTATTACK = "Thunder Clap";
+      return SetSpellRequest(thunderClap);
+    end
+
+    if IsCastableAtEnemyTarget("Demoralizing Shout", 0) and (CheckInteractDistance("target", 3) or InMeleeRange()) then
+      WowCyborg_CURRENTATTACK = "Demoralizing Shout";
+      return SetSpellRequest(demoralizingShout);
     end
 
     if nearbyEnemies > 4 then
-      if IsCastableAtEnemyTarget("Revenge", 30) and (ipBuff ~= nil and ipTl > 3) then
+      if IsCastableAtEnemyTarget("Revenge", 50) and (ipBuff ~= nil and ipTl > 3) then
         WowCyborg_CURRENTATTACK = "Revenge";
         return SetSpellRequest(revenge);
       end
     end
 
-    if outburst == nil and rage < 50 then
+    if rage < 50 then
       if IsCastableAtEnemyTarget("Shield Slam", 0) then
         WowCyborg_CURRENTATTACK = "Shield Slam";
         return SetSpellRequest(shieldSlam);
@@ -163,11 +166,6 @@ function RenderSingleTargetRotation()
       WowCyborg_CURRENTATTACK = "Thunder Clap";
       return SetSpellRequest(thunderClap);
     end
-    
-  if IsCastableAtEnemyTarget("Demoralizing Shout", 0) and CheckInteractDistance("target", 3) then
-    WowCyborg_CURRENTATTACK = "Demoralizing Shout";
-    return SetSpellRequest(demoralizingShout);
-  end
 
     local revBuff = FindBuff("player", "Revenge!");
     if (revBuff == "Revenge!" or IsCastableAtEnemyTarget("Revenge", 80)) then
@@ -186,12 +184,12 @@ function RenderSingleTargetRotation()
       WowCyborg_CURRENTATTACK = "Shield Slam";
       return SetSpellRequest(shieldSlam);
     end
-    
-  if IsCastableAtEnemyTarget("Demoralizing Shout", 0) and CheckInteractDistance("target", 3) then
-    WowCyborg_CURRENTATTACK = "Demoralizing Shout";
-    return SetSpellRequest(demoralizingShout);
-  end
 
+    if IsCastableAtEnemyTarget("Demoralizing Shout", 0) and (CheckInteractDistance("target", 3) or InMeleeRange()) then
+      WowCyborg_CURRENTATTACK = "Demoralizing Shout";
+      return SetSpellRequest(demoralizingShout);
+    end
+    
     if rage > 20 then
       if targetHp < 20 and IsCastableAtEnemyTarget("Execute", 0) then
         WowCyborg_CURRENTATTACK = "Execute";
@@ -210,7 +208,7 @@ function RenderSingleTargetRotation()
     end
     
     local revBuff = FindBuff("player", "Revenge!");
-    if (revBuff == "Revenge!") then
+    if (revBuff == "Revenge!" or IsCastableAtEnemyTarget("Revenge", 80)) then
       if IsCastableAtEnemyTarget("Revenge", 0) then
         WowCyborg_CURRENTATTACK = "Revenge";
         return SetSpellRequest(revenge);

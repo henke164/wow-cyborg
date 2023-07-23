@@ -39,6 +39,10 @@ function IsMelee()
   return IsSpellInRange("Rebuke", "target") == 1;
 end
 
+function GetCurrentGlobalCooldown()
+  return 1.5 - (1.5 * (UnitSpellHaste("player") / 100))
+end 
+
 function GetMemberIndex(name)
   local group = GetGroupRosterInfo();
   for groupindex = 1,25 do
@@ -105,15 +109,24 @@ function RenderSingleTargetRotation(saveHolyPower)
     saveHolyPower = false;
   end
 
+  local targetName = UnitName("target");
   local bastionBuff = FindBuff("player", "Bastion of Light");
   local nearbyEnemies = GetNearbyEnemyCount();
   local hp = GetHealthPercentage("player");
+  local mana = (UnitPower("player") / UnitPowerMax("player")) * 100;
   local targetHp = GetHealthPercentage("target");
   local holyPower = UnitPower("player", 9);
   local wrathBuff = FindBuff("player", "Avenging Wrath");
   local sentinelBuff = FindBuff("player", "Sentinel");
   local concetration = FindBuff("player", "Consecration");
   local speed = GetUnitSpeed("player");
+
+  if targetName == "Incorporeal Being" then
+    if IsCastableAtEnemyTarget("Turn Evil", 0) then
+      WowCyborg_CURRENTATTACK = "Turn Evil";
+      return SetSpellRequest(9);
+    end
+  end
 
   if (UnitChannelInfo("target") or UnitCastingInfo("target")) and IsCastableAtEnemyTarget("Avenger's Shield", 0) then
     WowCyborg_CURRENTATTACK = "Avenger's Shield";
@@ -122,15 +135,10 @@ function RenderSingleTargetRotation(saveHolyPower)
 
   local shiningBuff, tl, shiningStacks, _, icon = FindBuff("player", "Shining Light");
   if (shiningBuff ~= nil and shiningStacks > 0 and icon == 1360763) or bastionBuff ~= nil then
-    if hp < 70 then
+    if hp < 75 and mana >= 10 then
       WowCyborg_CURRENTATTACK = "Word of Glory (Self)";
       return SetSpellRequest(wog[1]);
     end
-  end
-
-  if concetration == nil and IsMelee() and IsCastableAtEnemyTarget("Consecration", 0) and speed == 0 then
-    WowCyborg_CURRENTATTACK = "Consecration";
-    return SetSpellRequest(consecration);
   end
 
   local poweredUp = holyPower > 2 or bastionBuff ~= nil;
@@ -140,14 +148,18 @@ function RenderSingleTargetRotation(saveHolyPower)
     poweredUp = divine ~= nil;
   end
 
+
   if hp < 50 then
-    if (poweredUp) then
+    if (poweredUp and mana >= 10) then
       WowCyborg_CURRENTATTACK = "Word of Glory (Self)";
       return SetSpellRequest(wog[1]);
     end
   end
 
   if WowCyborg_INCOMBAT then
+    if holyPower > 2 then
+    end
+
     if hp < 50 then
       if IsCastable("Ardent Defender", 0) then
         WowCyborg_CURRENTATTACK = "Ardent Defender";
@@ -161,18 +173,16 @@ function RenderSingleTargetRotation(saveHolyPower)
         return SetSpellRequest(guardian);
       end
     end
-    
-    if (holyPower > 2) then
-      if IsCastable("Seraphim", 0) then
-        WowCyborg_CURRENTATTACK = "Seraphim";
-        return SetSpellRequest(seraphim);
-      end
-    end  
+  end
+
+  if concetration == nil and IsMelee() and IsCastableAtEnemyTarget("Consecration", 0) and speed == 0 then
+    WowCyborg_CURRENTATTACK = "Consecration";
+    return SetSpellRequest(consecration);
   end
 
   local friendlyTargetName = FindHealingTarget();
   if friendlyTargetName ~= nil then
-    if poweredUp and saveHolyPower == false then
+    if poweredUp and saveHolyPower == false and mana >= 10 then
       local memberindex = GetMemberIndex(friendlyTargetName);
       WowCyborg_CURRENTATTACK = "Word of Glory " .. friendlyTargetName;
       return SetSpellRequest(wog[memberindex]);
@@ -260,6 +270,18 @@ function RenderSingleTargetRotation(saveHolyPower)
   if CheckInteractDistance("target", 3) and IsCastableAtEnemyTarget("Consecration", 0) and speed == 0 then
     WowCyborg_CURRENTATTACK = "Consecration";
     return SetSpellRequest(consecration);
+  end
+
+  if IsCastableAtEnemyTarget("Blessed Hammer", 0) and WowCyborg_INCOMBAT then
+    if (GetSpellCharges("Blessed Hammer") > 2) then
+      WowCyborg_CURRENTATTACK = "Blessed Hammer";
+      return SetSpellRequest(blessedHammer);
+    end
+
+    if holyPower < 3 and GetSpellCharges("Blessed Hammer") > 1 then
+      WowCyborg_CURRENTATTACK = "Blessed Hammer";
+      return SetSpellRequest(blessedHammer);
+    end
   end
 
   WowCyborg_CURRENTATTACK = "-";

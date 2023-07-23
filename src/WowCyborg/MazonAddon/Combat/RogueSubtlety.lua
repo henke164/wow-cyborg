@@ -9,12 +9,15 @@ buttons["symbols_of_death"] = "4";
 buttons["shadowstrike"] = "5";
 buttons["shadow_dance"] = "5";
 buttons["backstab"] = "6";
+buttons["gloomblade"] = "6";
 buttons["eviscerate"] = "7";
-buttons["flagellation"] = "8";
+buttons["cold_blood"] = "8";
 buttons["black_powder"] = "9";
 buttons["shuriken_storm"] = "0";
 buttons["shuriken_tornado"] = "F+6";
 buttons["vanish"] = "F+7";
+buttons["secret_technique"] = "F+8";
+buttons["thistle_tea"] = "F+9";
 
 WowCyborg_PAUSE_KEYS = {
   "F2",
@@ -25,47 +28,58 @@ WowCyborg_PAUSE_KEYS = {
   "NUMPAD3",
   "NUMPAD4",
   "NUMPAD5",
+  "NUMPAD7",
+  "NUMPAD8",
   "F4",
   "F",
   "§"
 }
 
 function RenderMultiTargetRotation()
-  Hekili.DB.profile.toggles.mode.value = "aoe";
-  return RenderRotation();
+  return RenderRotation(true);
 end
 
 function RenderSingleTargetRotation()
-  Hekili.DB.profile.toggles.mode.value = "single";
-  return RenderRotation();
+  return RenderRotation(false);
 end
 
-function RenderRotation()
+function RenderRotation(holdBurst)
   if IsMelee() == false then
     WowCyborg_CURRENTATTACK = "Out of range";
     return SetSpellRequest(nil);
   end
 
-  local actionName = Hekili.GetQueue().Cooldowns[1].actionName;
+  if UnitChannelInfo("player") or UnitCastingInfo("player") then
+    WowCyborg_CURRENTATTACK = "-";
+    return SetSpellRequest(nil);
+  end
+
+  local actionName = GetHekiliQueue().Cooldowns[1].actionName;
   WowCyborg_CURRENTATTACK = actionName;
   local button = buttons[actionName];
-  
-  if button ~= nil then
-    local ready = true;
-    if actionName == "shuriken_tornado" then
-      if IsCastableAtEnemyTarget("Shuriken Tornado", 0) == false then
-        ready = false;
-      end
-    end
-    
-    if actionName == "symbols_of_death" then
-      if IsCastableAtEnemyTarget("Symbols of Death", 0) == false then
-        ready = false;
-      end
-    end
-    
+  local ready = true;
+
+  if button ~= nil then    
     if actionName == "shadow_blades" then
-      if IsCastableAtEnemyTarget("Shadow Blades", 0) == false then
+      if IsCastableAtEnemyTarget("Shadow Blades", 0) == false or holdBurst == true then
+        ready = false;
+      end
+    end
+
+    if actionName == "shadow_dance" then
+      if IsCastableAtEnemyTarget("Shadow Dance", 0) == false or holdBurst == true then
+        ready = false;
+      end
+    end
+    
+    if actionName == "thistle_tea" then
+      if IsCastable("Thistle Tea", 0) == false then
+        ready = false;
+      end
+    end
+
+    if actionName == "vanish" then
+      if IsCastable("Vanish", 0) == false then
         ready = false;
       end
     end
@@ -75,7 +89,37 @@ function RenderRotation()
     end
   end
 
-  actionName = Hekili.GetQueue().Primary[1].actionName;
+  actionName = GetHekiliQueue().Primary[1].actionName;
+  
+  if holdBurst == true then
+    if actionName == "symbols_of_death" then
+      actionName = GetHekiliQueue().Primary[2].actionName;
+    end
+
+    if actionName == "cold_blood" then
+      actionName = GetHekiliQueue().Primary[2].actionName;
+    end
+
+    if actionName == "secret_technique" then
+      actionName = GetHekiliQueue().Primary[2].actionName;
+    end
+
+    if actionName == "secret_technique" then
+      actionName = GetHekiliQueue().Primary[3].actionName;
+    end
+  end
+
+  local points = GetComboPoints("player", "target");
+  if actionName == "shuriken_storm" and points > 6 then
+    actionName = GetHekiliQueue().Primary[2].actionName
+  end
+  
+  if actionName == "symbols_of_death" then
+    if IsCastableAtEnemyTarget("symbols of death", 0) == false then
+      actionName = GetHekiliQueue().Primary[2].actionName;
+    end
+  end
+
   WowCyborg_CURRENTATTACK = actionName;
   button = buttons[actionName];
   

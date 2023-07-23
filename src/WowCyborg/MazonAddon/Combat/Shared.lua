@@ -13,6 +13,15 @@ local spellButtonTexture;
 local buttonCombinerTexture;
 local letterToggleTexture;
 
+local hekiliQueue = nil;
+
+function GetHekiliQueue()
+  if hekiliQueue == nil then
+    hekiliQueue = Hekili:Query("queue");
+  end
+  return hekiliQueue;
+end
+
 function CreateDefaultFrame(x, y, width, height)
   local frame = CreateFrame("Frame");
   frame:ClearAllPoints();
@@ -129,9 +138,14 @@ end
 function FindDebuff(target, buffName)
   for i=1,40 do
     local name, _, stack, _, _, etime, castBy = UnitDebuff(target, i);
-    if name ~= nil and string.lower(name) == string.lower(buffName) and castBy == "player" then
-      local time = GetTime();
-      return name, etime - time, stack;
+    if name ~= nil and string.lower(name) == string.lower(buffName) then
+      if (target == "target" and castBy == "player") then
+        local time = GetTime();
+        return name, etime - time, stack;
+      elseif(target == "player") then
+        local time = GetTime();
+        return name, etime - time, stack;
+      end
     end
   end
 end

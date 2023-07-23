@@ -18,6 +18,7 @@ WowCyborg_PAUSE_KEYS = {
   "NUMPAD7",
   "NUMPAD8",
   "NUMPAD9",
+  "NUMPAD10",
   "§"
 }
 

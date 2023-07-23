@@ -12,6 +12,7 @@ buttons["crushing_blow"] = "5";
 buttons["whirlwind"] = "6";
 buttons["odyns_fury"] = "7";
 buttons["sweeping_strikes"] = "F+4";
+buttons["onslaught"] = "F+8";
 buttons["thunder_clap"] = "0";
 
 WowCyborg_PAUSE_KEYS = {
@@ -21,20 +22,21 @@ WowCyborg_PAUSE_KEYS = {
   "NUMPAD3",
   "NUMPAD4",
   "NUMPAD5",
+  "NUMPAD8",
   "F",
   "§"
 }
 
 function IsMelee()
-  return CheckInteractDistance("target", 5);
+  return IsSpellInRange("Rampage", "target") and UnitCanAttack("player", "target") == true;
 end
 
 function RenderMultiTargetRotation()
   return RenderSingleTargetRotation(true);
 end
 
-function RenderSingleTargetRotation(aoe)
-  if IsMelee() == false or WowCyborg_INCOMBAT == false then
+function RenderSingleTargetRotation()
+  if IsMelee() ~= true then
     WowCyborg_CURRENTATTACK = "Idle";
     return SetSpellRequest(nil);
   end
@@ -45,7 +47,7 @@ function RenderSingleTargetRotation(aoe)
     return SetSpellRequest(nil);
   end
 
-  local actionName = Hekili.GetQueue().Primary[1].actionName;
+  local actionName = GetHekiliQueue().Primary[1].actionName;
 
   WowCyborg_CURRENTATTACK = actionName;
   local button = buttons[actionName];

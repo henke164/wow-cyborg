@@ -41,21 +41,21 @@ end
 
 
 function RenderRotation()
+  local quaking, quaktingTl = FindDebuff("player", "Quake");
+  if quaking and quaktingTl < 0.2 then
+    return SetSpellRequest("F+8"); -- Stop casting
+  end
+
   if UnitChannelInfo("player") ~= nil then
     return SetSpellRequest(nil);
   end
 
-  local quaking = FindDebuff("player", "Quake");
-  if quaking then
-    return SetSpellRequest(nil);
-  end
-
-  local actionName = Hekili.GetQueue().Primary[1].actionName;
+  local actionName = GetHekiliQueue().Primary[1].actionName;
   button = buttons[actionName];
 
   WowCyborg_CURRENTATTACK = actionName;
   
-  if actionName == "fireball" then
+  if actionName == "frostbolt" then
     local speed = GetUnitSpeed("player");
     if speed > 0 then
       if FindBuff("player", "Ice Floes") == nil then

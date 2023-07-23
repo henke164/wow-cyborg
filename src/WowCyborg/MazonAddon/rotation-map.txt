@@ -5,6 +5,7 @@ furypvp	MazonAddon/Combat/WarriorFuryPvp.lua
 protwarrior	MazonAddon/Combat/WarriorProt.lua
 armswarrior	MazonAddon/Combat/WarriorArms.lua
 arms	MazonAddon/Combat/WarriorArms2.lua
+seller	MazonAddon/Combat/Seller.lua
 fury	MazonAddon/Combat/WarriorFury2.lua
 retpvp	MazonAddon/Combat/RetriPVP.lua
 pvpwarr	MazonAddon/Combat/WarriorPvp.lua
@@ -25,6 +26,7 @@ monkpvp	MazonAddon/Combat/MonkWindwalkerPvp.lua
 blooddk	MazonAddon/Combat/DKBlood.lua
 blooddk2	MazonAddon/Combat/DKBlood2.lua
 unholydk	MazonAddon/Combat/DKUnholy.lua
+unholydk2	MazonAddon/Combat/DKUnholy2.lua
 pvpdk	MazonAddon/Combat/DKPvp.lua
 pvpdk2	MazonAddon/Combat/DKPvp2.lua
 restodruid	MazonAddon/Combat/DruidResto.lua
@@ -58,6 +60,7 @@ outlawpvp	MazonAddon/Combat/RogueOutlawPvp.lua
 assa	MazonAddon/Combat/RogueAssasination.lua
 pvp	MazonAddon/Combat/ClassicPVP.lua
 firemage	MazonAddon/Combat/MageFire.lua
+arcane	MazonAddon/Combat/MageArcane.lua
 frostmage	MazonAddon/Combat/MageFrost.lua
 mage	MazonAddon/Combat/MageLevel.lua
 hordruid	MazonAddon/Combat/DruidRestoHorrific.lua

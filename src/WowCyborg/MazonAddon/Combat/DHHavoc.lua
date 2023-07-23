@@ -2,7 +2,6 @@
   Button    Spell
   bladeDance = "1";
   chaosStrike = "2";
-  attack = "3";
   eyeBeam = "4";
   concentratedFlame = "6";
   glavies = "8";
@@ -19,7 +18,6 @@ local glavies = "8";
 local felblade = "9";
 local glaviesHeal = "F+4";
 local sigilOfFlame = "F+5";
-local attack = "F+6";
 local glaiveTempest = "F+7";
 
 WowCyborg_PAUSE_KEYS = {
@@ -75,6 +73,14 @@ function RenderSingleTargetRotation(skipGlavie)
     end
   end
 
+  local focusImprison, focusImprisonTl = FindDebuff("focus", "Imprison");
+  if focusImprisonTl ~= nil and focusImprisonTl < 2 then
+    if IsCastableAtEnemyFocus("Sigil of Misery", 0) then
+      WowCyborg_CURRENTATTACK = "Sigil of Misery";
+      return SetSpellRequest("F+8");
+    end
+  end
+
   local imprisonDebuff = FindDebuff("target", "Imprison");
   local cycloneDebuff = FindDebuff("target", "Cyclone");
   if imprisonDebuff ~= nil or cycloneDebuff ~= nil then
@@ -100,6 +106,11 @@ function RenderSingleTargetRotation(skipGlavie)
   if InMeleeRange() and IsCastableAtEnemyTarget("Glaive Tempest", 30) then
     WowCyborg_CURRENTATTACK = "Glaive Tempest";
     return SetSpellRequest(glaiveTempest);
+  end
+
+  if IsCastableAtEnemyTarget("Sigil of Flame", 30) == false and IsCastableAtEnemyTarget("Sigil of Flame", 0) then
+    WowCyborg_CURRENTATTACK = "Sigil of Flame";
+    return SetSpellRequest(sigilOfFlame);
   end
 
   if dispellable then
@@ -135,11 +146,6 @@ function RenderSingleTargetRotation(skipGlavie)
     return SetSpellRequest(nil);
   end
   
-  if IsCurrentSpell(6603) == false then
-    WowCyborg_CURRENTATTACK = "Attack";
-    return SetSpellRequest(attack);
-  end
-
   if ctBuff then
     if IsCastableAtEnemyTarget("Chaos Strike", 40) or IsCastableAtEnemyTarget("Annihilation", 70) then
       WowCyborg_CURRENTATTACK = "Chaos Strike";
@@ -152,12 +158,13 @@ function RenderSingleTargetRotation(skipGlavie)
     return SetSpellRequest(eyeBeam);
   end
 
-  if CheckInteractDistance("target", 3) and IsCastable("Essence Break", 0) then
+  local meta = FindBuff("player", "Metamorphosis");
+  if meta and CheckInteractDistance("target", 3) and IsCastable("Essence Break", 0) then
     WowCyborg_CURRENTATTACK = "Essence Break";
     return SetSpellRequest(essenceBreak);
   end
 
-  if IsCastableAtEnemyTarget("Death Sweep", 15) or IsCastableAtEnemyTarget("Blade Dance", 15) then
+  if IsCastableAtEnemyTarget("Death Sweep", 35) or IsCastableAtEnemyTarget("Blade Dance", 35) then
     WowCyborg_CURRENTATTACK = "Blade Dance";
     return SetSpellRequest(bladeDance);
   end

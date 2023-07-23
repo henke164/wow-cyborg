@@ -169,7 +169,7 @@ function CreateDamageTakenFrame()
 
       tinsert(incomingDamage, 1, DamageDetails);
 
-      local cuwff = timestamp - 5
+      local cutoff = timestamp - 5
       meleeDamageInLast5Seconds = 0
       rangedDamageInLast5Seconds = 0;
       for i = #incomingDamage, 1, -1 do

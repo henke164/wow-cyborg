@@ -38,9 +38,9 @@ function RenderRotation()
   end
 
   if IsCastableAtEnemyTarget("Serpent Sting", 0) then
-    actionName = Hekili.GetQueue().Primary[1].actionName;
+    actionName = GetHekiliQueue().Primary[1].actionName;
     if actionName == "resonating_arrow" then
-      actionName = Hekili.GetQueue().Primary[2].actionName;
+      actionName = GetHekiliQueue().Primary[2].actionName;
     end
 
     WowCyborg_CURRENTATTACK = actionName;

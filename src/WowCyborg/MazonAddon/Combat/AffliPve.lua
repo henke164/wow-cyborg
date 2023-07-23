@@ -44,7 +44,7 @@ function RenderSingleTargetRotation(aoe)
     return SetSpellRequest(nil);
   end
 
-  local actionName = Hekili.GetQueue().Primary[1].actionName;
+  local actionName = GetHekiliQueue().Primary[1].actionName;
 
   WowCyborg_CURRENTATTACK = actionName;
   local button = buttons[actionName];

@@ -1,141 +1,107 @@
---[[p
+--[[
   Button    Spell
-  local rollTheBones = "1";
-  local adrenalineRush = "2";
-  local betweenTheEyes = "3";
-  local sinisterStrike = "4";
-  local dispatch = "5";
-  local pistolShot = "6";
 ]]--
-
-local rollTheBones = "1";
-local sliceNDice = "2";
-local ambush = "2";
-local betweenTheEyes = "3";
-local sinisterStrike = "4";
-local dispatch = "5";
-local pistolShot = "6";
-local bladeFlurry = "7";
-local adrenalineRush = "8";
-local flagellation = "9";
-local bladeRush = "0";
+local buttons = {}
+buttons["roll_the_bones"] = "1";
+buttons["slice_and_dice"] = "2";
+buttons["between_the_eyes"] = "3";
+buttons["sinister_strike"] = "4";
+buttons["dispatch"] = "5";
+buttons["pistol_shot"] = "6";
+buttons["blade_flurry"] = "7";
+buttons["blade_rush"] = "8";
+buttons["ambush"] = "9";
+buttons["vanish"] = "F+7";
+buttons["shadow_dance"] = "F+8";
 
 WowCyborg_PAUSE_KEYS = {
-  "F",
+  "F3",
   "R",
   "LSHIFT",
-  "F1",
-  "F2",
-  "F3",
-  "F5",
-  "F6",
-  "F7",
-  "F11",
-  "NUMPAD1",
+  "NUMPAD2",
+  "NUMPAD3",
+  "NUMPAD4",
   "NUMPAD5",
-  "NUMPAD9",
+  "NUMPAD7",
+  "NUMPAD8",
+  "F4",
+  "F",
+  "§"
 }
+
 function RenderMultiTargetRotation()
-  if InMeleeRange() == false then
-    WowCyborg_CURRENTATTACK = "-";
-    return SetSpellRequest(nil);
-  end
-
-  if IsCastableAtEnemyTarget("Flagellation", 0) then
-    WowCyborg_CURRENTATTACK = "Flagellation";
-    return SetSpellRequest(flagellation);
-  end
-
-  return RenderSingleTargetRotation(true)
+  return RenderRotation(true);
 end
 
-function RenderSingleTargetRotation(aoe)
-  local stealth = FindBuff("player", "Stealth");
+function RenderSingleTargetRotation()
+  return RenderRotation();
+end
 
-  if InMeleeRange() == false then
+function RenderRotation(skipVanish)
+  if IsMelee() == false then
+    WowCyborg_CURRENTATTACK = "Out of range";
+    return SetSpellRequest(nil);
+  end
+
+  if UnitChannelInfo("player") or UnitCastingInfo("player") then
     WowCyborg_CURRENTATTACK = "-";
     return SetSpellRequest(nil);
   end
 
-  if stealth ~= nil then
-    if IsCastableAtEnemyTarget("Ambush", 0) then
-      WowCyborg_CURRENTATTACK = "Ambush";
-      return SetSpellRequest(ambush);
-    end
+  local actionName = GetHekiliQueue().Cooldowns[1].actionName;
+  WowCyborg_CURRENTATTACK = actionName;
+  local button = buttons[actionName];
+  if actionName ~= nil then
+    if button ~= nil then
+      local ready = true;
 
-    WowCyborg_CURRENTATTACK = "-";
-    return SetSpellRequest(nil);
-  end
-  
-  if IsCastable("Adrenaline Rush", 0) then
-    WowCyborg_CURRENTATTACK = "Adrenaline Rush";
-    return SetSpellRequest(adrenalineRush);
-  end
+      local ambushAvail = IsCastable("Ambush", 0);
+      if actionName == "vanish" then
+        local vStarted, vTotalCd = GetSpellCooldown("Vanish");
+        local vCd = vStarted + vTotalCd - GetTime();
+        
+        if vCd > 0 then
+          ready = false;
+        end
 
-  if IsCastable("Roll the Bones", 25) then
-    WowCyborg_CURRENTATTACK = "Roll the Bones";
-    return SetSpellRequest(rollTheBones);
-  end
-
-  if aoe then
-    if IsCastable("Blade Flurry", 15) then
-      WowCyborg_CURRENTATTACK = "Blade Flurry";
-      return SetSpellRequest(bladeFlurry);
-    end
+        if ambushAvail == false then
+          ready = false;
+        end
+      end
       
-    if IsCastableAtEnemyTarget("Blade Rush", 0) then
-      WowCyborg_CURRENTATTACK = "Blade Rush";
-      return SetSpellRequest(bladeRush);
-    end
+      local sdStarted, sdTotalCd = GetSpellCooldown("Shadow Dance");
+      local sdCd = sdStarted + sdTotalCd - GetTime();
+      if actionName == "shadow_dance" then
+        if sdCd > 0 then
+          ready = false;
+        end
+      end
 
-  end
-
-  local points = GetComboPoints("player", "target");
-  local sliceBuff, sliceDuration = FindBuff("Player", "Slice and Dice");
-
-  if (points > 4) then
-    if sliceBuff == nil or sliceDuration < 9 then
-      if IsCastable("Slice and Dice", 0) then
-        WowCyborg_CURRENTATTACK = "Slice and Dice";
-        return SetSpellRequest(sliceNDice);
+      if ready and skipVanish ~= true then
+        return SetSpellRequest(button);
       end
     end
-    
-    if IsCastableAtEnemyTarget("Between the Eyes", 0) then
-      WowCyborg_CURRENTATTACK = "Between the Eyes";
-      return SetSpellRequest(betweenTheEyes);
-    end
-    
-    if IsCastableAtEnemyTarget("Dispatch", 0) then
-      WowCyborg_CURRENTATTACK = "Dispatch";
-      return SetSpellRequest(dispatch);
-    end
   end
 
-  if sliceBuff == nil and points > 0 then
-    if IsCastable("Slice and Dice", 0) then
-      WowCyborg_CURRENTATTACK = "Slice and Dice";
-      return SetSpellRequest(sliceNDice);
-    end
-  end
-
-  local oppBuff = FindBuff("Player", "Opportunity");
-  if oppBuff ~= nil and IsCastableAtEnemyTarget("Pistol Shot", 0) then
-    WowCyborg_CURRENTATTACK = "Pistol Shot";
-    return SetSpellRequest(pistolShot);
-  end
-
-  if IsCastableAtEnemyTarget("Sinister Strike", 50) then
-    WowCyborg_CURRENTATTACK = "Sinister Strike";
-    return SetSpellRequest(sinisterStrike);
-  end
+  actionName = GetHekiliQueue().Primary[1].actionName;
+  WowCyborg_CURRENTATTACK = actionName;
+  button = buttons[actionName];
   
-  WowCyborg_CURRENTATTACK = "-";
-  return SetSpellRequest(nil);
+  if button ~= nil then
+    return SetSpellRequest(button);
+  end
 end
 
-function InMeleeRange()
-  return IsSpellInRange("Ambush", "target") == 1;
+function IsMelee()
+  if UnitCanAttack("player", "target") == false then
+    return false;
+  end
+
+  if TargetIsAlive() == false then
+    return false;
+  end;
+
+  return IsSpellInRange("Eviscerate") == 1;
 end
 
-print("Rogue Outlaw rotation loaded");
+print("Outlaw rogue rotation loaded");

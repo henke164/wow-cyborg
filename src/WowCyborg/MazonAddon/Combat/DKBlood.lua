@@ -21,6 +21,7 @@ local bonestorm = "9";
 local runeTap = "F+6";
 local dancingRuneWeapon = "F+7";
 local vampiricBlood = "F+8";
+local tombstone = "F+9";
 
 WowCyborg_PAUSE_KEYS = {
   "1",
@@ -68,6 +69,11 @@ function RenderSingleTargetRotation()
       WowCyborg_CURRENTATTACK = "Rune Tap";
       return SetSpellRequest(runeTap);
     end
+
+    if bsStacks and bsStacks > 4 and IsCastable("Tombstone", 0) then
+      WowCyborg_CURRENTATTACK = "Tombstone";
+      return SetSpellRequest(tombstone);
+    end
   end
 
   if hpPercentage < 50 then
@@ -85,19 +91,18 @@ function RenderSingleTargetRotation()
     end
   end
 
-  local deathStrikeCost = 45;
+  local deathStrikeCost = 35;
   if bsStacks ~= nil and bsStacks >= 5 then
-    deathStrikeCost = 40;
+    --deathStrikeCost = 40;
   end
 
-  if (damageInLast5Seconds > (UnitHealth("player") * 0.15) and IsCastableAtEnemyTarget("Death Strike", deathStrikeCost)) or 
-    IsCastableAtEnemyTarget("Death Strike", 80) then
+  if (damageInLast5Seconds > (UnitHealth("player") * 0.15) and IsCastableAtEnemyTarget("Death Strike", deathStrikeCost)) then
     WowCyborg_CURRENTATTACK = "Death Strike";
     return SetSpellRequest(deathstrike);
   end
 
   if bbCharges ~= nil and bbCharges > 1 and saveForMarrowRend == false then
-    if IsCastableAtEnemyTarget("Blood Boil", 0) and CheckInteractDistance("target", 3) then
+    if IsCastableAtEnemyTarget("Blood Boil", 0) and (CheckInteractDistance("target", 3) or IsSpellInRange("Heart Strike", "target")) then
       WowCyborg_CURRENTATTACK = "Blood Boil";
       return SetSpellRequest(bloodboil);
     end
@@ -120,6 +125,11 @@ function RenderSingleTargetRotation()
     runeLimit = 3;
   end
   
+  if (IsCastableAtEnemyTarget("Death Strike", deathStrikeCost)) then
+    WowCyborg_CURRENTATTACK = "Death Strike";
+    return SetSpellRequest(deathstrike);
+  end
+
   if runeCount >= runeLimit then
     if IsCastableAtEnemyTarget("Heart Strike", 0) then
       WowCyborg_CURRENTATTACK = "Heart Strike";

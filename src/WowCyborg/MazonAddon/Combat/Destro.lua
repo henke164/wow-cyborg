@@ -17,6 +17,7 @@ local stopCast = "F+7";
 WowCyborg_PAUSE_KEYS = {
   "LSHIFT",
   "5",
+  "NUMPAD1",
   "NUMPAD2",
   "NUMPAD3",
   "NUMPAD4",
@@ -101,11 +102,11 @@ function RenderRotation()
     return SetSpellRequest(nil);
   end
 
-  local actionName = Hekili.GetQueue().Cooldowns[1].actionName;
+  local actionName = GetHekiliQueue().Cooldowns[1].actionName;
   WowCyborg_CURRENTATTACK = actionName;
   local button = buttons[actionName];
   
-  actionName = Hekili.GetQueue().Primary[1].actionName;
+  actionName = GetHekiliQueue().Primary[1].actionName;
   WowCyborg_CURRENTATTACK = actionName;
   button = buttons[actionName];
   
@@ -113,7 +114,7 @@ function RenderRotation()
     if actionName == "immolate" then
       local immolateDot, immolateDotTL = FindDebuff("target", "Immolate");
       if (immolateDot ~= nil and immolateDotTL > 5) then
-        actionName = Hekili.GetQueue().Primary[nextAction].actionName;
+        actionName = GetHekiliQueue().Primary[nextAction].actionName;
         WowCyborg_CURRENTATTACK = actionName;
         button = buttons[actionName];
       end
@@ -149,4 +150,4 @@ frame:SetScript("OnChar", function(self, key)
   end
 end)
 
-print("Destro lock rotation loaded");
+print("Destro lock rotation loaded!!");

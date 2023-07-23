@@ -2,19 +2,21 @@
   Button    Spell
 ]]--
 local buttons = {}
-buttons["summon_demonic_tyrant"] = "1";
-buttons["grimoire_felguard"] = "2";
+buttons["power_siphon"] = "1";
+buttons["demonbolt"] = "2";
 buttons["call_dreadstalkers"] = "3";
 buttons["shadow_bolt"] = "4";
-buttons["demonbolt"] = "5";
+buttons["grimoire_felguard"] = "5";
 buttons["hand_of_guldan"] = "6";
-buttons["power_siphon"] = "7";
+buttons["summon_demonic_tyrant"] = "7";
 buttons["implosion"] = "8";
 buttons["blood_fury"] = "F+1";
 buttons["demonic_strength"] = "9";
 buttons["soul_strike"] = "0";
+buttons["summon_vilefiend"] = "0";
 buttons["doom"] = "F+6";
-local stopCast = "F+7";
+buttons["nether_portal"] = "F+7";
+stopCast = "F+8";
 
 WowCyborg_PAUSE_KEYS = {
   "LSHIFT",
@@ -24,6 +26,7 @@ WowCyborg_PAUSE_KEYS = {
   "NUMPAD4",
   "NUMPAD5",
   "NUMPAD7",
+  "R",
   "F4",
   "F",
   "§"
@@ -31,7 +34,7 @@ WowCyborg_PAUSE_KEYS = {
 
 function RenderMultiTargetRotation()
   if WowCyborg_INCOMBAT == false then
-    return SetSpellRequest(nil);
+    --return SetSpellRequest(nil);
   end
 
   local quaking = FindDebuff("player", "Quake");
@@ -39,7 +42,7 @@ function RenderMultiTargetRotation()
     return SetSpellRequest(nil);
   end
 
-  local actionName = Hekili.GetQueue().Cooldowns[1].actionName;
+  local actionName = GetHekiliQueue().Cooldowns[1].actionName;
   
   WowCyborg_CURRENTATTACK = actionName;
   local button = buttons[actionName];
@@ -77,20 +80,31 @@ end
 
 function RenderSingleTargetRotation()
   if WowCyborg_INCOMBAT == false then
+    --return SetSpellRequest(nil);
+  end
+
+  if UnitCanAttack("player", "target") == false then
     return SetSpellRequest(nil);
   end
 
+  local castingInfo = UnitCastingInfo("player");
+  if castingInfo == "Demonbolt" then
+    WowCyborg_CURRENTATTACK = "-";
+    return SetSpellRequest(stopCast);
+  end
+  
+  local actionName = GetHekiliQueue().Primary[1].actionName;
   local quaking = FindDebuff("player", "Quake");
   if quaking then
-    return SetSpellRequest(nil);
+    if actionName == "shadow_bolt" or actionName == "hand_of_guldan" then
+      return SetSpellRequest(nil);
+    end
   end
-
-  local actionName = Hekili.GetQueue().Primary[1].actionName;
 
   if actionName == "doom" then
     local doomDebuff = FindDebuff("target", "Doom");
     if doomDebuff ~= nil then
-      actionName = Hekili.GetQueue().Primary[2].actionName;
+      actionName = GetHekiliQueue().Primary[2].actionName;
     end
   end
   

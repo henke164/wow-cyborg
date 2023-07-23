@@ -14,6 +14,7 @@ buttons["cleave"] = "8";
 buttons["skullsplitter"] = "8";
 buttons["thunder_clap"] = "9";
 buttons["sweeping_strikes"] = "F+4";
+buttons["thunderous_roar"] = "F+8";
 buttons["wrecking_throw"] = "0";
 
 WowCyborg_PAUSE_KEYS = {
@@ -27,10 +28,6 @@ WowCyborg_PAUSE_KEYS = {
 }
 
 function RenderMultiTargetRotation()
-  return RenderSingleTargetRotation(true);
-end
-
-function RenderSingleTargetRotation(aoe)
   if WowCyborg_INCOMBAT == false then
     return SetSpellRequest(nil);
   end
@@ -40,8 +37,31 @@ function RenderSingleTargetRotation(aoe)
     return SetSpellRequest(nil);
   end
 
-  local actionName = Hekili.GetQueue().Primary[1].actionName;
+  local actionName = GetHekiliQueue().Cooldowns[1].actionName;
+  WowCyborg_CURRENTATTACK = actionName;
+  local button = buttons[actionName];
+  
+  if button ~= nil then
+    local replaced = string.gsub(actionName, "_", " ");
+    if (IsCastable(replaced, 0)) then
+      return SetSpellRequest(button);
+    end
+  end
+  
+  return RenderSingleTargetRotation(true);
+end
 
+function RenderSingleTargetRotation()
+  if WowCyborg_INCOMBAT == false then
+    return SetSpellRequest(nil);
+  end
+
+  local castingInfo = UnitChannelInfo("player");
+  if castingInfo ~= nil then
+    return SetSpellRequest(nil);
+  end
+
+  local actionName = GetHekiliQueue().Primary[1].actionName;
   WowCyborg_CURRENTATTACK = actionName;
   local button = buttons[actionName];
   
