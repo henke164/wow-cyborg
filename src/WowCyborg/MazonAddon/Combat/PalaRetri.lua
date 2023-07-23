@@ -11,11 +11,13 @@ buttons["crusader_strike"] = "5";
 buttons["templar_strike"] = "5";
 buttons["templar_slash"] = "5";
 buttons["templars_verdict"] = "6";
+buttons["final_verdict"] = "6";
 buttons["divine_storm"] = "7";
 buttons["consecration"] = "9";
 buttons["execution_sentence"] = "9";
 buttons["exorcism"] = "8";
 buttons["seraphim"] = "0";
+buttons["divine_toll"] = "8";
 buttons["shield_of_vengeance"] = "F+1";
 buttons["crusade"] = "F+2";
 buttons["divine_toll"] = "8";
@@ -101,6 +103,7 @@ function RenderSingleTargetRotation()
     end
   end
 
+  WowCyborg_CURRENTATTACK = "";
   return SetSpellRequest(nil);
 end
 

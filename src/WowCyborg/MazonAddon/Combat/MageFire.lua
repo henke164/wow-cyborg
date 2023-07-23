@@ -11,6 +11,7 @@ buttons["dragons_breath"] = "6";
 buttons["ice_floes"] = "7";
 buttons["scorch"] = "8";
 buttons["rune_of_power"] = "9";
+buttons["cancel_buff"] = "0";
 buttons["shifting_power"] = "F+1";
 buttons["combustion"] = "F+2";
 
