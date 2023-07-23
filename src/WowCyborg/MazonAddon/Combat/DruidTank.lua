@@ -102,7 +102,7 @@ function RenderMultiTargetRotation()
 end
 
 function RenderSingleTargetRotation()
-  local actionName = Hekili.GetQueue().Primary[1].actionName;
+  local actionName = GetHekiliQueue().Primary[1].actionName;
   local hp = GetHealthPercentage("player");
   if (hp <= 65) then
     if IsCastable("Frenzied Regeneration", 0) then
