@@ -58,6 +58,7 @@ outlawpvp	MazonAddon/Combat/RogueOutlawPvp.lua
 assa	MazonAddon/Combat/RogueAssasination.lua
 pvp	MazonAddon/Combat/ClassicPVP.lua
 firemage	MazonAddon/Combat/MageFire.lua
+arcanemage	MazonAddon/Combat/MageArcane.lua
 frostmage	MazonAddon/Combat/MageFrost.lua
 mage	MazonAddon/Combat/MageLevel.lua
 hordruid	MazonAddon/Combat/DruidRestoHorrific.lua

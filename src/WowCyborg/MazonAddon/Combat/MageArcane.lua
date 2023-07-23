@@ -2,18 +2,18 @@
   Button    Spell
 ]]--
 local buttons = {}
-buttons["fireball"] = "1";
-buttons["fire_blast"] = "2";
-buttons["phoenix_flames"] = "3";
-buttons["pyroblast"] = "4";
-buttons["ice_nova"] = "5";
-buttons["dragons_breath"] = "6";
+buttons["arcane_blast"] = "1";
+buttons["arcane_missiles"] = "2";
+buttons["touch_of_the_magi"] = "3";
+buttons["arcane_barrage"] = "4";
+buttons["arcane_orb"] = "5";
+buttons["nether_tempest"] = "6";
 buttons["ice_floes"] = "7";
 buttons["scorch"] = "8";
 buttons["rune_of_power"] = "9";
 buttons["cancel_buff"] = "0";
 buttons["shifting_power"] = "F+1";
-buttons["combustion"] = "F+2";
+buttons["evocation"] = "F+2";
 
 WowCyborg_PAUSE_KEYS = {
   "R",
@@ -43,11 +43,6 @@ function RenderRotation()
     return SetSpellRequest(nil);
   end
 
-  local quaking = FindDebuff("player", "Quake");
-  if quaking then
-    return SetSpellRequest(nil);
-  end
-
   local speed = GetUnitSpeed("player");
 
   local actionName = Hekili.GetQueue().Primary[1].actionName;
@@ -59,9 +54,10 @@ function RenderRotation()
     actionName = Hekili.GetQueue().Primary[2].actionName
   end
 
+  WowCyborg_CURRENTATTACK = actionName;
+
   button = buttons[actionName];
 
-  WowCyborg_CURRENTATTACK = actionName;
 
   if actionName == "fireball" or actionName == "pyroblast" then
     if speed > 0 then

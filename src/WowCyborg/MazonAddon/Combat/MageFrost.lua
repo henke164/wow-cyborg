@@ -55,7 +55,7 @@ function RenderRotation()
 
   WowCyborg_CURRENTATTACK = actionName;
   
-  if actionName == "fireball" then
+  if actionName == "frostbolt" then
     local speed = GetUnitSpeed("player");
     if speed > 0 then
       if FindBuff("player", "Ice Floes") == nil then
