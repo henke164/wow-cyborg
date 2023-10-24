@@ -17,11 +17,11 @@ regrowth[4] = 4;
 regrowth[5] = 5;
 
 local rejuvenation = {};
-rejuvenation[1] = 6;
-rejuvenation[2] = 7;
-rejuvenation[3] = 8;
-rejuvenation[4] = 9;
-rejuvenation[5] = 0;
+rejuvenation[1] = "SHIFT+1";
+rejuvenation[2] = "SHIFT+2";
+rejuvenation[3] = "SHIFT+3";
+rejuvenation[4] = "SHIFT+4";
+rejuvenation[5] = "SHIFT+5";
 
 local swiftmend = {};
 swiftmend[1] = "CTRL+1";
@@ -37,18 +37,19 @@ local adaptiveSwarm = "F+8";
 local cancelCast = "F+9";
 
 WowCyborg_PAUSE_KEYS = {
-  "LSHIFT",
   "F",
+  "NUMPAD1",
+  "F1",
+  "F3",
   "F10",
   "R"
 }
 
 -- Boomer form
-local moonfire = "SHIFT+5";
-local sunfire = "SHIFT+6";
-local wrath = "SHIFT+7";
-local starfire = "SHIFT+8";
-local starsurge = "SHIFT+9";
+local moonfire = "6";
+local sunfire = "7";
+local wrath = "8";
+local starfire = "9";
 
 local healingTarget = {
   index = nil,
@@ -193,7 +194,7 @@ end
 function HandleTankPreHots()
   local tankName, index = GetTankName();
   if tankName ~= nil and FindBuff(tankName, "Lifebloom") == nil then
-    if IsCastableAtFriendlyUnit(tankName, "Lifebloom", 2061) and IsSpellInRange("Lifebloom", tankName) then
+    if IsCastableAtFriendlyUnit(tankName, "Lifebloom", 0) and IsSpellInRange("Lifebloom", tankName) then
       local tankHp = GetHealthPercentage(tankName);
       if tankHp > 0 then
         WowCyborg_CURRENTATTACK = "Lifebloom";
@@ -204,7 +205,7 @@ function HandleTankPreHots()
   end
 
   if tankName ~= nil and FindBuff(tankName, "Cenarion Ward") == nil then
-    if IsCastableAtFriendlyUnit(tankName, "Cenarion Ward", 1840) and IsSpellInRange("Cenarion Ward", tankName) then
+    if IsCastableAtFriendlyUnit(tankName, "Cenarion Ward", 0) and IsSpellInRange("Cenarion Ward", tankName) then
       local tankHp = GetHealthPercentage(tankName);
       if tankHp > 0 then
         WowCyborg_CURRENTATTACK = "Cenarion Ward";
@@ -215,7 +216,7 @@ function HandleTankPreHots()
   end
   
   
-  if tankName ~= nil and IsCastableAtFriendlyUnit(tankName, "Adaptive Swarm", 500) then
+  if tankName ~= nil and IsCastableAtFriendlyUnit(tankName, "Adaptive Swarm", 0) then
     local tankHp = GetHealthPercentage(tankName);
     if tankHp > 0 and tankHp < 90 then
       WowCyborg_CURRENTATTACK = "Adaptive Swarm";
@@ -227,7 +228,7 @@ function HandleTankPreHots()
   return false;
 end
 
-function RenderMoonkinRotation(wrathRot)
+function RenderMoonkinRotation()
   local dot = FindDebuff("target", "Moonfire");
   if dot == nil and IsCastableAtEnemyTarget("Moonfire", 0) then
     WowCyborg_CURRENTATTACK = "Moonfire";
@@ -238,11 +239,6 @@ function RenderMoonkinRotation(wrathRot)
   if dot2 == nil and IsCastableAtEnemyTarget("Sunfire", 0) then
     WowCyborg_CURRENTATTACK = "Sunfire";
     return SetSpellRequest(sunfire);
-  end
-
-  if IsCastableAtEnemyTarget("Starsurge", 0) then
-    WowCyborg_CURRENTATTACK = "Starsurge";
-    return SetSpellRequest(starsurge);
   end
 
   local solar = FindBuff("player", "Eclipse (Solar)");
@@ -261,18 +257,6 @@ function RenderMoonkinRotation(wrathRot)
     end
   end
 
-  if wrathRot then
-    if IsCastableAtEnemyTarget("Wrath", 0) then
-      WowCyborg_CURRENTATTACK = "Wrath";
-      return SetSpellRequest(wrath);
-    end
-  else
-    if IsCastableAtEnemyTarget("Starfire", 0) then
-      WowCyborg_CURRENTATTACK = "Starfire";
-      return SetSpellRequest(starfire);
-    end
-  end
-  
   if IsCastableAtEnemyTarget("Wrath", 0) then
     WowCyborg_CURRENTATTACK = "Wrath";
     return SetSpellRequest(wrath);
@@ -283,13 +267,8 @@ function RenderMoonkinRotation(wrathRot)
 end
 
 function RenderSingleTargetRotation(wrathRot)
-  if UnitChannelInfo("player") == "Tranquility" then
+  if UnitChannelInfo("player") then
     WowCyborg_CURRENTATTACK = "-";
-    return SetSpellRequest(nil);
-  end
-    
-  if UnitChannelInfo("player") == "Fleshcraft" then
-    WowCyborg_CURRENTATTACK = "Fleshcraft";
     return SetSpellRequest(nil);
   end
 
@@ -334,7 +313,7 @@ function RenderSingleTargetRotation(wrathRot)
   end
 
   local speed = GetUnitSpeed("player");
-  if AoeHealingRequired() and IsCastable("Wild Growth", 5600) and quaking == nil and speed == 0 then
+  if AoeHealingRequired() and IsCastable("Wild Growth", 0) and quaking == nil and speed == 0 then
     WowCyborg_CURRENTATTACK = "Wild Growth";
     return SetSpellRequest(wildGrowth);
   end
@@ -348,26 +327,26 @@ function RenderSingleTargetRotation(wrathRot)
     return RenderMoonkinRotation();
   end
 
-  if hp <= 60 and IsCastableAtFriendlyUnit(healingTarget.name, "Regrowth", 2800) and quaking == nil and speed == 0 then
+  if hp <= 60 and IsCastableAtFriendlyUnit(healingTarget.name, "Regrowth", 0) and quaking == nil and speed == 0 then
     WowCyborg_CURRENTATTACK = "Regrowth";
     return SetSpellRequest(regrowth[healingTarget.index]);
   end
 
   local rejuvenationHot = FindBuff(healingTarget.name, "Rejuvenation");
-  if rejuvenationHot == nil and IsCastableAtFriendlyUnit(healingTarget.name, "Rejuvenation", 2000) then
+  if rejuvenationHot == nil and IsCastableAtFriendlyUnit(healingTarget.name, "Rejuvenation", 0) then
     WowCyborg_CURRENTATTACK = "Rejuvenation " .. healingTarget.index;
     return SetSpellRequest(rejuvenation[healingTarget.index]);
   end
 
   local swiftmendCharges = GetSpellCharges("Swiftmend");
   if hp <= 70 and healingTarget ~= nil and swiftmendCharges > 0 then
-    if IsCastableAtFriendlyUnit(healingTarget.name, "Swiftmend", 2800) then
+    if IsCastableAtFriendlyUnit(healingTarget.name, "Swiftmend", 0) then
       WowCyborg_CURRENTATTACK = "Swiftmend";
       return SetSpellRequest(swiftmend[healingTarget.index]);
     end
   end
 
-  if hp <= 80 and IsCastableAtFriendlyUnit(healingTarget.name, "Regrowth", 2800) and quaking == nil and speed == 0 then
+  if hp <= 80 and IsCastableAtFriendlyUnit(healingTarget.name, "Regrowth", 0) and quaking == nil and speed == 0 then
     WowCyborg_CURRENTATTACK = "Regrowth";
     return SetSpellRequest(regrowth[healingTarget.index]);
   end

@@ -87,17 +87,17 @@ function RenderSingleTargetRotation()
   end
 
   if hpPercentage < 60 then
-    if IsCastableAtEnemyTarget("Last Stand", 0) then
+    if IsCastable("Last Stand", 0) then
       WowCyborg_CURRENTATTACK = "Last Stand";
       return SetSpellRequest(lastStand);
     end
 
-    if IsCastableAtEnemyTarget("Shield Wall", 0) then
+    if IsCastable("Shield Wall", 0) then
       WowCyborg_CURRENTATTACK = "Shield Wall";
       return SetSpellRequest(shieldWall);
     end
 
-    if IsCastableAtEnemyTarget("Rallying Cry", 0) then
+    if IsCastable("Rallying Cry", 0) then
       WowCyborg_CURRENTATTACK = "Rallying Cry";
       return SetSpellRequest(rallyingCry);
     end
@@ -123,7 +123,7 @@ function RenderSingleTargetRotation()
       end
     end
 
-    if (ipBuff == nil or ipTl < 3) and IsCastableAtEnemyTarget("Ignore Pain", 35) then
+    if (ipBuff == nil or ipTl < 3) and IsCastable("Ignore Pain", 35) then
       WowCyborg_CURRENTATTACK = "Ignore Pain";
       return SetSpellRequest(ignorePain);
     end
@@ -144,8 +144,10 @@ function RenderSingleTargetRotation()
     end
 
     if IsCastableAtEnemyTarget("Demoralizing Shout", 0) and (CheckInteractDistance("target", 3) or InMeleeRange()) then
-      WowCyborg_CURRENTATTACK = "Demoralizing Shout";
-      return SetSpellRequest(demoralizingShout);
+      if GetNonAggroCount() == 0 then
+        WowCyborg_CURRENTATTACK = "Demoralizing Shout";
+        return SetSpellRequest(demoralizingShout);
+      end
     end
 
     if nearbyEnemies > 4 then
@@ -216,9 +218,14 @@ function RenderSingleTargetRotation()
     end
   end
 
-  if needIgnorePain and IsCastableAtEnemyTarget("Ignore Pain", 35) then
+  if needIgnorePain and IsCastable("Ignore Pain", 35) then
     WowCyborg_CURRENTATTACK = "Ignore Pain";
     return SetSpellRequest(ignorePain);
+  end
+  
+  if IsCastableAtEnemyTarget("Shield Slam", 0) then
+    WowCyborg_CURRENTATTACK = "Shield Slam";
+    return SetSpellRequest(shieldSlam);
   end
   
   WowCyborg_CURRENTATTACK = "-";
@@ -274,6 +281,29 @@ function CreateDamageTakenFrame()
     end
 
   end)
+end
+
+function GetNonAggroCount(interactDistance)
+  if interactDistance == nil then
+    interactDistance = 3;
+  end
+
+  local count = 0;
+
+  for i = 1, 40 do 
+    local guid = UnitGUID("nameplate"..i) 
+    if guid then 
+      if CheckInteractDistance("nameplate"..i, interactDistance) then
+        if UnitCanAttack("player", "nameplate"..i) == true then
+          if UnitThreatSituation("player", "nameplate"..i) < 3 then
+            count = count + 1;
+          end
+        end
+      end
+    end
+  end
+
+  return count;
 end
 
 print("Protection warrior rotation loaded");

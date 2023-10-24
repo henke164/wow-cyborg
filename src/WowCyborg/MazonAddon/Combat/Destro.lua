@@ -37,6 +37,11 @@ end
 function RenderMultiTargetRotation()
   Hekili.DB.profile.toggles.mode.value = "aoe";
   
+  if UnitChannelInfo("player") then
+    WowCyborg_CURRENTATTACK = "-";
+    return SetSpellRequest(nil);
+  end
+
   if WowCyborg_INCOMBAT == false and doRainOfFire() == false then
     return SetSpellRequest(nil);
   end
@@ -75,7 +80,6 @@ end
 
 function RenderSingleTargetRotation()
   Hekili.DB.profile.toggles.mode.value = "single";
-  
   
   if UnitChannelInfo("player") then
     WowCyborg_CURRENTATTACK = "-";

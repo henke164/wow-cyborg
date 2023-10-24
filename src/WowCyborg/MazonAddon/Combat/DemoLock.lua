@@ -32,68 +32,72 @@ WowCyborg_PAUSE_KEYS = {
   "§"
 }
 
+felguardUpUntil = 0;
+
+function GetSpellCD(name)
+  local stStart, stDuration = GetSpellCooldown(name);
+  if stStart == nil then
+    return 60;
+  end
+
+  local stCdLeft = stStart + stDuration - GetTime();
+  return stCdLeft;
+end
+
 function RenderMultiTargetRotation()
-  if WowCyborg_INCOMBAT == false then
-    --return SetSpellRequest(nil);
-  end
-
-  local quaking = FindDebuff("player", "Quake");
-  if quaking then
-    return SetSpellRequest(nil);
-  end
-
-  local actionName = GetHekiliQueue().Cooldowns[1].actionName;
-  
-  WowCyborg_CURRENTATTACK = actionName;
-  local button = buttons[actionName];
-  
-  if actionName == "grimoire_felguard" then
-    if IsCastableAtEnemyTarget("Grimoire: Felguard", 0) == false then
-      return RenderSingleTargetRotation();
-    end
-  end
-  
-  if actionName == "summon_demonic_tyrant" then
-    if IsCastableAtEnemyTarget("Summon Demonic Tyrant", 0) == false then
-      return RenderSingleTargetRotation();
-    end
-  end
-
-  if actionName == "nether_portal" then
-    if IsCastableAtEnemyTarget("Nether Portal", 0) == false then
-      return RenderSingleTargetRotation();
-    end
-  end
-
-  if actionName == "blood_fury" then
-    if IsCastable("Blood Fury", 0) == false then
-      return RenderSingleTargetRotation();
-    end
-  end
-
-  if button ~= nil then
-    return SetSpellRequest(button);
-  end
-
   return RenderSingleTargetRotation();
 end
 
 function RenderSingleTargetRotation()
+  local shards = UnitPower("player", 7);
+
   if WowCyborg_INCOMBAT == false then
     --return SetSpellRequest(nil);
+  end
+
+  if Hekili.DB.profile.toggles.cooldowns.value == true then
+    Hekili:FireToggle("cooldowns");
+    Hekili:Query("UI").Minimap:RefreshDataText();
   end
 
   if UnitCanAttack("player", "target") == false then
     return SetSpellRequest(nil);
   end
 
-  local castingInfo = UnitCastingInfo("player");
-  if castingInfo == "Demonbolt" then
-    WowCyborg_CURRENTATTACK = "-";
-    return SetSpellRequest(stopCast);
+  local cooldown = GetHekiliQueue().Cooldowns[1];
+
+  if cooldown.wait == nil or cooldown.wait > 0 then
+    actionName = GetHekiliQueue().Primary[1].actionName;
+  else
+    actionName = cooldown.actionName;
   end
-  
-  local actionName = GetHekiliQueue().Primary[1].actionName;
+
+  local tyrantCd = GetSpellCD("Summon Demonic Tyrant");
+  local portalCd = GetSpellCD("Nether Portal");
+
+  if tyrantCd < 5 and shards > 0 and (portalCd <= 0 or portalCd > 60) then
+    if IsCastable("Blood Fury", 0) then
+      actionName = "blood_fury";
+    elseif IsCastable("Nether Portal", 0) then
+      actionName = "nether_portal";
+    elseif IsCastable("Summon Vilefiend", 0) then
+      actionName = "summon_vilefiend";
+    elseif IsCastable("Grimoire: Felguard", 0) then
+      actionName = "grimoire_felguard";
+    end
+  end
+
+  local felguardUptimeRemaining = felguardUpUntil - GetTime();
+  if felguardUptimeRemaining > 0 then
+    if IsCastable("Blood Fury", 0) then
+      actionName = "blood_fury";
+    end
+
+    if felguardUptimeRemaining < 5 and IsCastable("Summon Demonic Tyrant", 0) then
+      actionName = "summon_demonic_tyrant";
+    end
+  end
+
   local quaking = FindDebuff("player", "Quake");
   if quaking then
     if actionName == "shadow_bolt" or actionName == "hand_of_guldan" then
@@ -101,13 +105,6 @@ function RenderSingleTargetRotation()
     end
   end
 
-  if actionName == "doom" then
-    local doomDebuff = FindDebuff("target", "Doom");
-    if doomDebuff ~= nil then
-      actionName = GetHekiliQueue().Primary[2].actionName;
-    end
-  end
-  
   WowCyborg_CURRENTATTACK = actionName;
   local button = buttons[actionName];
   
@@ -117,5 +114,23 @@ function RenderSingleTargetRotation()
 
   return SetSpellRequest(nil);
 end
+
+function CreateSummonFrame()
+  local frame = CreateFrame("Frame");
+  frame:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED");
+
+  frame:SetScript("OnEvent", function(...)
+    local timestamp, type, hideCaster, sourceGUID, sourceName, sourceFlags, sourceRaidFlags, destGUID, destName, destFlags, destRaidFlags = CombatLogGetCurrentEventInfo();
+    if type == 'SPELL_SUMMON' and sourceName == UnitName('player') then
+      local spellId, spellName, spellSchool = ...
+      
+      if destName == "Felguard" then
+        felguardUpUntil = GetTime() + 17;
+      end
+    end
+  end)
+end
+
+CreateSummonFrame();
 
 print("Demo 2 lock rotation loaded");
