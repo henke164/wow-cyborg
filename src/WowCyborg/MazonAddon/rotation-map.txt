@@ -30,6 +30,7 @@ unholydk2	MazonAddon/Combat/DKUnholy2.lua
 pvpdk	MazonAddon/Combat/DKPvp.lua
 pvpdk2	MazonAddon/Combat/DKPvp2.lua
 restodruid	MazonAddon/Combat/DruidResto.lua
+raiddruid	MazonAddon/Combat/DruidRestoRaid.lua
 tankdruid	MazonAddon/Combat/DruidTank.lua
 feraldruid	MazonAddon/Combat/DruidFeral.lua
 convoke	MazonAddon/Combat/DruidConvoke.lua

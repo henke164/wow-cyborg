@@ -34,6 +34,8 @@ local attack = "8";
 local battleShout = "CTRL+3";
 local heroicThrow = "0";
 
+local eightYardCheck = "Intimidating Shout";
+
 WowCyborg_PAUSE_KEYS = {
   "F1",
   "F2",
@@ -51,7 +53,7 @@ function RenderMultiTargetRotation()
 end
 
 function RenderSingleTargetRotation()
-  local nearbyEnemies = GetNearbyEnemyCount();
+  local nearbyEnemies = GetNearbyEnemyCount(eightYardCheck);
   local targetHp = GetHealthPercentage("target");
   local bsBuff = FindBuff("player", "Battle Shout");
   
@@ -61,7 +63,7 @@ function RenderSingleTargetRotation()
   end
 
   if InMeleeRange() == false then
-    if IsCastableAtEnemyTarget("Thunder Clap", 0) and CheckInteractDistance("target", 3) then
+    if IsCastableAtEnemyTarget("Thunder Clap", 0) and IsNearby("target", eightYardCheck) then
       WowCyborg_CURRENTATTACK = "Thunder Clap";
       return SetSpellRequest(thunderClap);
     end
@@ -103,15 +105,15 @@ function RenderSingleTargetRotation()
     end
   end
 
-  local requiredAmount = 50000;
+  local requiredAmount = 150000;
   if targetHp < 20 and nearbyEnemies == 1 then
-    requiredAmount = 30000;
+    requiredAmount = 130000;
   end
     
   local _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, ipAmount = FindUnitBuff("player", "Ignore Pain");
   
   local ipBuff, ipTl = FindBuff("player", "Ignore Pain");
-  local needIgnorePain = InCombatLockdown() and CheckInteractDistance("target", 3) and
+  local needIgnorePain = InCombatLockdown() and IsNearby("target", eightYardCheck) and
     (ipBuff == nil or ipTl < 3 or ipAmount < requiredAmount);
 
   if InCombatLockdown() then
@@ -143,7 +145,7 @@ function RenderSingleTargetRotation()
       return SetSpellRequest(thunderClap);
     end
 
-    if IsCastableAtEnemyTarget("Demoralizing Shout", 0) and (CheckInteractDistance("target", 3) or InMeleeRange()) then
+    if IsCastableAtEnemyTarget("Demoralizing Shout", 0) and (IsNearby("target", eightYardCheck) or InMeleeRange()) then
       if GetNonAggroCount() == 0 then
         WowCyborg_CURRENTATTACK = "Demoralizing Shout";
         return SetSpellRequest(demoralizingShout);
@@ -187,7 +189,7 @@ function RenderSingleTargetRotation()
       return SetSpellRequest(shieldSlam);
     end
 
-    if IsCastableAtEnemyTarget("Demoralizing Shout", 0) and (CheckInteractDistance("target", 3) or InMeleeRange()) then
+    if IsCastableAtEnemyTarget("Demoralizing Shout", 0) and (IsNearby("target", eightYardCheck) or InMeleeRange()) then
       WowCyborg_CURRENTATTACK = "Demoralizing Shout";
       return SetSpellRequest(demoralizingShout);
     end
@@ -283,17 +285,13 @@ function CreateDamageTakenFrame()
   end)
 end
 
-function GetNonAggroCount(interactDistance)
-  if interactDistance == nil then
-    interactDistance = 3;
-  end
-
+function GetNonAggroCount()
   local count = 0;
 
   for i = 1, 40 do 
     local guid = UnitGUID("nameplate"..i) 
     if guid then 
-      if CheckInteractDistance("nameplate"..i, interactDistance) then
+      if IsNearby("nameplate"..i) then
         if UnitCanAttack("player", "nameplate"..i) == true then
           if UnitThreatSituation("player", "nameplate"..i) < 3 then
             count = count + 1;

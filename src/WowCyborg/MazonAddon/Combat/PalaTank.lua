@@ -102,6 +102,12 @@ function FindHealingTarget()
   return nil; 
 end
 
+function IsSanctified()
+  local s, _, _, _, _, id = FindBuff("player", "Sanctification")
+  return s ~= nil and id == 135876;
+end
+
+
 function RenderMultiTargetRotation()
   return RenderSingleTargetRotation(true);
 end
@@ -122,6 +128,10 @@ function RenderSingleTargetRotation(saveHolyPower)
   local sentinelBuff = FindBuff("player", "Sentinel");
   local concetration = FindBuff("player", "Consecration");
   local speed = GetUnitSpeed("player");
+  local sanct, _, sanctStacks = FindBuff("player", "Sanctification");
+  local sanctBuffed = sanct ~= nil and sanctStacks == 5;
+  local isSanctified = IsSanctified();
+  local shouldCastConcecration = (concetration == nil or sanctBuffed) and isSanctified == false;
 
   if targetName == "Incorporeal Being" then
     if IsCastableAtEnemyTarget("Turn Evil", 0) then
@@ -177,7 +187,7 @@ function RenderSingleTargetRotation(saveHolyPower)
     end
   end
 
-  if concetration == nil and IsMelee() and IsCastableAtEnemyTarget("Consecration", 0) and speed == 0 then
+  if shouldCastConcecration and IsMelee() and IsCastableAtEnemyTarget("Consecration", 0) and speed == 0 then
     WowCyborg_CURRENTATTACK = "Consecration";
     return SetSpellRequest(consecration);
   end
@@ -204,16 +214,16 @@ function RenderSingleTargetRotation(saveHolyPower)
     end
   end
 
-  if IsMelee() and IsCastableAtEnemyTarget("Shield of the Righteous", 0) and poweredUp and saveHolyPower == false then
-    WowCyborg_CURRENTATTACK = "Shield of the Righteous";
-    return SetSpellRequest(shieldOfTheRighteous);
-  end
-
   if IsCastableAtEnemyTarget("Avenger's Shield", 0) then
     WowCyborg_CURRENTATTACK = "Avenger's Shield";
     return SetSpellRequest(avengersShield);
   end
   
+  if IsMelee() and IsCastableAtEnemyTarget("Shield of the Righteous", 0) and poweredUp and saveHolyPower == false then
+    WowCyborg_CURRENTATTACK = "Shield of the Righteous";
+    return SetSpellRequest(shieldOfTheRighteous);
+  end
+
   if IsCastableAtEnemyTarget("Judgment", 0) and holyPower < 3 then
     WowCyborg_CURRENTATTACK = "Judgment";
     return SetSpellRequest(judgment);
@@ -231,14 +241,14 @@ function RenderSingleTargetRotation(saveHolyPower)
     return SetSpellRequest(avengersShield);
   end
 
-  if concetration == nil and CheckInteractDistance("target", 3) and IsCastableAtEnemyTarget("Consecration", 0) and speed == 0 then
+  if shouldCastConcecration and IsMelee() and IsCastableAtEnemyTarget("Consecration", 0) and speed == 0 then
     WowCyborg_CURRENTATTACK = "Consecration";
     return SetSpellRequest(consecration);
   end
 
-  if IsMelee() or CheckInteractDistance("target", 3) then
+  if IsMelee() then
     if IsCastableAtEnemyTarget("Blessed Hammer", 0) then
-      if concetration == nil and IsCastableAtEnemyTarget("Consecration", 0) then
+      if shouldCastConcecration and IsCastableAtEnemyTarget("Consecration", 0) then
         WowCyborg_CURRENTATTACK = "Consecration";
         return SetSpellRequest(consecration);
       end
@@ -252,7 +262,7 @@ function RenderSingleTargetRotation(saveHolyPower)
     
   if IsMelee() then
     if IsCastableAtEnemyTarget("Hammer of the Righteous", 0) then
-      if concetration == nil and IsCastableAtEnemyTarget("Consecration", 0) then
+      if shouldCastConcecration and IsCastableAtEnemyTarget("Consecration", 0) then
         WowCyborg_CURRENTATTACK = "Consecration";
         return SetSpellRequest(consecration);
       end
@@ -281,7 +291,7 @@ function RenderSingleTargetRotation(saveHolyPower)
   end
 
   local timeInConcecration = GetTime() - concecrationEnteredAt;
-  if CheckInteractDistance("target", 3) and IsCastableAtEnemyTarget("Consecration", 0) and (concetration == nil or timeInConcecration > 12) then
+  if IsMelee() and IsCastableAtEnemyTarget("Consecration", 0) and (concetration == nil or timeInConcecration > 12) then
     WowCyborg_CURRENTATTACK = "Consecration Filler";
     return SetSpellRequest(consecration);
   end
@@ -301,5 +311,27 @@ function RenderSingleTargetRotation(saveHolyPower)
   WowCyborg_CURRENTATTACK = "-";
   return SetSpellRequest(nil);
 end
+
+
+function CreateDamageTakenFrame()
+  local frame = CreateFrame("Frame")
+  frame:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED")
+
+  frame:SetScript("OnEvent", function()
+    local timestamp, type, hideCaster, sourceGUID, sourceName, sourceFlags, sourceRaidFlags, destGUID, destName, destFlags, destRaidFlags, amountDetails = CombatLogGetCurrentEventInfo()
+
+    if UnitInParty(destName) == false and destGUID ~= UnitGUID("player") then
+      return;
+    end
+    
+    if type == "SPELL_AURA_APPLIED" or type == "SPELL_ENERGIZE" then
+      spellId, _, _, amount, _, _, _, _, _, critical = select(12, CombatLogGetCurrentEventInfo());
+      if spellId == 424622 then
+        PlaySoundFile(569593);
+      end
+    end
+  end)
+end
+CreateDamageTakenFrame();
 
 print("Prot pala rotation loaded");

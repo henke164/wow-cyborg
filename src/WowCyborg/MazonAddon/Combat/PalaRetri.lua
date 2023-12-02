@@ -83,7 +83,12 @@ function RenderSingleTargetRotation()
 
   local actionName = GetHekiliQueue().Primary[1].actionName;
 
-
+  local nearbyEnemies = GetNearbyEnemyCount();
+  
+  if nearbyEnemies > 3 and actionName == "templars_verdict" then
+    actionName = "divine_storm";
+  end
+  
   if actionName == "templars_verdict" and InAttackRange() == false then
     return SetSpellRequest(nil);
   end

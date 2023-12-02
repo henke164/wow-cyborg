@@ -118,10 +118,12 @@ end
 
 function FindBuff(target, buffName)
   for i=1,40 do
-    local name, icon, stacks, _, __, etime = UnitBuff(target, i);
-    if name ~= nil and buffName ~= nil and string.lower(name) == string.lower(buffName) then
-      local time = GetTime();
-      return name, etime - time, stacks, i, icon;
+    local name, icon, stacks, _, __, etime, castBy = UnitBuff(target, i);
+    if castBy == "player" then
+      if name ~= nil and buffName ~= nil and string.lower(name) == string.lower(buffName) then
+        local time = GetTime();
+        return name, etime - time, stacks, i, icon;
+      end
     end
   end
 end
@@ -461,9 +463,9 @@ function PreventAzeriteBeamAbortion()
   end
 end
 
-function GetNearbyEnemyCount(interactDistance)
-  if interactDistance == nil then
-    interactDistance = 3;
+function GetNearbyEnemyCount(spellRangeCheck)
+  if spellRangeCheck == nil then
+    return 0;
   end
 
   local count = 0;
@@ -471,7 +473,7 @@ function GetNearbyEnemyCount(interactDistance)
   for i = 1, 40 do 
     local guid = UnitGUID("nameplate"..i) 
     if guid then 
-      if CheckInteractDistance("nameplate"..i, interactDistance) then
+      if IsNearby("nameplate"..i, spellRangeCheck) then
         if UnitCanAttack("player", "nameplate"..i) == true then
           count = count + 1;
         end
@@ -480,4 +482,17 @@ function GetNearbyEnemyCount(interactDistance)
   end
 
   return count;
+end
+
+
+function IsNearby(target, spellRangeCheck)
+  if UnitCanAttack("player", target) then
+    return false
+  end
+
+  if IsSpellInRange(spellRangeCheck, target) then
+    return true
+  else
+    return false
+  end
 end
