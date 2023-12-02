@@ -11,6 +11,8 @@ local avengersShield = 6;
 local shieldOfTheRighteous = 7;
 local hammerOfWrath = 8;
 local seraphim = 9;
+local inConcecration = false;
+local concecrationEnteredAt = 0;
 
 local wog = {};
 wog[1] = "F+5";
@@ -267,8 +269,20 @@ function RenderSingleTargetRotation(saveHolyPower)
     return SetSpellRequest(judgment);
   end
   
-  if CheckInteractDistance("target", 3) and IsCastableAtEnemyTarget("Consecration", 0) and speed == 0 then
-    WowCyborg_CURRENTATTACK = "Consecration";
+  if inConcecration == false then
+    if concetration ~= nil then
+      concecrationEnteredAt = GetTime();
+      inConcecration = true;
+    end
+  else
+    if concetration == nil then
+      inConcecration = false;
+    end
+  end
+
+  local timeInConcecration = GetTime() - concecrationEnteredAt;
+  if CheckInteractDistance("target", 3) and IsCastableAtEnemyTarget("Consecration", 0) and (concetration == nil or timeInConcecration > 12) then
+    WowCyborg_CURRENTATTACK = "Consecration Filler";
     return SetSpellRequest(consecration);
   end
 

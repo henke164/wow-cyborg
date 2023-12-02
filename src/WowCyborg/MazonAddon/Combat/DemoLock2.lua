@@ -1,19 +1,24 @@
 --[[
   Button    Spell
 ]]--
-local demonicTyrant = "1";
-local demonbolt = "2";
-local callDreadStalkers = "3";
-local handOfGulDan = "4";
-local felguard = "5";
-local shadowbolt = "6";
-local soulRot = "7";
-local implosion = "8";
-local stopCast = "F+7";
+local buttons = {}
+buttons["power_siphon"] = "1";
+buttons["demonbolt"] = "2";
+buttons["call_dreadstalkers"] = "3";
+buttons["shadow_bolt"] = "4";
+buttons["grimoire_felguard"] = "5";
+buttons["hand_of_guldan"] = "6";
+buttons["summon_demonic_tyrant"] = "7";
+buttons["implosion"] = "8";
+buttons["blood_fury"] = "F+1";
+buttons["demonic_strength"] = "9";
+buttons["soul_strike"] = "0";
+buttons["summon_vilefiend"] = "0";
+buttons["doom"] = "F+6";
+buttons["nether_portal"] = "F+7";
+buttons["soulburn"] = "F+8";
 
-local felguardUpUntil = 0;
-local dreadStalkersUpUntil = 0;
-local demonicTyrantUpUntil = 0;
+stopCast = "F+8";
 local wildImpsUpUntil = {};
 
 WowCyborg_PAUSE_KEYS = {
@@ -22,10 +27,15 @@ WowCyborg_PAUSE_KEYS = {
   "NUMPAD3",
   "NUMPAD4",
   "NUMPAD5",
+  "NUMPAD7",
+  "R",
   "F4",
   "F",
   "§"
 }
+
+felguardUpUntil = 0;
+demonicTyrantUpUntil = 0;
 
 function GetWildImpCount()
   local imps = 0;
@@ -40,65 +50,14 @@ function GetWildImpCount()
   return imps;
 end
 
-function GetCurrentGlobalCooldown()
-  return 1.5 - (1.5 * (UnitSpellHaste("player") / 100))
-end 
-
 function GetSpellCD(name)
   local stStart, stDuration = GetSpellCooldown(name);
+  if stStart == nil then
+    return 60;
+  end
+
   local stCdLeft = stStart + stDuration - GetTime();
   return stCdLeft;
-end
-
-function RenderTyrantSetup()
-  local shards = UnitPower("player", 7);
-  local tyrantCd = GetSpellCD("Summon Demonic Tyrant");
-  local felguardCd = GetSpellCD("Grimoire: Felguard");
-  local dcallBuff = FindBuff("player", "Demonic Calling");
-  local dreadStalkersCd = GetSpellCD("Call Dreadstalkers");
-  local felguardCd = GetSpellCD("Grimoire: Felguard");
-
-  local _, __, ___, tyrantCT = GetSpellInfo("Summon Demonic Tyrant");
-
-  if tyrantCd > 3 then
-    return nil;
-  end
-
-  local felguardUptimeRemaining = felguardUpUntil - GetTime();
-  local dreadStalkersUptimeRemaining = dreadStalkersUpUntil - GetTime();
-  local tyrantUptimeRemaining = demonicTyrantUpUntil - GetTime();
-  local felguardUp = felguardUptimeRemaining > 0;
-  local dreadstalkerUp = dreadStalkersUptimeRemaining > 0;
-  local tyrantUp = tyrantUptimeRemaining > 0;
-
-  if dreadstalkerUp == false and dreadStalkersCd > 0 then
-    return nil;
-  end
-  
-  if IsCastableAtEnemyTarget("Soul Rot", 0) then
-    WowCyborg_CURRENTATTACK = "Soul Rot";
-    return SetSpellRequest(soulRot);
-  end
-
-  if dcallBuff ~= nil or shards > 1 then
-    if IsCastableAtEnemyTarget("Call Dreadstalkers", 0) then
-      WowCyborg_CURRENTATTACK = "Call Dreadstalkers";
-      return SetSpellRequest(callDreadStalkers);
-    end
-  end
-  
-  if IsCastable("Grimoire: Felguard", 0) and shards > 0 then
-    WowCyborg_CURRENTATTACK = "Grimoire: Felguard";
-    return SetSpellRequest(felguard);
-  end
-
-  if IsCastable("Summon Demonic Tyrant", 0) then
-    WowCyborg_CURRENTATTACK = "Summon Demonic Tyrant";
-    return SetSpellRequest(demonicTyrant);
-  end
-  
-  WowCyborg_CURRENTATTACK = "-";
-  return SetSpellRequest(nil);
 end
 
 function RenderMultiTargetRotation()
@@ -106,98 +65,106 @@ function RenderMultiTargetRotation()
 end
 
 function RenderSingleTargetRotation(burst)
-  local imps = GetWildImpCount();
-  local felguardUptimeRemaining = felguardUpUntil - GetTime();
-  local dreadStalkersUptimeRemaining = dreadStalkersUpUntil - GetTime();
-  local tyrantUptimeRemaining = demonicTyrantUpUntil - GetTime();
-  local felguardUp = felguardUptimeRemaining > 0;
-  local dreadstalkerUp = dreadStalkersUptimeRemaining > 0;
-  local tyrantUp = tyrantUptimeRemaining > 0;
-  local dreadStalkersCd = GetSpellCD("Call Dreadstalkers");
-
   local shards = UnitPower("player", 7);
-  local speed = GetUnitSpeed("player");
-  local targetHp = GetHealthPercentage("target");
-  local tyrantCd = GetSpellCD("Summon Demonic Tyrant");
-  local shouldCastShadowbolt = true;
+
+  if Hekili.DB.profile.toggles.cooldowns.value == true then
+    Hekili:FireToggle("cooldowns");
+    Hekili:Query("UI").Minimap:RefreshDataText();
+  end
+
+  if UnitCanAttack("player", "target") == false then
+    return SetSpellRequest(nil);
+  end
+
+  local actionName = GetHekiliQueue().Primary[1].actionName;
+
+  local imps = GetWildImpCount();
+
+  local netherPortalCd = GetSpellCD("Nether Portal");
+  local felguardCd = GetSpellCD("Grimoire: Felguard");
+  local dcBuff = FindBuff("player", "Demonic Core");
+
+  if burst and felguardCd < 5 then
+    if netherPortalCd <= 0 and imps > 4 and actionName == "hand_of_guldan" then
+      actionName = GetHekiliQueue().Primary[2].actionName;
+    end
+
+    if netherPortalCd <= 1.5 then
+      if shards < 5 then
+        local dbCd = GetSpellCD("Demonbolt");
+        if dbCd < 4 and shards < 4 then
+          if dcBuff then
+            actionName = "demonbolt";
+            WowCyborg_CURRENTATTACK = actionName;
+            return SetSpellRequest(buttons[actionName]);
+          end
+        end
+
+        actionName = "shadow_bolt";
+        WowCyborg_CURRENTATTACK = actionName;
+        return SetSpellRequest(buttons[actionName]);
+      end
+
+      if shards == 5 then
+        actionName = "nether_portal";
+        WowCyborg_CURRENTATTACK = actionName;
+        return SetSpellRequest(buttons[actionName]);
+      end
+    end
+
+    if netherPortalCd > 170 then
+      local sbBuff = FindBuff("player", "Soulburn");
+      if sbBuff == nil then
+        if IsCastable("Soulburn", 0) and shards > 0 then
+          actionName = "soulburn";
+          WowCyborg_CURRENTATTACK = actionName;
+          return SetSpellRequest(buttons[actionName]);
+        end
+      end
+    end
+  end
+
+  if netherPortalCd > 60 and (shards >= 3 or dcBuff ~= nil or GetSpellCD("Power Siphon") < 3) then
+    if IsCastable("Grimoire: Felguard", 0) and shards > 0 then
+      actionName = "grimoire_felguard";
+    end 
+  end
+
+  if felguardCd > 40 and IsCastable("Summon Vilefiend", 0) and shards > 0 then
+    actionName = "summon_vilefiend";
+  end
+
+  local felguardUptimeRemaining = felguardUpUntil - GetTime();
+  if felguardUptimeRemaining > 0 then
+    if (felguardUptimeRemaining < 7 or imps > 10) and IsCastable("Summon Demonic Tyrant", 0) then
+      actionName = "summon_demonic_tyrant";
+    end
+  end
+
+  if demonicTyrantUpUntil > 0 then    
+    if GetSpellCD("Blood Fury") < 1.5 then
+      actionName = "blood_fury";
+    end
+
+    if IsCastable("Demonic Strength", 0) then
+      actionName = "demonic_strength";
+    end 
+  end
+
+  local quaking = FindDebuff("player", "Quake");
+  if quaking then
+    if actionName == "shadow_bolt" or actionName == "hand_of_guldan" then
+      return SetSpellRequest(nil);
+    end
+  end
+
+  WowCyborg_CURRENTATTACK = actionName;
+  local button = buttons[actionName];
   
-  if UnitCastingInfo("player") == "Summon Demonic Tyrant" then
-    shards = 5;
+  if button ~= nil then
+    return SetSpellRequest(button);
   end
 
-  if UnitCastingInfo("player") == "Hand of Gul'dan" then
-    shards = shards - 3;
-  end
-  
-  if UnitCastingInfo("player") == "Shadow Bolt" then
-    shards = shards + 1;
-  end
-
-  if tyrantUptimeRemaining < 0 and tyrantUptimeRemaining > -10 and tyrantUp == false and imps > 10 then
-    if IsCastableAtEnemyTarget("Implosion", 0) then
-      WowCyborg_CURRENTATTACK = "Implosion";
-      return SetSpellRequest(implosion);
-    end
-  end
-  
-  if speed == 0 and imps > 5 and burst and WowCyborg_INCOMBAT then
-    local tyrantSetup = RenderTyrantSetup();
-    if tyrantSetup ~= nil then
-      return tyrantSetup;
-    end
-  end
-
-  local dcBuff, dcTl, dcStacks = FindBuff("player", "Demonic Core");
-  local dcallBuff = FindBuff("player", "Demonic Calling");
-
-  if (tyrantCd > 20 or burst ~= true) and dcallBuff ~= nil and dreadStalkersCd < 1.5 then
-    shouldCastShadowbolt = false;
-    if IsCastableAtEnemyTarget("Call Dreadstalkers", 0) then
-      WowCyborg_CURRENTATTACK = "Call Dreadstalkers";
-      return SetSpellRequest(callDreadStalkers);
-    end
-  end
-
-  if speed == 0 and IsCastableAtEnemyTarget("Shadow Bolt", 0) then
-    if shards == 5 or (dcBuff ~= nil and shards > 3) or (tyrantCd == 0 and shards > 3) then
-      shouldCastShadowbolt = false;
-      if IsCastableAtEnemyTarget("Hand of Gul'dan", 0) then
-        WowCyborg_CURRENTATTACK = "Hand of Gul'dan";
-        return SetSpellRequest(handOfGulDan);
-      end
-    end
-
-    if shards > 2 and tyrantUp then
-      shouldCastShadowbolt = false;
-      if IsCastableAtEnemyTarget("Hand of Gul'dan", 0) then
-        WowCyborg_CURRENTATTACK = "Hand of Gul'dan";
-        return SetSpellRequest(handOfGulDan);
-      end
-    end
-
-    if dcBuff ~= nil and (speed == 1 or shards < 4) then
-      shouldCastShadowbolt = false;
-      if IsCastableAtEnemyTarget("Demonbolt", 0) then
-        WowCyborg_CURRENTATTACK = "Demonbolt";
-        return SetSpellRequest(demonbolt);
-      end
-    end
-
-    if shouldCastShadowbolt and IsCastableAtEnemyTarget("Shadow Bolt", 0) then
-      WowCyborg_CURRENTATTACK = "Shadow Bolt";
-      return SetSpellRequest(shadowbolt);
-    end
-  else
-    if dcBuff ~= nil then
-      shouldCastShadowbolt = false;
-      if IsCastableAtEnemyTarget("Demonbolt", 0) then
-        WowCyborg_CURRENTATTACK = "Demonbolt";
-        return SetSpellRequest(demonbolt);
-      end
-    end
-  end
-
-  WowCyborg_CURRENTATTACK = "-";
   return SetSpellRequest(nil);
 end
 
@@ -214,18 +181,13 @@ function CreateSummonFrame()
         wildImpsUpUntil[destGUID] = GetTime() + 10;
       end
 
-      if destName == "Dreadstalker" then
-        dreadStalkersUpUntil = GetTime() + 12;
-      end
-      
       if destName == "Felguard" then
         felguardUpUntil = GetTime() + 17;
       end
-      
+            
       if destName == "Demonic Tyrant" then
         demonicTyrantUpUntil = GetTime() + 15;
         felguardUpUntil = felguardUpUntil + 15;
-        dreadStalkersUpUntil = dreadStalkersUpUntil + 15;
 
         for k,v in pairs(wildImpsUpUntil) do 
           local wildImpUptime = v - GetTime();

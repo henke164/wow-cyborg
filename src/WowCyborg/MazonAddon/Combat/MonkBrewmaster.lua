@@ -12,6 +12,7 @@ buttons["rising_sun_kick"] = "7";
 buttons["exploding_keg"] = "8";
 buttons["black_ox_brew"] = "9";
 buttons["chi_wave"] = "0";
+buttons["touch_of_death"] = "F+2";
 buttons["celestial_brew"] = "F+5";
 buttons["purifying_brew"] = "F+6";
 buttons["fortifying_brew"] = "F+7";
@@ -30,19 +31,16 @@ WowCyborg_PAUSE_KEYS = {
   "NUMPAD5",
   "NUMPAD7",
   "NUMPAD8",
+  "F4",
   "F",
   "§"
 }
 
 function RenderMultiTargetRotation()
-  return RenderRotation(true);
-end
-
-function RenderSingleTargetRotation()
   return RenderRotation();
 end
 
-function RenderRotation()
+function RenderSingleTargetRotation()
   if UnitChannelInfo("player") or UnitCastingInfo("player") then
     WowCyborg_CURRENTATTACK = "-";
     return SetSpellRequest(nil);
@@ -52,27 +50,34 @@ function RenderRotation()
   WowCyborg_CURRENTATTACK = actionName;
   button = buttons[actionName];
   
-  if
-    actionName == "blackout_kick" or
-    actionName == "rising_sun_kick" or
-    actionName == "tiger_palm" or
-    actionName == "breath_of_fire"
-  then
-    if IsMelee() == false then
-      WowCyborg_CURRENTATTACK = "Out of range";
-      return SetSpellRequest(nil);
-    end
+  if (GetSpellCharges("Purifying Brew") == 0 and IsCastable("Celestial Brew", 0) == false and IsCastable("Black Ox Brew", 0)) then
+    WowCyborg_CURRENTATTACK = "Black Ox Brew";
+    return SetSpellRequest("9");
   end
 
-  if actionName == "chi_wave" then
-    if IsCastableAtEnemyTarget("Chi Wave", 0) == false then
-      WowCyborg_CURRENTATTACK = "Out of range";
-      return SetSpellRequest(nil);
-    end
-  end
+  if (button ~= nil) then
+    local replaced = string.gsub(actionName, "_", " ");
+    if (IsCastable(replaced, 0)) then
+      if
+        actionName == "blackout_kick" or
+        actionName == "rising_sun_kick"
+      then
+        if IsMelee() == false then
+          WowCyborg_CURRENTATTACK = "Out of range";
+          return SetSpellRequest(nil);
+        end
+      end
 
-  if button ~= nil then
-    return SetSpellRequest(button);
+      if actionName == "chi_wave" then
+        if IsCastableAtEnemyTarget("Chi Wave", 0) == false then
+          WowCyborg_CURRENTATTACK = "Out of range";
+          return SetSpellRequest(nil);
+        end
+      end
+
+      WowCyborg_CURRENTATTACK = actionName;
+      return SetSpellRequest(button);
+    end
   end
 end
 
@@ -85,7 +90,7 @@ function IsMelee()
     return false;
   end;
 
-  return true;
+  return IsSpellInRange("Rising Sun Kick", "target");
 end
 
-print("Brewmaster rotation loaded");
+print("BMMonk rotation loaded");

@@ -104,7 +104,7 @@ end
 function RenderSingleTargetRotation()
   local actionName = GetHekiliQueue().Primary[1].actionName;
   local hp = GetHealthPercentage("player");
-  if (hp <= 65) then
+  if (hp <= 50) then
     if IsCastable("Frenzied Regeneration", 0) then
       WowCyborg_CURRENTATTACK = "Frenzied Regeneration";
       return SetSpellRequest("6");
@@ -121,9 +121,23 @@ function RenderSingleTargetRotation()
     end
   end
 
+  if (hp <= 60) then
+    if IsCastable("Frenzied Regeneration", 0) then
+      WowCyborg_CURRENTATTACK = "Frenzied Regeneration";
+      return SetSpellRequest("6");
+    end
+  end
+
   local rage = UnitPower("player");
 
-  if rage > 85 then
+  local goryBuff = FindBuff("player", "Gory Fur");
+  local reqRage = 70;
+  
+  if goryBuff ~= nil then
+    reqRage = 60;
+  end
+
+  if rage >= reqRage then
     if (IsCastable("Ironfur", 0) and IsSpellInRange("Mangle", "target") and UnitCanAttack("player", "target")) then
       WowCyborg_CURRENTATTACK = "Ironfur";
       return SetSpellRequest(buttons["ironfur"]);

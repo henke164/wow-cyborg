@@ -33,7 +33,7 @@ WowCyborg_PAUSE_KEYS = {
 }
 
 function IsMelee()
-  return CheckInteractDistance("target", 5);
+  return CheckInteractDistance("target", 5) or IsSpellInRange("target", "Death strike");
 end
 
 function RenderMultiTargetRotation()
