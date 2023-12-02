@@ -3,11 +3,13 @@ dhtankpvp	MazonAddon/Combat/DHTankPvp.lua
 boomkin	MazonAddon/Combat/DruidBoomkin.lua
 furypvp	MazonAddon/Combat/WarriorFuryPvp.lua
 protwarrior	MazonAddon/Combat/WarriorProt.lua
+protwarrior2	MazonAddon/Combat/WarriorProt2.lua
 armswarrior	MazonAddon/Combat/WarriorArms.lua
 arms	MazonAddon/Combat/WarriorArms2.lua
 seller	MazonAddon/Combat/Seller.lua
 fury	MazonAddon/Combat/WarriorFury2.lua
 retpvp	MazonAddon/Combat/RetriPVP.lua
+lockfollow	MazonAddon/Combat/ClassicLockFollower.lua
 pvpwarr	MazonAddon/Combat/WarriorPvp.lua
 bmhunter	MazonAddon/Combat/HunterBM.lua
 mmhunter	MazonAddon/Combat/HunterMM.lua

@@ -13,6 +13,7 @@ buttons["blade_rush"] = "8";
 buttons["ambush"] = "9";
 buttons["vanish"] = "F+7";
 buttons["shadow_dance"] = "F+8";
+buttons["ghostly_strike"] = "F+9";
 
 WowCyborg_PAUSE_KEYS = {
   "F3",
