@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel;
+using System.Threading;
 using System.Windows.Forms;
 using WowCyborg.Core;
 using WowCyborg.Core.Handlers;
@@ -53,6 +54,13 @@ namespace WowCyborg.BotProfiles
 
                     KeyHandler.PressKey(Keys.S, 10);
                 }
+            }
+            else if (key == Keys.F7)
+            {
+                var proc = (int)HWnd;
+                var rnd = new Random(proc);
+                Thread.Sleep(rnd.Next(100, 1500));
+                KeyHandler.PressKey(Keys.Space);
             }
 
             KeyHandler.PressKey(key);

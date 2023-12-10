@@ -1,5 +1,5 @@
 ﻿{
-  "botType": "",
+  "botType": "follower",
   "serverAddress": "http://localhost:3000",
   "addonPath": "../../MazonAddon",
   "addonColumnCount": 4,
