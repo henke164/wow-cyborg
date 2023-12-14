@@ -113,8 +113,8 @@ function RenderSingleTargetRotation(aoe)
     end
   end
 
-  if targetRawHp < 500 and GetSpellCD("Shadowburn") <= 0 and IsSpellInRange("Shadowburn", "target") and UnitLevel("target") > 18 then
-    if IsCastableAtEnemyTarget("Shadowburn", 105) then
+  if targetRawHp < 800 and GetSpellCD("Shadowburn") <= 0 and IsSpellInRange("Shadowburn", "target") and UnitLevel("target") > 18 then
+    if IsCastableAtEnemyTarget("Shadowburn", 130) then
       WowCyborg_CURRENTATTACK = "Shadowburn";
       return SetSpellRequest("5");
     elseif targetRawHp < 200 and IsCastableAtEnemyTarget("Drain soul", 0) and UnitLevel("target") > 18 then
@@ -131,12 +131,9 @@ function RenderSingleTargetRotation(aoe)
   end
 
   if (UnitCastingInfo("player") == "Incinerate") then
-    if targetRawHp > 400 then
+    if targetRawHp > 600 then
       WowCyborg_CURRENTATTACK = "Chaos Bolt";
       return SetSpellRequest("4");
-    else
-      WowCyborg_CURRENTATTACK = "Shadow Bolt";
-      return SetSpellRequest("1");
     end
   end
 
@@ -148,7 +145,7 @@ function RenderSingleTargetRotation(aoe)
     end
   end
 
-  if targetRawHp > 400 and IsCastableAtEnemyTarget("Chaos Bolt", 26) then
+  if targetRawHp > 600 and IsCastableAtEnemyTarget("Chaos Bolt", 26) then
     if IsCastable("Demonic Grace", 0) and GetUnitName("pet") ~= nil then
       WowCyborg_CURRENTATTACK = "Demonic Grace";
       return SetSpellRequest("F+1");
@@ -164,94 +161,35 @@ function RenderSingleTargetRotation(aoe)
   end
 
   if WowCyborg_INCOMBAT then
-    if hp > 60 and mana < 30 then
-      if IsCastable("Life tap", 0) then
-        WowCyborg_CURRENTATTACK = "Life tap";
-        return SetSpellRequest("7");
-      end
+    if hp > 60 and mana < 30 and IsCastable("Life tap", 0) then
+      WowCyborg_CURRENTATTACK = "Life tap";
+      return SetSpellRequest("7");
     end
   else
-    if hp > 30 and mana < 80 then
-      if IsCastable("Life tap", 0) then
-        WowCyborg_CURRENTATTACK = "Life tap";
-        return SetSpellRequest("7");
-      end
+    if hp > 30 and mana < 80 and IsCastable("Life tap", 0) then
+      WowCyborg_CURRENTATTACK = "Life tap";
+      return SetSpellRequest("7");
     end
   end
 
-  --[[ META
-  local metaBuff = FindBuff("player", "Metamorphosis");
-
-  if metaBuff ~= nil then
-    if WowCyborg_INCOMBAT == false then
-      if IsCastableAtEnemyTarget("Demon Charge", 0) then
-        WowCyborg_CURRENTATTACK = "Demon Charge";
-        return SetSpellRequest("0");
-      end
+  local immo = FindDebuff("target", "Immolate");
+  if immo == nil and IsCastableAtEnemyTarget("Immolate", 90) then
+    if UnitCastingInfo("player") == "Immolate" then
+      WowCyborg_CURRENTATTACK = "Incinerate";
+      return SetSpellRequest("F+1");
     end
-
-    if IsCurrentSpell(6603) == false then
-      if IsCastableAtEnemyTarget("Curse of Agony", 0) then
-        WowCyborg_CURRENTATTACK = "Attack";
-        return SetSpellRequest("6");
-      end
-    end
-
-    local speed = GetUnitSpeed("player");
-    if speed > 0 then
-      local agonyDebuff = FindDebuff("target", "Curse of Agony")
-      if agonyDebuff == nil and IsCastableAtEnemyTarget("Curse of Agony", 25) then
-        WowCyborg_CURRENTATTACK = "Curse of Agony";
-        return SetSpellRequest("8");
-      end
-    end
-
-    local targetRawHp = UnitHealth("target");
-    if targetRawHp < 500 and GetSpellCD("Shadowburn") <= 0 and IsSpellInRange("Shadowburn", "target") then
-      if IsCastableAtEnemyTarget("Shadowburn", 0) then
-        WowCyborg_CURRENTATTACK = "Shadowburn";
-        return SetSpellRequest("5");
-      elseif targetRawHp < 200 and IsCastableAtEnemyTarget("Drain soul", 0) then
-        WowCyborg_CURRENTATTACK = "Drain soul";
-        return SetSpellRequest("F+2");
-      end
-    end
-
-    if IsCastableAtEnemyTarget("Shadow Cleave", 52) then
-      WowCyborg_CURRENTATTACK = "Shadow Cleave";
-      return SetSpellRequest("1");
-    end
-
-    if (UnitCastingInfo("player") == "Incinerate") then
-      WowCyborg_CURRENTATTACK = "Searing Pain";
-      return SetSpellRequest("3");
-    end
-  
-    local inciBuff = FindBuff("player", "Incinerate");
-    if inciBuff == nil then
-      if IsCastableAtEnemyTarget("Incinerate", 70) then
-        WowCyborg_CURRENTATTACK = "Incinerate";
-        return SetSpellRequest("F+1");
-      end
-    end
-
-    if IsCastableAtEnemyTarget("Searing Pain", 70) then
-      WowCyborg_CURRENTATTACK = "Searing Pain";
-      return SetSpellRequest("3");
-    end
+    WowCyborg_CURRENTATTACK = "Immolate";
+    return SetSpellRequest("2");
   end
-  ]]--
 
-  if IsCastableAtEnemyTarget("Shadow Bolt", 0) then
-    if IsCastableAtEnemyTarget("Shadow Bolt", 110) then
-      WowCyborg_CURRENTATTACK = "Shadow Bolt";
-      return SetSpellRequest("1");
-    else
-      if IsCurrentSpell(5019) == false then
-        WowCyborg_CURRENTATTACK = "Wanding...";
-        return SetSpellRequest(wand);
-      end
-    end
+  if IsCastableAtEnemyTarget("Incinerate", 70) then
+    WowCyborg_CURRENTATTACK = "Incinerate";
+    return SetSpellRequest("F+1");
+  end
+
+  if IsCastableAtEnemyTarget("Shadow Bolt", 0) and IsCurrentSpell(5019) == false then
+    WowCyborg_CURRENTATTACK = "Wanding...";
+    return SetSpellRequest(wand);
   end
 
   WowCyborg_CURRENTATTACK = "-";
