@@ -130,9 +130,9 @@ end
 
 function FindUnitBuff(target, buffName)
   for i=1,40 do
-    local name = UnitBuff(target, i);
-    if name ~= nil and buffName ~= nil and string.lower(name) == string.lower(buffName) then
-      return UnitBuff(target, i);
+    local buff = UnitBuff(target, i);
+    if buff ~= nil and buffName ~= nil and string.lower(buff.name) == string.lower(buffName) then
+      return buff;
     end
   end
 end
@@ -171,7 +171,7 @@ function IsCastable(spellName, requiredEnergy)
   end
   
   local charges = GetSpellCharges(spellName);
-  if (charges == nil) == false then
+  if charges ~= nil then
     if charges > 0 then
       return true;
     end
@@ -474,9 +474,7 @@ function GetNearbyEnemyCount(spellRangeCheck)
     local guid = UnitGUID("nameplate"..i) 
     if guid then 
       if IsNearby("nameplate"..i, spellRangeCheck) then
-        if UnitCanAttack("player", "nameplate"..i) == true then
-          count = count + 1;
-        end
+        count = count + 1;
       end
     end
   end
@@ -486,13 +484,47 @@ end
 
 
 function IsNearby(target, spellRangeCheck)
-  if UnitCanAttack("player", target) then
+  if UnitCanAttack("player", target) == false then
     return false
   end
-
+  
   if IsSpellInRange(spellRangeCheck, target) then
     return true
   else
     return false
   end
+end
+
+function IsSpellInRange(spellId, target)
+  if C_Spell.IsSpellInRange(spellId, target) == true then
+    return 1
+  else
+    return 0
+  end
+end
+
+function UnitBuff(target, i)
+  return C_UnitAuras.GetBuffDataByIndex(target, i)
+end
+
+function GetSpellCooldown(spellName)
+  if (C_Spell == nil) then
+    return GetSpellCooldown(spellName)
+  end
+
+  local spellCd = C_Spell.GetSpellCooldown(spellName)
+  return spellCd.startTime, spellCd.duration;
+end
+
+function GetSpellCharges(spellName)
+  local spellC = C_Spell.GetSpellCharges(spellName)
+  if (spellC == nil) then
+    return 0
+  end
+
+  return spellC.currentCharges, spellC.maxCharges, spellC.cooldownStartTime, spellC.cooldownDuration
+end
+
+function IsUsableSpell(spellName)
+  return C_Spell.IsSpellUsable(spellName)
 end

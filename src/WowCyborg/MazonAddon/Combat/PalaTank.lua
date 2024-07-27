@@ -10,7 +10,7 @@ local defender = 5;
 local avengersShield = 6;
 local shieldOfTheRighteous = 7;
 local hammerOfWrath = 8;
-local seraphim = 9;
+local hammerOfLight = 9;
 local inConcecration = false;
 local concecrationEnteredAt = 0;
 
@@ -38,7 +38,7 @@ WowCyborg_PAUSE_KEYS = {
 }
 
 function IsMelee()
-  return IsSpellInRange("Rebuke", "target") == 1;
+  return IsSpellInRange("Rebuke", "target") == 1 or IsSpellInRange("Rebuke", "target") == true;
 end
 
 function GetCurrentGlobalCooldown()
@@ -77,7 +77,7 @@ function GetGroupRosterInfo()
   return groupMembers;
 end
 
-function FindHealingTarget()
+function FindHealingTarget(shiningBuff)
   local lowestHealth = nil
   local members = GetGroupRosterInfo();
   for groupindex = 1,5 do
@@ -95,7 +95,11 @@ function FindHealingTarget()
     end
   end
 
-  if lowestHealth ~= nil and lowestHealth.hp < 60 then
+  if shiningBuff ~= nil and lowestHealth ~= nil and lowestHealth.hp < 60 then
+    return lowestHealth.name, 0;
+  end
+  
+  if shiningBuff == nil and lowestHealth ~= nil and lowestHealth.hp < 30 then
     return lowestHealth.name, 0;
   end
 
@@ -121,7 +125,12 @@ function RenderSingleTargetRotation(saveHolyPower)
   local bastionBuff = FindBuff("player", "Bastion of Light");
   local nearbyEnemies = GetNearbyEnemyCount();
   local hp = GetHealthPercentage("player");
-  local mana = (UnitPower("player") / UnitPowerMax("player")) * 100;
+  local mana = 0;
+  if UnitPower("player") ~= nil and UnitPowerMax("player") ~= nil then
+    if UnitPower("player") > 0 and UnitPowerMax("player") > 0 then
+      mana = (UnitPower("player") / UnitPowerMax("player")) * 100;
+    end
+  end
   local targetHp = GetHealthPercentage("target");
   local holyPower = UnitPower("player", 9);
   local wrathBuff = FindBuff("player", "Avenging Wrath");
@@ -132,6 +141,13 @@ function RenderSingleTargetRotation(saveHolyPower)
   local sanctBuffed = sanct ~= nil and sanctStacks == 5;
   local isSanctified = IsSanctified();
   local shouldCastConcecration = (concetration == nil or sanctBuffed) and isSanctified == false;
+  local useHol = false;
+
+  local holActive = C_Spell.GetOverrideSpell(387174) == 427453;
+  if (holActive) then
+    useHol = true;
+    saveHolyPower = true;
+  end
 
   if targetName == "Incorporeal Being" then
     if IsCastableAtEnemyTarget("Turn Evil", 0) then
@@ -192,7 +208,7 @@ function RenderSingleTargetRotation(saveHolyPower)
     return SetSpellRequest(consecration);
   end
 
-  local friendlyTargetName = FindHealingTarget();
+  local friendlyTargetName = FindHealingTarget(shiningBuff);
   if friendlyTargetName ~= nil then
     if poweredUp and saveHolyPower == false and mana >= 10 then
       local memberindex = GetMemberIndex(friendlyTargetName);
@@ -222,6 +238,11 @@ function RenderSingleTargetRotation(saveHolyPower)
   if IsMelee() and IsCastableAtEnemyTarget("Shield of the Righteous", 0) and poweredUp and saveHolyPower == false then
     WowCyborg_CURRENTATTACK = "Shield of the Righteous";
     return SetSpellRequest(shieldOfTheRighteous);
+  end
+  
+  if IsMelee() and IsCastableAtEnemyTarget("Shield of the Righteous", 0) and holyPower == 5 and useHol then
+    WowCyborg_CURRENTATTACK = "Hammer of Light";
+    return SetSpellRequest(hammerOfLight);
   end
 
   if IsCastableAtEnemyTarget("Judgment", 0) and holyPower < 3 then
@@ -274,7 +295,8 @@ function RenderSingleTargetRotation(saveHolyPower)
     end
   end
   
-  if IsCastableAtEnemyTarget("Judgment", 0) and holyPower < 3 then
+  local judgmentCharges = GetSpellCharges("Judgment");
+  if IsCastableAtEnemyTarget("Judgment", 0) and (holyPower < 3 or judgmentCharges > 1) then
     WowCyborg_CURRENTATTACK = "Judgment";
     return SetSpellRequest(judgment);
   end
@@ -311,27 +333,5 @@ function RenderSingleTargetRotation(saveHolyPower)
   WowCyborg_CURRENTATTACK = "-";
   return SetSpellRequest(nil);
 end
-
-
-function CreateDamageTakenFrame()
-  local frame = CreateFrame("Frame")
-  frame:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED")
-
-  frame:SetScript("OnEvent", function()
-    local timestamp, type, hideCaster, sourceGUID, sourceName, sourceFlags, sourceRaidFlags, destGUID, destName, destFlags, destRaidFlags, amountDetails = CombatLogGetCurrentEventInfo()
-
-    if UnitInParty(destName) == false and destGUID ~= UnitGUID("player") then
-      return;
-    end
-    
-    if type == "SPELL_AURA_APPLIED" or type == "SPELL_ENERGIZE" then
-      spellId, _, _, amount, _, _, _, _, _, critical = select(12, CombatLogGetCurrentEventInfo());
-      if spellId == 424622 then
-        PlaySoundFile(569593);
-      end
-    end
-  end)
-end
-CreateDamageTakenFrame();
 
 print("Prot pala rotation loaded");

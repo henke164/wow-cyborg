@@ -57,7 +57,12 @@ function RenderMultiTargetRotation()
         return SetSpellRequest(stopCast);
       end
       
+      local speed = GetUnitSpeed("player");
       WowCyborg_CURRENTATTACK = "Rain of fire";
+      if speed > 0 then
+        return SetSpellRequest("7");
+      end
+
       return SetSpellRequest("8");
     end
 

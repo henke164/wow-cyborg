@@ -3,18 +3,22 @@
 ]]--
 local buttons = {}
 buttons["roll_the_bones"] = "1";
-buttons["slice_and_dice"] = "2";
+buttons["blade_flurry"] = "2";
 buttons["between_the_eyes"] = "3";
 buttons["sinister_strike"] = "4";
 buttons["dispatch"] = "5";
 buttons["pistol_shot"] = "6";
-buttons["blade_flurry"] = "7";
+buttons["slice_and_dice"] = "7";
 buttons["blade_rush"] = "8";
 buttons["ambush"] = "9";
+buttons["keep_it_rolling"] = "0";
+buttons["echoing_reprimand"] = "8";
 buttons["vanish"] = "F+7";
+buttons["adrenaline_rush"] = "F+2";
 buttons["shadow_dance"] = "F+8";
 buttons["shiv"] = "F+6";
 buttons["ghostly_strike"] = "F+9";
+buttons["manic_grieftorch"] = "F+6";
 
 WowCyborg_PAUSE_KEYS = {
   "F3",
@@ -32,10 +36,18 @@ WowCyborg_PAUSE_KEYS = {
 }
 
 function RenderMultiTargetRotation()
+  if Hekili.DB.profile.toggles.cooldowns.value == false then
+    Hekili:FireToggle("cooldowns");
+    Hekili:Query("UI").Minimap:RefreshDataText();
+  end
   return RenderRotation(true);
 end
 
 function RenderSingleTargetRotation()
+  if Hekili.DB.profile.toggles.cooldowns.value == true then
+    Hekili:FireToggle("cooldowns");
+    Hekili:Query("UI").Minimap:RefreshDataText();
+  end
   return RenderRotation();
 end
 

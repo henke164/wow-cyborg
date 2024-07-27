@@ -44,7 +44,7 @@ bmhunterfollower	MazonAddon/Combat/HunterBMFollower.lua
 restofollower	MazonAddon/Combat/DruidRestoFollower.lua
 resto2follower	MazonAddon/Combat/DruidResto2Follower.lua
 dhdps	MazonAddon/Combat/DHHavoc.lua
-dhtank	MazonAddon/Combat/DHTank.lua
+dhtank	MazonAddon/Combat/DHTank2.lua
 classicarms	MazonAddon/Combat/WarriorClassicArms.lua
 classicwarrior	MazonAddon/Combat/WarriorClassic.lua
 classictank	MazonAddon/Combat/WarriorClassicTank.lua

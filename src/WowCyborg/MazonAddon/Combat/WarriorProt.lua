@@ -58,12 +58,12 @@ function RenderSingleTargetRotation()
   local bsBuff = FindBuff("player", "Battle Shout");
   
   if bsBuff == nil and IsCastable("Battle Shout", 0) then
-    WowCyborg_CURRENTATTACK = "Battle Shout";
-    return SetSpellRequest(battleShout);
+    --WowCyborg_CURRENTATTACK = "Battle Shout";
+    --return SetSpellRequest(battleShout);
   end
 
   if InMeleeRange() == false then
-    if IsCastableAtEnemyTarget("Thunder Clap", 0) and IsNearby("target", eightYardCheck) then
+    if IsCastableAtEnemyTarget("Thunder Clap", 0) and nearbyEnemies > 0 then
       WowCyborg_CURRENTATTACK = "Thunder Clap";
       return SetSpellRequest(thunderClap);
     end
@@ -132,7 +132,6 @@ function RenderSingleTargetRotation()
   end
 
   local avatarBuff = FindBuff("player", "Avatar");
-  local nearbyEnemies = GetNearbyEnemyCount();
 
   if avatarBuff ~= nil and IsCastableAtEnemyTarget("Thunder Clap", 0) then
     WowCyborg_CURRENTATTACK = "Thunder Clap";
@@ -140,12 +139,12 @@ function RenderSingleTargetRotation()
   end
       
   if nearbyEnemies > 1 then
-    if IsCastableAtEnemyTarget("Thunder Clap", 0) then
+    if IsCastable("Thunder Clap", 0) then
       WowCyborg_CURRENTATTACK = "Thunder Clap";
       return SetSpellRequest(thunderClap);
     end
 
-    if IsCastableAtEnemyTarget("Demoralizing Shout", 0) and (IsNearby("target", eightYardCheck) or InMeleeRange()) then
+    if IsCastable("Demoralizing Shout", 0) and (IsNearby("target", eightYardCheck) or InMeleeRange()) then
       if GetNonAggroCount() == 0 then
         WowCyborg_CURRENTATTACK = "Demoralizing Shout";
         return SetSpellRequest(demoralizingShout);
@@ -189,7 +188,7 @@ function RenderSingleTargetRotation()
       return SetSpellRequest(shieldSlam);
     end
 
-    if IsCastableAtEnemyTarget("Demoralizing Shout", 0) and (IsNearby("target", eightYardCheck) or InMeleeRange()) then
+    if IsCastableAtEnemyTarget("Demoralizing Shout", 0) and (nearbyEnemies > 0 or InMeleeRange()) then
       WowCyborg_CURRENTATTACK = "Demoralizing Shout";
       return SetSpellRequest(demoralizingShout);
     end
@@ -291,9 +290,10 @@ function GetNonAggroCount()
   for i = 1, 40 do 
     local guid = UnitGUID("nameplate"..i) 
     if guid then 
-      if IsNearby("nameplate"..i) then
+      if IsNearby("nameplate"..i, eightYardCheck) then
         if UnitCanAttack("player", "nameplate"..i) == true then
-          if UnitThreatSituation("player", "nameplate"..i) < 3 then
+          local threadSituation = UnitThreatSituation("player", "nameplate"..i);
+          if threadSituation ~= nil and threadSituation < 3 then
             count = count + 1;
           end
         end

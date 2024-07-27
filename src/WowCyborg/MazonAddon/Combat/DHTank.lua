@@ -18,6 +18,7 @@ local fieryBrand = "8";
 
 WowCyborg_PAUSE_KEYS = {
   "F2",
+  "F",
   "F3",
   "F4",
   "F7",
@@ -27,7 +28,9 @@ WowCyborg_PAUSE_KEYS = {
   "LSHIFT",
   "NUMPAD1",
   "NUMPAD5",
-  "NUMPAD8"
+  "NUMPAD7",
+  "NUMPAD8",
+  "NUMPAD9"
 }
 
 function RenderMultiTargetRotation()
@@ -40,11 +43,16 @@ function RenderSingleTargetRotation()
     return SetSpellRequest(nil);
   end
   
-  if CheckInteractDistance("target", 5) == false and WowCyborg_INCOMBAT == true then
+  if CheckInteractDistance("target", 5) == false then
     if IsCastableAtEnemyTarget("Throw Glaive", 0) then 
       WowCyborg_CURRENTATTACK = "Throw Glaive";
       return SetSpellRequest(glaive);
     end
+  end
+
+  if IsCastableAtEnemyTarget("Immolation Aura", 0) and WowCyborg_INCOMBAT == true then 
+    WowCyborg_CURRENTATTACK = "Immolation Aura";
+    return SetSpellRequest(immolationAura);
   end
   
   if UnitChannelInfo("player") then
@@ -73,10 +81,6 @@ function RenderSingleTargetRotation()
   if sbCharges ~= nil and sbCharges >= 4 and IsCastableAtEnemyTarget("Spirit Bomb", 30) then
     WowCyborg_CURRENTATTACK = "Spirit Bomb";
     return SetSpellRequest(spiritBomb);
-  end
-  if IsCastableAtEnemyTarget("Immolation Aura", 0) then 
-    WowCyborg_CURRENTATTACK = "Immolation Aura";
-    return SetSpellRequest(immolationAura);
   end
 
   if pain > 90 and IsCastableAtEnemyTarget("Soul Cleave", 30) then 

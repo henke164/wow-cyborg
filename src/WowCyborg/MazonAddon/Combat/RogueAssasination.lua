@@ -17,6 +17,7 @@ buttons["shadow_dance"] = "F+6";
 buttons["poisoned_knife"] = "F+7";
 buttons["thistle_tea"] = "F+8";
 buttons["ghostly_strike"] = "F+9";
+buttons["manic_grieftorch"] = "F+9";
 
 WowCyborg_PAUSE_KEYS = {
   "F2",

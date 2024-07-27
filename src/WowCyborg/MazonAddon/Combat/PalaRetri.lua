@@ -70,6 +70,11 @@ function RenderMultiTargetRotation()
 end
 
 function RenderSingleTargetRotation()
+  if UnitChannelInfo("player") then
+    WowCyborg_CURRENTATTACK = "-";
+    return SetSpellRequest(nil);
+  end
+
   local targetName = UnitName("target");
   if targetName == "Incorporeal Being" then
     WowCyborg_CURRENTATTACK = "Turn Evil";

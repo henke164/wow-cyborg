@@ -23,11 +23,13 @@ local wildImpsUpUntil = {};
 
 WowCyborg_PAUSE_KEYS = {
   "LSHIFT",
+  "NUMPAD1",
   "NUMPAD2",
   "NUMPAD3",
   "NUMPAD4",
   "NUMPAD5",
   "NUMPAD7",
+  "NUMPAD9",
   "R",
   "F4",
   "F",
@@ -76,6 +78,11 @@ function RenderSingleTargetRotation(burst)
     return SetSpellRequest(nil);
   end
 
+  if UnitChannelInfo("player") then
+    WowCyborg_CURRENTATTACK = "-";
+    return SetSpellRequest(nil);
+  end
+  
   local actionName = GetHekiliQueue().Primary[1].actionName;
 
   local imps = GetWildImpCount();
