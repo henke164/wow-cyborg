@@ -10,12 +10,15 @@
 
 local buttons = {}
 
+buttons["soul_reaper"] = "1";
 buttons["deaths_caress"] = "4";
 buttons["marrowrend"] = "5";
 buttons["blood_boil"] = "6";
 buttons["death_strike"] = "7";
 buttons["heart_strike"] = "8";
 buttons["shackle_the_unworthy"] = "9";
+buttons["consumption"] = "0";
+buttons["bonestorm"] = "9";
 buttons["tombstone"] = "F+9";
 buttons["vampiric_blood"] = "F+8";
 

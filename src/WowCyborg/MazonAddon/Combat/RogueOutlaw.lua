@@ -17,6 +17,7 @@ buttons["vanish"] = "F+7";
 buttons["adrenaline_rush"] = "F+2";
 buttons["shadow_dance"] = "F+8";
 buttons["shiv"] = "F+6";
+buttons["killing_spree"] = "F+8";
 buttons["ghostly_strike"] = "F+9";
 buttons["manic_grieftorch"] = "F+6";
 

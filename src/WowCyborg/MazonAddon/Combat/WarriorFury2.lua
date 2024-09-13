@@ -12,7 +12,7 @@ buttons["crushing_blow"] = "5";
 buttons["whirlwind"] = "6";
 buttons["odyns_fury"] = "7";
 buttons["sweeping_strikes"] = "F+4";
-buttons["onslaught"] = "F+8";
+buttons["onslaught"] = "8";
 buttons["thunder_clap"] = "0";
 
 WowCyborg_PAUSE_KEYS = {
@@ -22,7 +22,9 @@ WowCyborg_PAUSE_KEYS = {
   "NUMPAD3",
   "NUMPAD4",
   "NUMPAD5",
+  "NUMPAD7",
   "NUMPAD8",
+  "NUMPAD9",
   "F",
   "§"
 }
@@ -41,12 +43,24 @@ function RenderSingleTargetRotation()
     return SetSpellRequest(nil);
   end
 
+  local hp = GetHealthPercentage("target");
+  if hp <= 0 then
+    WowCyborg_CURRENTATTACK = "-";
+    return SetSpellRequest(nil);
+  end
+
   local castingInfo = UnitChannelInfo("player");
   if castingInfo ~= nil then
     WowCyborg_CURRENTATTACK = "Channeling";
     return SetSpellRequest(nil);
   end
 
+  local health = GetHealthPercentage("player");
+  if health < 70 and IsCastableAtEnemyTarget("Impending Victory", 10) then
+    WowCyborg_CURRENTATTACK = "Impending Victory";
+    return SetSpellRequest("X");
+  end
+  
   local actionName = GetHekiliQueue().Primary[1].actionName;
 
   WowCyborg_CURRENTATTACK = actionName;

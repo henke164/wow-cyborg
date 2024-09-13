@@ -14,9 +14,10 @@ buttons["soul_cleave"] = "3";
 buttons["immolation_aura"] = "4";
 buttons["sigil_of_flame"] = "5";
 buttons["demon_spikes"] = "6";
-buttons["glaive"] = "7";
+buttons["throw_glaive"] = "7";
 buttons["fiery_brand"] = "8";
-buttons["elysian_decree"] = "9";
+buttons["sigil_of_spite"] = "9";
+buttons["soul_carver"] = "F+7";
 buttons["fel_devastation"] = "F+6";
 
 
@@ -55,7 +56,7 @@ function RenderSingleTargetRotation()
     return SetSpellRequest(nil);
   end
 
-  if CheckInteractDistance("target", 5) == false then
+  if IsSpellInRange("target", "Spirit Bomb") == false then
     return SetSpellRequest(nil);
   end
 

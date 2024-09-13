@@ -11,11 +11,12 @@ buttons["spinning_crane_kick"] = "6";
 buttons["rising_sun_kick"] = "7";
 buttons["exploding_keg"] = "8";
 buttons["black_ox_brew"] = "9";
-buttons["chi_wave"] = "0";
+buttons["chi_burst"] = "0";
 buttons["touch_of_death"] = "F+2";
 buttons["celestial_brew"] = "F+5";
 buttons["purifying_brew"] = "F+6";
 buttons["fortifying_brew"] = "F+7";
+buttons["vivify"] = "F+9";
 buttons["expel_harm"] = "F+8";
 
 WowCyborg_PAUSE_KEYS = {

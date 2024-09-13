@@ -53,7 +53,7 @@ function RenderMultiTargetRotation()
   return RenderSingleTargetRotation(true);
 end
 
-function RenderSingleTargetRotation()
+function RenderSingleTargetRotation(pauseWake)
   if UnitChannelInfo("player") then
     WowCyborg_CURRENTATTACK = "-";
     return SetSpellRequest(nil);
@@ -62,11 +62,12 @@ function RenderSingleTargetRotation()
   local targetHp = GetHealthPercentage("target");
   local holyPower = UnitPower("player", 9);
   local nearbyEnemies = GetNearbyEnemyCount(853); --Hammer of Justice
+  local veryNearbyEnemies = GetNearbyEnemyCount(96231); --Rebuke
   local echoesOfWrath = FindBuff("player", "Echoes of Wrath");
-  local empyreanLegacy = FindBuff("player", "Empyrean Legacy");
+  local empyreanLegacy = FindBuff("player", "Empyrean Power");
   local useHol = false;
 
-  local holActive = C_Spell.GetOverrideSpell(387174) == 427453;
+  local holActive = C_Spell.GetOverrideSpell(255937) == 427453;
   if (holActive) then
     useHol = true;
   end
@@ -76,10 +77,17 @@ function RenderSingleTargetRotation()
     return SetSpellRequest(buttons["execution_sentence"]);
   end
 
+  if useHol and holyPower == 5 then
+    if IsCastableAtEnemyTarget("Templar's Verdict", 0) then
+      return SetSpellRequest(buttons["wake_of_ashes"]);
+    end
+  end
+
   if holyPower == 5 or echoesOfWrath ~= nil then
-    if useHol then
-      if IsCastableAtEnemyTarget("Templar's Verdict", 0) then
-        --return SetSpellRequest(buttons["wake_of_ashes"]);
+    if GetHealthPercentage("player") < 50 then
+      if IsCastable("Word of Glory", 0) then
+        WowCyborg_CURRENTATTACK = "Word of Glory";
+        return SetSpellRequest("F+5");
       end
     end
 
@@ -90,7 +98,12 @@ function RenderSingleTargetRotation()
           return SetSpellRequest(buttons["templars_verdict"]);
         end
       else
-        if IsCastableAtEnemyTarget("Divine Storm", 0) then
+        if IsCastableAtEnemyTarget("Divine Toll", 0) then
+          WowCyborg_CURRENTATTACK = "Divine Toll";
+          return SetSpellRequest(buttons["divine_toll"]);
+        end
+
+        if IsCastable("Divine Storm", 0) then
           WowCyborg_CURRENTATTACK = "Divine Storm";
           return SetSpellRequest(buttons["divine_storm"]);
         end
@@ -103,10 +116,12 @@ function RenderSingleTargetRotation()
     end
   end
 
-  if holyPower <= 2 and nearbyEnemies > 0 then
-    if IsCastableAtEnemyTarget("Wake of Ashes", 0) then
-      WowCyborg_CURRENTATTACK = "Wake of Ashes";
-      return SetSpellRequest(buttons["wake_of_ashes"]);
+  if pauseWake ~= true then
+    if holyPower <= 2 and veryNearbyEnemies > 0 then
+      if WowCyborg_INCOMBAT and IsCastable("Wake of Ashes", 0) and IsCastableAtEnemyTarget("Templar's Verdict", 0) then
+        WowCyborg_CURRENTATTACK = "Wake of Ashes";
+        return SetSpellRequest(buttons["wake_of_ashes"]);
+      end
     end
   end
 
@@ -136,7 +151,7 @@ function RenderSingleTargetRotation()
             return SetSpellRequest(buttons["templars_verdict"]);
           end
         else
-          if IsCastableAtEnemyTarget("Divine Storm", 0) then
+          if IsCastable("Divine Storm", 0) then
             WowCyborg_CURRENTATTACK = "Divine Storm";
             return SetSpellRequest(buttons["divine_storm"]);
           end

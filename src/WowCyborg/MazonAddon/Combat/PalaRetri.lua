@@ -98,21 +98,6 @@ function RenderSingleTargetRotation()
     return SetSpellRequest(nil);
   end
   
-  if actionName == "wake_of_ashes" then
-    if IsCastable("Avenging Wrath", 0) or IsMelee() == false then
-      actionName = GetHekiliQueue().Primary[2].actionName;
-      if (
-        actionName == "divine_storm" or
-        actionName == "templars_verdict"
-      ) then
-        local holyPower = UnitPower("player", 9);
-        if holyPower < 4 then
-          actionName = GetHekiliQueue().Primary[3].actionName;
-        end
-      end
-    end
-  end
-
   local button = buttons[actionName];
   WowCyborg_CURRENTATTACK = actionName;
   if button ~= nil then
@@ -139,14 +124,11 @@ function CanCast(actionName)
   end
 
   if (
-    actionName == "divine_storm" or
     actionName == "templars_verdict" or
-    actionName == "wake_of_ashes" or
     actionName == "blade_of_justice" or
     actionName == "judgment" or
     actionName == "hammer_of_wrath" or
     actionName == "crusader_strike" or
-    actionName == "consecration" or
     actionName == "crusade" or
     actionName == "divine_toll"
   ) then

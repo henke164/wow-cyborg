@@ -2,16 +2,20 @@
   Button    Spell
 ]]--
 local buttons = {}
+buttons["immolate"] = "4";
 buttons["incinerate"] = "2";
+buttons["infernal_bolt"] = "2";
 buttons["conflagrate"] = "3";
 buttons["cataclysm"] = "1";
-buttons["immolate"] = "4";
 buttons["channel_demonfire"] = "5";
 buttons["soul_rot"] = "6";
 buttons["chaos_bolt"] = "7";
+buttons["ruination"] = "7";
+buttons["shadowburn"] = "8";
 buttons["dark_soul_instability"] = "F+1";
 buttons["havoc"] = "F+2";
 buttons["rain_of_fire"] = "8";
+buttons["soul_fire"] = "F+9";
 local stopCast = "F+7";
 
 WowCyborg_PAUSE_KEYS = {

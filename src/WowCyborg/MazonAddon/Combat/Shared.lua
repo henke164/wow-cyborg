@@ -118,11 +118,13 @@ end
 
 function FindBuff(target, buffName)
   for i=1,40 do
-    local name, icon, stacks, _, __, etime, castBy = UnitBuff(target, i);
-    if castBy == "player" then
-      if name ~= nil and buffName ~= nil and string.lower(name) == string.lower(buffName) then
-        local time = GetTime();
-        return name, etime - time, stacks, i, icon;
+    local buff = UnitBuff(target, i);
+    if buff ~= nil then
+      if buff.sourceUnit == "player" then
+        if buffName ~= nil and string.lower(buff.name) == string.lower(buffName) then
+          local time = GetTime();
+          return buff.name, buff.expirationTime - time, buff.applications, i, buff.icon, buff.points;
+        end
       end
     end
   end
@@ -139,14 +141,14 @@ end
 
 function FindDebuff(target, buffName)
   for i=1,40 do
-    local name, _, stack, _, _, etime, castBy = UnitDebuff(target, i);
-    if name ~= nil and string.lower(name) == string.lower(buffName) then
-      if (target == "target" and castBy == "player") then
+    local debuff = C_UnitAuras.GetDebuffDataByIndex(target, i);
+    if debuff ~= nil and string.lower(debuff.name) == string.lower(buffName) then
+      if (target == "target" and debuff.sourceUnit == "player") then
         local time = GetTime();
-        return name, etime - time, stack;
+        return debuff.name, debuff.expirationTime - time, debuff.applications;
       elseif(target == "player") then
         local time = GetTime();
-        return name, etime - time, stack;
+        return debuff.name, debuff.expirationTime - time, debuff.applications;
       end
     end
   end
@@ -453,7 +455,8 @@ function PreventAzeriteBeamAbortion()
   local castingInfo, _, __, ___, castingEndTime = UnitCastingInfo("player");
   if castingInfo == "Focused Azerite Beam" then
     local finish = castingEndTime / 1000 - GetTime();
-    WowCyborg_PAUSE_UNTIL = GetTime() + (finish + 1);
+    WowCyborg_PAUSE_UNTIL
+     = GetTime() + (finish + 1);
   end
 
   local channelInfo, c_, c__, c___, channelEndTime = UnitChannelInfo("player");
@@ -471,9 +474,8 @@ function GetNearbyEnemyCount(spellRangeCheck)
   local count = 0;
 
   for i = 1, 40 do 
-    local guid = UnitGUID("nameplate"..i) 
-    if guid then 
-      if IsNearby("nameplate"..i, spellRangeCheck) then
+    if IsNearby("nameplate"..i, spellRangeCheck) == true then
+      if UnitHealth("nameplate"..i) > 0 then
         count = count + 1;
       end
     end
@@ -488,7 +490,7 @@ function IsNearby(target, spellRangeCheck)
     return false
   end
   
-  if IsSpellInRange(spellRangeCheck, target) then
+  if IsSpellInRange(spellRangeCheck, target) == 1 then
     return true
   else
     return false
@@ -513,6 +515,10 @@ function GetSpellCooldown(spellName)
   end
 
   local spellCd = C_Spell.GetSpellCooldown(spellName)
+  if spellCd == nil then
+    return nil;
+  end
+
   return spellCd.startTime, spellCd.duration;
 end
 

@@ -3,6 +3,8 @@
 ]]--
 local buttons = {}
 buttons["power_siphon"] = "1";
+buttons["infernal_bolt"] = "4";
+buttons["ruination"] = "6";
 buttons["demonbolt"] = "2";
 buttons["call_dreadstalkers"] = "3";
 buttons["shadow_bolt"] = "4";
@@ -19,6 +21,7 @@ buttons["nether_portal"] = "F+7";
 stopCast = "F+8";
 
 WowCyborg_PAUSE_KEYS = {
+  "F2",
   "LSHIFT",
   "NUMPAD1",
   "NUMPAD2",
@@ -52,7 +55,7 @@ function RenderSingleTargetRotation()
   local shards = UnitPower("player", 7);
 
   if WowCyborg_INCOMBAT == false then
-    --return SetSpellRequest(nil);
+    return SetSpellRequest(nil);
   end
 
   if Hekili.DB.profile.toggles.cooldowns.value == true then

@@ -3,23 +3,28 @@
 ]]--
 local buttons = {}
 buttons["unstable_affliction"] = "1";
+buttons["wither"] = "3";
 buttons["agony"] = "2";
 buttons["corruption"] = "3";
 buttons["malefic_rapture"] = "4";
 buttons["siphon_life"] = "5";
 buttons["vile_taint"] = "6";
+buttons["phantom_singularity"] = "6";
 buttons["haunt"] = "7";
 buttons["implosion"] = "8";
 buttons["blood_fury"] = "F+1";
 buttons["demonic_strength"] = "9";
 buttons["seed_of_corruption"] = "0";  
 buttons["drain_soul"] = "F+7";
+buttons["shadow_bolt"] = "F+7";
 buttons["summon_darkglare"] = "F+8";
+buttons["malevolence"] = "F+3";
 stopCast = "F+8";
 
 WowCyborg_PAUSE_KEYS = {
   "LSHIFT",
   "F2",
+  "F3",
   "NUMPAD1",
   "NUMPAD2",
   "NUMPAD3",
@@ -36,7 +41,7 @@ function RenderMultiTargetRotation()
   return RenderSingleTargetRotation(true);
 end
 
-function RenderSingleTargetRotation(burst)
+function RenderSingleTargetRotation(aoe)
   if WowCyborg_INCOMBAT == false then
     --return SetSpellRequest(nil);
   end
@@ -46,12 +51,12 @@ function RenderSingleTargetRotation(burst)
   end
 
   local speed = GetUnitSpeed("player");
-  local cooldown = GetHekiliQueue().Cooldowns[1];
+  local actionName = GetHekiliQueue().Primary[1].actionName;
 
-  if burst and cooldown.wait ~= nil and cooldown.wait == 0 and cooldown.actionName ~= "soul_rot" then
-    actionName = cooldown.actionName;
+  if aoe then
+    Hekili.DB.profile.toggles.mode.value = "aoe";
   else
-    actionName = GetHekiliQueue().Primary[1].actionName;
+    Hekili.DB.profile.toggles.mode.value = "single";
   end
 
   local quaking = FindDebuff("player", "Quake");
@@ -62,7 +67,7 @@ function RenderSingleTargetRotation(burst)
   end
 
   if speed > 0 then
-    local corruptionDebuff = FindDebuff("target", "Corruption");
+    local corruptionDebuff = FindDebuff("target", "Wither");
     local agonyDebuff, agonyTl, agonyStacks = FindDebuff("target", "Agony");
     if agonyDebuff == nil or agonyTl < 8 then
       if IsCastableAtEnemyTarget("Agony", 0) then
@@ -72,9 +77,9 @@ function RenderSingleTargetRotation(burst)
     end
     
     if corruptionDebuff == nil then
-      if IsCastableAtEnemyTarget("Corruption", 0) then
-        WowCyborg_CURRENTATTACK = "Corruption";
-        return SetSpellRequest(buttons["corruption"]);
+      if IsCastableAtEnemyTarget("Agony", 0) then
+        WowCyborg_CURRENTATTACK = "Wither";
+        return SetSpellRequest(buttons["wither"]);
       end
     end
     

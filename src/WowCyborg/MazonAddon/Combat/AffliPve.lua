@@ -8,6 +8,7 @@ buttons["corruption"] = "3";
 buttons["malefic_rapture"] = "4";
 buttons["seed_of_corruption"] = "5";
 buttons["drain_soul"] = "6";
+buttons["phantom_singularity"] = "6";
 buttons["summon_darkglare"] = "7";
 buttons["drain_life"] = "8";
 buttons["blood_fury"] = "9";

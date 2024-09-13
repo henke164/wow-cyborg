@@ -35,11 +35,12 @@ WowCyborg_PAUSE_KEYS = {
   "NUMPAD1",
   "NUMPAD3",
   "NUMPAD5",
+  "NUMPAD7",
   "NUMPAD8"
 }
 
 function RenderMultiTargetRotation()
-  if IsCastableAtEnemyTarget("Bonestorm", 50) then
+  if IsCastable("Bonestorm", 50) then
     WowCyborg_CURRENTATTACK = "Bonestorm";
     return SetSpellRequest(bonestorm);
   end
@@ -57,15 +58,22 @@ function RenderSingleTargetRotation()
   local saveForMarrowRend = false;
 
   if hpPercentage < 90 then
-    if IsCastableAtEnemyTarget("Dancing Rune Weapon", 0) then
+    if IsCastable("Dancing Rune Weapon", 0) then
       WowCyborg_CURRENTATTACK = "Dancing Rune Weapon";
       return SetSpellRequest(dancingRuneWeapon);
     end
   end
 
+  if hpPercentage < 50 then
+    if IsCastable("Consumption", 0) and IsSpellInRange("Heart Strike", "target") then
+      WowCyborg_CURRENTATTACK = "Consumption";
+      return SetSpellRequest(0);
+    end
+  end
+
   if hpPercentage < 85 then
     local rtBuff = FindBuff("player", "Rune Tap");
-    if rtBuff == nil and runeCount > 0 and IsCastableAtEnemyTarget("Rune Tap", 0) and CheckInteractDistance("target", 3) then
+    if rtBuff == nil and runeCount > 0 and IsCastable("Rune Tap", 0) and CheckInteractDistance("target", 3) then
       WowCyborg_CURRENTATTACK = "Rune Tap";
       return SetSpellRequest(runeTap);
     end
@@ -102,7 +110,7 @@ function RenderSingleTargetRotation()
   end
 
   if bbCharges ~= nil and bbCharges > 1 and saveForMarrowRend == false then
-    if IsCastableAtEnemyTarget("Blood Boil", 0) and (CheckInteractDistance("target", 3) or IsSpellInRange("Heart Strike", "target")) then
+    if IsCastable("Blood Boil", 0) and (CheckInteractDistance("target", 3) or IsSpellInRange("Heart Strike", "target")) and UnitCanAttack("player", "target") then
       WowCyborg_CURRENTATTACK = "Blood Boil";
       return SetSpellRequest(bloodboil);
     end
@@ -137,7 +145,7 @@ function RenderSingleTargetRotation()
     end
   end
 
-  if IsCastableAtEnemyTarget("Blood Boil", 0) and CheckInteractDistance("target", 3) then
+  if IsCastable("Blood Boil", 0) and (CheckInteractDistance("target", 3) or IsSpellInRange("Heart Strike", "target")) and UnitCanAttack("player", "target") then
     WowCyborg_CURRENTATTACK = "Blood Boil";
     return SetSpellRequest(bloodboil);
   end

@@ -12,6 +12,7 @@ buttons["raze"] = "7";
 buttons["maul"] = "8";
 buttons["pulverize"] = "9";
 buttons["soothe"] = "0";
+buttons["lunar_beam"] = "R";
 
 local reg = {};
 buttons["regrowth"] = "F+5";
@@ -152,14 +153,14 @@ function RenderSingleTargetRotation()
   end
 
   if (actionName == "swipe_bear") then
-    if ((IsTargetNearby() == false and IsSpellInRange("Mangle", "target") == 0) or IsCastableAtEnemyTarget("Swipe", 0) == false) then
+    if ((IsSpellInRange("Mangle", "target") == 0) or IsCastable("Swipe", 0) == false) then
       WowCyborg_CURRENTATTACK = "-";
       return SetSpellRequest(nil);
     end
   end
 
   if (actionName == "thrash_bear") then
-    if ((IsTargetNearby() == false and IsSpellInRange("Mangle", "target") == 0) or IsCastableAtEnemyTarget("Thrash", 0) == false) then
+    if ((IsSpellInRange("Mangle", "target") == 0) or IsCastable("Thrash", 0) == false) then
       WowCyborg_CURRENTATTACK = "-";
       return SetSpellRequest(nil);
     end

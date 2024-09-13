@@ -34,7 +34,7 @@ local attack = "8";
 local battleShout = "CTRL+3";
 local heroicThrow = "0";
 
-local eightYardCheck = "Intimidating Shout";
+local eightYardCheck = 316593;--"Intimidating Shout";
 
 WowCyborg_PAUSE_KEYS = {
   "F1",
@@ -48,14 +48,33 @@ WowCyborg_PAUSE_KEYS = {
   "§"
 }
 
+
+function GetClapCooldown()
+  local sStart, sDuration = GetSpellCooldown("Thunder Clap");
+  local tl = sStart + sDuration - GetTime();
+  if tl < 1 then
+    return 0;
+  end
+
+  return tl;
+end
+
 function RenderMultiTargetRotation()
-  return RenderSingleTargetRotation();
+  return SetSpellRequest("G");
 end
 
 function RenderSingleTargetRotation()
-  local nearbyEnemies = GetNearbyEnemyCount(eightYardCheck);
+  local nearbyEnemies = GetNearbyEnemyCount(316593);
   local targetHp = GetHealthPercentage("target");
   local bsBuff = FindBuff("player", "Battle Shout");
+  
+  
+  local holActive = C_Spell.GetOverrideSpell(6343) == 435222;
+
+  if holActive and GetClapCooldown() == 0 then
+    WowCyborg_CURRENTATTACK = "Thunder Clap";
+    return SetSpellRequest(thunderClap);
+  end
   
   if bsBuff == nil and IsCastable("Battle Shout", 0) then
     --WowCyborg_CURRENTATTACK = "Battle Shout";
@@ -63,7 +82,7 @@ function RenderSingleTargetRotation()
   end
 
   if InMeleeRange() == false then
-    if IsCastableAtEnemyTarget("Thunder Clap", 0) and nearbyEnemies > 0 then
+    if (IsCastable("Thunder Clap", 0) or holActive) and nearbyEnemies > 0 then
       WowCyborg_CURRENTATTACK = "Thunder Clap";
       return SetSpellRequest(thunderClap);
     end
@@ -110,11 +129,13 @@ function RenderSingleTargetRotation()
     requiredAmount = 130000;
   end
     
-  local _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, ipAmount = FindUnitBuff("player", "Ignore Pain");
+  local ipBuff, ipTl, _, __, ___, points = FindBuff("player", "Ignore Pain");
+  local ipAmount = 0;
+  if points ~= nil then
+    ipAmount = points[1]
+  end
   
-  local ipBuff, ipTl = FindBuff("player", "Ignore Pain");
-  local needIgnorePain = InCombatLockdown() and IsNearby("target", eightYardCheck) and
-    (ipBuff == nil or ipTl < 3 or ipAmount < requiredAmount);
+  local needIgnorePain = InCombatLockdown() and (ipBuff == nil or ipTl < 3 or ipAmount < requiredAmount);
 
   if InCombatLockdown() then
     if InMeleeRange() then
@@ -131,28 +152,19 @@ function RenderSingleTargetRotation()
     end
   end
 
-  local avatarBuff = FindBuff("player", "Avatar");
-
-  if avatarBuff ~= nil and IsCastableAtEnemyTarget("Thunder Clap", 0) then
-    WowCyborg_CURRENTATTACK = "Thunder Clap";
-    return SetSpellRequest(thunderClap);
-  end
-      
   if nearbyEnemies > 1 then
-    if IsCastable("Thunder Clap", 0) then
+    if IsCastable("Thunder Clap", 0) or holActive then
       WowCyborg_CURRENTATTACK = "Thunder Clap";
       return SetSpellRequest(thunderClap);
     end
 
-    if IsCastable("Demoralizing Shout", 0) and (IsNearby("target", eightYardCheck) or InMeleeRange()) then
-      if GetNonAggroCount() == 0 then
-        WowCyborg_CURRENTATTACK = "Demoralizing Shout";
-        return SetSpellRequest(demoralizingShout);
-      end
+    if IsCastable("Demoralizing Shout", 0) and rage < 70 then
+      WowCyborg_CURRENTATTACK = "Demoralizing Shout";
+      return SetSpellRequest(demoralizingShout);
     end
 
     if nearbyEnemies > 4 then
-      if IsCastableAtEnemyTarget("Revenge", 50) and (ipBuff ~= nil and ipTl > 3) then
+      if IsCastable("Revenge", 50) and (ipBuff ~= nil and ipTl > 3) then
         WowCyborg_CURRENTATTACK = "Revenge";
         return SetSpellRequest(revenge);
       end
@@ -165,14 +177,14 @@ function RenderSingleTargetRotation()
       end
     end
 
-    if IsCastableAtEnemyTarget("Thunder Clap", 0) then
+    if IsCastable("Thunder Clap", 0) or holActive then
       WowCyborg_CURRENTATTACK = "Thunder Clap";
       return SetSpellRequest(thunderClap);
     end
 
     local revBuff = FindBuff("player", "Revenge!");
-    if (revBuff == "Revenge!" or IsCastableAtEnemyTarget("Revenge", 80)) then
-      if IsCastableAtEnemyTarget("Revenge", 0) then
+    if (revBuff == "Revenge!" or IsCastable("Revenge", 80)) then
+      if IsCastable("Revenge", 0) then
         WowCyborg_CURRENTATTACK = "Revenge";
         return SetSpellRequest(revenge);
       end
@@ -188,7 +200,7 @@ function RenderSingleTargetRotation()
       return SetSpellRequest(shieldSlam);
     end
 
-    if IsCastableAtEnemyTarget("Demoralizing Shout", 0) and (nearbyEnemies > 0 or InMeleeRange()) then
+    if IsCastable("Demoralizing Shout", 0) and (nearbyEnemies > 0 or InMeleeRange() and rage < 70) then
       WowCyborg_CURRENTATTACK = "Demoralizing Shout";
       return SetSpellRequest(demoralizingShout);
     end
@@ -199,20 +211,20 @@ function RenderSingleTargetRotation()
         return SetSpellRequest(execute);
       end
   
-      if IsCastableAtEnemyTarget("Revenge", 40) then
+      if IsCastable("Revenge", 40) then
         WowCyborg_CURRENTATTACK = "Revenge";
         return SetSpellRequest(revenge);
       end
     end
 
-    if IsCastableAtEnemyTarget("Thunder Clap", 0) then
+    if IsCastable("Thunder Clap", 0) or holActive then
       WowCyborg_CURRENTATTACK = "Thunder Clap";
       return SetSpellRequest(thunderClap);
     end
     
     local revBuff = FindBuff("player", "Revenge!");
-    if (revBuff == "Revenge!" or IsCastableAtEnemyTarget("Revenge", 80)) then
-      if IsCastableAtEnemyTarget("Revenge", 0) then
+    if (revBuff == "Revenge!" or IsCastable("Revenge", 80)) then
+      if IsCastable("Revenge", 0) then
         WowCyborg_CURRENTATTACK = "Revenge";
         return SetSpellRequest(revenge);
       end
@@ -282,26 +294,6 @@ function CreateDamageTakenFrame()
     end
 
   end)
-end
-
-function GetNonAggroCount()
-  local count = 0;
-
-  for i = 1, 40 do 
-    local guid = UnitGUID("nameplate"..i) 
-    if guid then 
-      if IsNearby("nameplate"..i, eightYardCheck) then
-        if UnitCanAttack("player", "nameplate"..i) == true then
-          local threadSituation = UnitThreatSituation("player", "nameplate"..i);
-          if threadSituation ~= nil and threadSituation < 3 then
-            count = count + 1;
-          end
-        end
-      end
-    end
-  end
-
-  return count;
 end
 
 print("Protection warrior rotation loaded");
