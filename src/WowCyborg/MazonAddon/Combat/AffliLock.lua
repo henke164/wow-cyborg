@@ -7,7 +7,7 @@ buttons["wither"] = "3";
 buttons["agony"] = "2";
 buttons["corruption"] = "3";
 buttons["malefic_rapture"] = "4";
-buttons["siphon_life"] = "5";
+buttons["summon_glade"] = "5";
 buttons["vile_taint"] = "6";
 buttons["phantom_singularity"] = "6";
 buttons["haunt"] = "7";
@@ -31,6 +31,7 @@ WowCyborg_PAUSE_KEYS = {
   "NUMPAD4",
   "NUMPAD5",
   "NUMPAD7",
+  "NUMPAD9",
   "R",
   "F4",
   "F",
@@ -42,14 +43,6 @@ function RenderMultiTargetRotation()
 end
 
 function RenderSingleTargetRotation(aoe)
-  if WowCyborg_INCOMBAT == false then
-    --return SetSpellRequest(nil);
-  end
-
-  if UnitCanAttack("player", "target") == false then
-    return SetSpellRequest(nil);
-  end
-
   local speed = GetUnitSpeed("player");
   local actionName = GetHekiliQueue().Primary[1].actionName;
 
@@ -57,6 +50,14 @@ function RenderSingleTargetRotation(aoe)
     Hekili.DB.profile.toggles.mode.value = "aoe";
   else
     Hekili.DB.profile.toggles.mode.value = "single";
+  end
+
+  if WowCyborg_INCOMBAT == false then
+    --return SetSpellRequest(nil);
+  end
+
+  if UnitCanAttack("player", "target") == false then
+    return SetSpellRequest(nil);
   end
 
   local quaking = FindDebuff("player", "Quake");
@@ -67,6 +68,15 @@ function RenderSingleTargetRotation(aoe)
   end
 
   if speed > 0 then
+    local nightfall = FindDebuff("player", "Nightfall");
+
+    if nightfall then
+      if IsCastableAtEnemyTarget("Shadow Bolt", 0) then
+        WowCyborg_CURRENTATTACK = "Shadow Bolt";
+        return SetSpellRequest(buttons["shadow_bolt"]);
+      end
+    end
+
     local corruptionDebuff = FindDebuff("target", "Wither");
     local agonyDebuff, agonyTl, agonyStacks = FindDebuff("target", "Agony");
     if agonyDebuff == nil or agonyTl < 8 then

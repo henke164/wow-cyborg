@@ -246,6 +246,18 @@ function GetHealthPercentage(unit)
   return ((hp - absorb) / maxHp) * 100;
 end
 
+function GetMissingHealth(unit)
+  local maxHp = UnitHealthMax(unit);
+  local hp = UnitHealth(unit);
+  local absorb = UnitGetTotalHealAbsorbs(unit);
+
+  if maxHp == 0 or hp == 0 then
+    return 0;
+  end
+
+  return maxHp - (hp - absorb);
+end
+
 function TargetIsAlive()
   hp = UnitHealth("target");
   return hp > 0;
