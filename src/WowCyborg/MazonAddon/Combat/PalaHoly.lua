@@ -4,11 +4,11 @@
 
 local consecration = "F+1";
 local hammerOfWrath = "1";
-local shieldOfTheRighteous = "SHIFT+2";
+local shieldOfTheRighteous = "V";
 local holyShock = 2;
 local crusaderStrike = 3;
 local judgment = 4;
-local lightOfDawn = "T";
+local prism = "T";
 
 local wog = {};
 wog[1] = "F+5";
@@ -88,7 +88,7 @@ function AoeCritical()
   local lowCount = 0;
   local hp = GetHealthPercentage("player");
 
-  if hp < 80 then
+  if hp < 90 then
     lowCount = lowCount + 1;
   end
 
@@ -99,21 +99,21 @@ function AoeCritical()
     end
   end
   
-  return lowCount > 2;
+  return lowCount > 1;
 end
 
 function AoeHealingRequired()
   local lowCount = 0;
   local hp = GetHealthPercentage("player");
 
-  if hp < 100 then
+  if hp < 95 then
     lowCount = lowCount + 1;
   end
 
   if IsInRaid("player") then
     for groupindex = 1,25 do
       local php = GetHealthPercentage("raid" .. groupindex);
-      if tostring(php) ~= "-nan(ind)" and php > 1 and php < 100 then
+      if tostring(php) ~= "-nan(ind)" and php > 1 and php < 95 then
         if IsSpellInRange("Word of Glory", "raid" .. groupindex) == 1 then
           lowCount = lowCount + 1;
         end
@@ -122,7 +122,7 @@ function AoeHealingRequired()
   else
     for groupindex = 1,5 do
       local php = GetHealthPercentage("party" .. groupindex);
-      if tostring(php) ~= "-nan(ind)" and php > 1 and php < 100 then
+      if tostring(php) ~= "-nan(ind)" and php > 1 and php < 95 then
         if IsSpellInRange("Word of Glory", "party" .. groupindex) == 1 then
           lowCount = lowCount + 1;
         end
@@ -130,7 +130,11 @@ function AoeHealingRequired()
     end
   end
   
-  return lowCount > 2;
+  if IsInRaid("player") then
+    return lowCount > 4;
+  end
+
+  return lowCount > 1;
 end
 
 function FindHealingTarget(minMissingHealth)
@@ -150,19 +154,19 @@ function FindHealingTarget(minMissingHealth)
         end
       end
     end
-  end
-  
-  for groupindex = 1,5 do
-    if members[groupindex] == nil or members[groupindex].name == nil then
-      break;
-    end
-    
-    local hp = GetHealthPercentage(members[groupindex].name);
-    if tostring(hp) ~= "-nan(ind)" and hp > 0 and hp < 99 then
-      local missingHealth = GetMissingHealth(members[groupindex].name);
-      if missingHealth >= lowestHealth.hp then
-        if IsSpellInRange("Word of Glory", members[groupindex].name) == 1 then
-          lowestHealth = { hp = missingHealth, name = members[groupindex].name }
+  else
+    for groupindex = 1,5 do
+      if members[groupindex] == nil or members[groupindex].name == nil then
+        break;
+      end
+      
+      local hp = GetHealthPercentage(members[groupindex].name);
+      if tostring(hp) ~= "-nan(ind)" and hp > 0 and hp < 99 then
+        local missingHealth = GetMissingHealth(members[groupindex].name);
+        if missingHealth >= lowestHealth.hp then
+          if IsSpellInRange("Word of Glory", members[groupindex].name) == 1 then
+            lowestHealth = { hp = missingHealth, name = members[groupindex].name }
+          end
         end
       end
     end
@@ -200,7 +204,7 @@ function RenderSingleTargetRotation(skipDps)
   local playerHp = GetHealthPercentage("player");
 
   if playerHp < 10 and IsCastable("Divine Shield", 5000) then
-    WowCyborg_CURRENTATTACK = "Divine Shield;
+    WowCyborg_CURRENTATTACK = "Divine Shield";
     return SetSpellRequest("F");
   end
 
@@ -217,29 +221,33 @@ function RenderSingleTargetRotation(skipDps)
 
     if IsCastable("Holy Prism", 65000) then
       WowCyborg_CURRENTATTACK = "Holy Prism";
-      return SetSpellRequest("T");
+      return SetSpellRequest(prism);
     end
 
     local empyrianBuff = FindBuff("player", "Empyrean Legacy");
     if empyrianBuff == nil and IsCastableAtEnemyTarget("Judgment", 60000) then
       WowCyborg_CURRENTATTACK = "Judgment";
       return SetSpellRequest(judgment);
-    elseif (holyPower > 2 or divinePurpose ~= nil) then
-      WowCyborg_CURRENTATTACK = "Light of Dawn";
-      return SetSpellRequest("V");
     end
   end
 
   if shockTarget ~= nil then
-    if IsCastable("Word of Glory", 0) and (holyPower > 2 or divinePurpose ~= nil) then
+    local missingHp = GetMissingHealth(shockTarget);
+    if missingHp > 300000 and IsCastable("Word of Glory", 0) and (holyPower > 2 or divinePurpose ~= nil) then
       local memberindex = GetMemberIndex(shockTarget);
       WowCyborg_CURRENTATTACK = "Word of Glory " .. shockTarget;
       return SetSpellRequest(wog[memberindex]);
     end
-    if IsCastable("Holy Shock", 65000) then
+    
+    if GetSpellCharges("Holy Shock") > 0 and IsCastable("Holy Shock", 65000) then
       local memberindex = GetMemberIndex(shockTarget);
       WowCyborg_CURRENTATTACK = "Shock " .. shockTarget;
       return SetSpellRequest(shock[memberindex]);
+    end
+    
+    if speed == 0 and shockTarget == "mouseover" and IsCastable("Flash of Light", 45000) then
+      WowCyborg_CURRENTATTACK = "Flash of Light " .. shockTarget;
+      return SetSpellRequest("X");
     end
   end
   
@@ -247,23 +255,30 @@ function RenderSingleTargetRotation(skipDps)
     if WowCyborg_INCOMBAT then
       local targetHp = GetHealthPercentage("target");
       local consec = FindDebuff("target", "Consecration");
-      if consec == nil and IsMelee() and IsCastable("Consecration", 0) and speed == 0 then
+      if shockTarget == nil and consec == nil and IsMelee() and IsCastable("Consecration", 0) and speed == 0 then
         WowCyborg_CURRENTATTACK = "Consecration";
         return SetSpellRequest(consecration);
       end
 
-      if skipDps == false then
+      if IsInRaid("player") == false then
         if IsCastableAtEnemyTarget("Hammer of Wrath", 0) then
           WowCyborg_CURRENTATTACK = "Hammer of Wrath";
           return SetSpellRequest(hammerOfWrath);
         end
+      end
 
+      if skipDps == false then
         if holyPower >= 3 then
           if IsMelee() then
             WowCyborg_CURRENTATTACK = "Shield of the Righteous";
             return SetSpellRequest(shieldOfTheRighteous);
           end
         end
+      end
+    
+      if IsCastableAtEnemyTarget("Judgment", 42000) then
+        WowCyborg_CURRENTATTACK = "Judgment";
+        return SetSpellRequest(judgment);
       end
       
       if holyPower < 5 then
@@ -273,11 +288,6 @@ function RenderSingleTargetRotation(skipDps)
           return SetSpellRequest(holyShock);
         end
 
-        if IsCastableAtEnemyTarget("Judgment", 42000) then
-          WowCyborg_CURRENTATTACK = "Judgment";
-          return SetSpellRequest(judgment);
-        end
-        
         if IsCastableAtEnemyTarget("Crusader Strike", 15000) then
           WowCyborg_CURRENTATTACK = "Crusader Strike";
           return SetSpellRequest(crusaderStrike);
