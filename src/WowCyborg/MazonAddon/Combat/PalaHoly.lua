@@ -3,7 +3,7 @@
 ]]--
 
 local consecration = "F+1";
-local hammerOfWrath = "1";
+local hammerOfWrath = "H";
 local shieldOfTheRighteous = "V";
 local holyShock = 2;
 local crusaderStrike = 3;
@@ -88,7 +88,7 @@ function AoeCritical()
   local lowCount = 0;
   local hp = GetHealthPercentage("player");
 
-  if hp < 90 then
+  if hp < 80 then
     lowCount = lowCount + 1;
   end
 
@@ -106,14 +106,14 @@ function AoeHealingRequired()
   local lowCount = 0;
   local hp = GetHealthPercentage("player");
 
-  if hp < 95 then
+  if hp < 90 then
     lowCount = lowCount + 1;
   end
 
   if IsInRaid("player") then
     for groupindex = 1,25 do
       local php = GetHealthPercentage("raid" .. groupindex);
-      if tostring(php) ~= "-nan(ind)" and php > 1 and php < 95 then
+      if tostring(php) ~= "-nan(ind)" and php > 1 and php < 90 then
         if IsSpellInRange("Word of Glory", "raid" .. groupindex) == 1 then
           lowCount = lowCount + 1;
         end
@@ -122,7 +122,7 @@ function AoeHealingRequired()
   else
     for groupindex = 1,5 do
       local php = GetHealthPercentage("party" .. groupindex);
-      if tostring(php) ~= "-nan(ind)" and php > 1 and php < 95 then
+      if tostring(php) ~= "-nan(ind)" and php > 1 and php < 90 then
         if IsSpellInRange("Word of Glory", "party" .. groupindex) == 1 then
           lowCount = lowCount + 1;
         end
@@ -145,7 +145,7 @@ function FindHealingTarget(minMissingHealth)
   if IsInRaid("player") then
     if UnitCanAttack("player", "mouseover") == false then
       local hp = GetHealthPercentage("mouseover");
-      if tostring(hp) ~= "-nan(ind)" and hp > 0 and hp < 99 then
+      if tostring(hp) ~= "-nan(ind)" and hp > 0 and hp < 90 then
         local missingHealth = GetMissingHealth("mouseover");
         if missingHealth >= lowestHealth.hp then
           if IsSpellInRange("Word of Glory", "mouseover") == 1 then
@@ -161,7 +161,7 @@ function FindHealingTarget(minMissingHealth)
       end
       
       local hp = GetHealthPercentage(members[groupindex].name);
-      if tostring(hp) ~= "-nan(ind)" and hp > 0 and hp < 99 then
+      if tostring(hp) ~= "-nan(ind)" and hp > 0 and hp < 90 then
         local missingHealth = GetMissingHealth(members[groupindex].name);
         if missingHealth >= lowestHealth.hp then
           if IsSpellInRange("Word of Glory", members[groupindex].name) == 1 then
@@ -251,6 +251,17 @@ function RenderSingleTargetRotation(skipDps)
     end
   end
   
+  if UnitCanAttack("player", "mouseover") == false then
+    local hp = GetHealthPercentage("mouseover");
+    if tostring(hp) ~= "-nan(ind)" and hp > 0 and hp < 95 then
+      if speed == 0 and IsCastable("Flash of Light", 45000) then
+        WowCyborg_CURRENTATTACK = "Flash of Light Mouseover";
+        return SetSpellRequest("X");
+      end
+    end
+  end
+
+
   if UnitCanAttack("player", "target") == true then
     if WowCyborg_INCOMBAT then
       local targetHp = GetHealthPercentage("target");
