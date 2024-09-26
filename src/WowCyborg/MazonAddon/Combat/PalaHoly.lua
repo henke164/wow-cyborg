@@ -84,30 +84,12 @@ function GetMemberIndex(name)
   return nil;
 end
 
-function AoeCritical()
-  local lowCount = 0;
-  local hp = GetHealthPercentage("player");
-
-  if hp < 80 then
-    lowCount = lowCount + 1;
-  end
-
-  for groupindex = 1,5 do
-    local php = GetHealthPercentage("party" .. groupindex);
-    if tostring(php) ~= "-nan(ind)" and php > 1 and php < 90 then
-      lowCount = lowCount + 1;
-    end
-  end
-  
-  return lowCount > 1;
-end
-
 function AoeHealingRequired()
   local lowCount = 0;
   local hp = GetHealthPercentage("player");
 
   if hp < 90 then
-    lowCount = lowCount + 1;
+    lowCount = 1;
   end
 
   if IsInRaid("player") then
@@ -134,20 +116,23 @@ function AoeHealingRequired()
     return lowCount > 4;
   end
 
-  return lowCount > 1;
+  return lowCount > 2;
 end
 
-function FindHealingTarget(minMissingHealth)
+function FindHealingTarget()
   local members = GetGroupRosterInfo();
-  local missingHealth = GetMissingHealth("player");
-  local lowestHealth = { hp = missingHealth, name = "player" }
+  local lowestHealth = { hp = 100, name = "player" };
+
+  local playerHp = GetHealthPercentage("player");
+  if playerHp > 0 and playerHp < 90 then
+    lowestHealth = { hp = playerHp, name = "player" }
+  end
 
   if IsInRaid("player") then
     if UnitCanAttack("player", "mouseover") == false then
       local hp = GetHealthPercentage("mouseover");
       if tostring(hp) ~= "-nan(ind)" and hp > 0 and hp < 90 then
-        local missingHealth = GetMissingHealth("mouseover");
-        if missingHealth >= lowestHealth.hp then
+        if hp < lowestHealth.hp then
           if IsSpellInRange("Word of Glory", "mouseover") == 1 then
             lowestHealth = { hp = missingHealth, name = "mouseover" }
           end
@@ -156,24 +141,21 @@ function FindHealingTarget(minMissingHealth)
     end
   else
     for groupindex = 1,5 do
-      if members[groupindex] == nil or members[groupindex].name == nil then
-        break;
-      end
-      
-      local hp = GetHealthPercentage(members[groupindex].name);
-      if tostring(hp) ~= "-nan(ind)" and hp > 0 and hp < 90 then
-        local missingHealth = GetMissingHealth(members[groupindex].name);
-        if missingHealth >= lowestHealth.hp then
-          if IsSpellInRange("Word of Glory", members[groupindex].name) == 1 then
-            lowestHealth = { hp = missingHealth, name = members[groupindex].name }
+      if members[groupindex] ~= nil and members[groupindex].name ~= nil then
+        local hp = GetHealthPercentage(members[groupindex].name);
+        if tostring(hp) ~= "-nan(ind)" and hp > 0 and hp < 90 then
+          if hp < lowestHealth.hp then
+            if IsSpellInRange("Word of Glory", members[groupindex].name) == 1 then
+              lowestHealth = { hp = missingHealth, name = members[groupindex].name }
+            end
           end
         end
       end
     end
   end
 
-  if lowestHealth ~= nil and lowestHealth.hp > minMissingHealth then
-    return lowestHealth.name, 0;
+  if lowestHealth ~= nil and lowestHealth.hp < 90 then
+    return lowestHealth.name, lowestHealth.hp;
   end
 
   return nil; 
@@ -198,19 +180,14 @@ function RenderSingleTargetRotation(skipDps)
 
   local speed = GetUnitSpeed("player");
   local divinePurpose = FindBuff("player", "Divine Purpose");
-  local shiningRighteousness = FindBuff("player", "Shining Righteousness");
-  local shockTarget = FindHealingTarget(150000);
+  local shiningRighteousness, shiningTl, shiningStacks, _, shiningIcon = FindBuff("player", "Shining Righteousness");
+  local shockTarget, shockTargetHp = FindHealingTarget();
   local holyPower = UnitPower("player", 9);
   local playerHp = GetHealthPercentage("player");
 
   if playerHp < 10 and IsCastable("Divine Shield", 5000) then
     WowCyborg_CURRENTATTACK = "Divine Shield";
     return SetSpellRequest("F");
-  end
-
-  if AoeCritical() and IsCastable("Aura Mastery", 5000) then
-    WowCyborg_CURRENTATTACK = "Aura Mastery";
-    return SetSpellRequest("F+4");
   end
 
   if AoeHealingRequired() then
@@ -232,8 +209,7 @@ function RenderSingleTargetRotation(skipDps)
   end
 
   if shockTarget ~= nil then
-    local missingHp = GetMissingHealth(shockTarget);
-    if missingHp > 300000 and IsCastable("Word of Glory", 0) and (holyPower > 2 or divinePurpose ~= nil) then
+    if shockTargetHp < 70 and IsCastable("Word of Glory", 0) and (holyPower > 2 or divinePurpose ~= nil or shiningIcon == 135931) then
       local memberindex = GetMemberIndex(shockTarget);
       WowCyborg_CURRENTATTACK = "Word of Glory " .. shockTarget;
       return SetSpellRequest(wog[memberindex]);
@@ -243,6 +219,12 @@ function RenderSingleTargetRotation(skipDps)
       local memberindex = GetMemberIndex(shockTarget);
       WowCyborg_CURRENTATTACK = "Shock " .. shockTarget;
       return SetSpellRequest(shock[memberindex]);
+    end
+
+    if shockTargetHp < 85 and IsCastable("Word of Glory", 0) and (holyPower > 2 or divinePurpose ~= nil or shiningIcon == 135931) then
+      local memberindex = GetMemberIndex(shockTarget);
+      WowCyborg_CURRENTATTACK = "Word of Glory " .. shockTarget;
+      return SetSpellRequest(wog[memberindex]);
     end
     
     if speed == 0 and shockTarget == "mouseover" and IsCastable("Flash of Light", 45000) then
@@ -293,10 +275,12 @@ function RenderSingleTargetRotation(skipDps)
       end
       
       if holyPower < 5 then
-        local hsCharges = GetSpellCharges("Holy Shock");
-        if hsCharges > 1 and IsCastableAtEnemyTarget("Holy Shock", 65000) then
-          WowCyborg_CURRENTATTACK = "Holy Shock";
-          return SetSpellRequest(holyShock);
+        if skipDps == false then
+          local hsCharges = GetSpellCharges("Holy Shock");
+          if hsCharges > 1 and IsCastableAtEnemyTarget("Holy Shock", 65000) then
+            WowCyborg_CURRENTATTACK = "Holy Shock";
+            return SetSpellRequest(holyShock);
+          end
         end
 
         if IsCastableAtEnemyTarget("Crusader Strike", 15000) then
