@@ -40,7 +40,7 @@ function IsMelee()
 end
 
 function GetBurstCooldown()
-  local sStart, sDuration = GetSpellCooldown("Sentinel");
+  local sStart, sDuration = GetSpellCooldown("Avenging Wrath");
   local tl = sStart + sDuration - GetTime();
   if tl < 1 then
     return 0;

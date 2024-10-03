@@ -37,6 +37,7 @@ WowCyborg_PAUSE_KEYS = {
   "NUMPAD9",
   "F",
   "R",
+  "X",
   "ESCAPE"
 }
 
@@ -131,10 +132,10 @@ function FindHealingTarget()
   if IsInRaid("player") then
     if UnitCanAttack("player", "mouseover") == false then
       local hp = GetHealthPercentage("mouseover");
-      if tostring(hp) ~= "-nan(ind)" and hp > 0 and hp < 90 then
+      if tostring(hp) ~= "-nan(ind)" and hp > 0 and hp < 95 then
         if hp < lowestHealth.hp then
           if IsSpellInRange("Word of Glory", "mouseover") == 1 then
-            lowestHealth = { hp = missingHealth, name = "mouseover" }
+            lowestHealth = { hp = hp, name = "mouseover" }
           end
         end
       end
@@ -144,9 +145,9 @@ function FindHealingTarget()
       if members[groupindex] ~= nil and members[groupindex].name ~= nil then
         local hp = GetHealthPercentage(members[groupindex].name);
         if tostring(hp) ~= "-nan(ind)" and hp > 0 and hp < 90 then
-          if hp < lowestHealth.hp then
+          if lowestHealth == nil or hp < lowestHealth.hp then
             if IsSpellInRange("Word of Glory", members[groupindex].name) == 1 then
-              lowestHealth = { hp = missingHealth, name = members[groupindex].name }
+              lowestHealth = { hp = hp, name = members[groupindex].name }
             end
           end
         end
@@ -185,6 +186,11 @@ function RenderSingleTargetRotation(skipDps)
   local holyPower = UnitPower("player", 9);
   local playerHp = GetHealthPercentage("player");
 
+  local minHealth = 75;
+  if IsInRaid("player") then
+    minHealth = 95
+  end
+
   if playerHp < 10 and IsCastable("Divine Shield", 5000) then
     WowCyborg_CURRENTATTACK = "Divine Shield";
     return SetSpellRequest("F");
@@ -209,7 +215,7 @@ function RenderSingleTargetRotation(skipDps)
   end
 
   if shockTarget ~= nil then
-    if shockTargetHp < 70 and IsCastable("Word of Glory", 0) and (holyPower > 2 or divinePurpose ~= nil or shiningIcon == 135931) then
+    if shockTargetHp < minHealth and IsCastable("Word of Glory", 0) and (holyPower > 2 or divinePurpose ~= nil or shiningIcon == 135931) then
       local memberindex = GetMemberIndex(shockTarget);
       WowCyborg_CURRENTATTACK = "Word of Glory " .. shockTarget;
       return SetSpellRequest(wog[memberindex]);
@@ -221,7 +227,7 @@ function RenderSingleTargetRotation(skipDps)
       return SetSpellRequest(shock[memberindex]);
     end
 
-    if shockTargetHp < 85 and IsCastable("Word of Glory", 0) and (holyPower > 2 or divinePurpose ~= nil or shiningIcon == 135931) then
+    if shockTargetHp < minHealth + 10 and IsCastable("Word of Glory", 0) and (holyPower > 2 or divinePurpose ~= nil or shiningIcon == 135931) then
       local memberindex = GetMemberIndex(shockTarget);
       WowCyborg_CURRENTATTACK = "Word of Glory " .. shockTarget;
       return SetSpellRequest(wog[memberindex]);
@@ -229,7 +235,7 @@ function RenderSingleTargetRotation(skipDps)
     
     if speed == 0 and shockTarget == "mouseover" and IsCastable("Flash of Light", 45000) then
       WowCyborg_CURRENTATTACK = "Flash of Light " .. shockTarget;
-      return SetSpellRequest("X");
+      return SetSpellRequest("1");
     end
   end
   
@@ -238,7 +244,7 @@ function RenderSingleTargetRotation(skipDps)
     if tostring(hp) ~= "-nan(ind)" and hp > 0 and hp < 95 then
       if speed == 0 and IsCastable("Flash of Light", 45000) then
         WowCyborg_CURRENTATTACK = "Flash of Light Mouseover";
-        return SetSpellRequest("X");
+        return SetSpellRequest("1");
       end
     end
   end

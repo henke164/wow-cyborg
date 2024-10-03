@@ -66,12 +66,10 @@ end
 function RenderSingleTargetRotation()
   local nearbyEnemies = GetNearbyEnemyCount(316593);
   local targetHp = GetHealthPercentage("target");
-  local bsBuff = FindBuff("player", "Battle Shout");
-  
-  
-  local holActive = C_Spell.GetOverrideSpell(6343) == 435222;
+  local bsBuff = FindBuff("player", "Battle Shout");  
+  local holActive = C_Spell.GetOverrideSpell(6343) == 435222 and GetClapCooldown() == 0;
 
-  if holActive and GetClapCooldown() == 0 then
+  if holActive and InCombatLockdown() then
     WowCyborg_CURRENTATTACK = "Thunder Clap";
     return SetSpellRequest(thunderClap);
   end
@@ -124,10 +122,7 @@ function RenderSingleTargetRotation()
     end
   end
 
-  local requiredAmount = 150000;
-  if targetHp < 20 and nearbyEnemies == 1 then
-    requiredAmount = 130000;
-  end
+  local requiredAmount = 2000000;
     
   local ipBuff, ipTl, _, __, ___, points = FindBuff("player", "Ignore Pain");
   local ipAmount = 0;
@@ -209,11 +204,6 @@ function RenderSingleTargetRotation()
       if targetHp < 20 and IsCastableAtEnemyTarget("Execute", 0) then
         WowCyborg_CURRENTATTACK = "Execute";
         return SetSpellRequest(execute);
-      end
-  
-      if IsCastable("Revenge", 40) then
-        WowCyborg_CURRENTATTACK = "Revenge";
-        return SetSpellRequest(revenge);
       end
     end
 
