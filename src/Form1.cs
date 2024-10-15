@@ -149,7 +149,7 @@ namespace WowCyborg.UI
         {
             _topMost = !_topMost;
             this.TopMost = _topMost;
-            button1.ForeColor = _topMost ? Color.Green : Color.Red;
+            button1.ForeColor = _topMost ? Color.SeaGreen : Color.Brown;
         }
 
         private void button3_Click(object sender, EventArgs e)

@@ -50,12 +50,15 @@
             // 
             // button2
             // 
+            this.button2.BackColor = System.Drawing.Color.Black;
+            this.button2.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.button2.ForeColor = System.Drawing.Color.CornflowerBlue;
             this.button2.Location = new System.Drawing.Point(260, 108);
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(73, 28);
             this.button2.TabIndex = 1;
             this.button2.Text = "Reinitialize";
-            this.button2.UseVisualStyleBackColor = true;
+            this.button2.UseVisualStyleBackColor = false;
             this.button2.Click += new System.EventHandler(this.button2_Click);
             // 
             // panel1
@@ -143,7 +146,7 @@
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.ForeColor = System.Drawing.Color.MediumSeaGreen;
+            this.label4.ForeColor = System.Drawing.Color.SeaGreen;
             this.label4.Location = new System.Drawing.Point(6, 7);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(0, 13);
@@ -161,7 +164,8 @@
             // 
             // button1
             // 
-            this.button1.ForeColor = System.Drawing.Color.Green;
+            this.button1.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.button1.ForeColor = System.Drawing.Color.SeaGreen;
             this.button1.Location = new System.Drawing.Point(339, 108);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(89, 28);
@@ -172,16 +176,21 @@
             // 
             // button3
             // 
+            this.button3.BackColor = System.Drawing.Color.Black;
+            this.button3.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.button3.ForeColor = System.Drawing.Color.CornflowerBlue;
             this.button3.Location = new System.Drawing.Point(434, 108);
             this.button3.Name = "button3";
             this.button3.Size = new System.Drawing.Size(85, 28);
             this.button3.TabIndex = 9;
             this.button3.Text = "Focus Game";
-            this.button3.UseVisualStyleBackColor = true;
+            this.button3.UseVisualStyleBackColor = false;
             this.button3.Click += new System.EventHandler(this.button3_Click);
             // 
             // button4
             // 
+            this.button4.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.button4.ForeColor = System.Drawing.Color.CornflowerBlue;
             this.button4.Location = new System.Drawing.Point(525, 108);
             this.button4.Name = "button4";
             this.button4.Size = new System.Drawing.Size(80, 28);
