@@ -1,5 +1,6 @@
 --[[
-  Button    Spell
+NAME: Warrior Fury
+ICON: ability_warrior_innerrage
 ]]--
 local buttons = {}
 buttons["rampage"] = "1";

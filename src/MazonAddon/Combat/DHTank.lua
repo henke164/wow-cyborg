@@ -1,10 +1,6 @@
 --[[
-  Button    Spell
-  1         Blade Dance
-  2         Chaos Strike
-  3         Execute
-  4         Eye Beam
-  5         Overpower
+NAME: Demonhunter Tank
+ICON: ability_demonhunter_metamorphasisdps
 ]]--
 
 local spiritBomb = "1";

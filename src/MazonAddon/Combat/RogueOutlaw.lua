@@ -1,5 +1,6 @@
 --[[
-  Button    Spell
+NAME: Rouge Outlaw
+ICON: ability_rogue_waylay
 ]]--
 local buttons = {}
 buttons["roll_the_bones"] = "1";

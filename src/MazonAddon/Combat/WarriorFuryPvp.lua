@@ -1,16 +1,7 @@
 --[[
-  Button    Spell
-  rampage = "1";
-  recklessness = "2";
-  execute = "3";
-  bloodthirst = "4";
-  ragingBlow = "5";
-  whirlwind = "6";
-  siegeBreaker = "7";
-  bladestorm = "8";
-  victoryRush = "9";
+NAME: Warrior Fury PVP
+ICON: ability_warrior_innerrage
 ]]--
-
 local rampage = "1";
 local recklessness = "2";
 local execute = "3";

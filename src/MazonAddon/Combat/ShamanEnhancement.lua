@@ -1,10 +1,6 @@
 --[[
-  flametongue = "2"
-  frostbrand = "4"
-  stormstrike = "5"
-  lavaLash = "7"
-  crashLightning = "8"
-  lightningShield = "9"
+NAME: Shaman Enhancement
+ICON: spell_shaman_improvedstormstrike
 ]]--
 local buttons = {}
 buttons["stormstrike"] = "1";

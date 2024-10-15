@@ -1,5 +1,6 @@
 --[[
-  Button    Spell
+NAME: Paladin Protection
+ICON: ability_paladin_shieldofthetemplar
 ]]--
 
 local consecration = 1;

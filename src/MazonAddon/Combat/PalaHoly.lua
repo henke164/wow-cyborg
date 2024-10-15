@@ -1,5 +1,6 @@
 --[[
-  Button    Spell
+NAME: Paladin Holy
+ICON: spell_holy_holybolt
 ]]--
 
 local consecration = "F+1";

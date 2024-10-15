@@ -1,11 +1,6 @@
 --[[
-  Button    Spell
-  1   deathsCaress
-  2   marrowrend
-  3   bloodboil
-  4   deathstrike
-  5   heartstrike
-  6   bonestorm
+NAME: Deathknight Blood
+ICON: spell_deathknight_bloodpresence
 ]]--
 
 local incomingDamage = {}

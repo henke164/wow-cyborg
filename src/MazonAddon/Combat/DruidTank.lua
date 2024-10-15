@@ -1,5 +1,6 @@
 --[[
-  Button    Spell
+NAME: Druid Tank
+ICON: ability_racial_bearform
 ]]--
 local buttons = {}
 buttons["moonfire"] = "1";

@@ -4,22 +4,14 @@ using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.Linq;
-using System.Runtime.InteropServices;
 using System.Threading;
-using System.Windows.Forms;
-using WowCyborg.Models;
+using WowCyborg.UI;
 using WowCyborg.Utilities;
 
 namespace WowCyborg.Handlers
 {
     public static class AddonLocator
     {
-        [DllImport("User32.dll")]
-        static extern int SetForegroundWindow(IntPtr point);
-
-        [DllImport("user32.dll")]
-        private static extern int GetWindowRect(IntPtr hwnd, out Rectangle rect);
-
         private static Dictionary<IntPtr, Rectangle> InGameAddonLocations = new Dictionary<IntPtr, Rectangle>();
 
         private static IList<IntPtr> GameHandles;
@@ -82,8 +74,8 @@ namespace WowCyborg.Handlers
 
                 try
                 {
-                    GetWindowRect(handle, out rect);
-                    SetForegroundWindow(handle);
+                    Program.GetWindowRect(handle, out rect);
+                    Program.SetForegroundWindow(handle);
                     Thread.Sleep(500);
                     rect.Width -= rect.X;
                     rect.Height -= rect.Y;
@@ -104,7 +96,7 @@ namespace WowCyborg.Handlers
                         scanArea.X = 0;
                     }
 
-                    Console.WriteLine($"Scan area x:{scanArea.X}, y:{scanArea.Y}, w:{scanArea.Width}, h:{scanArea.Height}");
+                    Program.Log($"Scan area x:{scanArea.X}, y:{scanArea.Y}, w:{scanArea.Width}, h:{scanArea.Height}");
                     using (var bitmap = new Bitmap(bounds.Width, bounds.Height))
                     {
                         using (var g = Graphics.FromImage(bitmap))
@@ -118,35 +110,33 @@ namespace WowCyborg.Handlers
                     var frameSize = CalculateFrameSize(addonBottomLeft, clone);
                     if (frameSize <= 1)
                     {
-                        Console.WriteLine("Could not locate addon on screen.");
+                        Program.Log("Could not locate addon on screen. Make the addon visible on the screen, then press Reinitialize.");
                         locations.Add(handles[i], new Rectangle(1, 1, 1, 1));
                         continue;
                     }
 
-                    var settings = SettingsLoader.LoadSettings<AppSettings>("settings.json");
-
                     var location = new Rectangle(
                         scanArea.X + addonBottomLeft.X,
-                        scanArea.Y + addonBottomLeft.Y - (frameSize * settings.AddonRowCount) + 1,
-                        frameSize * settings.AddonColumnCount,
-                        frameSize * settings.AddonRowCount);
+                        scanArea.Y + addonBottomLeft.Y - (frameSize * Program.AddonRowCount) + 1,
+                        frameSize * Program.AddonColumnCount,
+                        frameSize * Program.AddonRowCount);
 
                     if (location.Height == 0 || location.Width == 0)
                     {
-                        Console.WriteLine("Could not locate addon on screen.");
+                        Program.Log("Could not locate addon on screen. Make the addon visible on the screen, then press Reinitialize.");
                         location = new Rectangle(1, 1, 1, 1);
                     }
                     else
                     {
-                        Console.WriteLine("Ingame addon successfully located on screen: " + location);
+                        Program.Log("Ingame addon successfully located on screen: " + location);
                     }
                     locations.Add(handles[i], location);
                     Thread.Sleep(200);
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine(ex.Message);
-                    Console.WriteLine("Exception: Could not locate addon on screen.");
+                    Program.Log(ex.Message);
+                    Program.Log("Could not locate addon on screen. Make the addon visible on the screen, then press Reinitialize.");
                     locations.Add(handles[i], new Rectangle(1, 1, 1, 1));
                 }
             }
@@ -221,20 +211,7 @@ namespace WowCyborg.Handlers
 
             if (processes.Length > 1)
             {
-                Console.WriteLine("Select process");
-                for (var x = 0; x < processes.Length; x++)
-                {
-                    Console.WriteLine($"{x}. {processes[x].MainWindowTitle} ({processes[x].Id})");
-                }
-                Console.WriteLine("Type \"all\" to run on all processes");
-
-                var input = Console.ReadLine();
-                if (input == "all")
-                {
-                    return processes.Select(p => p.MainWindowHandle).ToList();
-                }
-                var index = int.Parse(input);
-                return new List<IntPtr> { processes[index].MainWindowHandle };
+                return processes.Select(p => p.MainWindowHandle).ToList();
             }
 
             return new List<IntPtr>();

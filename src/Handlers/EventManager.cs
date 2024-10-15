@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using WowCyborg.EventDispatchers;
 using WowCyborg.Models.Abstractions;
 
 namespace WowCyborg.Handlers

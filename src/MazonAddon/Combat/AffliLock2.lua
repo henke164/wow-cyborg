@@ -1,5 +1,6 @@
 --[[
-  Button    Spell
+NAME: Warlock Affliction (PVP)
+ICON: spell_shadow_unstableaffliction_3
 ]]--
 local buttons = {}
 buttons["unstable_affliction"] = "1";

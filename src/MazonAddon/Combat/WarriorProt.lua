@@ -1,19 +1,7 @@
 --[[
-  Button    Spell
-  Shift+1   Avatar
-  Shift+2   Demoralizing Shout
-  Shift+3   Shield Wall
-  Shift+4   Last Stand
-  Ctrl+1    Rallying Cry
-  1         Shield Slam
-  2         Thunder Clap
-  3         Revenge
-  4         Devastate
-  5         Shield Block
-  6         Ignore Pain
-  7         Victory Rush
+NAME: Warrior Protection
+ICON: ability_warrior_defensivestance
 ]]--
-
 local incomingDamage = {}
 local meleeDamageInLast5Seconds = 0
 local rangedDamageInLast5Seconds = 0

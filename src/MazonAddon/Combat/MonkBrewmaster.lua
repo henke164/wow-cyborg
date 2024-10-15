@@ -1,5 +1,6 @@
 --[[
-  Button    Spell
+NAME: Monk Brewmaster
+ICON: spell_monk_brewmaster_spec
 ]]--
 local buttons = {}
 buttons["blackout_kick"] = "1";

@@ -1,5 +1,6 @@
 --[[
-  Button    Spell
+NAME: Paladin Retri
+ICON: spell_holy_auraoflight
 ]]--
 local buttons = {}
 buttons["wake_of_ashes"] = "1";

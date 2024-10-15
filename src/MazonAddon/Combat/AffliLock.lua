@@ -1,6 +1,6 @@
 --[[
 NAME: Affliction Warlock
-ICON: https://wow.zamimg.com/images/wow/icons/large/spell_shadow_unstableaffliction_3.jpg
+ICON: spell_shadow_unstableaffliction_3
 ]]--
 local buttons = {}
 buttons["unstable_affliction"] = "1";

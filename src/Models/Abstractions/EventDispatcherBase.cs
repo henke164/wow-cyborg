@@ -54,7 +54,6 @@ namespace WowCyborg.Models.Abstractions
                     {
                         Console.WriteLine("Error in event dispatcher");
                         Console.WriteLine(ex.Message);
-                        Console.WriteLine(ex.StackTrace);
                     }
                 }
             });

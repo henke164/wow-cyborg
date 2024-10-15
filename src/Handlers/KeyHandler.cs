@@ -47,7 +47,6 @@ namespace WowCyborg.Handlers
             {
                 SendMessage(_hWnd, WM_KEYUP, Convert.ToInt32(key), 0);
                 Console.WriteLine("Could not hold key");
-                Console.WriteLine(ex.Message);
             }
         }
 
@@ -65,7 +64,6 @@ namespace WowCyborg.Handlers
             catch (Exception ex)
             {
                 Console.WriteLine("Could not release key");
-                Console.WriteLine(ex.Message);
             }
         }
 

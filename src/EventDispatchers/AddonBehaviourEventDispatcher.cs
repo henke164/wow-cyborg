@@ -3,9 +3,8 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
 using WowCyborg.Handlers;
-using WowCyborg.Models;
 using WowCyborg.Models.Abstractions;
-using WowCyborg.Utilities;
+using WowCyborg.UI;
 
 namespace WowCyborg.EventDispatchers
 {
@@ -13,13 +12,10 @@ namespace WowCyborg.EventDispatchers
     {
         protected static Dictionary<IntPtr, Bitmap> AddonScreenshots = new Dictionary<IntPtr, Bitmap>();
         protected static Dictionary<IntPtr, Size> AddonScreenshotSizes = new Dictionary<IntPtr, Size>();
-        private AppSettings _appSettings;
 
         public AddonBehaviourEventDispatcher() 
             : base()
         {
-            _appSettings = SettingsLoader.LoadSettings<AppSettings>("settings.json");
-
             OnGameHandleAdded = InitializeGameHandle;
         }
 
@@ -117,8 +113,8 @@ namespace WowCyborg.EventDispatchers
                 return Color.White;
             }
 
-            var frameWidth = AddonScreenshotSizes[hWnd].Width / _appSettings.AddonColumnCount;
-            var frameHeight = AddonScreenshotSizes[hWnd].Height / _appSettings.AddonRowCount;
+            var frameWidth = AddonScreenshotSizes[hWnd].Width / Program.AddonColumnCount;
+            var frameHeight = AddonScreenshotSizes[hWnd].Height / Program.AddonRowCount;
             var xPos = (frameWidth * x) - 1;
             var yPos = (frameHeight * y) - 1;
 

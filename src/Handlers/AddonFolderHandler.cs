@@ -43,12 +43,8 @@ namespace WowCyborg.Handlers
                 var file = new FileInfo(process.MainModule.FileName);
                 var folder = file.Directory;
                 var addonPath = Path.Combine(folder.FullName, "Interface", "Addons");
-                if (Directory.Exists(addonPath))
-                {
-                    _addonFolderPath = addonPath;
-                }
+                _addonFolderPath = addonPath;
             }
         }
-
     }
 }

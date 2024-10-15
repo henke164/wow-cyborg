@@ -52,10 +52,14 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BotProfiles\AutoCaster.cs" />
-    <Compile Include="BotProfiles\Bot.cs" />
+    <Compile Include="CreateProfileForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="CreateProfileForm.Designer.cs">
+      <DependentUpon>CreateProfileForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Handlers\Bot.cs" />
     <Compile Include="EventDispatchers\AddonBehaviourEventDispatcher.cs" />
-    <Compile Include="EventDispatchers\AddonNotVisibleDispatcher.cs" />
     <Compile Include="EventDispatchers\CombatCastingDispatcher.cs" />
     <Compile Include="EventDispatchers\CombatChangedDispatcher.cs" />
     <Compile Include="EventDispatchers\ScreenChangedDispatcher.cs" />
@@ -68,21 +72,13 @@
     <Compile Include="Handlers\AddonFolderHandler.cs" />
     <Compile Include="Handlers\AddonLocator.cs" />
     <Compile Include="Handlers\EventManager.cs" />
-    <Compile Include="Handlers\GameWindowHandler.cs" />
-    <Compile Include="Handlers\GameWindowUtilities.cs" />
     <Compile Include="Handlers\KeyHandler.cs" />
-    <Compile Include="Handlers\WowAddonInstaller.cs" />
+    <Compile Include="Handlers\WowRotationInstaller.cs" />
     <Compile Include="Models\Abstractions\Event.cs" />
     <Compile Include="Models\Abstractions\EventDispatcherBase.cs" />
-    <Compile Include="Models\AddonSettings.cs" />
-    <Compile Include="Models\ApplicationSettings.cs" />
-    <Compile Include="Models\BotTransform.cs" />
     <Compile Include="Models\GameWindow.cs" />
     <Compile Include="Models\KeyPressRequest.cs" />
     <Compile Include="Models\RotationProfile.cs" />
-    <Compile Include="Models\ScreenBoundsInfo.cs" />
-    <Compile Include="Models\ServerTextFile.cs" />
-    <Compile Include="Models\WaypointCollection.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RotationProfileControl.cs">
@@ -91,13 +87,11 @@
     <Compile Include="RotationProfileControl.Designer.cs">
       <DependentUpon>RotationProfileControl.cs</DependentUpon>
     </Compile>
-    <Compile Include="Utilities\Logger.cs" />
-    <Compile Include="Utilities\PluginBase.cs" />
-    <Compile Include="Utilities\Rect.cs" />
+    <Compile Include="Utilities\FileUtilities.cs" />
     <Compile Include="Utilities\ScreenUtilities.cs" />
-    <Compile Include="Utilities\SettingsLoader.cs" />
-    <Compile Include="Utilities\Transform.cs" />
-    <Compile Include="Utilities\Vector3.cs" />
+    <EmbeddedResource Include="CreateProfileForm.resx">
+      <DependentUpon>CreateProfileForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>
     </EmbeddedResource>
@@ -114,6 +108,75 @@
     <EmbeddedResource Include="RotationProfileControl.resx">
       <DependentUpon>RotationProfileControl.cs</DependentUpon>
     </EmbeddedResource>
+    <None Include="MazonAddon\Combat\AffliLock.lua">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="MazonAddon\Combat\AffliLock2.lua">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="MazonAddon\Combat\DemoLock.lua">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="MazonAddon\Combat\DHTank.lua">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="MazonAddon\Combat\DKBlood.lua">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="MazonAddon\Combat\DruidTank.lua">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="MazonAddon\Combat\MonkBrewmaster.lua">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="MazonAddon\Combat\PalaHoly.lua">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="MazonAddon\Combat\PalaRetri.lua">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="MazonAddon\Combat\PalaTank.lua">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="MazonAddon\Combat\RogueOutlaw.lua">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="MazonAddon\Combat\RogueSubtlety.lua">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="MazonAddon\Combat\ShamanEnhancement.lua">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="MazonAddon\Combat\Shared.lua">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="MazonAddon\Combat\WarriorArms.lua">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="MazonAddon\Combat\WarriorFury.lua">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="MazonAddon\Combat\WarriorFuryPvp.lua">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="MazonAddon\Combat\WarriorProt.lua">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="MazonAddon\MazonAddon.lua">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="MazonAddon\MazonAddon.toc">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="MazonAddon\OCR.lua">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="MazonAddon\Positioning\PlayerPositioning.lua">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="MazonAddon\Positioning\TankPositioning.lua">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
@@ -124,9 +187,6 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
-    <None Include="settings.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

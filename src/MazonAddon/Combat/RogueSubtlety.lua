@@ -1,5 +1,6 @@
 --[[
-  Button    Spell
+NAME: Rogue Subtlety
+ICON: ability_stealth
 ]]--
 local buttons = {}
 buttons["shadow_blades"] = "1";

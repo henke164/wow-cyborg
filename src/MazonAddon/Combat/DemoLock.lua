@@ -1,5 +1,6 @@
 --[[
-  Button    Spell
+NAME: Warlock Demonology
+ICON: ability_warlock_impoweredimp
 ]]--
 local buttons = {}
 buttons["power_siphon"] = "1";

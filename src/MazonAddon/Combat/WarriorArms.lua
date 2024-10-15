@@ -1,10 +1,6 @@
 --[[
-  Button    Spell
-  1         Hamstring
-  2         Slam
-  3         Execute
-  4         Mortal Strike
-  5         Overpower
+NAME: Warrior Arms
+ICON: ability_warrior_savageblow
 ]]--
 
 local execute = "1";
