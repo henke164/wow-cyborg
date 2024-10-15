@@ -16,7 +16,7 @@ wog[2] = "F+6";
 wog[3] = "F+7";
 wog[4] = "F+8";
 wog[5] = "F+9";
-wog[6] = "1";
+wog[6] = "X";
 
 local shock = {};
 shock[1] = "6";
@@ -34,10 +34,10 @@ WowCyborg_PAUSE_KEYS = {
   "NUMPAD2",
   "NUMPAD3",
   "NUMPAD5",
+  "NUMPAD7",
   "NUMPAD9",
   "F",
   "R",
-  "X",
   "ESCAPE"
 }
 
@@ -175,10 +175,6 @@ function RenderSingleTargetRotation(skipDps)
     skipDps = false;
   end
 
-  if IsInRaid("player") then
-    skipDps = true;
-  end
-
   local speed = GetUnitSpeed("player");
   local divinePurpose = FindBuff("player", "Divine Purpose");
   local shiningRighteousness, shiningTl, shiningStacks, _, shiningIcon = FindBuff("player", "Shining Righteousness");
@@ -205,12 +201,6 @@ function RenderSingleTargetRotation(skipDps)
     if IsCastable("Holy Prism", 65000) then
       WowCyborg_CURRENTATTACK = "Holy Prism";
       return SetSpellRequest(prism);
-    end
-
-    local empyrianBuff = FindBuff("player", "Empyrean Legacy");
-    if empyrianBuff == nil and IsCastableAtEnemyTarget("Judgment", 60000) then
-      WowCyborg_CURRENTATTACK = "Judgment";
-      return SetSpellRequest(judgment);
     end
   end
 
@@ -254,7 +244,7 @@ function RenderSingleTargetRotation(skipDps)
     if WowCyborg_INCOMBAT then
       local targetHp = GetHealthPercentage("target");
       local consec = FindDebuff("target", "Consecration");
-      if shockTarget == nil and consec == nil and IsMelee() and IsCastable("Consecration", 0) and speed == 0 then
+      if shockTarget == nil and consec == nil and IsMelee() and IsCastable("Consecration", 0) then
         WowCyborg_CURRENTATTACK = "Consecration";
         return SetSpellRequest(consecration);
       end

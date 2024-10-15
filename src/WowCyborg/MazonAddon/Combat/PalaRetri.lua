@@ -90,14 +90,6 @@ function RenderSingleTargetRotation()
 
   local nearbyEnemies = GetNearbyEnemyCount();
   
-  if nearbyEnemies > 3 and actionName == "templars_verdict" then
-    actionName = "divine_storm";
-  end
-  
-  if actionName == "templars_verdict" and InAttackRange() == false then
-    return SetSpellRequest(nil);
-  end
-  
   local button = buttons[actionName];
   WowCyborg_CURRENTATTACK = actionName;
   if button ~= nil then

@@ -18,10 +18,10 @@ buttons["soul_strike"] = "0";
 buttons["summon_vilefiend"] = "0";
 buttons["doom"] = "F+6";
 buttons["nether_portal"] = "F+7";
+buttons["spymasters_web"] = "F+8";
 stopCast = "F+8";
 
 WowCyborg_PAUSE_KEYS = {
-  "F2",
   "LSHIFT",
   "NUMPAD1",
   "NUMPAD2",
@@ -30,7 +30,6 @@ WowCyborg_PAUSE_KEYS = {
   "NUMPAD5",
   "NUMPAD7",
   "R",
-  "F4",
   "F",
   "§"
 }
@@ -48,19 +47,23 @@ function GetSpellCD(name)
 end
 
 function RenderMultiTargetRotation()
-  return RenderSingleTargetRotation();
+  return RenderSingleTargetRotation(true);
 end
 
-function RenderSingleTargetRotation()
+function RenderSingleTargetRotation(useCds)
   local shards = UnitPower("player", 7);
+
+  if useCds == nil then
+    useCds = false;
+  end
+
+  if Hekili.DB.profile.toggles.cooldowns.value ~= useCds then
+    Hekili:FireToggle("cooldowns");
+    Hekili:Query("UI").Minimap:RefreshDataText();
+  end
 
   if WowCyborg_INCOMBAT == false then
     return SetSpellRequest(nil);
-  end
-
-  if Hekili.DB.profile.toggles.cooldowns.value == true then
-    Hekili:FireToggle("cooldowns");
-    Hekili:Query("UI").Minimap:RefreshDataText();
   end
 
   if UnitCanAttack("player", "target") == false then
@@ -108,10 +111,11 @@ function RenderSingleTargetRotation()
     end
   end
 
-  WowCyborg_CURRENTATTACK = actionName;
   local button = buttons[actionName];
   
   if button ~= nil then
+    local replaced = string.gsub(actionName, "_", " ");
+    WowCyborg_CURRENTATTACK = replaced;
     return SetSpellRequest(button);
   end
 

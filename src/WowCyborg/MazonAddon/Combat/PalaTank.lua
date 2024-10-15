@@ -155,6 +155,11 @@ function RenderSingleTargetRotation(saveHolyPower)
     end
   end
 
+  if (concecrationBuff == nil or (concTimeLeft > 0 and concTimeLeft < 2)) and WowCyborg_INCOMBAT and IsCastable("Consecration", 0) then
+    WowCyborg_CURRENTATTACK = "Consecration";
+    return SetSpellRequest(consecration);
+  end
+  
   if (UnitChannelInfo("target") or UnitCastingInfo("target")) and IsCastableAtEnemyTarget("Avenger's Shield", 0) then
     WowCyborg_CURRENTATTACK = "Avenger's Shield";
     return SetSpellRequest(avengersShield);
