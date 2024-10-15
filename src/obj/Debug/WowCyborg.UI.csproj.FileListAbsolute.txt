@@ -1,0 +1,14 @@
+C:\code\wow-cyborg\WowCyborg\WowCyborg.UI\obj\Debug\WowCyborg.UI.csproj.AssemblyReference.cache
+C:\code\wow-cyborg\WowCyborg\WowCyborg.UI\obj\Debug\WowCyborg.UI.Form1.resources
+C:\code\wow-cyborg\WowCyborg\WowCyborg.UI\obj\Debug\WowCyborg.UI.Properties.Resources.resources
+C:\code\wow-cyborg\WowCyborg\WowCyborg.UI\obj\Debug\WowCyborg.UI.csproj.GenerateResource.cache
+C:\code\wow-cyborg\WowCyborg\WowCyborg.UI\obj\Debug\WowCyborg.UI.csproj.CoreCompileInputs.cache
+C:\code\wow-cyborg\WowCyborg\WowCyborg.UI\bin\Debug\WowCyborg.UI.exe.config
+C:\code\wow-cyborg\WowCyborg\WowCyborg.UI\bin\Debug\WowCyborg.UI.exe
+C:\code\wow-cyborg\WowCyborg\WowCyborg.UI\bin\Debug\WowCyborg.UI.pdb
+C:\code\wow-cyborg\WowCyborg\WowCyborg.UI\bin\Debug\Newtonsoft.Json.dll
+C:\code\wow-cyborg\WowCyborg\WowCyborg.UI\bin\Debug\Newtonsoft.Json.xml
+C:\code\wow-cyborg\WowCyborg\WowCyborg.UI\obj\Debug\WowCybor.037E2DA5.Up2Date
+C:\code\wow-cyborg\WowCyborg\WowCyborg.UI\obj\Debug\WowCyborg.UI.exe
+C:\code\wow-cyborg\WowCyborg\WowCyborg.UI\obj\Debug\WowCyborg.UI.pdb
+C:\code\wow-cyborg\WowCyborg\WowCyborg.UI\bin\Debug\settings.json

@@ -1,0 +1,14 @@
+C:\code\wow-cyborg\src\bin\Debug\settings.json
+C:\code\wow-cyborg\src\bin\Debug\WowCyborg.exe.config
+C:\code\wow-cyborg\src\bin\Debug\WowCyborg.exe
+C:\code\wow-cyborg\src\bin\Debug\WowCyborg.pdb
+C:\code\wow-cyborg\src\bin\Debug\Newtonsoft.Json.dll
+C:\code\wow-cyborg\src\obj\Debug\WowCyborg.csproj.AssemblyReference.cache
+C:\code\wow-cyborg\src\obj\Debug\WowCyborg.UI.Form1.resources
+C:\code\wow-cyborg\src\obj\Debug\WowCyborg.Properties.Resources.resources
+C:\code\wow-cyborg\src\obj\Debug\WowCyborg.csproj.GenerateResource.cache
+C:\code\wow-cyborg\src\obj\Debug\WowCyborg.csproj.CoreCompileInputs.cache
+C:\code\wow-cyborg\src\obj\Debug\WowCyborg.csproj.Up2Date
+C:\code\wow-cyborg\src\obj\Debug\WowCyborg.exe
+C:\code\wow-cyborg\src\obj\Debug\WowCyborg.pdb
+C:\code\wow-cyborg\src\obj\Debug\WowCyborg.RotationProfileControl.resources
