@@ -5,7 +5,6 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
-using System.Threading;
 using System.Windows.Forms;
 using WowCyborg.Handlers;
 using WowCyborg.Models;
@@ -28,13 +27,13 @@ namespace WowCyborg.UI
 
         public void WriteLog(string str)
         {
-            if (label4.InvokeRequired)
+            if (logTextBox.InvokeRequired)
             {
-                label4.Invoke(new Action(() => label4.Text += str + "\r\n" ));
+                logTextBox.Invoke(new Action(() => logTextBox.Text += str + "\r\n" ));
             }
             else
             {
-                label4.Text += str + "\r\n";
+                logTextBox.Text += str + "\r\n";
             }
         }
 
@@ -174,6 +173,11 @@ namespace WowCyborg.UI
         private void button4_Click(object sender, EventArgs e)
         {
             this.Close();
+        }
+
+        protected override void OnPaintBackground(PaintEventArgs e)
+        {
+            e.Graphics.Clear(Color.Transparent);
         }
     }
 }
