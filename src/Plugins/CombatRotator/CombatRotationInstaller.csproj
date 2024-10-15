@@ -47,11 +47,5 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="WowAddonInstaller.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\..\WowCyborg.PluginUtilities\WowCyborg.PluginUtilities.csproj">
-      <Project>{f6c2529f-4366-41db-b1b0-a6b84d581616}</Project>
-      <Name>WowCyborg.PluginUtilities</Name>
-    </ProjectReference>
-  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

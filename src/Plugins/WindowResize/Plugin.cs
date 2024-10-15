@@ -1,8 +1,8 @@
 ﻿using System;
-using WowCyborg.PluginUtilities;
-using WowCyborg.PluginUtilities.Models;
+using WowCyborg;
+using WowCyborg.Models;
 
-namespace WindowResize
+namespace WowCyborg.WindowResize
 {
     public class Plugin : PluginBase
     {

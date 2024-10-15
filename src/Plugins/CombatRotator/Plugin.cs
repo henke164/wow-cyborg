@@ -1,6 +1,6 @@
 ﻿using System;
-using WowCyborg.PluginUtilities;
-using WowCyborg.PluginUtilities.Models;
+using WowCyborg;
+using WowCyborg.Models;
 
 namespace CombatRotationInstaller
 {

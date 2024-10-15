@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using WowCyborg.PluginUtilities;
-using WowCyborg.PluginUtilities.Models;
+using WowCyborg;
+using WowCyborg.Models;
 
 namespace WowCyborg
 {

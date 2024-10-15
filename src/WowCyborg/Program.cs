@@ -1,13 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using WowCyborg.Core;
-using WowCyborg.Core.Models;
-using WowCyborg.Core.Utilities;
-using WowCyborg.Core.Handlers;
-using WowCyborg.PluginUtilities;
-using WowCyborg.PluginUtilities.Models;
+using WowCyborg;
+using WowCyborg.Models;
+using WowCyborg.Utilities;
+using WowCyborg.Handlers;
+using WowCyborg;
+using WowCyborg.Models;
 using WowCyborg.BotProfiles;
+using WindowResize;
+using CombatRotationInstaller;
 
 namespace WowCyborg
 {
@@ -40,33 +42,7 @@ namespace WowCyborg
 
         static void InitializeBotRunner(IList<IntPtr> hWnds, AppSettings settings)
         {
-            switch (settings.BotType.ToLower())
-            {
-                case "solorunner":
-                    Console.Write("Solo runner");
-                    InitializeBotRunnerByType<SoloRunner>(hWnds);
-                    break;
-                case "follower":
-                    Console.Write("Follower");
-                    InitializeBotRunnerByType<BotFollower>(hWnds);
-                    break;
-                case "pvp":
-                    Console.Write("Pvp");
-                    InitializeBotRunnerByType<PVP>(hWnds);
-                    break;
-                case "expedition":
-                    Console.Write("Expedition");
-                    InitializeBotRunnerByType<Expedition>(hWnds);
-                    break;
-                case "looter":
-                    Console.Write("Looter");
-                    InitializeBotRunnerByType<Looter>(hWnds);
-                    break;
-                default:
-                    Console.Write("Autocaster");
-                    InitializeBotRunnerByType<AutoCaster>(hWnds);
-                    break;
-            }
+            InitializeBotRunnerByType<AutoCaster>(hWnds);
         }
 
         static ApplicationSettings GetApplicationSettings(AppSettings settings)
@@ -84,11 +60,20 @@ namespace WowCyborg
             Logger.Log(">> ", ConsoleColor.White, true);
             var input = Console.ReadLine().ToLower().Split(' ');
 
-            foreach (var plugin in Plugins)
+            var command = input[0];
+            if (command == "resize")
             {
-                var command = input[0];
+                var handler = new GameWindowHandler();
+                handler.ReinitializeGameWindows();
+            }
+
+            if (command == "rotation")
+            {
+                var settings = SettingsLoader.LoadSettings<AppSettings>("settings.json");
+                var addonInstaller = new WowAddonInstaller(settings.AddonPath);
+                addonInstaller.FetchRotations();
                 var args = input.ToList().Skip(1).Take(input.Length - 1).ToArray();
-                plugin.HandleInput(command, args);
+                var addonPath = addonInstaller.SetRotation(args[1]);
             }
 
             HandleInput();

@@ -1,10 +1,10 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Windows.Forms;
-using WowCyborg.Core;
-using WowCyborg.Core.Handlers;
-using WowCyborg.Core.Models;
-using WowCyborg.Core.Models.Abstractions;
+using WowCyborg;
+using WowCyborg.Handlers;
+using WowCyborg.Models;
+using WowCyborg.Models.Abstractions;
 
 namespace WowCyborg.BotProfiles
 {
