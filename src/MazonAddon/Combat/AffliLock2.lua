@@ -43,25 +43,30 @@ function RenderMultiTargetRotation()
   return RenderSingleTargetRotation(true);
 end
 
-function RenderSingleTargetRotation(aoe)
+function RenderSingleTargetRotation(slow)
   local speed = GetUnitSpeed("player");
   local actionName = GetHekiliQueue().Primary[1].actionName;
-
-  if WowCyborg_INCOMBAT == false then
-    --return SetSpellRequest(nil);
+  local targetHp = GetHealthPercentage("target");
+  if targetHp == 0 then
+    return SetSpellRequest(nil);
   end
 
   if UnitCanAttack("player", "target") == false then
     return SetSpellRequest(nil);
   end
-
-  local quaking = FindDebuff("player", "Quake");
-  if quaking then
-    if actionName == "unstable_affliction" or actionName == "malefic_rapture" then
-      --return SetSpellRequest(nil);
-    end
+  
+  if actionName == "drain_soul" and UnitChannelInfo("player") ~= nil then
+    return SetSpellRequest(nil);
   end
 
+  if slow == true then
+    local shards = UnitPower("player", 7);
+    local slowDebuff = FindDebuff("target", "Curse of Exhaustion");
+    local cow = FindDebuff("target", "Curse of Weakness");
+    if slowDebuff == nil and cow == nil and shards > 0 then
+    return SetSpellRequest("F+8");
+    end
+  end
 
   local bfury = FindBuff("player", "Blood Fury");
   if bfury then
@@ -101,10 +106,6 @@ function RenderSingleTargetRotation(aoe)
       end
     end
     
-  end
-
-  if actionName == "drain_soul" and UnitChannelInfo("player") ~= nil then
-    return SetSpellRequest(nil);
   end
 
   WowCyborg_CURRENTATTACK = actionName;

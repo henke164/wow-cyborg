@@ -49,17 +49,21 @@ function GetSpellCD(name)
 end
 
 function RenderMultiTargetRotation()
-  return RenderSingleTargetRotation();
+  return RenderSingleTargetRotation(true);
 end
 
-function RenderSingleTargetRotation()
+function RenderSingleTargetRotation(burst)
   local shards = UnitPower("player", 7);
+
+  if burst == nil then
+    burst = false;
+  end
 
   if WowCyborg_INCOMBAT == false then
     return SetSpellRequest(nil);
   end
-
-  if Hekili.DB.profile.toggles.cooldowns.value == true then
+  
+  if Hekili.DB.profile.toggles.cooldowns.value ~= burst then
     Hekili:FireToggle("cooldowns");
     Hekili:Query("UI").Minimap:RefreshDataText();
   end
