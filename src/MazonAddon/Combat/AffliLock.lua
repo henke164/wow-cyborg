@@ -43,29 +43,21 @@ function RenderMultiTargetRotation()
   return RenderSingleTargetRotation(true);
 end
 
-function RenderSingleTargetRotation(aoe)
+function RenderSingleTargetRotation(burst)
   local speed = GetUnitSpeed("player");
   local actionName = GetHekiliQueue().Primary[1].actionName;
 
-  if aoe then
-    Hekili.DB.profile.toggles.mode.value = "aoe";
-  else
-    Hekili.DB.profile.toggles.mode.value = "single";
+  if burst == nil then
+    burst = false;
   end
 
-  if WowCyborg_INCOMBAT == false then
-    --return SetSpellRequest(nil);
+  if Hekili.DB.profile.toggles.cooldowns.value ~= burst then
+    Hekili:FireToggle("cooldowns");
+    Hekili:Query("UI").Minimap:RefreshDataText();
   end
 
   if UnitCanAttack("player", "target") == false then
     return SetSpellRequest(nil);
-  end
-
-  local quaking = FindDebuff("player", "Quake");
-  if quaking then
-    if actionName == "unstable_affliction" or actionName == "malefic_rapture" then
-      --return SetSpellRequest(nil);
-    end
   end
 
   if speed > 0 then
@@ -110,4 +102,4 @@ function RenderSingleTargetRotation(aoe)
   return SetSpellRequest(nil);
 end
 
-print("Affli lock rotation loaded");
+print("Affli lock PVE rotation loaded");

@@ -48,7 +48,7 @@ function GetClapCooldown()
 end
 
 function RenderMultiTargetRotation()
-  return SetSpellRequest("G");
+  return RenderSingleTargetRotation();
 end
 
 function RenderSingleTargetRotation()

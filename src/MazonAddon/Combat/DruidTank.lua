@@ -33,6 +33,7 @@ WowCyborg_PAUSE_KEYS = {
   "NUMPAD8",
   "NUMPAD9",
   "NUMPAD10",
+  "R",
   "F",
   "X",
   "§"
@@ -106,13 +107,6 @@ end
 function RenderSingleTargetRotation()
   local actionName = GetHekiliQueue().Primary[1].actionName;
   local hp = GetHealthPercentage("player");
-  if (hp <= 50) then
-    if IsCastable("Frenzied Regeneration", 0) then
-      WowCyborg_CURRENTATTACK = "Frenzied Regeneration";
-      return SetSpellRequest("6");
-    end
-  end
-
   local friendlyTargetName = FindHealingTarget();
   if friendlyTargetName ~= nil then
     local poweredUp = FindBuff("player", "Dream of Cenarius");
@@ -153,15 +147,17 @@ function RenderSingleTargetRotation()
     end
   end
 
+  local nearbyEnemies = GetNearbyEnemyCount("Mangle");
+  local eightYardCheck = IsSpellInRange("Wild Charge", "target") == 0 and IsSpellInRange("Skull Bash", "target") == 1;
   if (actionName == "swipe_bear") then
-    if ((IsSpellInRange("Mangle", "target") == 0) or IsCastable("Swipe", 0) == false) then
+    if (((nearbyEnemies == 0) and eightYardCheck == false) or IsCastable("Swipe", 0) == false) then
       WowCyborg_CURRENTATTACK = "-";
       return SetSpellRequest(nil);
     end
   end
 
   if (actionName == "thrash_bear") then
-    if ((IsSpellInRange("Mangle", "target") == 0) or IsCastable("Thrash", 0) == false) then
+    if (((nearbyEnemies == 0) and eightYardCheck == false) or IsCastable("Thrash", 0) == false) then
       WowCyborg_CURRENTATTACK = "-";
       return SetSpellRequest(nil);
     end

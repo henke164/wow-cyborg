@@ -17,7 +17,7 @@ wog[2] = "F+6";
 wog[3] = "F+7";
 wog[4] = "F+8";
 wog[5] = "F+9";
-wog[6] = "1";
+wog[6] = "X";
 
 local shock = {};
 shock[1] = "6";
@@ -27,20 +27,38 @@ shock[4] = "9";
 shock[5] = "0";
 shock[6] = "2";
 
-WowCyborg_PAUSE_KEYS = {
-  "F2",
-  "F3",
-  "F4",
-  "NUMPAD1",
-  "NUMPAD2",
-  "NUMPAD3",
-  "NUMPAD5",
-  "NUMPAD9",
-  "F",
-  "R",
-  "X",
-  "ESCAPE"
-}
+if IsInRaid("player") then
+  WowCyborg_PAUSE_KEYS = {
+    "F2",
+    "F3",
+    "F4",
+    "NUMPAD1",
+    "NUMPAD2",
+    "NUMPAD3",
+    "NUMPAD5",
+    "NUMPAD9",
+    "F",
+    "R",
+    "ESCAPE"
+  }
+  print ("In Raid Profile");
+else
+  WowCyborg_PAUSE_KEYS = {
+    "F2",
+    "F3",
+    "F4",
+    "NUMPAD1",
+    "NUMPAD2",
+    "NUMPAD3",
+    "NUMPAD5",
+    "NUMPAD9",
+    "F",
+    "R",
+    "X",
+    "ESCAPE"
+  }
+  print ("M+ Profile");
+end
 
 function GetTargetFullName()
   local name, realm = UnitName("target");
