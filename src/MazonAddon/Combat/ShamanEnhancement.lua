@@ -3,13 +3,20 @@ NAME: Shaman Enhancement
 ICON: spell_shaman_improvedstormstrike
 ]]--
 local buttons = {}
-buttons["stormstrike"] = "1";
-buttons["flame_shock"] = "2";
-buttons["lava_lash"] = "3";
-buttons["lightning_bolt"] = "4";
+buttons["stormstrike"] = "F+5";
+buttons["flame_shock"] = "9";
+buttons["lava_lash"] = "F+7";
+buttons["lightning_bolt"] = "F+8";
 buttons["crash_lightning"] = "5";
 buttons["chain_lightning"] = "6";
 buttons["frost_shock"] = "7";
+buttons["primordial_wave"] = "0";
+buttons["tempest"] = "F+8";
+
+buttons["doom_winds"] = "F+2";
+buttons["fire_nova"] = "8";
+buttons["elemental_blast"] = "F+9";
+
 WowCyborg_PAUSE_KEYS = {
 }
 
@@ -29,9 +36,15 @@ function RenderSingleTargetRotation()
     return SetSpellRequest(nil);
   end
 
-    if UnitCanAttack("player", "target") == false then
+  if UnitCanAttack("player", "target") == false then
     WowCyborg_CURRENTATTACK = "-";
     return SetSpellRequest(nil);
+  end
+
+  local proc = C_Spell.GetOverrideSpell(470411) == 470057;
+  if proc and IsCastableAtEnemyTarget("Flame Shock", 0) then
+    WowCyborg_CURRENTATTACK = "Flame Shock";
+    return SetSpellRequest(buttons["flame_shock"]);
   end
 
   local actionName = GetHekiliQueue().Primary[1].actionName;

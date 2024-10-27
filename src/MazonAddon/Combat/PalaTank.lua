@@ -42,6 +42,10 @@ end
 
 function GetBurstCooldown()
   local sStart, sDuration = GetSpellCooldown("Avenging Wrath");
+  if sStart == nil then
+    sStart, sDuration = GetSpellCooldown("Sentinel");
+  end
+
   local tl = sStart + sDuration - GetTime();
   if tl < 1 then
     return 0;

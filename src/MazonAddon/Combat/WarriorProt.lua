@@ -22,7 +22,7 @@ local attack = "8";
 local battleShout = "CTRL+3";
 local heroicThrow = "0";
 
-local eightYardCheck = 316593;--"Intimidating Shout";
+local eightYardCheck = 5246;--"Intimidating Shout";
 
 WowCyborg_PAUSE_KEYS = {
   "F1",
@@ -52,27 +52,27 @@ function RenderMultiTargetRotation()
 end
 
 function RenderSingleTargetRotation()
-  local nearbyEnemies = GetNearbyEnemyCount(316593);
+  local nearbyEnemies = GetNearbyEnemyCount(eightYardCheck);
   local targetHp = GetHealthPercentage("target");
   local bsBuff = FindBuff("player", "Battle Shout");  
   local holActive = C_Spell.GetOverrideSpell(6343) == 435222 and GetClapCooldown() == 0;
 
-  if holActive and InCombatLockdown() then
+  if nearbyEnemies > 2 then
+    local revBuff = FindBuff("player", "Revenge!");
+    if (revBuff ~= nil) then
+      if IsCastable("Revenge", 0) then
+        WowCyborg_CURRENTATTACK = "Revenge";
+        return SetSpellRequest(revenge);
+      end
+    end
+  end
+
+  if (IsCastable("Thunder Clap", 0) or holActive) and nearbyEnemies > 0 then
     WowCyborg_CURRENTATTACK = "Thunder Clap";
     return SetSpellRequest(thunderClap);
   end
   
-  if bsBuff == nil and IsCastable("Battle Shout", 0) then
-    --WowCyborg_CURRENTATTACK = "Battle Shout";
-    --return SetSpellRequest(battleShout);
-  end
-
   if InMeleeRange() == false then
-    if (IsCastable("Thunder Clap", 0) or holActive) and nearbyEnemies > 0 then
-      WowCyborg_CURRENTATTACK = "Thunder Clap";
-      return SetSpellRequest(thunderClap);
-    end
-
     if InCombatLockdown() and IsCastableAtEnemyTarget("Heroic Throw", 0) then
       WowCyborg_CURRENTATTACK = "Heroic Throw";
       return SetSpellRequest(heroicThrow);
@@ -99,7 +99,7 @@ function RenderSingleTargetRotation()
       return SetSpellRequest(lastStand);
     end
 
-    if IsCastable("Shield Wall", 0) then
+    if IsCastable("Shield Wall", 0) and FindBuff("player", "Shield Wall") == nil then
       WowCyborg_CURRENTATTACK = "Shield Wall";
       return SetSpellRequest(shieldWall);
     end
@@ -110,7 +110,7 @@ function RenderSingleTargetRotation()
     end
   end
 
-  local requiredAmount = 2000000;
+  local requiredAmount = maxHp * 0.2;
     
   local ipBuff, ipTl, _, __, ___, points = FindBuff("player", "Ignore Pain");
   local ipAmount = 0;
@@ -164,15 +164,7 @@ function RenderSingleTargetRotation()
       WowCyborg_CURRENTATTACK = "Thunder Clap";
       return SetSpellRequest(thunderClap);
     end
-
-    local revBuff = FindBuff("player", "Revenge!");
-    if (revBuff == "Revenge!" or IsCastable("Revenge", 80)) then
-      if IsCastable("Revenge", 0) then
-        WowCyborg_CURRENTATTACK = "Revenge";
-        return SetSpellRequest(revenge);
-      end
-    end
-
+    
     if IsCastableAtEnemyTarget("Shield Slam", 0) then
       WowCyborg_CURRENTATTACK = "Shield Slam";
       return SetSpellRequest(shieldSlam);

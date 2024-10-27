@@ -451,7 +451,7 @@ function GetCurrentSpellGCD(spellName)
   else
     gcd = gcd / 1000
   end
-  return (gcd - ((gcd / 2) * (spellHastePercent * 0.01))) - delay;
+  return (gcd - ((gcd / 2) * (spellHastePercent * 0.01)));
 end
 
 function GetGCDMax()
