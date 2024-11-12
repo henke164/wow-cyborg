@@ -26,18 +26,28 @@ end
 
 -- Multi target
 function RenderMultiTargetRotation()
-  return RenderSingleTargetRotation();
+  return RenderSingleTargetRotation(true);
 end
 
--- Single target
-function RenderSingleTargetRotation()  
-  if WowCyborg_INCOMBAT == false then
-    WowCyborg_CURRENTATTACK = "-";
-    return SetSpellRequest(nil);
+-- Single
+function RenderSingleTargetRotation(burst)
+  Hekili.DB.profile.toggles.cooldowns.value = burst == true;
+  local nearbyEnemies = GetNearbyEnemyCount("Flame Shock");
+  if nearbyEnemies > 0 then
+    Hekili.DB.profile.specs[ 263 ].abilities.primordial_wave.targetMin = math.floor(nearbyEnemies / 2);
   end
 
-  if UnitCanAttack("player", "target") == false then
-    WowCyborg_CURRENTATTACK = "-";
+  local hp = GetHealthPercentage("player");
+  if hp < 10 then
+    local maelstrom, maelstromTimeLeft, maelstromStacks = FindBuff("player", "Maelstrom Weapon");
+    if maelstrom ~= nil and maelstromStacks >= 5 then
+      WowCyborg_CURRENTATTACK = "Self heal";
+      return SetSpellRequest(buttons["healing_surge"]);
+    end
+  end
+
+  if WowCyborg_INCOMBAT == false then
+    WowCyborg_CURRENTATTACK = "";
     return SetSpellRequest(nil);
   end
 
@@ -46,16 +56,51 @@ function RenderSingleTargetRotation()
     WowCyborg_CURRENTATTACK = "Flame Shock";
     return SetSpellRequest(buttons["flame_shock"]);
   end
-
-  local actionName = GetHekiliQueue().Primary[1].actionName;
-  local button = buttons[actionName];
-  WowCyborg_CURRENTATTACK = actionName;
-  if button ~= nil then
-    WowCyborg_CURRENTATTACK = actionName;
-    return SetSpellRequest(button);
+  if UnitCanAttack("player", "target") == false then
+    WowCyborg_CURRENTATTACK = "";
+    return SetSpellRequest(nil);
   end
-  
-  WowCyborg_CURRENTATTACK = "-";
+
+  for attackIndex = 1,5 do
+    local actionName = GetHekiliQueue().Primary[attackIndex].actionName;
+    if actionName == "windstrike" then
+      actionName = "stormstrike";
+    end
+    
+    if actionName == "tempest" then
+      actionName = "lightning_bolt";
+    end
+
+    local button = buttons[actionName];
+    if button ~= nil then
+      local replaced = string.gsub(actionName, "_", " ");
+
+      if (
+        actionName == "crash_lightning" or
+        actionName == "ascendance" or
+        actionName == "sundering" 
+      ) and IsMelee() then
+        WowCyborg_CURRENTATTACK = replaced;
+        return SetSpellRequest(button);
+      end
+
+      if (
+        actionName == "doom_winds" or
+        actionName == "fire_nova" or
+        actionName == "blood_fury" 
+      ) then
+        WowCyborg_CURRENTATTACK = replaced;
+        return SetSpellRequest(button);
+      end
+
+      if (IsCastableAtEnemyTarget(replaced, 0)) then
+        WowCyborg_CURRENTATTACK = replaced;
+        return SetSpellRequest(button);
+      end
+    end
+  end
+
+  WowCyborg_CURRENTATTACK = "";
   return SetSpellRequest(nil);
 end
 

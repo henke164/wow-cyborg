@@ -21,17 +21,43 @@ wog[4] = "F+8";
 wog[5] = "F+9";
 
 WowCyborg_PAUSE_KEYS = {
-  "§",
-  "F",
-  "R",
-  "X",
-  "F4",
-  "NUMPAD1",
-  "NUMPAD5",
-  "NUMPAD7",
-  "NUMPAD8",
-  "NUMPAD9",
-  "UP",
+  ["F"] = function()
+    local cd = GetCooldown("Divine Shield");
+    return cd ~= nil and cd <= 1.5;
+  end,
+  ["R"] = function()
+    local cd = GetCooldown("Cleanse Toxins");
+    return cd ~= nil and cd <= 1.5;
+  end,
+  ["X"] = function()
+    local cd = GetCooldown("Blinding Light");
+    return cd ~= nil and cd <= 1.5;
+  end,
+  ["NUMPAD1"] = function()
+    local cd = GetCooldown("Divine Toll");
+    return cd ~= nil and cd <= 1.5;
+  end,
+  ["NUMPAD5"] = function()
+    local cd = GetCooldown("Hammer of Justice");
+    print(cd);
+    return cd ~= nil and cd <= 1.5;
+  end,
+  ["NUMPAD7"] = function()
+    local cd = GetCooldown("Blessing of Freedom");
+    return cd ~= nil and cd <= 1.5;
+  end,
+  ["NUMPAD8"] = function()
+    local cd = GetCooldown("Eye of Tyr");
+    return cd ~= nil and cd < 1.5;
+  end,
+  ["NUMPAD9"] = function()
+    local cd = GetCooldown("Word of Glory");
+    return cd ~= nil and cd < 1.5;
+  end,
+  ["0"] = function()
+    local cd = GetCooldown("Blessing of Spellwarding");
+    return cd ~= nil and cd < 1.5;
+  end,
   "LSHIFT",
   "ESCAPE",
 }
@@ -41,17 +67,7 @@ function IsMelee()
 end
 
 function GetBurstCooldown()
-  local sStart, sDuration = GetSpellCooldown("Avenging Wrath");
-  if sStart == nil then
-    sStart, sDuration = GetSpellCooldown("Sentinel");
-  end
-
-  local tl = sStart + sDuration - GetTime();
-  if tl < 1 then
-    return 0;
-  end
-
-  return tl;
+  return GetCooldown("Avenging Wrath");
 end
 
 function GetMemberIndex(name)
@@ -165,7 +181,7 @@ function RenderSingleTargetRotation(saveHolyPower)
     return SetSpellRequest(avengersShield);
   end
 
-  if (hp < 75) then
+  if (hp < 75 and mana >= 50) then
     local shiningBuff, shiningTl, shiningStacks, _, icon = FindBuff("player", "Shining Light");
     if (shiningBuff ~= nil and shiningStacks > 0 and icon == 1360763) or bastionBuff ~= nil then
       WowCyborg_CURRENTATTACK = "Word of Glory (Self)";
@@ -189,13 +205,6 @@ function RenderSingleTargetRotation(saveHolyPower)
   end
 
   if WowCyborg_INCOMBAT then
-    if hp < 50 then
-      if IsCastable("Ardent Defender", 0) then
-        WowCyborg_CURRENTATTACK = "Ardent Defender";
-        return SetSpellRequest(defender);
-      end
-    end
-
     if hp < 40 then
       if IsCastable("Guardian of Ancient Kings", 0) then
         WowCyborg_CURRENTATTACK = "Guardian of Ancient Kings";
@@ -227,6 +236,7 @@ function RenderSingleTargetRotation(saveHolyPower)
     return SetSpellRequest(consecration);
   end
 
+  --[[
   local friendlyTargetName = FindHealingTarget(shiningBuff, shiningTl);
   if friendlyTargetName ~= nil then
     if poweredUp and saveHolyPower == false and mana >= 10 then
@@ -241,13 +251,14 @@ function RenderSingleTargetRotation(saveHolyPower)
       return SetSpellRequest(wog[memberindex]);
     end
   end
-
+  
   if (shiningBuff ~= nil and shiningStacks > 0 and icon == 1360763) then
     if (shiningTl < 5) then
       WowCyborg_CURRENTATTACK = "Word of Glory (Self)";
       return SetSpellRequest(wog[1]);
     end
   end
+  ]]--
 
   if (wrathBuff or sentinelBuff or targetHp < 20) then
     if IsCastableAtEnemyTarget("Hammer of Wrath", 0) then
@@ -306,23 +317,9 @@ function RenderSingleTargetRotation(saveHolyPower)
       end
     end
   end
-    
-  if IsMelee() then
-    if IsCastableAtEnemyTarget("Hammer of the Righteous", 0) then
-      if shouldCastConcecration and IsCastable("Consecration", 0) then
-        WowCyborg_CURRENTATTACK = "Consecration";
-        return SetSpellRequest(consecration);
-      end
-      
-      if concetration ~= nil then
-        WowCyborg_CURRENTATTACK = "Hammer of the Righteous";
-        return SetSpellRequest(blessedHammer);
-      end
-    end
-  end
   
   local judgmentCharges = GetSpellCharges("Judgment");
-  if IsCastableAtEnemyTarget("Judgment", 0) and (holyPower < 3 or judgmentCharges > 1) then
+  if IsCastableAtEnemyTarget("Judgment", 0) and judgmentCharges > 1 then
     WowCyborg_CURRENTATTACK = "Judgment";
     return SetSpellRequest(judgment);
   end
@@ -337,6 +334,11 @@ function RenderSingleTargetRotation(saveHolyPower)
       WowCyborg_CURRENTATTACK = "Blessed Hammer";
       return SetSpellRequest(blessedHammer);
     end
+  end
+
+  if IsCastableAtEnemyTarget("Judgment", 0) and judgmentCharges > 0 then
+    WowCyborg_CURRENTATTACK = "Judgment";
+    return SetSpellRequest(judgment);
   end
 
   WowCyborg_CURRENTATTACK = "-";

@@ -22,7 +22,7 @@ function GetHekiliQueue()
   return hekiliQueue;
 end
 
-function CreateDefaultFrame(x, y, width, height)
+function CreateDefaultFrame(x, y, width, height, UIParent)
   local frame = CreateFrame("Frame");
   frame:ClearAllPoints();
   frame:SetPoint("BOTTOMLEFT", UIParent, "BOTTOMLEFT", x, y);
@@ -270,7 +270,7 @@ end
 
 function Pause(secondsAfterGcd)
   local cdUntil = GetSpellCooldown(61304);
-  local globalTl = 1 - (GetTime() - cdUntil);
+  local globalTl = GetTime() - cdUntil;
   if globalTl > 1.5 or globalTl < 0 then
     globalTl = 0;
   end
@@ -279,23 +279,25 @@ function Pause(secondsAfterGcd)
 end
 
 function RenderFontFrame()
-  local fontFrame, fontTexture = CreateDefaultFrame(frameSize * 5, frameSize * 5, 100, 20);
+  local fontFrame, fontTexture = CreateDefaultFrame(frameSize * 5, frameSize * 5, 50, 15);
   fontFrame:SetMovable(true)
   fontFrame:EnableMouse(true)
   fontFrame:RegisterForDrag("LeftButton")
   fontFrame:SetScript("OnDragStart", fontFrame.StartMoving)
   fontFrame:SetScript("OnDragStop", fontFrame.StopMovingOrSizing)
 
-  local str = fontFrame:CreateFontString(nil, "OVERLAY", "GameFontNormalLarge");
+  local str = fontFrame:CreateFontString(nil, "OVERLAY", "GameFontDarkGraySmall");
   str:SetPoint("CENTER");
   str:SetTextColor(1, 1, 1);
 
-  local infoStr = fontFrame:CreateFontString(nil, "OVERLAY", "GameFontNormalSmall");
-  infoStr:SetPoint("CENTER", fontFrame, "CENTER", 0, -20);
+  local infoStr = fontFrame:CreateFontString(nil, "OVERLAY", "GameFontDarkGraySmall");
+  infoStr:SetPoint("CENTER", fontFrame, "CENTER", 0, -45);
   infoStr:SetTextColor(1, 1, 1);
   
-  fontFrame:SetPropagateKeyboardInput(true);
+  
+  local iconFrame, iconTexture = CreateDefaultFrame(12, -30, 25, 25, fontFrame);
 
+  fontFrame:SetPropagateKeyboardInput(true);
   fontFrame:SetScript("OnKeyDown", function(self, key)
     if key == "CAPSLOCK" then
       if IsShiftKeyDown() then
@@ -310,6 +312,13 @@ function RenderFontFrame()
     for index, value in ipairs(WowCyborg_PAUSE_KEYS) do
       if value == key then
         Pause(0.3);
+      end
+    end
+
+    if WowCyborg_PAUSE_KEYS[key] ~= nil then
+      local shouldPause = WowCyborg_PAUSE_KEYS[key]();
+      if shouldPause then
+        Pause(0.2);
       end
     end
   end)
@@ -330,17 +339,31 @@ function RenderFontFrame()
       fontTexture:SetColorTexture(1, 1, 0);
       str:SetText("Disabled");
       infoStr:SetText(WowCyborg_CURRENTATTACK);
+      iconTexture:SetTexture(nil);
     else
       if WowCyborg_AOE_Rotation == true then
         fontTexture:SetColorTexture(1, 0, 0);
-        str:SetText("Multi target");
+        str:SetText("Profile 2");
         infoStr:SetText(WowCyborg_CURRENTATTACK);
+        if WowCyborg_CURRENTATTACK ~= nil then
+          local spellIcon = C_Spell.GetSpellTexture(WowCyborg_CURRENTATTACK);
+          if spellIcon ~= nil then
+            iconTexture:SetTexture(spellIcon);
+          end
+        end
       end
       
       if WowCyborg_AOE_Rotation == false then
         fontTexture:SetColorTexture(0, 0, 1);
-        str:SetText("Single target");
+        str:SetText("Profile 1");
         infoStr:SetText(WowCyborg_CURRENTATTACK);
+
+        if WowCyborg_CURRENTATTACK ~= nil then
+          local spellIcon = C_Spell.GetSpellTexture(WowCyborg_CURRENTATTACK);
+          if spellIcon ~= nil then
+            iconTexture:SetTexture(spellIcon);
+          end
+        end
       end
     end
   end)
@@ -438,7 +461,7 @@ function GetActiveEnemies()
   return inRange;
 end
 
-local delay = 0.5;
+local delay = 1;
 function GetCurrentSpellGCD(spellName)
   if UnitSpellHaste == nil then
     return 1.5;
@@ -451,7 +474,7 @@ function GetCurrentSpellGCD(spellName)
   else
     gcd = gcd / 1000
   end
-  return (gcd - ((gcd / 2) * (spellHastePercent * 0.01)));
+  return (gcd - ((gcd / 2) * (spellHastePercent * 0.01))) - delay;
 end
 
 function GetGCDMax()
