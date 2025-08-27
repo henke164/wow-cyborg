@@ -14,6 +14,7 @@ local execute = "4";
 local shieldBlock = "5";
 local ignorePain = "6";
 local victoryRush = "7";
+local battleShout = "CTRL+3";
 local heroicThrow = "0";
 
 local eightYardCheck = 5246;--"Intimidating Shout";
@@ -49,7 +50,8 @@ function RenderSingleTargetRotation()
   local nearbyEnemies = GetNearbyEnemyCount(eightYardCheck);
   local targetHp = GetHealthPercentage("target");
   local bsBuff = FindBuff("player", "Battle Shout");  
-  local holActive = C_Spell.GetOverrideSpell(6343) == 435222 and GetClapCooldown() == 0;
+  local holActive = C_Spell.GetOverrideSpell(6343) == 435222 and GetClapCooldown() == 0;    
+  local ipBuff, ipTl, _, __, ___, points = FindBuff("player", "Ignore Pain");
 
   if (IsCastable("Thunder Clap", 0) or holActive) and nearbyEnemies > 0 then
     WowCyborg_CURRENTATTACK = "Thunder Clap";
@@ -76,9 +78,6 @@ function RenderSingleTargetRotation()
       WowCyborg_CURRENTATTACK = "Heroic Throw";
       return SetSpellRequest(heroicThrow);
     end
-
-    WowCyborg_CURRENTATTACK = "-";
-    return SetSpellRequest(nil);
   end
 
   if hpPercentage < 60 then
@@ -157,8 +156,6 @@ function RenderSingleTargetRotation()
 
   -- Ignore pain logic
   local requiredAmount = maxHp * 0.2;
-    
-  local ipBuff, ipTl, _, __, ___, points = FindBuff("player", "Ignore Pain");
   local ipAmount = 0;
   if points ~= nil then
     ipAmount = points[1]
