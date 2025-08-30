@@ -12,5 +12,5 @@
 src/wowpal-server/node_modules
 /.vs/WowCyborg
 
-/src/bin
-/src/obj
+/src/bin/
+/src/obj/
