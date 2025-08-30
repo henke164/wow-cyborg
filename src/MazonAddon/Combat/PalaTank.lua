@@ -145,7 +145,6 @@ function RenderSingleTargetRotation(saveHolyPower)
   end
 
   local targetName = UnitName("target");
-  local bastionBuff = FindBuff("player", "Bastion of Light");
   local hp = GetHealthPercentage("player");
   local mana = 0;
   if UnitPower("player") ~= nil and UnitPowerMax("player") ~= nil then
@@ -157,6 +156,11 @@ function RenderSingleTargetRotation(saveHolyPower)
   local holyPower = UnitPower("player", 9);
   local wrathBuff = FindBuff("player", "Avenging Wrath");
   local sentinelBuff = FindBuff("player", "Sentinel");
+  local barricadeBuff = FindBuff("player", "Barricade of Faith");
+  local judgmentCharges = GetSpellCharges("Judgment");
+  local hammerCharges = GetSpellCharges("Blessed Hammer");
+
+  local isBursting = wrathBuff ~= nil or sentinelBuff ~= nil;
   local concecrationBuff, concTimeLeft = FindBuff("player", "Consecration");
   local speed = GetUnitSpeed("player");
   local useHol = false;
@@ -169,13 +173,6 @@ function RenderSingleTargetRotation(saveHolyPower)
 
   local bulwarkActive = C_Spell.GetOverrideSpell(432459) == 432459;
 
-  if targetName == "Incorporeal Being" then
-    if IsCastableAtEnemyTarget("Turn Evil", 0) then
-      WowCyborg_CURRENTATTACK = "Turn Evil";
-      return SetSpellRequest(9);
-    end
-  end
-
   if (UnitChannelInfo("target") or UnitCastingInfo("target")) and IsCastableAtEnemyTarget("Avenger's Shield", 0) then
     WowCyborg_CURRENTATTACK = "Avenger's Shield";
     return SetSpellRequest(avengersShield);
@@ -183,13 +180,13 @@ function RenderSingleTargetRotation(saveHolyPower)
 
   if (hp < 75 and mana >= 50) then
     local shiningBuff, shiningTl, shiningStacks, _, icon = FindBuff("player", "Shining Light");
-    if (shiningBuff ~= nil and shiningStacks > 0 and icon == 1360763) or bastionBuff ~= nil then
+    if (shiningBuff ~= nil and shiningStacks > 0 and icon == 1360763) then
       WowCyborg_CURRENTATTACK = "Word of Glory (Self)";
       return SetSpellRequest(wog[1]);
     end
   end
 
-  local poweredUp = holyPower > 2 or bastionBuff ~= nil;
+  local poweredUp = holyPower > 2;
 
   local divine = FindBuff("player", "Divine Purpose")
   if poweredUp == false then
@@ -212,8 +209,8 @@ function RenderSingleTargetRotation(saveHolyPower)
       end
     end
 
-    local hbCharges = GetSpellCharges("Holy Bulwark");
-    if sentinelBuff == nil and (hp < 75 or hbCharges == 2) then
+    local mw, mwtime, mwStacks = FindBuff("player", "Masterwork");
+    if mwStacks == 5 then
       if bulwarkActive and IsCastable("Holy Bulwark", 0) then
         local currentHolyBulwarkBuff = FindBuff("player", "Holy Bulwark");
         if currentHolyBulwarkBuff == nil then
@@ -221,13 +218,19 @@ function RenderSingleTargetRotation(saveHolyPower)
           return SetSpellRequest(9);
         end
       end
-    end
 
-    if bulwarkActive == false and GetBurstCooldown() > 25 and FindBuff("player", "Sacred Weapon") == nil then
-      if IsCastable("Sacred Weapon", 0) then
-        WowCyborg_CURRENTATTACK = "Sacred Weapon";
-        return SetSpellRequest(9);
+      local sacredCharges = GetSpellCharges("Sacred Weapon");
+      if bulwarkActive == false and (GetBurstCooldown() > 25 or sacredCharges > 1) and FindBuff("player", "Sacred Weapon") == nil then
+        if IsCastable("Sacred Weapon", 0) then
+          WowCyborg_CURRENTATTACK = "Sacred Weapon";
+          return SetSpellRequest(9);
+        end
       end
+    end
+  else    
+    if IsCastableAtEnemyTarget("Avenger's Shield", 0) and barricadeBuff == nil then
+      WowCyborg_CURRENTATTACK = "Avenger's Shield";
+      return SetSpellRequest(avengersShield);
     end
   end
 
@@ -236,42 +239,6 @@ function RenderSingleTargetRotation(saveHolyPower)
     return SetSpellRequest(consecration);
   end
 
-  --[[
-  local friendlyTargetName = FindHealingTarget(shiningBuff, shiningTl);
-  if friendlyTargetName ~= nil then
-    if poweredUp and saveHolyPower == false and mana >= 10 then
-      local memberindex = GetMemberIndex(friendlyTargetName);
-      WowCyborg_CURRENTATTACK = "Word of Glory " .. friendlyTargetName;
-      return SetSpellRequest(wog[memberindex]);
-    end
-
-    if shiningBuff ~= nil and shiningStacks > 0 and icon == 1360763 then
-      local memberindex = GetMemberIndex(friendlyTargetName);
-      WowCyborg_CURRENTATTACK = "Word of Glory " .. friendlyTargetName;
-      return SetSpellRequest(wog[memberindex]);
-    end
-  end
-  
-  if (shiningBuff ~= nil and shiningStacks > 0 and icon == 1360763) then
-    if (shiningTl < 5) then
-      WowCyborg_CURRENTATTACK = "Word of Glory (Self)";
-      return SetSpellRequest(wog[1]);
-    end
-  end
-  ]]--
-
-  if (wrathBuff or sentinelBuff or targetHp < 20) then
-    if IsCastableAtEnemyTarget("Hammer of Wrath", 0) then
-      WowCyborg_CURRENTATTACK = "Hammer of Wrath";
-      return SetSpellRequest(hammerOfWrath);
-    end
-  end
-
-  if IsCastableAtEnemyTarget("Avenger's Shield", 0) then
-    WowCyborg_CURRENTATTACK = "Avenger's Shield";
-    return SetSpellRequest(avengersShield);
-  end
-  
   if IsMelee() and IsCastable("Shield of the Righteous", 0) and poweredUp and saveHolyPower == false then
     WowCyborg_CURRENTATTACK = "Shield of the Righteous";
     return SetSpellRequest(shieldOfTheRighteous);
@@ -282,23 +249,30 @@ function RenderSingleTargetRotation(saveHolyPower)
     return SetSpellRequest(hammerOfLight);
   end
 
-  if IsCastableAtEnemyTarget("Judgment", 0) and holyPower < 3 then
-    WowCyborg_CURRENTATTACK = "Judgment";
-    return SetSpellRequest(judgment);
-  end
-  
-  if (wrathBuff or sentinelBuff or targetHp < 20) then
+  if (isBursting) then
+    if IsCastableAtEnemyTarget("Judgment", 0) and judgmentCharges == 2 then
+      WowCyborg_CURRENTATTACK = "Judgment";
+      return SetSpellRequest(judgment);
+    end
+      
+    if IsMelee() then
+      if IsCastable("Blessed Hammer", 0)then
+        WowCyborg_CURRENTATTACK = "Blessed Hammer";
+        return SetSpellRequest(blessedHammer);
+      end
+    end
+
     if IsCastableAtEnemyTarget("Hammer of Wrath", 0) then
       WowCyborg_CURRENTATTACK = "Hammer of Wrath";
       return SetSpellRequest(hammerOfWrath);
     end
   end
 
-  if IsCastableAtEnemyTarget("Avenger's Shield", 0) then
-    WowCyborg_CURRENTATTACK = "Avenger's Shield";
-    return SetSpellRequest(avengersShield);
+  if IsCastableAtEnemyTarget("Judgment", 0) and holyPower < 3 then
+    WowCyborg_CURRENTATTACK = "Judgment";
+    return SetSpellRequest(judgment);
   end
-
+  
   if shouldCastConcecration and IsMelee() and IsCastable("Consecration", 0) and speed == 0 then
     WowCyborg_CURRENTATTACK = "Consecration";
     return SetSpellRequest(consecration);
@@ -318,27 +292,31 @@ function RenderSingleTargetRotation(saveHolyPower)
     end
   end
   
-  local judgmentCharges = GetSpellCharges("Judgment");
   if IsCastableAtEnemyTarget("Judgment", 0) and judgmentCharges > 1 then
     WowCyborg_CURRENTATTACK = "Judgment";
     return SetSpellRequest(judgment);
   end
   
   if IsCastable("Blessed Hammer", 0) and WowCyborg_INCOMBAT then
-    if (GetSpellCharges("Blessed Hammer") > 2) then
-      WowCyborg_CURRENTATTACK = "Blessed Hammer";
-      return SetSpellRequest(blessedHammer);
-    end
-
-    if holyPower < 3 and GetSpellCharges("Blessed Hammer") > 1 then
+    if GetSpellCharges("Blessed Hammer") > 0 then
       WowCyborg_CURRENTATTACK = "Blessed Hammer";
       return SetSpellRequest(blessedHammer);
     end
   end
 
+  if IsCastableAtEnemyTarget("Avenger's Shield", 0) then
+    WowCyborg_CURRENTATTACK = "Avenger's Shield";
+    return SetSpellRequest(avengersShield);
+  end
+  
   if IsCastableAtEnemyTarget("Judgment", 0) and judgmentCharges > 0 then
     WowCyborg_CURRENTATTACK = "Judgment";
     return SetSpellRequest(judgment);
+  end
+
+  if IsCastableAtEnemyTarget("Hammer of Wrath", 0) then
+    WowCyborg_CURRENTATTACK = "Hammer of Wrath";
+    return SetSpellRequest(hammerOfWrath);
   end
 
   WowCyborg_CURRENTATTACK = "-";
