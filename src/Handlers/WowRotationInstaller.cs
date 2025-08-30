@@ -134,11 +134,6 @@ print(""{name} rotation loaded"");
                 Directory.CreateDirectory(destinationDir);
             }
 
-            if (sourceDir.EndsWith("Combat"))
-            {
-                return;
-            }
-
             foreach (string file in Directory.GetFiles(sourceDir))
             {
                 string fileName = Path.GetFileName(file);

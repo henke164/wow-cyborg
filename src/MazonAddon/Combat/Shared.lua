@@ -5,6 +5,8 @@ WowCyborg_DISABLED = false;
 WowCyborg_PAUSE = false;
 WowCyborg_PAUSE_UNTIL = 0;
 
+print("Mazon addon loaded 1.0");
+
 if WowCyborg_PAUSE_KEYS == nil then
   WowCyborg_PAUSE_KEYS = {}
 end

@@ -171,6 +171,8 @@ function RenderSingleTargetRotation(saveHolyPower)
     PlaySoundFile("Interface\\AddOns\\MazonAddon\\Sounds\\powerup.mp3", "SFX")
   end
 
+  WowCyborg_POWERED_UP = mwStacks == 5;
+
   lastMWStack = mwStacks
 
   local holActive = C_Spell.GetOverrideSpell(387174) == 427453;
@@ -181,7 +183,9 @@ function RenderSingleTargetRotation(saveHolyPower)
 
   local bulwarkActive = C_Spell.GetOverrideSpell(432459) == 432459;
 
-  if (UnitChannelInfo("target") or UnitCastingInfo("target")) and IsCastableAtEnemyTarget("Avenger's Shield", 0) then
+  local spell1, rank1, displayName1, icon1, startTime1, endTime1, isTradeSkill1, castID1, interrupt1 = UnitCastingInfo("target");
+  local spell2, rank2, displayName2, icon2, startTime2, endTime2, isTradeSkill2, castID2, interrupt2 = UnitChannelInfo("target");
+  if ((spell1 ~= nil and interrupt1 == false) or (spell2 ~= nil and interrupt2 == false)) and IsCastableAtEnemyTarget("Avenger's Shield", 0) then
     WowCyborg_CURRENTATTACK = "Avenger's Shield";
     return SetSpellRequest(avengersShield);
   end
@@ -257,6 +261,11 @@ function RenderSingleTargetRotation(saveHolyPower)
   end
 
   if (isBursting) then
+    if IsCastable("Bastion of Light", 0) then
+      WowCyborg_CURRENTATTACK = "Bastion of Light";
+      return SetSpellRequest("F+1");
+    end
+    
     if IsCastableAtEnemyTarget("Judgment", 0) and judgmentCharges == 2 then
       WowCyborg_CURRENTATTACK = "Judgment";
       return SetSpellRequest(judgment);
@@ -304,13 +313,6 @@ function RenderSingleTargetRotation(saveHolyPower)
     return SetSpellRequest(judgment);
   end
   
-  if IsCastable("Blessed Hammer", 0) and WowCyborg_INCOMBAT then
-    if GetSpellCharges("Blessed Hammer") > 0 then
-      WowCyborg_CURRENTATTACK = "Blessed Hammer";
-      return SetSpellRequest(blessedHammer);
-    end
-  end
-
   if IsCastableAtEnemyTarget("Avenger's Shield", 0) then
     WowCyborg_CURRENTATTACK = "Avenger's Shield";
     return SetSpellRequest(avengersShield);
