@@ -12,6 +12,7 @@ local avengersShield = 6;
 local shieldOfTheRighteous = 7;
 local hammerOfWrath = 8;
 local hammerOfLight = 9;
+local lastMWStack = 0;
 
 local wog = {};
 wog[1] = "F+5";
@@ -164,6 +165,13 @@ function RenderSingleTargetRotation(saveHolyPower)
   local concecrationBuff, concTimeLeft = FindBuff("player", "Consecration");
   local speed = GetUnitSpeed("player");
   local useHol = false;
+  
+  local mw, mwtime, mwStacks = FindBuff("player", "Masterwork");
+  if mwStacks == 5 and lastMWStack < 5 then
+    PlaySoundFile("Interface\\AddOns\\MazonAddon\\Sounds\\powerup.mp3", "SFX")
+  end
+
+  lastMWStack = mwStacks
 
   local holActive = C_Spell.GetOverrideSpell(387174) == 427453;
   if (holActive) then
@@ -209,7 +217,6 @@ function RenderSingleTargetRotation(saveHolyPower)
       end
     end
 
-    local mw, mwtime, mwStacks = FindBuff("player", "Masterwork");
     if mwStacks == 5 then
       if bulwarkActive and IsCastable("Holy Bulwark", 0) then
         local currentHolyBulwarkBuff = FindBuff("player", "Holy Bulwark");
