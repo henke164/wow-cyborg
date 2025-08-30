@@ -1,0 +1,335 @@
+--[[
+NAME: Paladin Protection
+ICON: ability_paladin_shieldofthetemplar
+]]--
+
+local consecration = 1;
+local blessedHammer = 2;
+local judgment = 3;
+local guardian = 4;
+local defender = 5;
+local avengersShield = 6;
+local shieldOfTheRighteous = 7;
+local hammerOfWrath = 8;
+local hammerOfLight = 9;
+local lastMWStack = 0;
+
+local wog = {};
+wog[1] = "F+5";
+wog[2] = "F+6";
+wog[3] = "F+7";
+wog[4] = "F+8";
+wog[5] = "F+9";
+
+WowCyborg_PAUSE_KEYS = {
+  ["F"] = function()
+    local cd = GetCooldown("Divine Shield");
+    return cd ~= nil and cd <= 1.5;
+  end,
+  ["R"] = function()
+    local cd = GetCooldown("Cleanse Toxins");
+    return cd ~= nil and cd <= 1.5;
+  end,
+  ["X"] = function()
+    local cd = GetCooldown("Blinding Light");
+    return cd ~= nil and cd <= 1.5;
+  end,
+  ["NUMPAD1"] = function()
+    local cd = GetCooldown("Divine Toll");
+    return cd ~= nil and cd <= 1.5;
+  end,
+  ["NUMPAD5"] = function()
+    local cd = GetCooldown("Hammer of Justice");
+    print(cd);
+    return cd ~= nil and cd <= 1.5;
+  end,
+  ["NUMPAD7"] = function()
+    local cd = GetCooldown("Blessing of Freedom");
+    return cd ~= nil and cd <= 1.5;
+  end,
+  ["NUMPAD8"] = function()
+    local cd = GetCooldown("Eye of Tyr");
+    return cd ~= nil and cd < 1.5;
+  end,
+  ["NUMPAD9"] = function()
+    local cd = GetCooldown("Word of Glory");
+    return cd ~= nil and cd < 1.5;
+  end,
+  ["0"] = function()
+    local cd = GetCooldown("Blessing of Spellwarding");
+    return cd ~= nil and cd < 1.5;
+  end,
+  "LSHIFT",
+  "ESCAPE",
+}
+
+function IsMelee()
+  return IsSpellInRange("Rebuke", "target") == 1;
+end
+
+function GetBurstCooldown()
+  return GetCooldown("Avenging Wrath");
+end
+
+function GetMemberIndex(name)
+  local group = GetGroupRosterInfo();
+  for groupindex = 1,25 do
+    if group[groupindex] == nil then
+      return nil;
+    end
+
+    if group[groupindex].name == nil then
+      return nil;
+    end
+
+    if group[groupindex].name == name then
+      return groupindex;
+    end
+  end
+  return nil;
+end
+
+function GetGroupRosterInfo()
+  local groupMembers = {};
+
+  for groupIndex = 1,5 do
+    local name,_,_,_,_,_,_,_,_,_,_,role = GetRaidRosterInfo(groupIndex);
+    if UnitName("player") == name then
+      table.insert(groupMembers, 1, { name = name, role = role });
+    else
+      table.insert(groupMembers, { name = name, role = role });
+    end
+  end
+  return groupMembers;
+end
+
+function FindHealingTarget(shiningBuff, shiningTimeLeft)
+  local lowestHealth = nil
+  local members = GetGroupRosterInfo();
+  for groupindex = 1,5 do
+    if members[groupindex] == nil or members[groupindex].name == nil then
+      break;
+    end
+    
+    local hp = GetHealthPercentage(members[groupindex].name);
+    if tostring(hp) ~= "-nan(ind)" and hp > 0 and hp < 100 then
+      if lowestHealth == nil or hp <= lowestHealth.hp then
+        if IsSpellInRange("Word of Glory", members[groupindex].name) == 1 then
+          lowestHealth = { hp = hp, name = members[groupindex].name }
+        end
+      end
+    end
+  end
+
+  if shiningBuff ~= nil and shiningTimeLeft < 5 and lowestHealth ~= nil and lowestHealth.hp < 100 then
+    return lowestHealth.name, 0;
+  end
+
+  if shiningBuff ~= nil and lowestHealth ~= nil and lowestHealth.hp < 60 then
+    return lowestHealth.name, 0;
+  end
+  
+  if shiningBuff == nil and lowestHealth ~= nil and lowestHealth.hp < 30 then
+    return lowestHealth.name, 0;
+  end
+
+  return nil; 
+end
+
+function RenderMultiTargetRotation()
+  return RenderSingleTargetRotation(true);
+end
+
+function RenderSingleTargetRotation(saveHolyPower)
+  if saveHolyPower == nil then
+    saveHolyPower = false;
+  end
+
+  local targetName = UnitName("target");
+  local hp = GetHealthPercentage("player");
+  local mana = 0;
+  if UnitPower("player") ~= nil and UnitPowerMax("player") ~= nil then
+    if UnitPower("player") > 0 and UnitPowerMax("player") > 0 then
+      mana = (UnitPower("player") / UnitPowerMax("player")) * 100;
+    end
+  end
+  local targetHp = GetHealthPercentage("target");
+  local holyPower = UnitPower("player", 9);
+  local wrathBuff = FindBuff("player", "Avenging Wrath");
+  local sentinelBuff = FindBuff("player", "Sentinel");
+  local barricadeBuff = FindBuff("player", "Barricade of Faith");
+  local judgmentCharges = GetSpellCharges("Judgment");
+  local hammerCharges = GetSpellCharges("Blessed Hammer");
+
+  local isBursting = wrathBuff ~= nil or sentinelBuff ~= nil;
+  local concecrationBuff, concTimeLeft = FindBuff("player", "Consecration");
+  local speed = GetUnitSpeed("player");
+  local useHol = false;
+  
+  local mw, mwtime, mwStacks = FindBuff("player", "Masterwork");
+  if mwStacks == 5 and lastMWStack < 5 then
+    PlaySoundFile("Interface\\AddOns\\MazonAddon\\Sounds\\powerup.mp3", "SFX")
+  end
+
+  WowCyborg_POWERED_UP = mwStacks == 5;
+
+  lastMWStack = mwStacks
+
+  local holActive = C_Spell.GetOverrideSpell(387174) == 427453;
+  if (holActive) then
+    useHol = true;
+    saveHolyPower = true;
+  end
+
+  local bulwarkActive = C_Spell.GetOverrideSpell(432459) == 432459;
+
+  local spell1, rank1, displayName1, icon1, startTime1, endTime1, isTradeSkill1, castID1, interrupt1 = UnitCastingInfo("target");
+  local spell2, rank2, displayName2, icon2, startTime2, endTime2, isTradeSkill2, castID2, interrupt2 = UnitChannelInfo("target");
+  if ((spell1 ~= nil and interrupt1 == false) or (spell2 ~= nil and interrupt2 == false)) and IsCastableAtEnemyTarget("Avenger's Shield", 0) then
+    WowCyborg_CURRENTATTACK = "Avenger's Shield";
+    return SetSpellRequest(avengersShield);
+  end
+
+  if (hp < 75 and mana >= 50) then
+    local shiningBuff, shiningTl, shiningStacks, _, icon = FindBuff("player", "Shining Light");
+    if (shiningBuff ~= nil and shiningStacks > 0 and icon == 1360763) then
+      WowCyborg_CURRENTATTACK = "Word of Glory (Self)";
+      return SetSpellRequest(wog[1]);
+    end
+  end
+
+  local poweredUp = holyPower > 2;
+
+  local divine = FindBuff("player", "Divine Purpose")
+  if poweredUp == false then
+    poweredUp = divine ~= nil;
+  end
+
+
+  if hp < 50 then
+    if (poweredUp and mana >= 10) then
+      WowCyborg_CURRENTATTACK = "Word of Glory (Self)";
+      return SetSpellRequest(wog[1]);
+    end
+  end
+
+  if WowCyborg_INCOMBAT then
+    if hp < 40 then
+      if IsCastable("Guardian of Ancient Kings", 0) then
+        WowCyborg_CURRENTATTACK = "Guardian of Ancient Kings";
+        return SetSpellRequest(guardian);
+      end
+    end
+
+    if mwStacks == 5 then
+      if bulwarkActive and IsCastable("Holy Bulwark", 0) then
+        local currentHolyBulwarkBuff = FindBuff("player", "Holy Bulwark");
+        if currentHolyBulwarkBuff == nil then
+          WowCyborg_CURRENTATTACK = "Holy Bulwark";
+          return SetSpellRequest(9);
+        end
+      end
+
+      local sacredCharges = GetSpellCharges("Sacred Weapon");
+      if bulwarkActive == false and (GetBurstCooldown() > 25 or sacredCharges > 1) and FindBuff("player", "Sacred Weapon") == nil then
+        if IsCastable("Sacred Weapon", 0) then
+          WowCyborg_CURRENTATTACK = "Sacred Weapon";
+          return SetSpellRequest(9);
+        end
+      end
+    end
+  else    
+    if IsCastableAtEnemyTarget("Avenger's Shield", 0) and barricadeBuff == nil then
+      WowCyborg_CURRENTATTACK = "Avenger's Shield";
+      return SetSpellRequest(avengersShield);
+    end
+  end
+
+  if (concecrationBuff == nil or (concTimeLeft > 0 and concTimeLeft < 2)) and IsMelee() and IsCastable("Consecration", 0) and speed == 0 then
+    WowCyborg_CURRENTATTACK = "Consecration";
+    return SetSpellRequest(consecration);
+  end
+
+  if IsMelee() and IsCastable("Shield of the Righteous", 0) and poweredUp and saveHolyPower == false then
+    WowCyborg_CURRENTATTACK = "Shield of the Righteous";
+    return SetSpellRequest(shieldOfTheRighteous);
+  end
+  
+  if IsMelee() and IsCastable("Shield of the Righteous", 0) and holyPower > 2 and useHol then
+    WowCyborg_CURRENTATTACK = "Hammer of Light";
+    return SetSpellRequest(hammerOfLight);
+  end
+
+  if (isBursting) then
+    if IsCastable("Bastion of Light", 0) then
+      WowCyborg_CURRENTATTACK = "Bastion of Light";
+      return SetSpellRequest("F+1");
+    end
+    
+    if IsCastableAtEnemyTarget("Judgment", 0) and judgmentCharges == 2 then
+      WowCyborg_CURRENTATTACK = "Judgment";
+      return SetSpellRequest(judgment);
+    end
+      
+    if IsMelee() then
+      if IsCastable("Blessed Hammer", 0)then
+        WowCyborg_CURRENTATTACK = "Blessed Hammer";
+        return SetSpellRequest(blessedHammer);
+      end
+    end
+
+    if IsCastableAtEnemyTarget("Hammer of Wrath", 0) then
+      WowCyborg_CURRENTATTACK = "Hammer of Wrath";
+      return SetSpellRequest(hammerOfWrath);
+    end
+  end
+
+  if IsCastableAtEnemyTarget("Judgment", 0) and holyPower < 3 then
+    WowCyborg_CURRENTATTACK = "Judgment";
+    return SetSpellRequest(judgment);
+  end
+  
+  if shouldCastConcecration and IsMelee() and IsCastable("Consecration", 0) and speed == 0 then
+    WowCyborg_CURRENTATTACK = "Consecration";
+    return SetSpellRequest(consecration);
+  end
+
+  if IsMelee() then
+    if IsCastable("Blessed Hammer", 0) then
+      if shouldCastConcecration and IsCastable("Consecration", 0) then
+        WowCyborg_CURRENTATTACK = "Consecration";
+        return SetSpellRequest(consecration);
+      end
+
+      if IsCastable("Blessed Hammer", 0) then
+        WowCyborg_CURRENTATTACK = "Blessed Hammer";
+        return SetSpellRequest(blessedHammer);
+      end
+    end
+  end
+  
+  if IsCastableAtEnemyTarget("Judgment", 0) and judgmentCharges > 1 then
+    WowCyborg_CURRENTATTACK = "Judgment";
+    return SetSpellRequest(judgment);
+  end
+  
+  if IsCastableAtEnemyTarget("Avenger's Shield", 0) then
+    WowCyborg_CURRENTATTACK = "Avenger's Shield";
+    return SetSpellRequest(avengersShield);
+  end
+  
+  if IsCastableAtEnemyTarget("Judgment", 0) and judgmentCharges > 0 then
+    WowCyborg_CURRENTATTACK = "Judgment";
+    return SetSpellRequest(judgment);
+  end
+
+  if IsCastableAtEnemyTarget("Hammer of Wrath", 0) then
+    WowCyborg_CURRENTATTACK = "Hammer of Wrath";
+    return SetSpellRequest(hammerOfWrath);
+  end
+
+  WowCyborg_CURRENTATTACK = "-";
+  return SetSpellRequest(nil);
+end
+
+print("Prot pala rotation loaded");
