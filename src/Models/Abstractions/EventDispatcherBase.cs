@@ -59,9 +59,6 @@ namespace WowCyborg.Models.Abstractions
             });
         }
         
-        public void Stop()
-            => _isRunning = false;
-
         protected abstract void Update();
 
         protected abstract void GameHandleUpdate(IntPtr hWnd);

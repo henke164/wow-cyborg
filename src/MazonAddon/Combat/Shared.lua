@@ -368,6 +368,10 @@ function RenderFontFrame()
         end
       end
     end
+
+    if WowCyborg_POWERED_UP == true then
+      fontTexture:SetColorTexture(0, 1, 0);
+    end
   end)
 end
 

@@ -8,6 +8,7 @@ buttons["blade_flurry"] = "2";
 buttons["between_the_eyes"] = "3";
 buttons["sinister_strike"] = "4";
 buttons["dispatch"] = "5";
+buttons["coup_de_grace"] = "5";
 buttons["pistol_shot"] = "6";
 buttons["slice_and_dice"] = "7";
 buttons["blade_rush"] = "8";

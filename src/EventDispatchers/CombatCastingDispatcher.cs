@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Windows.Forms;
 using WowCyborg.Models;
-using WowCyborg.Models.Abstractions;
 
 namespace WowCyborg.EventDispatchers
 {

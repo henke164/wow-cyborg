@@ -5,6 +5,8 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using WowCyborg.Handlers;
 using WowCyborg.Models;
@@ -22,7 +24,8 @@ namespace WowCyborg.UI
         public Form1()
         {
             InitializeComponent();
-            InitializeBotRunner();
+            loadingPanel.Size = this.Size;
+            Task.Run(InitializeBotRunner);
         }
 
         public void WriteLog(string str)
@@ -49,7 +52,8 @@ namespace WowCyborg.UI
             BotRunners = new List<Bot>();
             if (gameHandles.Count == 0)
             {
-                MessageBox.Show("No Game processes found! Start the game, then press Reinitialize");
+                Thread.Sleep(1000);
+                InitializeBotRunner();
                 return;
             }
 
@@ -58,13 +62,18 @@ namespace WowCyborg.UI
                 BotRunners.Add(new Bot(hWnd));
             }
 
-            ListRotations();
-
-            var currentRotation = AddonInstaller.GetCurrentRotation();
-            if (currentRotation != null)
+            BeginInvoke((MethodInvoker)delegate
             {
-                SelectProfile(currentRotation);
-            }
+                loadingPanel.Visible = false;
+
+                ListRotations();
+
+                var currentRotation = AddonInstaller.GetCurrentRotation();
+                if (currentRotation != null)
+                {
+                    SelectProfile(currentRotation);
+                }
+            });
         }
 
         private void ListRotations()
@@ -149,11 +158,6 @@ namespace WowCyborg.UI
             _topMost = !_topMost;
             this.TopMost = _topMost;
             button1.ForeColor = _topMost ? Color.SeaGreen : Color.Brown;
-        }
-
-        private void button3_Click(object sender, EventArgs e)
-        {
-            FocusGame();
         }
 
         private void linkLabel1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)

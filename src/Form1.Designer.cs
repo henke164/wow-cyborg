@@ -41,11 +41,16 @@
             this.logTextBox = new System.Windows.Forms.TextBox();
             this.label5 = new System.Windows.Forms.Label();
             this.button1 = new System.Windows.Forms.Button();
-            this.button3 = new System.Windows.Forms.Button();
             this.button4 = new System.Windows.Forms.Button();
+            this.loadingPanel = new System.Windows.Forms.Panel();
+            this.label6 = new System.Windows.Forms.Label();
+            this.label4 = new System.Windows.Forms.Label();
+            this.pictureBox2 = new System.Windows.Forms.PictureBox();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.panel3.SuspendLayout();
+            this.loadingPanel.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
             this.SuspendLayout();
             // 
             // button2
@@ -55,7 +60,7 @@
             this.button2.ForeColor = System.Drawing.Color.CornflowerBlue;
             this.button2.Location = new System.Drawing.Point(259, 101);
             this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(73, 28);
+            this.button2.Size = new System.Drawing.Size(112, 28);
             this.button2.TabIndex = 1;
             this.button2.Text = "Reinitialize";
             this.button2.UseVisualStyleBackColor = false;
@@ -175,39 +180,72 @@
             this.button1.BackColor = System.Drawing.Color.Black;
             this.button1.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.button1.ForeColor = System.Drawing.Color.SeaGreen;
-            this.button1.Location = new System.Drawing.Point(338, 101);
+            this.button1.Location = new System.Drawing.Point(377, 101);
             this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(89, 28);
+            this.button1.Size = new System.Drawing.Size(112, 28);
             this.button1.TabIndex = 8;
             this.button1.Text = "Always on top";
             this.button1.UseVisualStyleBackColor = false;
             this.button1.Click += new System.EventHandler(this.button1_Click);
-            // 
-            // button3
-            // 
-            this.button3.BackColor = System.Drawing.Color.Black;
-            this.button3.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.button3.ForeColor = System.Drawing.Color.CornflowerBlue;
-            this.button3.Location = new System.Drawing.Point(433, 101);
-            this.button3.Name = "button3";
-            this.button3.Size = new System.Drawing.Size(85, 28);
-            this.button3.TabIndex = 9;
-            this.button3.Text = "Focus Game";
-            this.button3.UseVisualStyleBackColor = false;
-            this.button3.Click += new System.EventHandler(this.button3_Click);
             // 
             // button4
             // 
             this.button4.BackColor = System.Drawing.Color.Black;
             this.button4.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.button4.ForeColor = System.Drawing.Color.CornflowerBlue;
-            this.button4.Location = new System.Drawing.Point(524, 101);
+            this.button4.Location = new System.Drawing.Point(495, 101);
             this.button4.Name = "button4";
-            this.button4.Size = new System.Drawing.Size(80, 28);
+            this.button4.Size = new System.Drawing.Size(109, 28);
             this.button4.TabIndex = 10;
             this.button4.Text = "Exit";
             this.button4.UseVisualStyleBackColor = false;
             this.button4.Click += new System.EventHandler(this.button4_Click);
+            // 
+            // loadingPanel
+            // 
+            this.loadingPanel.Controls.Add(this.label6);
+            this.loadingPanel.Controls.Add(this.label4);
+            this.loadingPanel.Controls.Add(this.pictureBox2);
+            this.loadingPanel.Location = new System.Drawing.Point(12, 9);
+            this.loadingPanel.Name = "loadingPanel";
+            this.loadingPanel.Size = new System.Drawing.Size(36, 29);
+            this.loadingPanel.TabIndex = 11;
+            // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.BackColor = System.Drawing.Color.Black;
+            this.label6.Font = new System.Drawing.Font("Verdana", 21.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label6.ForeColor = System.Drawing.SystemColors.ControlLightLight;
+            this.label6.Location = new System.Drawing.Point(163, 13);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(252, 35);
+            this.label6.TabIndex = 2;
+            this.label6.Text = "WOW CYBORG";
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.BackColor = System.Drawing.Color.Transparent;
+            this.label4.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label4.ForeColor = System.Drawing.SystemColors.ControlLightLight;
+            this.label4.Location = new System.Drawing.Point(231, 366);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(141, 20);
+            this.label4.TabIndex = 0;
+            this.label4.Text = "Waiting for game...";
+            // 
+            // pictureBox2
+            // 
+            this.pictureBox2.ErrorImage = global::WowCyborg.Properties.Resources.cyborg;
+            this.pictureBox2.Image = global::WowCyborg.Properties.Resources.cyborg;
+            this.pictureBox2.InitialImage = global::WowCyborg.Properties.Resources.cyborg;
+            this.pictureBox2.Location = new System.Drawing.Point(0, 56);
+            this.pictureBox2.Name = "pictureBox2";
+            this.pictureBox2.Size = new System.Drawing.Size(593, 298);
+            this.pictureBox2.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.pictureBox2.TabIndex = 1;
+            this.pictureBox2.TabStop = false;
             // 
             // Form1
             // 
@@ -215,8 +253,8 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.Black;
             this.ClientSize = new System.Drawing.Size(617, 423);
+            this.Controls.Add(this.loadingPanel);
             this.Controls.Add(this.button4);
-            this.Controls.Add(this.button3);
             this.Controls.Add(this.button1);
             this.Controls.Add(this.button2);
             this.Controls.Add(this.label5);
@@ -230,11 +268,15 @@
             this.Name = "Form1";
             this.Text = "Wow Cyborg 2.0";
             this.TopMost = true;
+            this.TransparencyKey = System.Drawing.Color.Purple;
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.panel3.ResumeLayout(false);
             this.panel3.PerformLayout();
+            this.loadingPanel.ResumeLayout(false);
+            this.loadingPanel.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -251,10 +293,13 @@
         private System.Windows.Forms.Panel panel3;
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.Button button1;
-        private System.Windows.Forms.Button button3;
         private System.Windows.Forms.LinkLabel linkLabel1;
         private System.Windows.Forms.Button button4;
         private System.Windows.Forms.TextBox logTextBox;
+        private System.Windows.Forms.Panel loadingPanel;
+        private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.PictureBox pictureBox2;
+        private System.Windows.Forms.Label label6;
     }
 }
 

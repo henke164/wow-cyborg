@@ -20,7 +20,6 @@ namespace WowCyborg
             _keyHandler = new KeyHandler(hWnd);
 
             EventManager.StartEventDispatcher<ScreenChangedDispatcher>(hWnd);
-            EventManager.StartEventDispatcher<CombatChangedDispatcher>(hWnd);
             EventManager.StartEventDispatcher<CombatCastingDispatcher>(hWnd);
             EventManager.On(hWnd, "KeyPressRequested", OnKeyPressRequested);
         }

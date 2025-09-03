@@ -51,7 +51,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>cyborg.ico</ApplicationIcon>
+    <ApplicationIcon>Resources\cyborg.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
@@ -79,7 +79,6 @@
     <Compile Include="Handlers\Bot.cs" />
     <Compile Include="EventDispatchers\AddonBehaviourEventDispatcher.cs" />
     <Compile Include="EventDispatchers\CombatCastingDispatcher.cs" />
-    <Compile Include="EventDispatchers\CombatChangedDispatcher.cs" />
     <Compile Include="EventDispatchers\ScreenChangedDispatcher.cs" />
     <Compile Include="Form1.cs">
       <SubType>Form</SubType>
@@ -94,7 +93,6 @@
     <Compile Include="Handlers\WowRotationInstaller.cs" />
     <Compile Include="Models\Abstractions\Event.cs" />
     <Compile Include="Models\Abstractions\EventDispatcherBase.cs" />
-    <Compile Include="Models\GameWindow.cs" />
     <Compile Include="Models\KeyPressRequest.cs" />
     <Compile Include="Models\RotationProfile.cs" />
     <Compile Include="Program.cs" />
@@ -135,6 +133,7 @@
     <None Include="MazonAddon\Combat\DemoLock.lua">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Include="MazonAddon\Combat\DestroLock.lua" />
     <None Include="MazonAddon\Combat\DHTank.lua">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
@@ -189,12 +188,6 @@
     <None Include="MazonAddon\OCR.lua">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="MazonAddon\Positioning\PlayerPositioning.lua">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="MazonAddon\Positioning\TankPositioning.lua">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
@@ -210,7 +203,8 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="cyborg.ico" />
+    <Content Include="Resources\cyborg.ico" />
+    <None Include="Resources\cyborg.png" />
     <Content Include="MazonAddon\Sounds\powerup.mp3">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

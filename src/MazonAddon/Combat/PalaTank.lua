@@ -183,8 +183,8 @@ function RenderSingleTargetRotation(saveHolyPower)
 
   local bulwarkActive = C_Spell.GetOverrideSpell(432459) == 432459;
 
-  local spell1, rank1, displayName1, icon1, startTime1, endTime1, isTradeSkill1, castID1, interrupt1 = UnitCastingInfo("target");
-  local spell2, rank2, displayName2, icon2, startTime2, endTime2, isTradeSkill2, castID2, interrupt2 = UnitChannelInfo("target");
+  local spell1, rank1, displayName1, icon1, startTime1, endTime1, isTradeSkill1, interrupt1 = UnitCastingInfo("target");
+  local spell2, rank2, displayName2, icon2, startTime2, endTime2, isTradeSkill2, interrupt2 = UnitChannelInfo("target");
   if ((spell1 ~= nil and interrupt1 == false) or (spell2 ~= nil and interrupt2 == false)) and IsCastableAtEnemyTarget("Avenger's Shield", 0) then
     WowCyborg_CURRENTATTACK = "Avenger's Shield";
     return SetSpellRequest(avengersShield);
@@ -221,17 +221,17 @@ function RenderSingleTargetRotation(saveHolyPower)
       end
     end
 
-    if mwStacks == 5 then
-      if bulwarkActive and IsCastable("Holy Bulwark", 0) then
-        local currentHolyBulwarkBuff = FindBuff("player", "Holy Bulwark");
-        if currentHolyBulwarkBuff == nil then
-          WowCyborg_CURRENTATTACK = "Holy Bulwark";
-          return SetSpellRequest(9);
-        end
+    if bulwarkActive and IsCastable("Holy Bulwark", 0) then
+      local currentHolyBulwarkBuff = FindBuff("player", "Holy Bulwark");
+      if currentHolyBulwarkBuff == nil then
+        WowCyborg_CURRENTATTACK = "Holy Bulwark";
+        return SetSpellRequest(9);
       end
-
+    end
+    
+    if mwStacks == 5 then
       local sacredCharges = GetSpellCharges("Sacred Weapon");
-      if bulwarkActive == false and (GetBurstCooldown() > 25 or sacredCharges > 1) and FindBuff("player", "Sacred Weapon") == nil then
+      if bulwarkActive == false and GetBurstCooldown() > 25 and FindBuff("player", "Sacred Weapon") == nil then
         if IsCastable("Sacred Weapon", 0) then
           WowCyborg_CURRENTATTACK = "Sacred Weapon";
           return SetSpellRequest(9);
