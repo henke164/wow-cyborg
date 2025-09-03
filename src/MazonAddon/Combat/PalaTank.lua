@@ -183,8 +183,8 @@ function RenderSingleTargetRotation(saveHolyPower)
 
   local bulwarkActive = C_Spell.GetOverrideSpell(432459) == 432459;
 
-  local spell1, rank1, displayName1, icon1, startTime1, endTime1, isTradeSkill1, castID1, interrupt1 = UnitCastingInfo("target");
-  local spell2, rank2, displayName2, icon2, startTime2, endTime2, isTradeSkill2, castID2, interrupt2 = UnitChannelInfo("target");
+  local spell1, rank1, displayName1, icon1, startTime1, endTime1, isTradeSkill1, interrupt1 = UnitCastingInfo("target");
+  local spell2, rank2, displayName2, icon2, startTime2, endTime2, isTradeSkill2, interrupt2 = UnitChannelInfo("target");
   if ((spell1 ~= nil and interrupt1 == false) or (spell2 ~= nil and interrupt2 == false)) and IsCastableAtEnemyTarget("Avenger's Shield", 0) then
     WowCyborg_CURRENTATTACK = "Avenger's Shield";
     return SetSpellRequest(avengersShield);
