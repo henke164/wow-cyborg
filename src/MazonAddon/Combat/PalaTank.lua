@@ -323,6 +323,12 @@ function RenderSingleTargetRotation(saveHolyPower)
     return SetSpellRequest(judgment);
   end
 
+  local nearbyEnemies = GetNearbyEnemyCount("Hammer of Justice");
+  if nearbyEnemies > 0 and IsCastable("Blessed Hammer", 0) then
+    WowCyborg_CURRENTATTACK = "Blessed Hammer";
+    return SetSpellRequest(blessedHammer);
+  end
+  
   if IsCastableAtEnemyTarget("Hammer of Wrath", 0) then
     WowCyborg_CURRENTATTACK = "Hammer of Wrath";
     return SetSpellRequest(hammerOfWrath);
