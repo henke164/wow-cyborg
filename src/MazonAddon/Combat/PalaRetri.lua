@@ -4,6 +4,7 @@ ICON: spell_holy_auraoflight
 ]]--
 local buttons = {}
 buttons["wake_of_ashes"] = "1";
+buttons["hammer_of_light"] = "1";
 buttons["radiant_decree"] = "1";
 buttons["blade_of_justice"] = "2";
 buttons["judgment"] = "3";
@@ -22,6 +23,7 @@ buttons["divine_toll"] = "8";
 buttons["shield_of_vengeance"] = "F+1";
 buttons["crusade"] = "F+2";
 buttons["divine_toll"] = "8";
+buttons["divine_hammer"] = "0";
 
 WowCyborg_PAUSE_KEYS = {
   "F1",
@@ -51,12 +53,6 @@ function InAttackRange()
 end
 
 function RenderMultiTargetRotation()
-  local targetName = UnitName("target");
-  if targetName == "Incorporeal Being" then
-    WowCyborg_CURRENTATTACK = "Turn Evil";
-    return SetSpellRequest(9);
-  end
-
   local actionName = GetHekiliQueue().Cooldowns[1].actionName;
   local button = buttons[actionName];
   if button ~= nil then
@@ -76,19 +72,12 @@ function RenderSingleTargetRotation()
     return SetSpellRequest(nil);
   end
 
-  local targetName = UnitName("target");
-  if targetName == "Incorporeal Being" then
-    WowCyborg_CURRENTATTACK = "Turn Evil";
-    return SetSpellRequest(9);
-  end
-
   if UnitCanAttack("player", "target") == false then
     WowCyborg_CURRENTATTACK = "-";
     return SetSpellRequest(nil);
   end
 
   local actionName = GetHekiliQueue().Primary[1].actionName;
-
   local nearbyEnemies = GetNearbyEnemyCount();
   
   if nearbyEnemies > 3 and actionName == "templars_verdict" then
@@ -98,7 +87,7 @@ function RenderSingleTargetRotation()
   if actionName == "templars_verdict" and InAttackRange() == false then
     return SetSpellRequest(nil);
   end
-  
+
   local button = buttons[actionName];
   WowCyborg_CURRENTATTACK = actionName;
   if button ~= nil then
@@ -122,6 +111,10 @@ function CanCast(actionName)
 
   if (spellName == "templars verdict") then
     spellName = "templar's verdict";
+  end
+
+  if (actionName == "hammer_of_light") and InAttackRange() then
+    return true;
   end
 
   if (

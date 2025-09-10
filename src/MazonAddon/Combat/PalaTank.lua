@@ -71,71 +71,6 @@ function GetBurstCooldown()
   return GetCooldown("Avenging Wrath");
 end
 
-function GetMemberIndex(name)
-  local group = GetGroupRosterInfo();
-  for groupindex = 1,25 do
-    if group[groupindex] == nil then
-      return nil;
-    end
-
-    if group[groupindex].name == nil then
-      return nil;
-    end
-
-    if group[groupindex].name == name then
-      return groupindex;
-    end
-  end
-  return nil;
-end
-
-function GetGroupRosterInfo()
-  local groupMembers = {};
-
-  for groupIndex = 1,5 do
-    local name,_,_,_,_,_,_,_,_,_,_,role = GetRaidRosterInfo(groupIndex);
-    if UnitName("player") == name then
-      table.insert(groupMembers, 1, { name = name, role = role });
-    else
-      table.insert(groupMembers, { name = name, role = role });
-    end
-  end
-  return groupMembers;
-end
-
-function FindHealingTarget(shiningBuff, shiningTimeLeft)
-  local lowestHealth = nil
-  local members = GetGroupRosterInfo();
-  for groupindex = 1,5 do
-    if members[groupindex] == nil or members[groupindex].name == nil then
-      break;
-    end
-    
-    local hp = GetHealthPercentage(members[groupindex].name);
-    if tostring(hp) ~= "-nan(ind)" and hp > 0 and hp < 100 then
-      if lowestHealth == nil or hp <= lowestHealth.hp then
-        if IsSpellInRange("Word of Glory", members[groupindex].name) == 1 then
-          lowestHealth = { hp = hp, name = members[groupindex].name }
-        end
-      end
-    end
-  end
-
-  if shiningBuff ~= nil and shiningTimeLeft < 5 and lowestHealth ~= nil and lowestHealth.hp < 100 then
-    return lowestHealth.name, 0;
-  end
-
-  if shiningBuff ~= nil and lowestHealth ~= nil and lowestHealth.hp < 60 then
-    return lowestHealth.name, 0;
-  end
-  
-  if shiningBuff == nil and lowestHealth ~= nil and lowestHealth.hp < 30 then
-    return lowestHealth.name, 0;
-  end
-
-  return nil; 
-end
-
 function RenderMultiTargetRotation()
   return RenderSingleTargetRotation(true);
 end
@@ -190,6 +125,7 @@ function RenderSingleTargetRotation(saveHolyPower)
     return SetSpellRequest(avengersShield);
   end
 
+  --[[
   if (hp < 75 and mana >= 50) then
     local shiningBuff, shiningTl, shiningStacks, _, icon = FindBuff("player", "Shining Light");
     if (shiningBuff ~= nil and shiningStacks > 0 and icon == 1360763) then
@@ -197,6 +133,7 @@ function RenderSingleTargetRotation(saveHolyPower)
       return SetSpellRequest(wog[1]);
     end
   end
+  ]]--
 
   local poweredUp = holyPower > 2;
 
@@ -206,7 +143,7 @@ function RenderSingleTargetRotation(saveHolyPower)
   end
 
 
-  if hp < 50 then
+  if hp < 55 then
     if (poweredUp and mana >= 10) then
       WowCyborg_CURRENTATTACK = "Word of Glory (Self)";
       return SetSpellRequest(wog[1]);
