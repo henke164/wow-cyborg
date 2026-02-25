@@ -1,0 +1,10 @@
+## Interface: 120001
+## Title: Mazon
+## Notes: Mazon addon for Midnight
+## Author: Mazon
+## Version: 1.0.0
+
+Mazon.lua
+OCR.lua
+Utilities.lua
+Renderer.lua
