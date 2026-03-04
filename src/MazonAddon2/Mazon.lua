@@ -5,17 +5,10 @@ WowCyborg_DISABLED = false;
 WowCyborg_PAUSE = false;
 WowCyborg_PAUSE_UNTIL = 0;
 WowCyborg_INCOMBAT = false;
+WowCyborg_PAUSE_KEYS = {};
 
-if WowCyborg_PAUSE_KEYS == nil then
-  WowCyborg_PAUSE_KEYS = {
-    "NUMPAD1",
-    "NUMPAD5",
-    "NUMPAD7",
-    "NUMPAD8",
-    "NUMPAD9",
-    "X",
-  }
-end
+WowCyborg_MeleeDetectionSpell = "";
+WowCyborg_NearbyEnemyDetectionSpell = "";
 
 function IsActionSlotAssistedHighlighted(slot)
   local button = _G["ActionButton" .. slot]
@@ -35,7 +28,19 @@ function UpdateMazonRotation()
   end
 
   if WowCyborg_PAUSE_UNTIL > GetTime() then
-    WowCyborg_CURRENTATTACK = "Paused";
+    WowCyborg_CURRENTATTACK = "-";
+    return SetSpellRequest(nil);
+  end
+
+  if WowCyborg_ClassRotation ~= nil then
+    local result = WowCyborg_ClassRotation();
+    if result == true then
+      return;
+    end
+  end
+
+  if UnitCanAttack("player", "target") == false then
+    WowCyborg_CURRENTATTACK = "-";
     return SetSpellRequest(nil);
   end
 
@@ -44,7 +49,7 @@ function UpdateMazonRotation()
     local actionType, id = GetActionInfo(slot)
     if (id ~= nil and actionType == "spell") then
       local inRange = IsSpellInRange(id, "target")
-      local nearbyEnemies = GetNearbyEnemyCount("Hammer of Justice");
+      local nearbyEnemies = GetNearbyEnemyCount(WowCyborg_NearbyEnemyDetectionSpell);
 
       if inRange or nearbyEnemies > 0 then
         SetSpellRequest(slot);
@@ -56,5 +61,6 @@ function UpdateMazonRotation()
     end
   else
     WowCyborg_CURRENTATTACK = "-";
+    SetSpellRequest(nil);
   end
 end

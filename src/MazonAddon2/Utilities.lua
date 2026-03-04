@@ -51,12 +51,46 @@ function IsSpellInRange(spellID, unit)
   if not UnitExists(unit) then return false end
   if UnitIsDead(unit) then return false end
 
-  if C_Spell.IsSpellInRange("Rebuke", "target") then
-    return true
+  if UnitCanAttack("player", unit) == false then
+    return false
   end
 
   local inRange = C_Spell.IsSpellInRange(spellID, unit)
   return inRange
+end
+
+function ExtractSecretNumber(secretValue)
+  local str = tostring(secretValue)
+  local i = 0
+  for part in str:gmatch("[^-]+") do
+    i = i + 1
+    if i == 6 then
+      return tonumber(part)
+    end
+  end
+  return nil
+end
+
+function IsSpellUsable(spellId)
+  local usable = C_Spell.IsSpellUsable(spellId)
+  return usable == true
+end
+
+function HasActiveBuff(spellId)
+  return WowCyborg_ActiveBuffs[spellId] == true
+end
+
+function BuffRemainingTime(spellId)
+  local expiry = WowCyborg_ActiveTimers[spellId]
+  if not expiry then return 0 end
+  local remaining = expiry - GetTime()
+  if remaining < 0 then return 0 end
+  return remaining
+end
+
+function ShouldRefreshBuff(spellId, threshold)
+  if not HasActiveBuff(spellId) then return true end
+  return BuffRemainingTime(spellId) <= threshold
 end
 
 function GetHighlightedActionSlot()
