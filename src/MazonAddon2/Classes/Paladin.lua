@@ -11,4 +11,7 @@ WowCyborg_PAUSE_KEYS = {
   "NUMPAD8",
   "NUMPAD9",
   "X",
+  "F",
+  "R",
+  "F1",
 }

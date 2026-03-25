@@ -32,19 +32,30 @@ function UpdateMazonRotation()
     return SetSpellRequest(nil);
   end
 
+  local slot = GetHighlightedActionSlot();
+
   if WowCyborg_ClassRotation ~= nil then
-    local result = WowCyborg_ClassRotation();
+    local result = WowCyborg_ClassRotation(slot);
     if result == true then
       return;
     end
   end
 
-  if UnitCanAttack("player", "target") == false then
+  if UnitChannelInfo("player") ~= nil then
+    WowCyborg_CURRENTATTACK = "Channeling";
+    return SetSpellRequest(nil);
+  end
+
+  if UnitCastingInfo("player") ~= nil then
+    WowCyborg_CURRENTATTACK = "Casting";
+    return SetSpellRequest(nil);
+  end
+
+  if UnitCanAttack("player", "target") == false or UnitIsDead("target") then
     WowCyborg_CURRENTATTACK = "-";
     return SetSpellRequest(nil);
   end
 
-  local slot = GetHighlightedActionSlot();
   if slot ~= nil then
     local actionType, id = GetActionInfo(slot)
     if (id ~= nil and actionType == "spell") then
@@ -52,6 +63,10 @@ function UpdateMazonRotation()
       local nearbyEnemies = GetNearbyEnemyCount(WowCyborg_NearbyEnemyDetectionSpell);
 
       if inRange or nearbyEnemies > 0 then
+        if slot == 10 then
+          slot = 0;
+        end
+
         SetSpellRequest(slot);
         WowCyborg_CURRENTATTACK = slot;
       else

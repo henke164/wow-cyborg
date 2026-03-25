@@ -10,4 +10,7 @@ Utilities.lua
 Renderer.lua
 AuraTracker.lua
 Classes/Warrior.lua
+Classes/Warlock.lua
 Classes/Paladin.lua
+Classes/Rogue.lua
+Classes/DemonHunter.lua

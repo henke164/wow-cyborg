@@ -108,7 +108,7 @@ function RenderFontFrame()
 
     for index, value in ipairs(WowCyborg_PAUSE_KEYS) do
       if value == key then
-        Pause(0.3);
+        Pause(0.05);
       end
     end
   end)

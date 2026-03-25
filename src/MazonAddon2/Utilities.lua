@@ -94,7 +94,7 @@ function ShouldRefreshBuff(spellId, threshold)
 end
 
 function GetHighlightedActionSlot()
-  for slot = 1, 9 do
+  for slot = 1, 10 do
     if IsActionSlotAssistedHighlighted(slot) then
       return slot
     end
