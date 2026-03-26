@@ -53,11 +53,14 @@ WowCyborg_ClassRotation = function(highlightedSlot)
       end
     end
 
-    if IsSpellUsable(seedofCorruptionId) then
-      if highlightedSlot == 1 then
-        local inRange = IsSpellInRange(seedofCorruptionId, "target")
-        if inRange then
-          return SetSpellRequest("8");
+    local channel = UnitChannelInfo("player");
+    if channel == nil or channel == "Drain Soul" then
+      if IsSpellUsable(seedofCorruptionId) then
+        if highlightedSlot == 1 then
+          local inRange = IsSpellInRange(seedofCorruptionId, "target")
+          if inRange then
+            return SetSpellRequest("8");
+          end
         end
       end
     end
