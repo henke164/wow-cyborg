@@ -27,9 +27,12 @@ namespace WowCyborg.EventDispatchers
 
         protected override void GameHandleUpdate(IntPtr hWnd)
         {
-            using (var screenshot = (Bitmap)_screenshots[hWnd].Clone())
+            if (_screenshots.TryGetValue(hWnd, out Bitmap image))
             {
-                TriggerEvent(hWnd, screenshot);
+                using (var screenshot = (Bitmap)image.Clone())
+                {
+                    TriggerEvent(hWnd, screenshot);
+                }
             }
         }
 
